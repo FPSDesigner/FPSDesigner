@@ -35,6 +35,9 @@ namespace Editor.Game
         private List<string> _consoleLines = new List<string>();
         private List<string> _commandsList = new List<string>();
 
+        // Classes needed for commands
+        private Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
+
         // Classes
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
@@ -63,7 +66,7 @@ namespace Editor.Game
 
 
         // Commands List
-        public void enterNewCommand(string command)
+        public void enterNewCommand(string command, GameTime gameTime)
         {
             _commandsList.Add(command);
             addMessage(_inputLinePre + command);
@@ -78,6 +81,42 @@ namespace Editor.Game
                 case "togglefps":
                 case "toggle_fps":
                     _drawFPS = !_drawFPS;
+                    break;
+                case "effect":
+                    if (cmd.Length > 1)
+                    {
+                        string effectName = cmd[1].ToLower();
+                        if (effectName == "gaussianblur" || effectName == "blur")
+                        {
+                            float blurAmount;
+                            if (cmd.Length > 2 && float.TryParse(cmd[2], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out blurAmount))
+                                C2DEffect.gaussianBlurEffect(blurAmount);
+                            else
+                                addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <blur intensity (float)>");
+                        }
+                        else if (effectName == "blackwhite" || effectName == "blackandwhite")
+                        {
+                            C2DEffect.BlackAndWhiteEffect();
+                        }
+                        else if (effectName == "fade")
+                        {
+                            if (cmd.Length > 1)
+                            {
+                                int fadeToOpacity;
+                                int duration;
+                                if (cmd.Length >= 4 && int.TryParse(cmd[2], out fadeToOpacity) && int.TryParse(cmd[3], out duration))
+                                    C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0,0), new Color(0, 0, 0), C2DEffect.nullFunction);
+                                else
+                                    addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <opacity (0-255)> <duration (ms)>");
+                            }
+                        }
+                    }
+                    else
+                        addMessage("USAGE: " + cmd[0] + " <GaussianBlur/BlackWhite/Fade>");
+                    break;
+                case "help":
+                    addMessage("Command List:");
+                    addMessage("togglefps - effect");
                     break;
             }
         }
@@ -141,25 +180,26 @@ namespace Editor.Game
             if (!_isConsoleActivated)
                 return;
 
-            if (!_isConsoleEnabled)
+
+            foreach (Keys keys in _activationKeys)
             {
-                foreach (Keys keys in _activationKeys)
+                if (_oldKeyBoardState.IsKeyDown(keys) || keyboardState.IsKeyDown(keys))
                 {
-                    if (_oldKeyBoardState.IsKeyDown(keys) && keyboardState.IsKeyUp(keys))
-                    {
+                    if (keyboardState.IsKeyUp(keys))
                         _isConsoleEnabled = !_isConsoleEnabled;
-                        break;
-                    }
+                    this._oldKeyBoardState = keyboardState;
+                    return;
                 }
             }
-            else
+            if(_isConsoleEnabled)
             {
+
                 // Enter
                 if (_oldKeyBoardState.IsKeyDown(Keys.Enter) && keyboardState.IsKeyDown(Keys.Enter))
                 {
                     if (_inputLine_preLine.Length > 0 || _inputLine_postLine.Length > 0)
                     {
-                        enterNewCommand(_inputLine_preLine + _inputLine_postLine);
+                        enterNewCommand(_inputLine_preLine + _inputLine_postLine, gameTime);
                         _inputLine_preLine = "";
                         _inputLine_postLine = "";
                     }

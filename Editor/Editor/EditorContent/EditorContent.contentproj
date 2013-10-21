@@ -45,7 +45,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
-      <HintPath>.\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+      <HintPath>..\..\..\..\..\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -75,11 +75,6 @@
       <Name>GaussianBlur_PP</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Nuclex.Fonts.Content.TrueTypeImporter.dll">
-      <Name>Nuclex.Fonts.Content.TrueTypeImporter</Name>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

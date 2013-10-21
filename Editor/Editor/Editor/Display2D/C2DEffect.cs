@@ -14,6 +14,10 @@ namespace Editor.Display2D
 {
     class C2DEffect
     {
+        // Singleton Code
+        private static C2DEffect instance = null;
+        private static readonly object myLock = new object();
+
         private SpriteBatch _spriteBatch;
         private GraphicsDevice _graphicsDevice;
         private ContentManager _content;
@@ -163,5 +167,19 @@ namespace Editor.Display2D
         }
 
         public delegate void MethodDelegate();
+
+        public void nullFunction() { }
+
+
+        // Singelton Methods
+        private C2DEffect() { }
+        public static C2DEffect getInstance()
+        {
+            lock (myLock)
+            {
+                if (instance == null) instance = new C2DEffect();
+                return instance;
+            }
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Editor
             gameState = new Game.CGameState(Game.gameStates.Starting);
             devConsole = new Game.CConsole(true, true);
             levelInfo = new Game.CLevelInfo();
-            C2DEffect = new Display2D.C2DEffect();
+            C2DEffect = Display2D.C2DEffect.getInstance();
 
             if (gameState.IsDevVersion())
             {
@@ -86,12 +86,6 @@ namespace Editor
             // GetState Test
             if (kbState.IsKeyDown(Keys.Space))
                 gameState.ChangeState(Game.gameStates.InGame);
-
-            if (oldKeyboardState.IsKeyDown(Keys.Tab) && kbState.IsKeyUp(Keys.Tab))
-            {
-                // C2DEffect.BlackAndWhiteEffect();
-                C2DEffect.gaussianBlurEffect(2f);
-            }
 
             // Update Console
             devConsole.Update(kbState, gameTime);
