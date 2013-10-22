@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Display2D\C2DEffect.cs" />
     <Compile Include="Display2D\CPostProcessing.cs" />
+    <Compile Include="Display3D\Camera.cs" />
     <Compile Include="Display3D\CModel.cs" />
     <Compile Include="Game\CConsole.cs" />
     <Compile Include="Game\CGameState.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CXMLManager.cs" />
+    <Compile Include="Game\Displacement.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

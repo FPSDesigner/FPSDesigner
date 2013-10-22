@@ -48,8 +48,6 @@ namespace Editor
                 graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             }
         }
-
-
         protected override void Initialize()
         {
 
