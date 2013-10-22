@@ -39,6 +39,11 @@ namespace Editor.Display2D
                 effectList.Add(effectName, effect); 
         }
 
+        public bool isEffectLoaded(string effectName)
+        {
+            return effectList.ContainsKey(effectName);
+        }
+
         public void removeEffect(string effectName)
         {
             effectList.Remove(effectName);

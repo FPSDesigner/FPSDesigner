@@ -74,8 +74,14 @@ namespace Editor.Display2D
         }
 
 
-        public void gaussianBlurEffect(float blurAmount)
+        public void gaussianBlurEffect(float blurAmount, bool toggle = false)
         {
+            if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
+            {
+                _postProcessor.removeEffect("GaussianBlur");
+                return;
+            }
+
             this._gbBlurAmount = blurAmount;
 
             _postProcessor.LoadEffect("GaussianBlur", _content.Load<Effect>("Effects/GaussianBlur_PP"));

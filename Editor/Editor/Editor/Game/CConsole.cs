@@ -90,7 +90,7 @@ namespace Editor.Game
                         {
                             float blurAmount;
                             if (cmd.Length > 2 && float.TryParse(cmd[2], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out blurAmount))
-                                C2DEffect.gaussianBlurEffect(blurAmount);
+                                C2DEffect.gaussianBlurEffect(blurAmount, true);
                             else
                                 addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <blur intensity (float)>");
                         }
