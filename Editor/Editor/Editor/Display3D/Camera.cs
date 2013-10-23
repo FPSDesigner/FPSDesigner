@@ -17,7 +17,7 @@ namespace Editor.Display3D
         public Matrix _view { get; private set; }
         public Matrix _projection{ get; private set; }
 
-        public Vector3 _cameraPos { get; private set; }
+        public Vector3 _cameraPos { get; set; }
         public Vector3 _cameraTarget { get; private set; }
         
         private float _nearClip;
@@ -35,14 +35,23 @@ namespace Editor.Display3D
             this._nearClip = nearClip;
             this._farClip = farClip;
 
+            this._cameraPos = cameraPos;
+            this._cameraTarget = target;
+
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), _aspectRatio, _nearClip, _farClip);
         }
 
-        public void Update(GameTime gametime, Vector3 cameraPos, Vector3 target)
+        public void Update(GameTime gametime, KeyboardState keyState)
         {
-            _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
+            if (keyState.IsKeyDown(Keys.Z)) { _cameraPos += Vector3.Forward * 4.0f * gametime.ElapsedGameTime.Milliseconds; }
+            if (keyState.IsKeyDown(Keys.S)) { _cameraPos += Vector3.Backward * 4.0f * gametime.ElapsedGameTime.Milliseconds; }
+            if (keyState.IsKeyDown(Keys.Q)) { _cameraPos += Vector3.Left * 4.0f * gametime.ElapsedGameTime.Milliseconds; }
+            if (keyState.IsKeyDown(Keys.D)) { _cameraPos += Vector3.Right * 4.0f * gametime.ElapsedGameTime.Milliseconds; }
+
+            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, Vector3.Up);
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), _aspectRatio, _nearClip, _farClip);
         }
+
     }
 }

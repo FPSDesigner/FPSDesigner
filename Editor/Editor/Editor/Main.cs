@@ -25,6 +25,8 @@ namespace Editor
         Display2D.CPostProcessor postProcessor;
         Display3D.CModel model;
 
+        Display3D.Camera cam;
+
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -50,7 +52,7 @@ namespace Editor
         }
         protected override void Initialize()
         {
-
+            cam = new Display3D.Camera(GraphicsDevice, new Vector3(0f, 500f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
             base.Initialize();
         }
 
@@ -89,6 +91,8 @@ namespace Editor
             devConsole.Update(kbState, gameTime);
             C2DEffect.Update(gameTime);
 
+            cam.Update(gameTime, kbState);
+
             oldKeyboardState = kbState;
             base.Update(gameTime);
         }
@@ -103,10 +107,8 @@ namespace Editor
 
                 GraphicsDevice.Clear(Color.CornflowerBlue);
 
-                Matrix view = Matrix.CreateLookAt(new Vector3(0f, 500f, 2000f), new Vector3(0, 0, 0), Vector3.Up);
-                Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), GraphicsDevice.Viewport.AspectRatio, 0.1f, 5000.0f);
-
-                model.Draw(view, projection);
+                
+                model.Draw(cam._view, cam._projection);
 
                 // Draw the console
                 devConsole.Draw(gameTime);
