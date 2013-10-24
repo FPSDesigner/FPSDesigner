@@ -44,7 +44,7 @@ namespace Editor.Game
         private KeyboardState _oldKeyBoardState;
         private ContentManager _Content;
         private CInput _inputManager = new CInput();
-        private List<Keys> _activationKeys = new List<Keys> { Keys.OemTilde, Keys.OemQuotes };
+        private Keys _activationKeys = Keys.OemTilde;
 
         // 2D
         private Texture2D _backgroundTexture;
@@ -105,7 +105,7 @@ namespace Editor.Game
                                 int fadeToOpacity;
                                 int duration;
                                 if (cmd.Length >= 4 && int.TryParse(cmd[2], out fadeToOpacity) && int.TryParse(cmd[3], out duration))
-                                    C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0,0), new Color(0, 0, 0), C2DEffect.nullFunction);
+                                    C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0, 0), new Color(0, 0, 0), C2DEffect.nullFunction);
                                 else
                                     addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <opacity (0-255)> <duration (ms)>");
                             }
@@ -181,17 +181,15 @@ namespace Editor.Game
                 return;
 
 
-            foreach (Keys keys in _activationKeys)
+            if (_oldKeyBoardState.IsKeyDown(_activationKeys) || keyboardState.IsKeyDown(_activationKeys))
             {
-                if (_oldKeyBoardState.IsKeyDown(keys) || keyboardState.IsKeyDown(keys))
-                {
-                    if (keyboardState.IsKeyUp(keys))
-                        _isConsoleEnabled = !_isConsoleEnabled;
-                    this._oldKeyBoardState = keyboardState;
-                    return;
-                }
+                if (keyboardState.IsKeyUp(_activationKeys))
+                    _isConsoleEnabled = !_isConsoleEnabled;
+                this._oldKeyBoardState = keyboardState;
+                return;
             }
-            if(_isConsoleEnabled)
+
+            if (_isConsoleEnabled)
             {
 
                 // Enter
@@ -375,7 +373,7 @@ namespace Editor.Game
         }
 
         // Change the keys to open the console
-        public void changeActivationKeys(List<Keys> newActivationKeys)
+        public void changeActivationKeys(Keys newActivationKeys)
         {
             this._activationKeys = newActivationKeys;
         }

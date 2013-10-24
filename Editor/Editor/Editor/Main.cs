@@ -19,7 +19,8 @@ namespace Editor
 
         Game.CGameState gameState;
         Game.CConsole devConsole;
-        Game.CLevelInfo levelInfo;
+        Game.LevelInfo.CLevelInfo levelInfo;
+        Game.Settings.CGameSettings gameSettings;
         Display2D.C2DEffect C2DEffect;
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
@@ -34,7 +35,8 @@ namespace Editor
 
             gameState = new Game.CGameState(Game.gameStates.Starting);
             devConsole = new Game.CConsole(true, true);
-            levelInfo = new Game.CLevelInfo();
+            levelInfo = new Game.LevelInfo.CLevelInfo();
+            gameSettings = new Game.Settings.CGameSettings();
             C2DEffect = Display2D.C2DEffect.getInstance();
 
             if (gameState.IsDevVersion())
@@ -65,7 +67,9 @@ namespace Editor
 
             devConsole.LoadContent(Content, GraphicsDevice, spriteBatch);
             C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor);
+            gameSettings.loadDatas(GraphicsDevice);
 
+            devConsole.changeActivationKeys(gameSettings._gameSettings.KeyMapping.Console);
 
             model = new Display3D.CModel(Content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(1.0f, 1.0f, 1.0f), GraphicsDevice);
         }
