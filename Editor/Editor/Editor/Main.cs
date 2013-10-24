@@ -15,7 +15,8 @@ namespace Editor
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        KeyboardState oldKeyboardState;
+        KeyboardState oldKeyboardState; //--| These 2 variables avec used to compare new state and old state (ex : Key pressed and released)
+        MouseState oldMouseState;// --------|
 
         Game.CGameState gameState;
         Game.CConsole devConsole;
@@ -55,7 +56,7 @@ namespace Editor
         }
         protected override void Initialize()
         {
-            cam = new Display3D.CCamera(GraphicsDevice, new Vector3(0f, 500f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
+            cam = new Display3D.CCamera(GraphicsDevice, new Vector3(0f, 250f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
             base.Initialize();
         }
 
@@ -85,7 +86,8 @@ namespace Editor
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState kbState = Keyboard.GetState();
+            KeyboardState kbState = Keyboard.GetState(); 
+            MouseState mouseState = Mouse.GetState();
 
             // Quit program when 'Escape' key is pressed
             if (kbState.IsKeyDown(Keys.Escape))
@@ -99,9 +101,10 @@ namespace Editor
             devConsole.Update(kbState, gameTime);
             C2DEffect.Update(gameTime);
 
-            cam.Update(gameTime, kbState);
+            cam.Update(gameTime, kbState, mouseState, oldMouseState);
 
             oldKeyboardState = kbState;
+            oldMouseState = mouseState;
             base.Update(gameTime);
         }
 
