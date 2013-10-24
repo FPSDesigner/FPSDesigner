@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
-    class Camera
+    class CCamera
     {
         public Matrix _view { get; private set; }
         public Matrix _projection{ get; private set; }
@@ -27,7 +27,7 @@ namespace Editor.Display3D
 
         private float _aspectRatio;
 
-        public Camera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip)
         {
             this._graphics = device;
             _aspectRatio = device.PresentationParameters.BackBufferWidth / device.PresentationParameters.BackBufferHeight;

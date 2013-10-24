@@ -25,7 +25,7 @@ namespace Editor
         Display2D.CPostProcessor postProcessor;
         Display3D.CModel model;
 
-        Display3D.Camera cam;
+        Display3D.CCamera cam;
 
         public Main()
         {
@@ -52,7 +52,7 @@ namespace Editor
         }
         protected override void Initialize()
         {
-            cam = new Display3D.Camera(GraphicsDevice, new Vector3(0f, 500f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
+            cam = new Display3D.CCamera(GraphicsDevice, new Vector3(0f, 500f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
             base.Initialize();
         }
 

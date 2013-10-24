@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
-    class Character
+    class CCharacter
     {
         public Vector3 _position { get; set; }
         public Vector3 _rotation { get; set; }
@@ -20,7 +20,7 @@ namespace Editor.Game
  
         float _health;
 
-        Character(Vector3 position, float health, GraphicsDevice graphics)
+        CCharacter(Vector3 position, float health, GraphicsDevice graphics)
         {
             this._position = position;
 
