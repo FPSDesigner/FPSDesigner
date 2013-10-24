@@ -112,7 +112,7 @@ namespace Editor
                 GraphicsDevice.Clear(Color.CornflowerBlue);
 
                 
-                model.Draw(cam._view, cam._projection);
+                model.Draw(cam._view, cam._projection, cam._cameraPos);
 
                 // Draw the console
                 devConsole.Draw(gameTime);

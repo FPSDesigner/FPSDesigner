@@ -81,6 +81,12 @@
     <Compile Include="Display2D\CPostProcessing.cs" />
     <Compile Include="Display3D\CCamera.cs" />
     <Compile Include="Display3D\CModel.cs" />
+    <Compile Include="Display3D\CSkySphere.cs" />
+    <Compile Include="Display3D\Materials\Material.cs" />
+    <Compile Include="Display3D\Materials\MultiLightingMaterial.cs" />
+    <Compile Include="Display3D\Materials\PointLightMaterial.cs" />
+    <Compile Include="Display3D\Materials\ProjectedTextureMaterial.cs" />
+    <Compile Include="Display3D\Materials\SpotLightMaterial.cs" />
     <Compile Include="Game\CConsole.cs" />
     <Compile Include="Game\CGameSettings.cs" />
     <Compile Include="Game\CGameState.cs" />
