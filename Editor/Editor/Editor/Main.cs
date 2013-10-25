@@ -26,7 +26,6 @@ namespace Editor
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
         Display3D.CModel model;
-        Display3D.SkySphere sky;
 
         Display3D.CCamera cam;
 
@@ -38,7 +37,7 @@ namespace Editor
             gameState = new Game.CGameState(Game.gameStates.Starting);
             devConsole = new Game.CConsole(true, true);
             levelInfo = new Game.LevelInfo.CLevelInfo();
-            gameSettings = new Game.Settings.CGameSettings();
+            gameSettings = Game.Settings.CGameSettings.getInstance();
             C2DEffect = Display2D.C2DEffect.getInstance();
 
             if (gameState.IsDevVersion())
@@ -74,9 +73,6 @@ namespace Editor
             devConsole.changeActivationKeys(gameSettings._gameSettings.KeyMapping.Console);
 
             model = new Display3D.CModel(Content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(1.0f, 1.0f, 1.0f), GraphicsDevice);
-
-            sky = new Display3D.SkySphere(Content, GraphicsDevice,
-                Content.Load<TextureCube>("Textures/clouds"));
         }
 
 
@@ -101,7 +97,7 @@ namespace Editor
             devConsole.Update(kbState, gameTime);
             C2DEffect.Update(gameTime);
 
-            cam.Update(gameTime, kbState, mouseState, oldMouseState);
+            cam.Update(gameTime, kbState, mouseState);
 
             oldKeyboardState = kbState;
             oldMouseState = mouseState;

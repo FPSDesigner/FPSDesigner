@@ -21,13 +21,24 @@ namespace Editor.Game.Settings
         CXMLManager _xmlManager;
         GraphicsDevice _graphicsDevice;
 
-        public CGameSettings()
+        // Singleton Code
+        private static CGameSettings instance = null;
+        private static readonly object myLock = new object();
+
+        // Singelton Methods
+        private CGameSettings() { }
+        public static CGameSettings getInstance()
         {
-            _xmlManager = new CXMLManager();
+            lock (myLock)
+            {
+                if (instance == null) instance = new CGameSettings();
+                return instance;
+            }
         }
 
         public GameSettingsInfos loadDatas(GraphicsDevice graphicsDevice, string xmlFile = "gameSettings2.xml")
         {
+            _xmlManager = new CXMLManager();
             _xmlFile = xmlFile;
             _graphicsDevice = graphicsDevice;
 
@@ -52,7 +63,8 @@ namespace Editor.Game.Settings
                     MRight = Keys.D,
                     MBackward = Keys.S,
                     MJump = Keys.Space,
-                    Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes
+                    Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
+                    MouseSensibility = 0.01f,
                 },
                 Video = new Video
                 {
@@ -91,6 +103,7 @@ namespace Editor.Game.Settings
         public Keys MBackward { get; set; }
         public Keys MJump { get; set; }
         public Keys Console { get; set; }
+        public float MouseSensibility { get; set; }
     }
     #endregion
 
