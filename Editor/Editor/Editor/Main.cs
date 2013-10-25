@@ -66,7 +66,7 @@ namespace Editor
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
-            devConsole.LoadContent(Content, GraphicsDevice, spriteBatch);
+            devConsole.LoadContent(Content, GraphicsDevice, spriteBatch, cam);
             C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor);
             gameSettings.loadDatas(GraphicsDevice);
 

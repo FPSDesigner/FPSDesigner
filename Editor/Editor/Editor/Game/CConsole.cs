@@ -45,6 +45,7 @@ namespace Editor.Game
         private ContentManager _Content;
         private CInput _inputManager = new CInput();
         private Keys _activationKeys = Keys.OemTilde;
+        private Display3D.CCamera _Camera;
 
         // 2D
         private Texture2D _backgroundTexture;
@@ -53,6 +54,9 @@ namespace Editor.Game
         private Color _backgroundColor;
         private SpriteFont _consoleFont;
         private Vector2 _inputLinePos;
+
+        // Gyzmo
+        bool _drawGyzmo = false;
 
 
         /* *** Methods *** */
@@ -81,6 +85,11 @@ namespace Editor.Game
                 case "togglefps":
                 case "toggle_fps":
                     _drawFPS = !_drawFPS;
+                    break;
+                case "gyzmo":
+                case "togglegyzmo":
+                    _drawGyzmo = !_drawGyzmo;
+                    addMessage("Gyzmo " + ((_drawGyzmo) ? "activated" : "disabled") + " !");
                     break;
                 case "effect":
                     if (cmd.Length > 1)
@@ -130,12 +139,15 @@ namespace Editor.Game
         }
 
         // Load all the contents
-        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera)
         {
             // Instantiate classes
             this._graphicsDevice = graphicsDevice;
             this._spriteBatch = spriteBatch;
             this._Content = contentManager;
+            this._Camera = Camera;
+
+            Display3D.CSimpleShapes.Initialize(_graphicsDevice);
 
             // Compute background position & size
             _backgroundPosition = Vector2.Zero;
@@ -283,6 +295,19 @@ namespace Editor.Game
 
                 _spriteBatch.DrawString(_consoleFont, string.Format("{0} FPS", _totalFPS),
                     new Vector2(10.0f, 20.0f), Color.White);
+            }
+
+            if (_drawGyzmo)
+            {
+                Display3D.CSimpleShapes.AddLine(new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 1f), Color.Red);
+                Display3D.CSimpleShapes.AddLine(new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f), Color.Blue);
+                Display3D.CSimpleShapes.AddLine(new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f), Color.Green);
+
+                Vector3 position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_Camera._yaw, _Camera._pitch, 0));
+                Matrix viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
+                Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphicsDevice.Viewport.AspectRatio, .1f, 100f);
+
+                Display3D.CSimpleShapes.Draw(gameTime, viewMatrix, projection);
             }
 
             if (_isConsoleEnabled)
