@@ -25,8 +25,8 @@ namespace Editor
         Display2D.C2DEffect C2DEffect;
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
-        Display3D.CModel model;
 
+        Display3D.CModel model;
         Display3D.CCamera cam;
 
         public Main()
@@ -55,7 +55,7 @@ namespace Editor
         }
         protected override void Initialize()
         {
-            cam = new Display3D.CCamera(GraphicsDevice, new Vector3(0f, 250f, 2000f), new Vector3(0, 0, 0), 0.1f, 5000.0f);
+            cam = new Display3D.CCamera(GraphicsDevice, new Vector3(100f, 250f, 2000f), new Vector3(-100.0f, -250.0f, -2000.0f), 0.1f, 10000.0f);
             base.Initialize();
         }
 
@@ -78,13 +78,14 @@ namespace Editor
 
         protected override void UnloadContent()
         {
+
         }
 
         protected override void Update(GameTime gameTime)
         {
             KeyboardState kbState = Keyboard.GetState(); 
             MouseState mouseState = Mouse.GetState();
-
+            
             // Quit program when 'Escape' key is pressed
             if (kbState.IsKeyDown(Keys.Escape))
                 this.Exit();
@@ -100,10 +101,8 @@ namespace Editor
             cam.Update(gameTime, kbState, mouseState);
 
             oldKeyboardState = kbState;
-            oldMouseState = mouseState;
             base.Update(gameTime);
         }
-
 
         protected override void Draw(GameTime gameTime)
         {

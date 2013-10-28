@@ -1,5 +1,4 @@
 ﻿using System;
-
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -20,11 +19,13 @@ namespace Editor.Display3D
         public Vector3 _cameraPos { get; set; }
         public Vector3 _cameraTarget { get; private set; }
 
-        public MouseState _oldMouseState;
+        private Vector3 _translation; // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
+        private Vector3 _up;
+
         private Game.Settings.CGameSettings _gameSettings;
 
-        public float _yaw { get; set; }
-        public float _pitch { get; set; }
+        public float _yaw { get; private set; } //---| Param for rotation matrix
+        public float _pitch { get; private set; }//--|
         
         private float _nearClip;
         private float _farClip;
@@ -37,7 +38,7 @@ namespace Editor.Display3D
         // used to initialize all the values
         {
             this._graphics = device;
-            _aspectRatio = device.PresentationParameters.BackBufferWidth / device.PresentationParameters.BackBufferHeight;
+            _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
 
             this._nearClip = nearClip;
             this._farClip = farClip;
@@ -45,47 +46,58 @@ namespace Editor.Display3D
             this._cameraPos = cameraPos;
             this._cameraTarget = target;
 
+            this._up = Vector3.Up;
+
+            this._translation = Vector3.Zero;
+
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), _aspectRatio, _nearClip, _farClip);
+            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
         }
 
         public void Update(GameTime gametime, KeyboardState keyState, MouseState mouseState)
         {
+            CameraUpdates(gametime, keyState, mouseState); // Moving the camera
+           
+            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up); //View with camera
+            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _aspectRatio, _nearClip, _farClip); // Displaying on the screen
 
-            Displacement(gametime, keyState); // Moving the camera
-
-            if (_oldMouseState.X == 0 && _oldMouseState.Y == 0)
-                _oldMouseState = mouseState;
-
-            Rotate(mouseState);
-            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
-
-            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation); 
-            _cameraTarget = _cameraPos + forward;
-
-            Vector3 up = Vector3.Transform(Vector3.Up, rotation);
-
-
-            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, up); //View with camera
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), _aspectRatio, _nearClip, _farClip); // Displaying on the screen
-            _oldMouseState = mouseState;
         }
 
-        public void Displacement (GameTime gametime,KeyboardState keyState)
+        public void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
             // Keyboard displacement
         {
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward)) { _cameraPos += Vector3.Forward * gametime.ElapsedGameTime.Milliseconds; _cameraTarget += Vector3.Forward * gametime.ElapsedGameTime.Milliseconds; }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward)) { _cameraPos += Vector3.Backward * gametime.ElapsedGameTime.Milliseconds; _cameraTarget += Vector3.Backward * gametime.ElapsedGameTime.Milliseconds; }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft)) { _cameraPos += Vector3.Left * gametime.ElapsedGameTime.Milliseconds; _cameraTarget += Vector3.Left * gametime.ElapsedGameTime.Milliseconds; }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight)) { _cameraPos += Vector3.Right * gametime.ElapsedGameTime.Milliseconds; _cameraTarget += Vector3.Right * gametime.ElapsedGameTime.Milliseconds; }
+            Mouse.SetPosition(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2); 
+            Rotation(mouseState, gametime); //Get back Yaw & Pitch
+            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
+
+            _translation = Vector3.Transform(_translation, rotation);//--| Translation added to position
+            _cameraPos += _translation;//-------------------------------| 
+            _translation = Vector3.Zero;//------------------------------|
+
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward)) { 
+                _translation += Vector3.Forward * gametime.ElapsedGameTime.Milliseconds; 
+            }
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward)) { 
+                _translation += Vector3.Backward * gametime.ElapsedGameTime.Milliseconds;
+            }
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft)) { 
+                _translation += Vector3.Left * gametime.ElapsedGameTime.Milliseconds; 
+            }
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight)) { 
+                _translation += Vector3.Right * gametime.ElapsedGameTime.Milliseconds; 
+            }
+
+            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+            _cameraTarget = _cameraPos + forward; //TARGETING
         }
 
-        public void Rotate(MouseState mouseState)
+        public void Rotation(MouseState mouseState, GameTime gametime)
+            // Use to modify yaw & pitch
         {
-            this._yaw -= 0.01f * ((float)mouseState.X - (float)_oldMouseState.X);
-            this._pitch -= 0.01f * ((float)mouseState.Y - (float)_oldMouseState.Y); 
+            this._yaw -= 0.001f * gametime.ElapsedGameTime.Milliseconds *((float)mouseState.X - (float)_graphics.Viewport.Width/2) ;
+            this._pitch -= 0.001f * gametime.ElapsedGameTime.Milliseconds * ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2); 
         }
 
 
