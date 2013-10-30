@@ -73,6 +73,8 @@ namespace Editor
             devConsole.changeActivationKeys(gameSettings._gameSettings.KeyMapping.Console);
 
             model = new Display3D.CModel(Content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(1.0f, 1.0f, 1.0f), GraphicsDevice);
+
+            
         }
 
 
