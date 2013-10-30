@@ -94,10 +94,15 @@ namespace Editor.Display3D
         }
 
         public void Rotation(MouseState mouseState, GameTime gametime)
-            // Use to modify yaw & pitch
+            // Used to modify yaw & pitch
         {
-            this._yaw -= 0.001f * gametime.ElapsedGameTime.Milliseconds *((float)mouseState.X - (float)_graphics.Viewport.Width/2) ;
-            this._pitch -= 0.001f * gametime.ElapsedGameTime.Milliseconds * ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2); 
+
+            float targetYaw = this._yaw - gametime.ElapsedGameTime.Milliseconds * ((float)mouseState.X - (float)_graphics.Viewport.Width / 2);
+            float targetPitch = this._pitch - gametime.ElapsedGameTime.Milliseconds * ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2);
+
+            this._yaw = MathHelper.SmoothStep(_yaw, targetYaw, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
+            this._pitch = MathHelper.SmoothStep(_pitch, targetPitch, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
+
         }
 
 

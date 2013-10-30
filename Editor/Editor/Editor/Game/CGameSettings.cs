@@ -36,7 +36,7 @@ namespace Editor.Game.Settings
             }
         }
 
-        public GameSettingsInfos loadDatas(GraphicsDevice graphicsDevice, string xmlFile = "gameSettings2.xml")
+        public GameSettingsInfos loadDatas(GraphicsDevice graphicsDevice, string xmlFile = "gameSettings.xml")
         {
             _xmlManager = new CXMLManager();
             _xmlFile = xmlFile;
