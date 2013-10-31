@@ -9,34 +9,34 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Game
+namespace Editor.GameStates
 {
-    public abstract class CGameState
-    // EACH "PART" OF GAME IS A GAMESTATE (MENU, GAME, OPTIONS, ...)
+    class CInGame : Game.CGameState
     {
-        public virtual void Initialize()
+        public void Initialize()
         {
 
         }
 
-        public virtual void loadContent(ContentManager content)
+        public void loadContent(ContentManager content)
         {
 
         }
 
-        public virtual void unloadContent(ContentManager content)
+        public void unloadContent(ContentManager content)
         {
 
         }
 
-        public virtual void Update(GameTime gametime)
+        public void Update(GameTime gametime)
         {
 
         }
 
-        public virtual void Draw(SpriteBatch spritebatch, GameTime gametime)
+        public void Draw(SpriteBatch spritebatch, GameTime gametime)
         {
 
         }
+
     }
 }

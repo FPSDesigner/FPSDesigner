@@ -30,11 +30,13 @@ namespace Editor.Display3D
         private float _nearClip;
         private float _farClip;
 
+        private float cameraVelocity;
+
         private GraphicsDevice _graphics;
 
         private float _aspectRatio;
 
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity)
         // used to initialize all the values
         {
             this._graphics = device;
@@ -42,6 +44,8 @@ namespace Editor.Display3D
 
             this._nearClip = nearClip;
             this._farClip = farClip;
+
+            this.cameraVelocity = camVelocity;
 
             this._cameraPos = cameraPos;
             this._cameraTarget = target;
@@ -77,32 +81,32 @@ namespace Editor.Display3D
             _translation = Vector3.Zero;//------------------------------|
 
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward)) { 
-                _translation += Vector3.Forward * (float)gametime.ElapsedGameTime.TotalMilliseconds; 
+                _translation += Vector3.Forward; 
             }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward)) {
-                _translation += Vector3.Backward * (float)gametime.ElapsedGameTime.TotalMilliseconds;
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward)) { 
+                _translation += Vector3.Backward;
             }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft)) {
-                _translation += Vector3.Left * (float)gametime.ElapsedGameTime.TotalMilliseconds; 
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft)) { 
+                _translation += Vector3.Left; 
             }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight)) {
-                _translation += Vector3.Right * (float)gametime.ElapsedGameTime.TotalMilliseconds; 
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight)) { 
+                _translation += Vector3.Right; 
             }
+
+            _translation = _translation * gametime.ElapsedGameTime.Milliseconds;
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
             _cameraTarget = _cameraPos + forward; //TARGETING
         }
 
         public void Rotation(MouseState mouseState, GameTime gametime)
-            // Used to modify yaw & pitch
+            // Use to modify yaw & pitch
         {
-
             float targetYaw = this._yaw - ((float)mouseState.X - (float)_graphics.Viewport.Width / 2);
             float targetPitch = this._pitch - ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2);
 
             this._yaw = MathHelper.SmoothStep(_yaw, targetYaw, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
             this._pitch = MathHelper.SmoothStep(_pitch, targetPitch, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
-
         }
 
 
