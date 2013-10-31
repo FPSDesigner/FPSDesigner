@@ -160,7 +160,7 @@ namespace Editor.Display2D
         public CRenderCapture(GraphicsDevice GraphicsDevice)
         {
             this.graphicsDevice = GraphicsDevice;
-            renderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+            renderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 4, RenderTargetUsage.PreserveContents);
         }
 
         /// <summary>

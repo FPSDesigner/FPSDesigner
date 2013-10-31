@@ -31,6 +31,7 @@ namespace Editor
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferMultiSampling = true;
             Content.RootDirectory = "Content";
 
             graphics.PreferredBackBufferWidth = 1280;
