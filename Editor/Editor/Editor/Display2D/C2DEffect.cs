@@ -12,11 +12,17 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display2D
 {
+    /// <summary>
+    /// A 2D Effects manager
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// C2DEffect allows the rendering of different 2D effects used in the game.
+    /// Most of theses effects use the post processing (CPostProcessing) technique.
+    /// </remarks>
+    /// 
     class C2DEffect
     {
-        // Singleton Code
-        private static C2DEffect instance = null;
-        private static readonly object myLock = new object();
 
         private SpriteBatch _spriteBatch;
         private GraphicsDevice _graphicsDevice;
@@ -35,12 +41,20 @@ namespace Editor.Display2D
         private Texture2D _fadeTexture;
         private MethodDelegate _fadeCallback;
 
-        // Gaussin Blur Effect
+        // Gaussian Blur Effect
         private float _gbBlurAmount;
         private float[] gbWeightsH, gbweightsV;
         private Vector2[] gboffsetsH, gboffsetsV;
         private CRenderCapture gbRenderCapture;
 
+
+        /// <summary>
+        /// Initialize the class
+        /// </summary>
+        /// <param name="content">ContentManager class</param>
+        /// <param name="graphicsDevice">GraphicsDevice class</param>
+        /// <param name="spriteBatch">SpriteBatch class</param>
+        /// <param name="postProcessor">CPostProcessor class</param>
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, CPostProcessor postProcessor)
         {
             this._spriteBatch = spriteBatch;
@@ -49,6 +63,16 @@ namespace Editor.Display2D
             this._postProcessor = postProcessor;
         }
 
+        /// <summary>
+        /// Create a new fade effect
+        /// </summary>
+        /// <param name="fadeTo">Opacity to fade to. 255 = transparent, 0 = opaque</param>
+        /// <param name="timeMilliSecs">Duration of the effect</param>
+        /// <param name="gameTime">Current GameTime snapshot</param>
+        /// <param name="sizeRect">Size of the fade rectangle</param>
+        /// <param name="positionRect">Position of the fade rectangle</param>
+        /// <param name="fadeToColor">Color to fade to</param>
+        /// <param name="callback">Function to be called once the effect is done</param>
         public void fadeEffect(int fadeTo, int timeMilliSecs, GameTime gameTime, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
         {
             this._fadeSizeRect = sizeRect;
@@ -68,12 +92,19 @@ namespace Editor.Display2D
             
         }
 
+        /// <summary>
+        /// Create a new Black and White effect.
+        /// </summary>
         public void BlackAndWhiteEffect()
         {
             _postProcessor.LoadEffect("BlackWhite", _content.Load<Effect>("Effects/BlackWhite_PP"));
         }
 
-
+        /// <summary>
+        /// Create a new Gaussian Blur Effect
+        /// </summary>
+        /// <param name="blurAmount">Intensity of the blur</param>
+        /// <param name="toggle">If true, then deactivate it if already activated</param>
         public void gaussianBlurEffect(float blurAmount, bool toggle = false)
         {
             if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
@@ -142,6 +173,10 @@ namespace Editor.Display2D
             return (float)((1.0f / Math.Sqrt(2 * Math.PI * _gbBlurAmount * _gbBlurAmount)) * Math.Exp(-(x * x) / (2 * _gbBlurAmount * _gbBlurAmount)));
         }
 
+        /// <summary>
+        /// Called at each frame to process code frame-per-frame
+        /// </summary>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void Update(GameTime gameTime)
         {
             if (_isFading)
@@ -161,7 +196,11 @@ namespace Editor.Display2D
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Draw the different effects, frame-per-frame
+        /// </summary>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void Draw(GameTime gameTime)
         {
             if (_isFading)
@@ -172,12 +211,18 @@ namespace Editor.Display2D
             }
         }
 
+        // Delegation Method
+        // Used for callbacks once an effect is done
+        // Example: fade effect
         public delegate void MethodDelegate();
 
         public void nullFunction() { }
 
 
-        // Singelton Methods
+        // Singelton Code
+        private static C2DEffect instance = null;
+        private static readonly object myLock = new object();
+
         private C2DEffect() { }
         public static C2DEffect getInstance()
         {
@@ -187,5 +232,6 @@ namespace Editor.Display2D
                 return instance;
             }
         }
+
     }
 }

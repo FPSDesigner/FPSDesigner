@@ -10,11 +10,11 @@ namespace Editor.Display3D
     /// A simple-shapes renderer
     /// </summary>
     /// <remarks>
-    /// 
     /// CSimpleShapes allows rendering simple shapes such as lines, triangles and boudings elements.
     /// We can call theses methods via the Draw() method or use the lifetime parameter to specify
     /// the duration of rendering the element.
     /// </remarks>
+    /// 
     public static class CSimpleShapes
     {
         // A single shape in our renderer

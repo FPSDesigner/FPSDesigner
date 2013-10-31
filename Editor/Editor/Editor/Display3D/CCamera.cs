@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
+    /// <summary>
+    /// The camera class process all the camera movement and the world view & projection matrix.
+    /// </summary>
     class CCamera
     {
         public Matrix _view { get; private set; }
@@ -19,25 +22,34 @@ namespace Editor.Display3D
         public Vector3 _cameraPos { get; set; }
         public Vector3 _cameraTarget { get; private set; }
 
-        private Vector3 _translation; // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
+        // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
+        private Vector3 _translation;
         private Vector3 _up;
 
         private Game.Settings.CGameSettings _gameSettings;
 
-        public float _yaw { get; private set; } //---| Param for rotation matrix
-        public float _pitch { get; private set; }//--|
+        // Rotations angles
+        public float _yaw { get; private set; }
+        public float _pitch { get; private set; }
         
         private float _nearClip;
         private float _farClip;
-
-        private float cameraVelocity;
+        private float _cameraVelocity;
+        private float _aspectRatio;
 
         private GraphicsDevice _graphics;
 
-        private float _aspectRatio;
 
+        /// <summary>
+        /// Initialize the class
+        /// </summary>
+        /// <param name="device">GraphicsDevice class</param>
+        /// <param name="cameraPos">Default position of the camera</param>
+        /// <param name="target">Default target of the camera</param>
+        /// <param name="nearClip">Closest elements to be rendered</param>
+        /// <param name="farClip">Farthest elements to be rentered</param>
+        /// <param name="camVelocity">Camera movement speed</param>
         public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity)
-        // used to initialize all the values
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -45,7 +57,7 @@ namespace Editor.Display3D
             this._nearClip = nearClip;
             this._farClip = farClip;
 
-            this.cameraVelocity = camVelocity;
+            this._cameraVelocity = camVelocity;
 
             this._cameraPos = cameraPos;
             this._cameraTarget = target;
@@ -60,47 +72,61 @@ namespace Editor.Display3D
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
         }
 
+        /// <summary>
+        /// Used to update the camera frame-per-frame
+        /// </summary>
+        /// <param name="gametime">GameTime snapshot</param>
+        /// <param name="keyState">Current KeyboardState</param>
+        /// <param name="mouseState">Current mouseState</param>
         public void Update(GameTime gametime, KeyboardState keyState, MouseState mouseState)
         {
-            CameraUpdates(gametime, keyState, mouseState); // Moving the camera
+            CameraUpdates(gametime, keyState, mouseState);
            
-            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up); //View with camera
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _aspectRatio, _nearClip, _farClip); // Displaying on the screen
+            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
+            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _aspectRatio, _nearClip, _farClip);
 
         }
 
-        public void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
-            // Keyboard displacement
+        /// <summary>
+        /// Update the movements and rotations of the camera
+        /// </summary>
+        /// <param name="gametime">GameTime snapshot</param>
+        /// <param name="keyState">Current keyboardState</param>
+        /// <param name="mouseState">Current mouseState</param>
+        private void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
         {
             Mouse.SetPosition(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2); 
-            Rotation(mouseState, gametime); //Get back Yaw & Pitch
+            Rotation(mouseState, gametime);
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
 
-            _translation = Vector3.Transform(_translation, rotation);//--| Translation added to position
-            _cameraPos += _translation;//-------------------------------| 
-            _translation = Vector3.Zero;//------------------------------|
+            _translation = Vector3.Transform(_translation, rotation);
+            _cameraPos += _translation;
+            _translation = Vector3.Zero;
 
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward)) { 
-                _translation += Vector3.Forward; 
-            }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward)) { 
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
+                _translation += Vector3.Forward;
+
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward))
                 _translation += Vector3.Backward;
-            }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft)) { 
-                _translation += Vector3.Left; 
-            }
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight)) { 
-                _translation += Vector3.Right; 
-            }
+
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft))
+                _translation += Vector3.Left;
+
+            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
+                _translation += Vector3.Right;
 
             _translation = _translation * gametime.ElapsedGameTime.Milliseconds;
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
-            _cameraTarget = _cameraPos + forward; //TARGETING
+            _cameraTarget = _cameraPos + forward;
         }
 
-        public void Rotation(MouseState mouseState, GameTime gametime)
-            // Use to modify yaw & pitch
+        /// <summary>
+        /// Update the camera rotation from the mouse movements
+        /// </summary>
+        /// <param name="mouseState">Current mouseState</param>
+        /// <param name="gametime">GameTime snapshot</param>
+        private void Rotation(MouseState mouseState, GameTime gametime)
         {
             float targetYaw = this._yaw - ((float)mouseState.X - (float)_graphics.Viewport.Width / 2);
             float targetPitch = this._pitch - ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2);

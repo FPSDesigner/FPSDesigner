@@ -11,21 +11,30 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display2D
 {
-    // Post Processor class
+    /// <summary>
+    /// The post processing technique allows the applications of different effects
+    /// after the world has been displayed, directly by modifying the rendered pixels.
+    /// </summary>
     public class CPostProcessor
     {
-        // Pixel shader
-        //public Effect Effect { get; protected set; }
 
-        // Texture to process
+        /// <summary>
+        /// Texture to process, usually the screen captured by CRenderCapture
+        /// </summary>
         public Texture2D Input { get; set; }
 
-        // GraphicsDevice and SpriteBatch for drawing
         protected GraphicsDevice graphicsDevice;
         protected static SpriteBatch spriteBatch;
 
+        /// <summary>
+        /// List of the different loaded effects
+        /// </summary>
         public Dictionary<string, Effect> effectList = new Dictionary<string, Effect>();
 
+        /// <summary>
+        /// Initialize the post processor technique
+        /// </summary>
+        /// <param name="graphicsDevice">GraphicsDevice class</param>
         public CPostProcessor(GraphicsDevice graphicsDevice)
         {
             if (spriteBatch == null)
@@ -33,22 +42,40 @@ namespace Editor.Display2D
             this.graphicsDevice = graphicsDevice;
         }
 
+        /// <summary>
+        /// Load a new post processed effect
+        /// </summary>
+        /// <param name="effectName">The effect name used as a key in the dictionnary</param>
+        /// <param name="effect">The effect to load</param>
         public void LoadEffect(string effectName, Effect effect)
         {
             if (!effectList.ContainsKey(effectName))
                 effectList.Add(effectName, effect); 
         }
 
+        /// <summary>
+        /// Check if an effect is loaded
+        /// </summary>
+        /// <param name="effectName">The key name of the effect</param>
+        /// <returns>True if the effect is loaded, False otherwise</returns>
         public bool isEffectLoaded(string effectName)
         {
             return effectList.ContainsKey(effectName);
         }
 
+        /// <summary>
+        /// Remove an effect from the post processor
+        /// </summary>
+        /// <param name="effectName"></param>
         public void removeEffect(string effectName)
         {
             effectList.Remove(effectName);
         }
 
+        /// <summary>
+        /// Check if at least one effect is loaded
+        /// </summary>
+        /// <returns>True if at least one effect is loaded, false otherwise</returns>
         public bool isAnyEffectLoaded()
         {
             return (effectList.Count > 0);
@@ -61,7 +88,10 @@ namespace Editor.Display2D
         public Vector2[] gboffsetsV { get; set; }
         public CRenderCapture gbCapture { get; set; }
 
-        // Draws the input texture using the pixel shader postprocessor
+        /// <summary>
+        /// Draws the input textures using the pixel shade post processor
+        /// </summary>
+        /// <param name="gaussianBlurStop">Only used internal, so the blur can be drawn twice (horizontally & vertically)</param>
         public virtual void Draw(bool gaussianBlurStop = false)
         {
             if (!gaussianBlurStop && effectList.ContainsKey("GaussianBlur"))
@@ -114,31 +144,45 @@ namespace Editor.Display2D
         }
     }
 
-    // Render Capture class - Capture what is being drawn
+    /// <summary>
+    /// Render Capture class captures what is being drawn so it can be used to post process effects
+    /// </summary>
     public class CRenderCapture
     {
         RenderTarget2D renderTarget;
         GraphicsDevice graphicsDevice;
 
+
+        /// <summary>
+        /// Initialize the render capture class
+        /// </summary>
+        /// <param name="GraphicsDevice">Graphics Device class</param>
         public CRenderCapture(GraphicsDevice GraphicsDevice)
         {
             this.graphicsDevice = GraphicsDevice;
             renderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
         }
 
-        // Begins capturing from the graphics device
+        /// <summary>
+        /// Begins the capture with the graphic device
+        /// </summary>
         public void Begin()
         {
             graphicsDevice.SetRenderTarget(renderTarget);
         }
 
-        // Stop capturing
+        /// <summary>
+        /// Stop capturing
+        /// </summary>
         public void End()
         {
             graphicsDevice.SetRenderTarget(null);
         }
 
-        // Returns what was captured
+        /// <summary>
+        /// Returns what has been captured
+        /// </summary>
+        /// <returns>The capture</returns>
         public Texture2D GetTexture()
         {
             return renderTarget;

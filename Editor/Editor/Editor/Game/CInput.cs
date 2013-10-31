@@ -14,17 +14,24 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
+    /// <summary>
+    /// CInput manage the different inputs and controlers
+    /// </summary>
     class CInput
     {
-        /* *** Variables *** */
         private string _clipboardStack = "";
 
-
-        /* *** Methods *** */
+        /// <summary>
+        /// Constructor, Initialize the class
+        /// </summary>
         public CInput()
         {
         }
 
+        /// <summary>
+        /// Get the content of the clipboard
+        /// </summary>
+        /// <returns>The content of the clipboard</returns>
         public String GetClipboardText()
         {
             Thread t = new Thread(getClipboard);
@@ -34,6 +41,9 @@ namespace Editor.Game
             return _clipboardStack;
         }
 
+        /// <summary>
+        /// Used internally by a Thread with GetClipboardText()
+        /// </summary>
         private void getClipboard()
         {
             if (System.Windows.Forms.Clipboard.ContainsText())
@@ -42,7 +52,11 @@ namespace Editor.Game
             }
         }
 
-        // Return keyboard type from user's region
+        /// <summary>
+        /// Returns the keyboard layout the player is using.
+        /// Example: AZERTY, QWERTY, ...
+        /// </summary>
+        /// <returns>The player's keyboard layout</returns>
         public string getKeyboardType()
         {
             if (System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture.Name == "fr-FR")
@@ -51,6 +65,12 @@ namespace Editor.Game
                 return "QWERTY";
         }
 
+        /// <summary>
+        /// Returns a string with the real typed key, using the player keyboard's layout
+        /// </summary>
+        /// <param name="key">The key we want to check</param>
+        /// <param name="caps">True if caps are enabled</param>
+        /// <returns></returns>
         public string getRealTypedKey(Keys key, bool caps)
         {
             // No localization needed keys:

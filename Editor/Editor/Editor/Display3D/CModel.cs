@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
+    /// <summary>
+    /// Load a new model to draw on the world
+    /// </summary>
     class CModel
     {
         public Vector3 _modelPosition{ get ; set; }
@@ -23,8 +26,15 @@ namespace Editor.Display3D
  
         private GraphicsDevice _graphicsDevice;
  
+        /// <summary>
+        /// Initialize the model class
+        /// </summary>
+        /// <param name="model">Model element</param>
+        /// <param name="modelPos">Position of the model</param>
+        /// <param name="modelRotation">Rotation of the model</param>
+        /// <param name="modelScale">Scale of the model (size)</param>
+        /// <param name="device">GraphicsDevice class</param>
         public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device)
-            // Constructor : Used to initialize all the value, position, scale of a model
         {
             this._model = model;
  
@@ -38,6 +48,11 @@ namespace Editor.Display3D
             this._graphicsDevice = device;
         }
 
+        /// <summary>
+        /// Draw the model in the world
+        /// </summary>
+        /// <param name="view">View Matrix used in CCamera class</param>
+        /// <param name="projection">Projection Matrix used in CCamera class</param>
         public void Draw(Matrix view, Matrix projection)
         {
             // Matrix which display the model in the world

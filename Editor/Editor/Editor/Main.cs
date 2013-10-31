@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor
 {
+    /// <summary>
+    /// The main file, core of the program
+    /// </summary>
     public class Main : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
@@ -89,7 +92,7 @@ namespace Editor
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //Draw "All" the State
+            // Draw "All" the State
             GameManagement.Draw(spriteBatch, gameTime);
 
             // Draw the Console effect
@@ -102,7 +105,7 @@ namespace Editor
             postProcessor.Input = renderCapture.GetTexture();
             postProcessor.Draw();
 
-        base.Draw(gameTime);
+            base.Draw(gameTime);
         }
     }
 }

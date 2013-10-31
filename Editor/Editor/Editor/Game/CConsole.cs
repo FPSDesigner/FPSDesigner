@@ -13,14 +13,16 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
+    /// <summary>
+    /// Basic console class to process several developer commands, display messages, etc.
+    /// </summary>
     class CConsole
     {
-        /* *** Variables *** */
         private bool _isConsoleActivated = false;
         private bool _isConsoleEnabled = false;
         private bool _drawGameStuff = true;
         private bool _drawFPS = true;
-
+        private bool _drawGyzmo = false;
 
         private float _elapsedTimeFPS = 0.0f;
         private int _totalFrames = 0;
@@ -35,19 +37,18 @@ namespace Editor.Game
         private List<string> _consoleLines = new List<string>();
         private List<string> _commandsList = new List<string>();
 
-        // Classes needed for commands
         private Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
 
-        // Classes
+
         private GraphicsDevice _graphicsDevice;
         private SpriteBatch _spriteBatch;
         private KeyboardState _oldKeyBoardState;
         private ContentManager _Content;
         private CInput _inputManager = new CInput();
-        private Keys _activationKeys = Keys.OemTilde;
         private Display3D.CCamera _Camera;
+        public Keys _activationKeys = Keys.OemTilde;
 
-        // 2D
+
         private Texture2D _backgroundTexture;
         private Vector2 _backgroundPosition;
         private Vector2 _backgroundSize;
@@ -55,13 +56,12 @@ namespace Editor.Game
         private SpriteFont _consoleFont;
         private Vector2 _inputLinePos;
 
-        // Gyzmo
-        bool _drawGyzmo = false;
 
-
-        /* *** Methods *** */
-
-        // Constructor
+        /// <summary>
+        /// Initialize the console class
+        /// </summary>
+        /// <param name="isConsoleActivated">True if we want the player to toggle the console</param>
+        /// <param name="drawGameStuff">True if we want to display internal messages</param>
         public CConsole(bool isConsoleActivated, bool drawGameStuff)
         {
             this._isConsoleActivated = isConsoleActivated;
@@ -69,7 +69,11 @@ namespace Editor.Game
         }
 
 
-        // Commands List
+        /// <summary>
+        /// Process new commands
+        /// </summary>
+        /// <param name="command">The command typed</param>
+        /// <param name="gameTime">GameTime snaphot</param>
         public void enterNewCommand(string command, GameTime gameTime)
         {
             _commandsList.Add(command);
@@ -130,7 +134,11 @@ namespace Editor.Game
             }
         }
 
-        // Add a message to the console
+        /// <summary>
+        /// Add a new message to the console
+        /// </summary>
+        /// <param name="msg">The message</param>
+        /// <param name="isGameMessage">Whether or not it's an internal message</param>
         public void addMessage(string msg, bool isGameMessage = false)
         {
             if (isGameMessage && !_drawGameStuff)
@@ -138,7 +146,13 @@ namespace Editor.Game
             _consoleLines.Add(msg);
         }
 
-        // Load all the contents
+        /// <summary>
+        /// Load content & initialize 2D drawable content
+        /// </summary>
+        /// <param name="contentManager">ContentManager class</param>
+        /// <param name="graphicsDevice">GraphicsDevice class</param>
+        /// <param name="spriteBatch">SpriteBatch class</param>
+        /// <param name="Camera">Display3D.CCamera class</param>
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera)
         {
             // Instantiate classes
@@ -164,7 +178,7 @@ namespace Editor.Game
 
             _backgroundTexture.SetData(data);
 
-            // Load font & computations
+            // Load font & compute size, positions
             _consoleFont = _Content.Load<SpriteFont>("2D\\consoleFont");
             int fontSizeY = (int)_consoleFont.MeasureString("A").Y;
             _inputLinePos = new Vector2(10, WindowSize.Y / 4 - fontSizeY * 2);
@@ -173,9 +187,14 @@ namespace Editor.Game
 
         }
 
-        // Update function: manage inputs, etc.
+        /// <summary>
+        /// Called at each frame to process code frame-per-frame
+        /// </summary>
+        /// <param name="keyboardState">KeyboardState class</param>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void Update(KeyboardState keyboardState, GameTime gameTime)
         {
+            // Draw FPS
             if (_drawFPS)
             {
                 _elapsedTimeFPS += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -189,6 +208,7 @@ namespace Editor.Game
                 }
             }
 
+            // Draw Console
             if (!_isConsoleActivated)
                 return;
 
@@ -284,7 +304,10 @@ namespace Editor.Game
             this._oldKeyBoardState = keyboardState;
         }
 
-        // Draw the console
+        /// <summary>
+        /// Draw the console each frames
+        /// </summary>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
@@ -328,7 +351,12 @@ namespace Editor.Game
             _spriteBatch.End();
         }
 
-        // Draw a text with different colors
+        /// <summary>
+        /// Draw a text by using its formatted colors
+        /// Example: "[color:#RRGGBBAA]test [color:#RRGGBBAA]test2"
+        /// </summary>
+        /// <param name="text">The text to draw</param>
+        /// <param name="pos">The position to draw the text</param>
         private void drawFormattedText(string text, Vector2 pos)
         {
             Color defaultColor = Color.LightGreen;
@@ -370,8 +398,12 @@ namespace Editor.Game
             }
         }
 
-        // #RRGGBBAA to Color
-        static Color RGBToColor(string hexString)
+        /// <summary>
+        /// Transform a RGB color to a Color instance.
+        /// </summary>
+        /// <param name="hexString">The RGB string</param>
+        /// <returns>A Color instance</returns>
+        private Color RGBToColor(string hexString)
         {
             if (hexString.StartsWith("#"))
                 hexString = hexString.Substring(1);
@@ -395,12 +427,6 @@ namespace Editor.Game
                 throw new InvalidOperationException("Invalid hex representation of an ARGB or RGB color value.");
             }
             return color;
-        }
-
-        // Change the keys to open the console
-        public void changeActivationKeys(Keys newActivationKeys)
-        {
-            this._activationKeys = newActivationKeys;
         }
 
     }

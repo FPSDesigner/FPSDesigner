@@ -64,7 +64,7 @@ namespace Editor.Game.Settings
                     MBackward = Keys.S,
                     MJump = Keys.Space,
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
-                    MouseSensibility = 0.01f,
+                    MouseSensibility = 0.1f,
                 },
                 Video = new Video
                 {
