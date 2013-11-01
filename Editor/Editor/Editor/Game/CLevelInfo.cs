@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
 
 namespace Editor.Game.LevelInfo
 {
@@ -27,6 +36,7 @@ namespace Editor.Game.LevelInfo
         public Properties Properties { get; set; }
         public MapTerrain MapTerrain { get; set; }
         public MapModels MapModels { get; set; }
+        public ContentFiles ContentFiles { get; set; }
     }
 
 
@@ -43,7 +53,6 @@ namespace Editor.Game.LevelInfo
     #endregion
 
 
-
     #region "Node - MapTerrain"
 
     // Terrain
@@ -53,7 +62,6 @@ namespace Editor.Game.LevelInfo
         public string textureFile { get; set; }
     }
     #endregion
-
 
 
     #region "Node - MapModels"
@@ -87,6 +95,37 @@ namespace Editor.Game.LevelInfo
     #endregion
 
 
+    #region "Node - ContentFiles"
+
+    // Content Files to load
+    public class ContentFiles
+    {
+        [XmlElement("Texture")]
+        public string[] Texture { get; set; }
+        [XmlElement("Texture2D")]
+        public string[] Texture2D { get; set; }
+        [XmlElement("Texture3D")]
+        public string[] Texture3D { get; set; }
+        [XmlElement("Model")]
+        public string[] Model { get; set; }
+    }
+    #endregion
 
 
+    #region Examples
+    /*Game.LevelInfo.LevelData dataToSerialize = new Game.LevelInfo.LevelData
+    {
+        Properties = new Game.LevelInfo.Properties
+        {
+            Author = "Author",
+            levelName = "LevelName"
+        },
+        ContentFiles = new Game.LevelInfo.ContentFiles
+        {
+            Texture = new[] { "Content/Texture1.fbx", "Content/Texture2.fbx" },
+            Texture2D = new[] { "Content/2D/Texture1.fbx", "Content/2D/Texture2.fbx" }
+        }
+    };
+    */
+    #endregion
 }

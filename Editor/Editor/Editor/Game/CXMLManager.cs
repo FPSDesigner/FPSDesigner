@@ -37,7 +37,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="xmlFile">The XML file</param>
         /// <param name="classToSerialize">The class we want to serialize</param>
-        public void serializeClass(string xmlFile, Type classToSerialize)
+        public void serializeClass(string xmlFile, Object classToSerialize)
         {
             XmlSerializer xs = new XmlSerializer(classToSerialize.GetType());
 
