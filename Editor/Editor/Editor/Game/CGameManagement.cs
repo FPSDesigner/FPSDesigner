@@ -38,8 +38,8 @@ namespace Editor.Game
         {
             _currentState = Game.CGameStateManager.getInstance();
 
-            devConsole = new Game.CConsole(true, true);
-            gameSettings = Game.Settings.CGameSettings.getInstance(); // Singleton Initialization
+            devConsole = Game.CConsole.getInstance();
+            gameSettings = Game.Settings.CGameSettings.getInstance();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Editor.Game
 
             gameSettings.loadDatas(graphics);
 
-            devConsole.LoadContent(content, graphics, spriteBatch, cam);
+            devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
         }
 

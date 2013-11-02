@@ -58,18 +58,6 @@ namespace Editor.Game
 
 
         /// <summary>
-        /// Initialize the console class
-        /// </summary>
-        /// <param name="isConsoleActivated">True if we want the player to toggle the console</param>
-        /// <param name="drawGameStuff">True if we want to display internal messages</param>
-        public CConsole(bool isConsoleActivated, bool drawGameStuff)
-        {
-            this._isConsoleActivated = isConsoleActivated;
-            this._drawGameStuff = drawGameStuff;
-        }
-
-
-        /// <summary>
         /// Process new commands
         /// </summary>
         /// <param name="command">The command typed</param>
@@ -153,13 +141,17 @@ namespace Editor.Game
         /// <param name="graphicsDevice">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
         /// <param name="Camera">Display3D.CCamera class</param>
-        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera)
+        /// <param name="isConsoleActivated">True if we want the player to toggle the console</param>
+        /// <param name="drawGameStuff">True if we want to display internal messages</param>
+        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera, bool isConsoleActivated = true, bool drawGameStuff = false)
         {
             // Instantiate classes
             this._graphicsDevice = graphicsDevice;
             this._spriteBatch = spriteBatch;
             this._Content = contentManager;
             this._Camera = Camera;
+            this._isConsoleActivated = isConsoleActivated;
+            this._drawGameStuff = drawGameStuff;
 
             Display3D.CSimpleShapes.Initialize(_graphicsDevice);
 
@@ -427,6 +419,22 @@ namespace Editor.Game
                 throw new InvalidOperationException("Invalid hex representation of an ARGB or RGB color value.");
             }
             return color;
+        }
+
+        /// <summary>
+        /// Singleton Code
+        /// </summary>
+        private static CConsole instance = null;
+        private static readonly object myLock = new object();
+
+        private CConsole() { }
+        public static CConsole getInstance()
+        {
+            lock (myLock)
+            {
+                if (instance == null) instance = new CConsole();
+                return instance;
+            }
         }
 
     }
