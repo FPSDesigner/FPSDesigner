@@ -26,6 +26,8 @@ namespace Editor.Display3D
         private Vector3 _translation;
         private Vector3 _up;
 
+        private Point _middleScreen;
+
         private Game.Settings.CGameSettings _gameSettings;
 
         // Rotations angles
@@ -37,7 +39,11 @@ namespace Editor.Display3D
         private float _cameraVelocity;
         private float _aspectRatio;
 
+        private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
+        private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
+
         private GraphicsDevice _graphics;
+        private Game.CConsole console = Game.CConsole.getInstance();
 
 
         /// <summary>
@@ -62,9 +68,13 @@ namespace Editor.Display3D
             this._cameraPos = cameraPos;
             this._cameraTarget = target;
 
-            this._up = Vector3.Up;
+            this._pitch = 0f;
+            this._yaw = 0f;
 
+            this._up = Vector3.Up;
             this._translation = Vector3.Zero;
+
+            this._middleScreen = new Point(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
 
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
 
@@ -95,7 +105,7 @@ namespace Editor.Display3D
         /// <param name="mouseState">Current mouseState</param>
         private void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
         {
-            Mouse.SetPosition(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2); 
+            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y); 
             Rotation(mouseState, gametime);
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
 
@@ -128,11 +138,13 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         private void Rotation(MouseState mouseState, GameTime gametime)
         {
-            float targetYaw = this._yaw - ((float)mouseState.X - (float)_graphics.Viewport.Width / 2);
-            float targetPitch = this._pitch - ((float)mouseState.Y - (float)_graphics.Viewport.Height / 2);
+            this._yaw -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
+            this._pitch -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
 
-            this._yaw = MathHelper.SmoothStep(_yaw, targetYaw, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
-            this._pitch = MathHelper.SmoothStep(_pitch, targetPitch, _gameSettings._gameSettings.KeyMapping.MouseSensibility);
+            if (this._pitch < lowestPitchAngle)
+                this._pitch = lowestPitchAngle;
+            else if (this._pitch > highestPitchAngle)
+                this._pitch = highestPitchAngle;
         }
 
 
