@@ -23,7 +23,7 @@ namespace Editor
         Game.CGameManagement GameManagement; // Class Created to relieving main's Class
 
         Game.LevelInfo.CLevelInfo levelInfo;
-        
+
         Display2D.C2DEffect C2DEffect;
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
@@ -71,19 +71,22 @@ namespace Editor
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState kbState = Keyboard.GetState(); 
-            MouseState mouseState = Mouse.GetState();
-            
-            // Quit program when 'Escape' key is pressed
-            if (kbState.IsKeyDown(Keys.Escape))
-                this.Exit();
+            if (base.IsActive)
+            {
+                KeyboardState kbState = Keyboard.GetState();
+                MouseState mouseState = Mouse.GetState();
 
-            GameManagement.Update(gameTime, kbState, mouseState);
+                // Quit program when 'Escape' key is pressed
+                if (kbState.IsKeyDown(Keys.Escape))
+                    this.Exit();
 
-            C2DEffect.Update(gameTime);
+                GameManagement.Update(gameTime, kbState, mouseState);
 
-            oldKeyboardState = kbState;
-            base.Update(gameTime);
+                C2DEffect.Update(gameTime);
+
+                oldKeyboardState = kbState;
+                base.Update(gameTime);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
