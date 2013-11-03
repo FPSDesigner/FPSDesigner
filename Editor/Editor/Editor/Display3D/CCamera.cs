@@ -125,7 +125,7 @@ namespace Editor.Display3D
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                 _translation += Vector3.Right;
 
-            _translation = _translation * gametime.ElapsedGameTime.Milliseconds;
+            _translation = _translation * gametime.ElapsedGameTime.Milliseconds * _cameraVelocity;
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
             _cameraTarget = _cameraPos + forward;

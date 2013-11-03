@@ -93,6 +93,7 @@
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CXMLManager.cs" />
     <Compile Include="Game\CGameManagement.cs" />
+    <Compile Include="Game\Skybox.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

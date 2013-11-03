@@ -55,7 +55,7 @@ namespace Editor
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            GameManagement.loadContent(Content, GraphicsDevice, spriteBatch);
+            GameManagement.loadContent(Content, GraphicsDevice, spriteBatch, graphics);
 
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);

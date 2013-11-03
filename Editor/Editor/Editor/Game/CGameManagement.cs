@@ -28,8 +28,11 @@ namespace Editor.Game
         Game.CGameStateManager _currentState;
 
         private Game.CConsole devConsole;
-
         private Game.Settings.CGameSettings gameSettings;
+        private GraphicsDeviceManager _graphics;
+
+
+        Game.Skybox skybox;
         
         /// <summary>
         /// Constructor, Initialize the class
@@ -48,15 +51,19 @@ namespace Editor.Game
         /// <param name="content">ContentManager class</param>
         /// <param name="graphics">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
-        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch)
+        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice2)
         {
-            model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(1.0f, 1.0f, 1.0f), graphics);
-            cam = new Display3D.CCamera(graphics, new Vector3(100f, 250f, 2000f), new Vector3(-100.0f, -250.0f, -2000.0f), 0.1f, 10000.0f, 1.0f);
+            _graphics = graphicsDevice2;
+
+            model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            cam = new Display3D.CCamera(graphics, new Vector3(10f, 0f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.01f);
 
             gameSettings.loadDatas(graphics);
 
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
+
+            skybox = new Skybox("Textures/Sunset", 500f, content);
         }
 
         public void unloadContent(ContentManager content)
@@ -74,6 +81,15 @@ namespace Editor.Game
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+
+            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
+            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
+
             model.Draw(cam._view, cam._projection);
 
             devConsole.Draw(gameTime);
