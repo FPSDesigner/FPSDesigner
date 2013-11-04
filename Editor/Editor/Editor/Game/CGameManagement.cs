@@ -90,7 +90,8 @@ namespace Editor.Game
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
 
-            model.Draw(cam._view, cam._projection);
+            if (cam.BoundingVolumeIsInView(model.BoundingSphere))
+                model.Draw(cam._view, cam._projection);
 
             devConsole.Draw(gameTime);
         }

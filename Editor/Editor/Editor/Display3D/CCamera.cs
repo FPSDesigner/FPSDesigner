@@ -45,6 +45,7 @@ namespace Editor.Display3D
         private GraphicsDevice _graphics;
         private Game.CConsole console = Game.CConsole.getInstance();
 
+        public BoundingFrustum Frustum { get; private set; }
 
         /// <summary>
         /// Initialize the class
@@ -95,6 +96,7 @@ namespace Editor.Display3D
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _aspectRatio, _nearClip, _farClip);
 
+            generateFrustum();
         }
 
         /// <summary>
@@ -147,6 +149,33 @@ namespace Editor.Display3D
                 this._pitch = highestPitchAngle;
         }
 
+        /// <summary>
+        /// Checks if a BoundingSphere is in view
+        /// </summary>
+        /// <param name="sphere">Sphere to check if it is in view</param>
+        /// <returns></returns>
+        public bool BoundingVolumeIsInView(BoundingSphere sphere)
+        {
+            return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
+        }
 
+        /// <summary>
+        /// Checks if a BoundingBox is in view
+        /// </summary>
+        /// <param name="box">Box to check if it is in view</param>
+        /// <returns></returns>
+        public bool BoundingVolumeIsInView(BoundingBox box)
+        {
+            return (Frustum.Contains(box) != ContainmentType.Disjoint);
+        }
+
+        /// <summary>
+        /// Generates a Frustum using the view and projection matrices
+        /// </summary>
+        private void generateFrustum()
+        {
+            Matrix viewProjection = _view * _projection;
+            Frustum = new BoundingFrustum(viewProjection);
+        }
     }
 }

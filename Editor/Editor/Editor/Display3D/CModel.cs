@@ -23,8 +23,22 @@ namespace Editor.Display3D
         public Model _model { get; private set; }
  
         private Matrix[] _modelTransforms;
- 
         private GraphicsDevice _graphicsDevice;
+        private BoundingSphere boundingSphere;
+
+        public BoundingSphere BoundingSphere
+        {
+            get
+            {
+                Matrix worldTransform = Matrix.CreateScale(_modelScale)
+                    * Matrix.CreateTranslation(_modelPosition);
+
+                BoundingSphere transformed = boundingSphere;
+                transformed = transformed.Transform(worldTransform);
+
+                return transformed;
+            }
+        }
  
         /// <summary>
         /// Initialize the model class
@@ -44,6 +58,8 @@ namespace Editor.Display3D
  
             _modelTransforms = new Matrix[model.Bones.Count];
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
+
+            buildBoundingSphere();
  
             this._graphicsDevice = device;
         }
@@ -75,6 +91,25 @@ namespace Editor.Display3D
 
                 mesh.Draw();
             }
+        }
+
+        /// <summary>
+        /// Creates the bounding sphere associated to the model
+        /// </summary>
+        private void buildBoundingSphere()
+        {
+            BoundingSphere sphere = new BoundingSphere(Vector3.Zero, 0);
+
+            // Merge all the model's built in bounding spheres
+            foreach (ModelMesh mesh in _model.Meshes)
+            {
+                BoundingSphere transformed = mesh.BoundingSphere.Transform(
+                    _modelTransforms[mesh.ParentBone.Index]);
+
+                sphere = BoundingSphere.CreateMerged(sphere, transformed);
+            }
+
+            this.boundingSphere = sphere;
         }
     }
 }
