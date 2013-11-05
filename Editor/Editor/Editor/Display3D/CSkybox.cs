@@ -6,12 +6,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace Editor.Game
+namespace Editor.Display3D
 {
     /// <summary>
     /// Handles all of the aspects of working with a skybox.
     /// </summary>
-    public class Skybox
+    public class CSkybox
     {
         /// <summary>
         /// The skybox model, which will just be a cube
@@ -38,7 +38,7 @@ namespace Editor.Game
         /// Creates a new skybox
         /// </summary>
         /// <param name="skyboxTexture">the name of the skybox texture to use</param>
-        public Skybox(string skyboxTexture, float size, ContentManager Content)
+        public CSkybox(string skyboxTexture, float size, ContentManager Content)
         {
             skyBox = Content.Load<Model>("3D/SkyBox");
             skyBoxTexture = Content.Load<TextureCube>(skyboxTexture);

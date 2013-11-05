@@ -32,7 +32,8 @@ namespace Editor.Game
         private GraphicsDeviceManager _graphics;
 
 
-        Game.Skybox skybox;
+        Display3D.CSkybox skybox;
+        Display3D.CTerrain terrain;
         
         /// <summary>
         /// Constructor, Initialize the class
@@ -55,15 +56,17 @@ namespace Editor.Game
         {
             _graphics = graphicsDevice2;
 
-            model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 0, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            cam = new Display3D.CCamera(graphics, new Vector3(10f, 0f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.01f);
+            model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
 
             gameSettings.loadDatas(graphics);
 
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
-            skybox = new Skybox("Textures/Sunset", 500f, content);
+            skybox = new Display3D.CSkybox("Textures/Sunset", 500f, content);
+            terrain = new Display3D.CTerrain();
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 10, content.Load<Texture2D>("Textures/terrain_grass"), 5, new Vector3(1, -1, 0), graphics, content);
         }
 
         public void unloadContent(ContentManager content)
@@ -86,9 +89,12 @@ namespace Editor.Game
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
+
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
+            terrain.Draw(cam._view, cam._projection);
 
             if (cam.BoundingVolumeIsInView(model.BoundingSphere))
                 model.Draw(cam._view, cam._projection);
