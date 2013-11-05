@@ -29,12 +29,13 @@ namespace Editor.Game
 
         private Game.CConsole devConsole;
         private Game.Settings.CGameSettings gameSettings;
-        private GraphicsDeviceManager _graphics;
-
+        private GraphicsDeviceManager _graphicsManager;
+        private GraphicsDevice _graphics;
+        private MouseState _oldMouseState;
 
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
-        
+
         /// <summary>
         /// Constructor, Initialize the class
         /// </summary>
@@ -52,9 +53,10 @@ namespace Editor.Game
         /// <param name="content">ContentManager class</param>
         /// <param name="graphics">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
-        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice2)
+        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice)
         {
-            _graphics = graphicsDevice2;
+            _graphicsManager = graphicsDevice;
+            _graphics = graphics;
 
             model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
             cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
@@ -66,7 +68,7 @@ namespace Editor.Game
 
             skybox = new Display3D.CSkybox("Textures/Sunset", 500f, content);
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 10, content.Load<Texture2D>("Textures/terrain_grass"), 5, new Vector3(1, -1, 0), graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 10, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
         }
 
         public void unloadContent(ContentManager content)
@@ -80,19 +82,27 @@ namespace Editor.Game
             cam.Update(gameTime, kbState, mouseState);
 
             devConsole.Update(kbState, gameTime);
+
+            if (_oldMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed)
+            {
+                Vector3 pos = terrain.Pick(_graphics, cam._view, cam._projection, _graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
+                devConsole.addMessage("Terrain Pick: " + pos);
+                model._modelPosition = pos;
+            }
+            _oldMouseState = mouseState;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
 
-            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            RasterizerState originalRasterizerState = _graphicsManager.GraphicsDevice.RasterizerState;
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
-            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            _graphicsManager.GraphicsDevice.RasterizerState = rasterizerState;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+            _graphicsManager.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             terrain.Draw(cam._view, cam._projection);
 
@@ -101,5 +111,7 @@ namespace Editor.Game
 
             devConsole.Draw(gameTime);
         }
+
+
     }
 }

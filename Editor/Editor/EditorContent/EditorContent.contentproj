@@ -107,15 +107,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\terrain_grass.bmp">
-      <Name>terrain_grass</Name>
+    <Compile Include="Textures\Heightmap.bmp">
+      <Name>Heightmap</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Heightmap.bmp">
-      <Name>Heightmap</Name>
+    <Compile Include="Textures\terrain_grass.jpg">
+      <Name>terrain_grass</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
