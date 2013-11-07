@@ -83,9 +83,6 @@ namespace Editor.Game
 
             devConsole.Update(kbState, gameTime);
 
-            Vector3 pos = terrain.Pick(_graphics, cam._view, cam._projection, _graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
-            model._modelPosition = pos;
-
             _oldMouseState = mouseState;
         }
 

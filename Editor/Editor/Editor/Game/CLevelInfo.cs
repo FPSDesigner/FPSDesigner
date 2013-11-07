@@ -36,7 +36,8 @@ namespace Editor.Game.LevelInfo
         public Properties Properties { get; set; }
         public MapTerrain MapTerrain { get; set; }
         public MapModels MapModels { get; set; }
-        public ContentFiles ContentFiles { get; set; }
+        public GameFiles GameFiles { get; set; }
+        public GameMenu GameMenu { get; set; }
     }
 
 
@@ -95,10 +96,8 @@ namespace Editor.Game.LevelInfo
     #endregion
 
 
-    #region "Node - ContentFiles"
-
-    // Content Files to load
-    public class ContentFiles
+    #region "Node - GameFiles"
+    public class GameFiles
     {
         [XmlElement("Texture")]
         public string[] Texture { get; set; }
@@ -111,19 +110,91 @@ namespace Editor.Game.LevelInfo
     }
     #endregion
 
+    #region "Node - Menu"
 
+    // 2D Menu
+    public class GameMenu
+    {
+        public string Type { get; set; }
+        public string BackgroundMusic { get; set; }
+        public string BGImageFile { get; set; }
+
+        public ButtonsInfo ButtonsInfo { get; set; }
+    }
+
+
+    // 3D Models - Model - Info
+    public class ButtonsInfo
+    {
+        public string ButtonsImages { get; set; }
+        public MenuButton[] MenuButton { get; set; }
+    }
+
+    public class MenuButton
+    {
+        public int Action { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public int ImgPosX { get; set; }
+        public int ImgPosY { get; set; }
+        public int SizeX { get; set; }
+        public int SizeY { get; set; }
+    }
+
+    #endregion
+
+
+    // TODO: Add all the nodes to the example
     #region Examples
-    /*Game.LevelInfo.LevelData dataToSerialize = new Game.LevelInfo.LevelData
+    /*
+    Game.LevelInfo.LevelData dataToSerialize = new Game.LevelInfo.LevelData
     {
         Properties = new Game.LevelInfo.Properties
         {
             Author = "Author",
-            levelName = "LevelName"
+            levelName = "LevelName",
+            lastEditionDate = "07/11/2013, 21:44"
         },
-        ContentFiles = new Game.LevelInfo.ContentFiles
+        MapTerrain = new Game.LevelInfo.MapTerrain
+        {
+            heightmapFile = "Folder/Heightmap.bmp",
+            textureFile = "Folder/TexturesMap.bmp"
+        },
+        MapModels = new Game.LevelInfo.MapModels
+        {
+            MapModels_Model = new Game.LevelInfo.MapModels_Model
+            {
+                MapModels_Model_Info = new Game.LevelInfo.MapModels_Model_Info
+                {
+                    ModelID = "building.fbx"
+                },
+                MapModels_Model_Position = new Game.LevelInfo.MapModels_Model_Position
+                {
+                    X = 0.54f,
+                    Y = 21.1f,
+                    Z = 32.0f,
+                }
+            }
+        },
+        GameFiles = new Game.LevelInfo.GameFiles
         {
             Texture = new[] { "Content/Texture1.fbx", "Content/Texture2.fbx" },
             Texture2D = new[] { "Content/2D/Texture1.fbx", "Content/2D/Texture2.fbx" }
+        },
+        GameMenu = new Game.LevelInfo.GameMenu
+        {
+            Type = "Image",
+            BackgroundMusic = "sound.wav",
+            BGImageFile = "Background.jpg",
+            ButtonsInfo = new Game.LevelInfo.ButtonsInfo
+            {
+                ButtonsImages = "Images/Buttons.png",
+                MenuButton = new Game.LevelInfo.MenuButton[]
+                {
+                    new Game.LevelInfo.MenuButton {Action = 0, PosX = 10, PosY = 20},
+                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 100, PosY = 200},
+                }
+            }
         }
     };
     */
