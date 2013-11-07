@@ -66,9 +66,9 @@ namespace Editor.Game
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
-            skybox = new Display3D.CSkybox("Textures/Sunset", 500f, content);
+            skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 10, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
         }
 
         public void unloadContent(ContentManager content)
@@ -83,12 +83,9 @@ namespace Editor.Game
 
             devConsole.Update(kbState, gameTime);
 
-            if (_oldMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed)
-            {
-                Vector3 pos = terrain.Pick(_graphics, cam._view, cam._projection, _graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
-                devConsole.addMessage("Terrain Pick: " + pos);
-                model._modelPosition = pos;
-            }
+            Vector3 pos = terrain.Pick(_graphics, cam._view, cam._projection, _graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
+            model._modelPosition = pos;
+
             _oldMouseState = mouseState;
         }
 

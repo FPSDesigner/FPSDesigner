@@ -247,14 +247,17 @@ namespace Editor.Display3D
                 nVertices, 0, nIndices / 3);
         }
 
+
+
         /// <summary>
         /// Get the position on the terrain from a screen position
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="view"></param>
-        /// <param name="projection"></param>
-        /// <param name="currentMouseState"></param>
-        /// <returns></returns>
+        /// <param name="device">Graphics Device</param>
+        /// <param name="view">View Matrix</param>
+        /// <param name="projection">Projection Matrix</param>
+        /// <param name="X">The X screen position</param>
+        /// <param name="Y">The Y screen position</param>
+        /// <returns>The position on the terrain</returns>
         public Vector3 Pick(GraphicsDevice device, Matrix view, Matrix projection, int X, int Y)
         {
             Vector3 NearestPoint = Vector3.Zero;
@@ -262,37 +265,30 @@ namespace Editor.Display3D
             Vector3 nearSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MinDepth), projection, view, World);
             Vector3 farSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MaxDepth), projection, view, World);
             Vector3 direction = farSource - nearSource;
+            Point terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);
 
-            float zFactor = 0 / direction.Y;
-            Vector3 zeroWorldPoint = nearSource + direction * zFactor;
-            Ray ray = new Ray(zeroWorldPoint, direction);
-            double distance;
-            double ShortestDistance = 0;
-            bool firstPass = true;
+            float t = 0f;
 
-            for (int x = 0; x < width; x++)
+            while (true)
             {
-                for (int z = 0; z < length; z++)
-                {
-                    var position = new Vector3(); /// Converter para getData de vertexBuffer
-                    position.X = 1.0f * (x - ((width - 1) / 2.0f));
-                    position.Y = (heights[x, z] - 1);
-                    position.Z = 1.0f * (z - ((length - 1) / 2.0f));
+                t += 0.0001f;
 
-                    BoundingBox tmp = BoundingBox.CreateFromSphere(new BoundingSphere(position, 1.0f));
-                    if (ray.Intersects(tmp) != null)
-                    {
-                        // Calculate the distance from us to the surface and keep the closest distance.
-                        // Note that we don't really need to calculate the squares and hypotenuse to be useful (I think).
-                        // TO BE OPTIMIZED
-                        distance = (Math.Abs(position.X - zeroWorldPoint.X) + Math.Abs(position.Y - zeroWorldPoint.Y) + Math.Abs(position.Z - zeroWorldPoint.Z));
-                        if (firstPass == true || distance < ShortestDistance)
-                        {
-                            firstPass = false;
-                            return position;
-                        }
-                    }
-                }
+                float XPos = nearSource.X + direction.X * t;
+                int IndWidth = terrainMiddle.X + (int)XPos;
+
+
+                float ZPos = nearSource.Z + direction.Z * t;
+                int IndLength = terrainMiddle.Y + (int)ZPos;
+
+                if (IndWidth >= width || IndWidth < 0 || IndLength >= length || IndLength < 0)
+                    break;
+
+                float YPos = nearSource.Y + direction.Y * t;
+                float IndHeight = heights[IndWidth, IndLength];
+
+
+                if (IndHeight >= YPos)
+                    return new Vector3(XPos, YPos, ZPos);
             }
 
             return Vector3.Zero;
