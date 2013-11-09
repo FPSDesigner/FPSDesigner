@@ -35,6 +35,7 @@ namespace Editor.Game
 
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
+        Display3D.CLensFlare lensFlare;
 
         /// <summary>
         /// Constructor, Initialize the class
@@ -45,6 +46,8 @@ namespace Editor.Game
 
             devConsole = Game.CConsole.getInstance();
             gameSettings = Game.Settings.CGameSettings.getInstance();
+
+            lensFlare = new Display3D.CLensFlare();
         }
 
         /// <summary>
@@ -69,6 +72,10 @@ namespace Editor.Game
             skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
             terrain = new Display3D.CTerrain();
             terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
+
+            lensFlare.LoadContent(content, graphics, spriteBatch);
+            
+            
         }
 
         public void unloadContent(ContentManager content)
@@ -89,20 +96,22 @@ namespace Editor.Game
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
 
-            RasterizerState originalRasterizerState = _graphicsManager.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            _graphicsManager.GraphicsDevice.RasterizerState = rasterizerState;
-
-            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
-
-            _graphicsManager.GraphicsDevice.RasterizerState = originalRasterizerState;
-
             terrain.Draw(cam._view, cam._projection);
 
             if (cam.BoundingVolumeIsInView(model.BoundingSphere))
                 model.Draw(cam._view, cam._projection);
 
+            lensFlare.UpdateOcclusion(cam._view, cam._projection);
+            
+            RasterizerState originalRasterizerState = _graphicsManager.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            _graphicsManager.GraphicsDevice.RasterizerState = rasterizerState;
+            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
+            _graphicsManager.GraphicsDevice.RasterizerState = originalRasterizerState;
+
+
+            lensFlare.Draw(gameTime);
             devConsole.Draw(gameTime);
         }
 
