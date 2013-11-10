@@ -35,6 +35,13 @@ namespace Editor.Display3D
         private float size = 500f;
 
         /// <summary>
+        /// Defines the color intensity of the skybox.
+        /// 0 = dark, 1 = colorful
+        /// Useful for night/day cycles
+        /// </summary>
+        public float colorIntensity = 1.0f;
+
+        /// <summary>
         /// Creates a new skybox
         /// </summary>
         /// <param name="skyboxTexture">the name of the skybox texture to use</param>
@@ -75,6 +82,7 @@ namespace Editor.Display3D
                         part.Effect.Parameters["Projection"].SetValue(projection);
                         part.Effect.Parameters["SkyBoxTexture"].SetValue(skyBoxTexture);
                         part.Effect.Parameters["CameraPosition"].SetValue(cameraPosition);
+                        part.Effect.Parameters["Intensity"].SetValue(colorIntensity);
                     }
 
                     // Draw the mesh with the skybox effect

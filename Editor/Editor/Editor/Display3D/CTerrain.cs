@@ -54,6 +54,11 @@ namespace Editor.Display3D
         // World matrix contains scale, position, rotation...
         Matrix World;
 
+        public Texture2D RTexture, BTexture, GTexture, WeightMap;
+        public Texture2D DetailTexture;
+        public float DetailDistance = 2500;
+        public float DetailTextureTiling = 100;
+
 
         /// <summary>
         /// Constructor
@@ -229,7 +234,7 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="View">The camera View matrix</param>
         /// <param name="Projection">The camera Projection matrix</param>
-        public void Draw(Matrix View, Matrix Projection)
+        public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
@@ -239,6 +244,15 @@ namespace Editor.Display3D
             effect.Parameters["BaseTexture"].SetValue(baseTexture);
             effect.Parameters["TextureTiling"].SetValue(textureTiling);
             effect.Parameters["LightDirection"].SetValue(lightDirection);
+
+            effect.Parameters["RTexture"].SetValue(RTexture);
+            effect.Parameters["GTexture"].SetValue(GTexture);
+            effect.Parameters["BTexture"].SetValue(BTexture);
+            effect.Parameters["WeightMap"].SetValue(WeightMap);
+
+            effect.Parameters["DetailTexture"].SetValue(DetailTexture);
+            effect.Parameters["DetailDistance"].SetValue(DetailDistance);
+            effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
 
             effect.Techniques[0].Passes[0].Apply();
 

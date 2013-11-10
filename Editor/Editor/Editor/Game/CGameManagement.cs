@@ -73,7 +73,12 @@ namespace Editor.Game
             skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 0, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
+            terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
+            terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
+            terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
+            terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
+            terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             model._lightDirection = lensFlare.LightDirection;
         }
@@ -90,12 +95,51 @@ namespace Editor.Game
             devConsole.Update(kbState, gameTime);
 
             _oldMouseState = mouseState;
+
+            if (kbState.IsKeyDown(Keys.Down))
+            {
+                lensFlare.LightDirection.X -= 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            if (kbState.IsKeyDown(Keys.Up))
+            {
+                lensFlare.LightDirection.X += 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            if (kbState.IsKeyDown(Keys.Right))
+            {
+                lensFlare.LightDirection.Z += 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            if (kbState.IsKeyDown(Keys.Left))
+            {
+                lensFlare.LightDirection.Z -= 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            if (kbState.IsKeyDown(Keys.PageDown))
+            {
+                lensFlare.LightDirection.Y -= 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            if (kbState.IsKeyDown(Keys.PageUp))
+            {
+                lensFlare.LightDirection.Y += 0.001f;
+                terrain.lightDirection = lensFlare.LightDirection;
+            }
+            float intensity = (lensFlare.LightDirection.Y > 0) ? 0.1f : -lensFlare.LightDirection.Y*10;
+            if (intensity > 1)
+                intensity = 1;
+            else if(intensity < 0.1f)
+                intensity = 0.1f;
+            string state = (lensFlare.LightDirection.Y > 0) ? "Nuit" : "Jour";
+            devConsole.addMessage(lensFlare.LightDirection + " - " + state);
+            skybox.colorIntensity = intensity;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
 
-            terrain.Draw(cam._view, cam._projection);
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             if (cam.BoundingVolumeIsInView(model.BoundingSphere))
                 model.Draw(cam._view, cam._projection, cam._cameraPos);
