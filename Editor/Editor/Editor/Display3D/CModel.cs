@@ -19,12 +19,15 @@ namespace Editor.Display3D
         public Vector3 _modelPosition{ get ; set; }
         public Vector3 _modelRotation { get; set; }
         public Vector3 _modelScale { get; set; }
+        public Vector3 _lightDirection { get; set; }
  
         public Model _model { get; private set; }
  
         private Matrix[] _modelTransforms;
         private GraphicsDevice _graphicsDevice;
         private BoundingSphere boundingSphere;
+
+        public Materials.Material Material { get; set; }
 
         public BoundingSphere BoundingSphere
         {
@@ -60,8 +63,11 @@ namespace Editor.Display3D
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
 
             buildBoundingSphere();
- 
+            generateTags();
+
             this._graphicsDevice = device;
+
+            this.Material = new Materials.Material();
         }
 
         /// <summary>
@@ -69,7 +75,8 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="view">View Matrix used in CCamera class</param>
         /// <param name="projection">Projection Matrix used in CCamera class</param>
-        public void Draw(Matrix view, Matrix projection)
+        /// <param name="cameraPosition">Vector representing the camera position</param>
+        public void Draw(Matrix view, Matrix projection, Vector3 cameraPosition)
         {
             // Matrix which display the model in the world
             Matrix world = Matrix.CreateScale(_modelScale) *
@@ -78,15 +85,32 @@ namespace Editor.Display3D
 
             foreach (ModelMesh mesh in _model.Meshes)
             {
-                foreach (ModelMeshPart meshParts in mesh.MeshParts)
-                {
-                    Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
-                    BasicEffect effect = (BasicEffect)meshParts.Effect;
-                    effect.World = localWorld;
-                    effect.View = view;
-                    effect.Projection = projection;
+                Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
 
-                    effect.EnableDefaultLighting();
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                {
+                    Effect effect = meshPart.Effect;
+
+                    if (effect is BasicEffect)
+                    {
+                        ((BasicEffect)effect).World = localWorld;
+                        ((BasicEffect)effect).View = view;
+                        ((BasicEffect)effect).Projection = projection;
+                        //((BasicEffect)effect).EnableDefaultLighting();
+                        ((BasicEffect)effect).LightingEnabled = true; // turn on the lighting subsystem.
+                        ((BasicEffect)effect).DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1); // a red light
+                        ((BasicEffect)effect).DirectionalLight0.Direction = _lightDirection;  // coming along the x-axis
+                        ((BasicEffect)effect).DirectionalLight0.SpecularColor = new Vector3(1, 1, 1); // with green highlights
+                    }
+                    else
+                    {
+                        setEffectParameter(effect, "World", localWorld);
+                        setEffectParameter(effect, "View", view);
+                        setEffectParameter(effect, "Projection", projection);
+                        setEffectParameter(effect, "CameraPosition", cameraPosition);
+
+                        Material.SetEffectParameters(effect);
+                    }
                 }
 
                 mesh.Draw();
@@ -110,6 +134,115 @@ namespace Editor.Display3D
             }
 
             this.boundingSphere = sphere;
+        }
+
+
+        /// <summary>
+        /// Set to the specified effet the parameter given
+        /// </summary>
+        /// <param name="effect">The effect the parameter is applied to</param>
+        /// <param name="paramName">The parameter name</param>
+        /// <param name="val">The parameter value</param>
+        void setEffectParameter(Effect effect, string paramName, object val)
+        {
+            if (effect.Parameters[paramName] == null)
+                return;
+
+            if (val is Vector3)
+                effect.Parameters[paramName].SetValue((Vector3)val);
+            else if (val is bool)
+                effect.Parameters[paramName].SetValue((bool)val);
+            else if (val is Matrix)
+                effect.Parameters[paramName].SetValue((Matrix)val);
+            else if (val is Texture2D)
+                effect.Parameters[paramName].SetValue((Texture2D)val);
+        }
+
+        /// <summary>
+        /// Sets a specific effect to a model
+        /// </summary>
+        /// <param name="effect">The effect to apply to the model</param>
+        /// <param name="CopyEffect">Wether or not we copy the effect</param>
+        public void SetModelEffect(Effect effect, bool CopyEffect)
+        {
+            foreach (ModelMesh mesh in _model.Meshes)
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    Effect toSet = effect;
+
+                    // Copy the effect if necessary
+                    if (CopyEffect)
+                        toSet = effect.Clone();
+
+                    MeshTag tag = ((MeshTag)part.Tag);
+
+                    // If this ModelMeshPart has a texture, set it to the effect
+                    if (tag.Texture != null)
+                    {
+                        setEffectParameter(toSet, "BasicTexture", tag.Texture);
+                        setEffectParameter(toSet, "TextureEnabled", true);
+                    }
+                    else
+                        setEffectParameter(toSet, "TextureEnabled", false);
+
+                    // Set our remaining parameters to the effect
+                    setEffectParameter(toSet, "DiffuseColor", tag.Color);
+                    setEffectParameter(toSet, "SpecularPower", tag.SpecularPower);
+
+                    part.Effect = toSet;
+                }
+        }
+
+        /// <summary>
+        /// Generate tags
+        /// </summary>
+        private void generateTags()
+        {
+            foreach (ModelMesh mesh in _model.Meshes)
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                    if (part.Effect is BasicEffect)
+                    {
+                        BasicEffect effect = (BasicEffect)part.Effect;
+                        MeshTag tag = new MeshTag(effect.DiffuseColor,
+                            effect.Texture, effect.SpecularPower);
+                        part.Tag = tag;
+                    }
+        }
+
+        /// <summary>
+        /// Store references to all of the model's current effecs
+        /// </summary>
+        public void CacheEffects()
+        {
+            foreach (ModelMesh mesh in _model.Meshes)
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                    ((MeshTag)part.Tag).CachedEffect = part.Effect;
+        }
+
+        /// <summary>
+        /// Restore effects referenced by the model's cache
+        /// </summary>
+        public void RestoreEffects()
+        {
+            foreach (ModelMesh mesh in _model.Meshes)
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                    if (((MeshTag)part.Tag).CachedEffect != null)
+                        part.Effect = ((MeshTag)part.Tag).CachedEffect;
+        }
+    }
+
+    public class MeshTag
+    {
+        public Vector3 Color;
+        public Texture2D Texture;
+        public float SpecularPower;
+        public Effect CachedEffect = null;
+
+        public MeshTag(Vector3 Color, Texture2D Texture, float SpecularPower)
+        {
+            this.Color = Color;
+            this.Texture = Texture;
+            this.SpecularPower = SpecularPower;
         }
     }
 }

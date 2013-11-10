@@ -46,8 +46,6 @@ namespace Editor.Game
 
             devConsole = Game.CConsole.getInstance();
             gameSettings = Game.Settings.CGameSettings.getInstance();
-
-            lensFlare = new Display3D.CLensFlare();
         }
 
         /// <summary>
@@ -61,28 +59,29 @@ namespace Editor.Game
             _graphicsManager = graphicsDevice;
             _graphics = graphics;
 
-            model = new Display3D.CModel(content.Load<Model>("3D//building"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
+            model = new Display3D.CModel(content.Load<Model>("3D/building"), new Vector3(0, 45.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            cam = new Display3D.CCamera(graphics, new Vector3(0f, 50f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
 
             gameSettings.loadDatas(graphics);
 
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
-            skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
-            terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
+            lensFlare = new Display3D.CLensFlare();
+            lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
 
-            lensFlare.LoadContent(content, graphics, spriteBatch);
-            
-            
+            skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
+
+            terrain = new Display3D.CTerrain();
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, lensFlare.LightDirection, graphics, content);
+
+            model._lightDirection = lensFlare.LightDirection;
         }
 
         public void unloadContent(ContentManager content)
         {
 
         }
-
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
         {
@@ -99,7 +98,7 @@ namespace Editor.Game
             terrain.Draw(cam._view, cam._projection);
 
             if (cam.BoundingVolumeIsInView(model.BoundingSphere))
-                model.Draw(cam._view, cam._projection);
+                model.Draw(cam._view, cam._projection, cam._cameraPos);
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             

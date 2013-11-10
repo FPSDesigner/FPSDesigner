@@ -89,7 +89,7 @@ namespace Editor.Display3D
         /// <summary>
         /// Loads the content used by the lensflare component.
         /// </summary>
-        public void LoadContent(ContentManager Content, GraphicsDevice _graphicsDevice, SpriteBatch _spriteBatch)
+        public void LoadContent(ContentManager Content, GraphicsDevice _graphicsDevice, SpriteBatch _spriteBatch, Vector3 lightDirection)
         {
             spriteBatch = _spriteBatch;
 
@@ -111,7 +111,7 @@ namespace Editor.Display3D
             queryVertices[3].Position = new Vector3(querySize / 2, querySize / 2, -1);
 
             graphicsDevice = _graphicsDevice;
-
+            LightDirection = Vector3.Normalize(lightDirection);
             occlusionQuery = new OcclusionQuery(graphicsDevice);
             
         }

@@ -44,17 +44,16 @@ namespace Editor.Display3D
         // Number of vertices and indices
         int nVertices, nIndices;
 
-        /// <summary>
-        /// Classes
-        /// </summary>
+        // Classes
         Effect effect;
         GraphicsDevice GraphicsDevice;
-        Vector3 lightDirection;
+        public Vector3 lightDirection;
         Texture2D heightMap;
         Texture2D baseTexture;
 
         // World matrix contains scale, position, rotation...
         Matrix World;
+
 
         /// <summary>
         /// Constructor
