@@ -73,7 +73,7 @@ namespace Editor.Game
             skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 0, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
