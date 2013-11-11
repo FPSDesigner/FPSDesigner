@@ -92,9 +92,9 @@ namespace Editor
         protected override void Draw(GameTime gameTime)
         {
             // Capture the render
-            renderCapture.Begin();
+            //renderCapture.Begin();
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State
             GameManagement.Draw(spriteBatch, gameTime);
@@ -103,11 +103,11 @@ namespace Editor
             C2DEffect.Draw(gameTime);
 
             // End capturing
-            renderCapture.End();
+           /* renderCapture.End();
 
             // Draw the render via post processing
             postProcessor.Input = renderCapture.GetTexture();
-            postProcessor.Draw();
+            postProcessor.Draw();*/
 
             base.Draw(gameTime);
         }

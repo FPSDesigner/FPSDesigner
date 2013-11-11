@@ -36,6 +36,7 @@ namespace Editor.Game
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
+        Display3D.CWater water;
 
         /// <summary>
         /// Constructor, Initialize the class
@@ -70,7 +71,7 @@ namespace Editor.Game
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
 
-            skybox = new Display3D.CSkybox("Textures/Clouds", 500f, content);
+            skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
             terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
@@ -81,6 +82,12 @@ namespace Editor.Game
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             model._lightDirection = lensFlare.LightDirection;
+
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(10 * 30));
+            water.Objects.Add(skybox);
+            water.Objects.Add(terrain);
+            water.Objects.Add(model);
+            
         }
 
         public void unloadContent(ContentManager content)
@@ -95,66 +102,24 @@ namespace Editor.Game
             devConsole.Update(kbState, gameTime);
 
             _oldMouseState = mouseState;
-
-            if (kbState.IsKeyDown(Keys.Down))
-            {
-                lensFlare.LightDirection.X -= 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            if (kbState.IsKeyDown(Keys.Up))
-            {
-                lensFlare.LightDirection.X += 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            if (kbState.IsKeyDown(Keys.Right))
-            {
-                lensFlare.LightDirection.Z += 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            if (kbState.IsKeyDown(Keys.Left))
-            {
-                lensFlare.LightDirection.Z -= 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            if (kbState.IsKeyDown(Keys.PageDown))
-            {
-                lensFlare.LightDirection.Y -= 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            if (kbState.IsKeyDown(Keys.PageUp))
-            {
-                lensFlare.LightDirection.Y += 0.001f;
-                terrain.lightDirection = lensFlare.LightDirection;
-            }
-            float intensity = (lensFlare.LightDirection.Y > 0) ? 0.1f : -lensFlare.LightDirection.Y*10;
-            if (intensity > 1)
-                intensity = 1;
-            else if(intensity < 0.1f)
-                intensity = 0.1f;
-            string state = (lensFlare.LightDirection.Y > 0) ? "Nuit" : "Jour";
-            devConsole.addMessage(lensFlare.LightDirection + " - " + state);
-            skybox.colorIntensity = intensity;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            water.PreDraw(cam, gameTime);
+
+            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             if (cam.BoundingVolumeIsInView(model.BoundingSphere))
                 model.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            water.Draw(cam._view, cam._projection, cam._cameraPos);
+
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
-            
-            RasterizerState originalRasterizerState = _graphicsManager.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            _graphicsManager.GraphicsDevice.RasterizerState = rasterizerState;
-            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
-            _graphicsManager.GraphicsDevice.RasterizerState = originalRasterizerState;
-
-
             lensFlare.Draw(gameTime);
+
             devConsole.Draw(gameTime);
         }
 

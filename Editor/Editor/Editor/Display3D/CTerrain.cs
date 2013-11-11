@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
-    class CTerrain
+    class CTerrain : IRenderable
     {
         /// <summary>
         /// Variables
@@ -261,6 +261,13 @@ namespace Editor.Display3D
         }
 
 
+        public void SetClipPlane(Vector4? Plane)
+        {
+            effect.Parameters["ClipPlaneEnabled"].SetValue(Plane.HasValue);
+
+            if (Plane.HasValue)
+                effect.Parameters["ClipPlane"].SetValue(Plane.Value);
+        }
 
         /// <summary>
         /// Get the position on the terrain from a screen position
@@ -305,6 +312,48 @@ namespace Editor.Display3D
             }
 
             return Vector3.Zero;
+        }
+
+
+        public float GetHeightAtPosition(float X, float Z, out float Steepness)
+        {
+            // Clamp coordinates to locations on terrain
+            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
+                (width / 2) * cellSize);
+            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
+                (length / 2) * cellSize);
+
+            // Map from (-Width/2->Width/2,-Length/2->Length/2) 
+            // to (0->Width, 0->Length)
+            X += (width / 2f) * cellSize;
+            Z += (length / 2f) * cellSize;
+
+            // Map to cell coordinates
+            X /= cellSize;
+            Z /= cellSize;
+
+            // Truncate coordinates to get coordinates of top left cell vertex
+            int x1 = (int)X;
+            int z1 = (int)Z;
+
+            // Try to get coordinates of bottom right cell vertex
+            int x2 = x1 + 1 == width ? x1 : x1 + 1;
+            int z2 = z1 + 1 == length ? z1 : z1 + 1;
+
+            // Get the heights at the two corners of the cell
+            float h1 = heights[x1, z1];
+            float h2 = heights[x2, z2];
+
+            // Determine steepness (angle between higher and lower vertex of cell)
+            Steepness = (float)Math.Atan(Math.Abs((h1 - h2)) /
+                (cellSize * Math.Sqrt(2)));
+
+            // Find the average of the amounts lost from coordinates during 
+            // truncation above
+            float leftOver = ((X - x1) + (Z - z1)) / 2f;
+
+            // Interpolate between the corner vertices' heights
+            return MathHelper.Lerp(h1, h2, leftOver);
         }
     }
 }

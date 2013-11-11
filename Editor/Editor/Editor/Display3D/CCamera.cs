@@ -30,6 +30,8 @@ namespace Editor.Display3D
 
         private Game.Settings.CGameSettings _gameSettings;
 
+        private bool isCamFrozen = false;
+
         // Rotations angles
         public float _yaw { get; private set; }
         public float _pitch { get; private set; }
@@ -56,7 +58,7 @@ namespace Editor.Display3D
         /// <param name="nearClip">Closest elements to be rendered</param>
         /// <param name="farClip">Farthest elements to be rentered</param>
         /// <param name="camVelocity">Camera movement speed</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity, bool isCamFrozen = false)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -71,6 +73,8 @@ namespace Editor.Display3D
 
             this._pitch = 0f;
             this._yaw = 0f;
+
+            this.isCamFrozen = isCamFrozen;
 
             this._up = Vector3.Up;
             this._translation = Vector3.Zero;
@@ -89,13 +93,12 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime, KeyboardState keyState, MouseState mouseState)
+        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState))
         {
-            CameraUpdates(gametime, keyState, mouseState);
-           
-            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _aspectRatio, _nearClip, _farClip);
+            if (!isCamFrozen)
+                CameraUpdates(gametime, keyState, mouseState);
 
+            _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
             generateFrustum();
         }
 

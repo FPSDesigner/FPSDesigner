@@ -14,7 +14,7 @@ namespace Editor.Display3D
     /// <summary>
     /// Load a new model to draw on the world
     /// </summary>
-    class CModel
+    class CModel : IRenderable
     {
         public Vector3 _modelPosition{ get ; set; }
         public Vector3 _modelRotation { get; set; }
@@ -22,6 +22,8 @@ namespace Editor.Display3D
         public Vector3 _lightDirection { get; set; }
  
         public Model _model { get; private set; }
+
+        public float Alpha = 1.0f;
  
         private Matrix[] _modelTransforms;
         private GraphicsDevice _graphicsDevice;
@@ -51,13 +53,14 @@ namespace Editor.Display3D
         /// <param name="modelRotation">Rotation of the model</param>
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
-        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device)
+        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, float alpha = 1.0f)
         {
             this._model = model;
  
             this._modelPosition = modelPos;
             this._modelRotation = modelRotation;
             this._modelScale = modelScale;
+            this.Alpha = alpha;
  
             _modelTransforms = new Matrix[model.Bones.Count];
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
@@ -101,6 +104,7 @@ namespace Editor.Display3D
                         ((BasicEffect)effect).DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1); // a red light
                         ((BasicEffect)effect).DirectionalLight0.Direction = _lightDirection;  // coming along the x-axis
                         ((BasicEffect)effect).DirectionalLight0.SpecularColor = new Vector3(1, 1, 1); // with green highlights
+                        ((BasicEffect)effect).Alpha = Alpha;
                     }
                     else
                     {
@@ -228,6 +232,20 @@ namespace Editor.Display3D
                 foreach (ModelMeshPart part in mesh.MeshParts)
                     if (((MeshTag)part.Tag).CachedEffect != null)
                         part.Effect = ((MeshTag)part.Tag).CachedEffect;
+        }
+
+        public void SetClipPlane(Vector4? Plane)
+        {
+            foreach (ModelMesh mesh in _model.Meshes)
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    if (part.Effect.Parameters["ClipPlaneEnabled"] != null)
+                        part.Effect.Parameters["ClipPlaneEnabled"].SetValue(Plane.HasValue);
+
+                    if (Plane.HasValue)
+                        if (part.Effect.Parameters["ClipPlane"] != null)
+                            part.Effect.Parameters["ClipPlane"].SetValue(Plane.Value);
+                }
         }
     }
 

@@ -4,6 +4,9 @@ float4x4 Projection;
 float3 LightDirection = float3(1, -1, 0);
 float TextureTiling = 1;
 
+float4 ClipPlane;
+bool ClipPlaneEnabled = false;
+
 texture RTexture;
 sampler RTextureSampler = sampler_state {
 	texture = <RTexture>;
@@ -62,6 +65,7 @@ struct VertexShaderOutput
 	float2 UV : TEXCOORD0;
 	float3 Normal : TEXCOORD1;
 	float Depth : TEXCOORD2;
+	float3 WorldPosition : TEXCOORD3;
 };
 
 float DetailTextureTiling;
@@ -84,12 +88,16 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Normal = input.Normal;
 	output.UV = input.UV;
 	output.Depth = output.Position.z;
+	output.WorldPosition = input.Position;
 
     return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
+	if (ClipPlaneEnabled)
+		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
+
 	float light = dot(normalize(input.Normal), normalize(LightDirection));
 	light = clamp(light + 0.4f, 0, 1);
 
