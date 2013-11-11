@@ -234,6 +234,10 @@ namespace Editor.Display3D
                         part.Effect = ((MeshTag)part.Tag).CachedEffect;
         }
 
+        /// <summary>
+        /// Sets the clip plane for the water rendering reflection
+        /// </summary>
+        /// <param name="Plane">The plane</param>
         public void SetClipPlane(Vector4? Plane)
         {
             foreach (ModelMesh mesh in _model.Meshes)

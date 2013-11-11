@@ -103,7 +103,7 @@ namespace Editor
             C2DEffect.Draw(gameTime);
 
             // End capturing
-           /* renderCapture.End();
+            /*renderCapture.End();
 
             // Draw the render via post processing
             postProcessor.Input = renderCapture.GetTexture();

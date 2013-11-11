@@ -76,8 +76,8 @@ namespace Editor.Display3D
         /// <param name="BaseTexture">The texture to draw</param>
         /// <param name="TextureTiling">Number of texture we draw</param>
         /// <param name="LightDirection">Light Direction</param>
-        /// <param name="GraphicsDevice"></param>
-        /// <param name="Content"></param>
+        /// <param name="GraphicsDevice">The graphics Device</param>
+        /// <param name="Content">The ContentManager</param>
         public void LoadContent(Texture2D HeightMap, float CellSize, float Height, Texture2D BaseTexture, float TextureTiling, Vector3 LightDirection, GraphicsDevice GraphicsDevice, ContentManager Content)
         {
             this.baseTexture = BaseTexture;
@@ -234,6 +234,7 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="View">The camera View matrix</param>
         /// <param name="Projection">The camera Projection matrix</param>
+        /// <param name="cameraPos">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
@@ -260,7 +261,9 @@ namespace Editor.Display3D
                 nVertices, 0, nIndices / 3);
         }
 
-
+        /// <summary>
+        /// Sets the clip plane for water reflection rendereing
+        /// </summary>
         public void SetClipPlane(Vector4? Plane)
         {
             effect.Parameters["ClipPlaneEnabled"].SetValue(Plane.HasValue);
@@ -314,7 +317,13 @@ namespace Editor.Display3D
             return Vector3.Zero;
         }
 
-
+        /// <summary>
+        /// Get the terrain height at a certain position
+        /// </summary>
+        /// <param name="X">Position X</param>
+        /// <param name="Z">Position Y</param>
+        /// <param name="Steepness">The steepness at position X Z</param>
+        /// <returns>The height & steepness at position X Y</returns>
         public float GetHeightAtPosition(float X, float Z, out float Steepness)
         {
             // Clamp coordinates to locations on terrain

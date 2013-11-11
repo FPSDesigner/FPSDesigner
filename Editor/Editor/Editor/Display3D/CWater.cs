@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
 
 namespace Editor.Display3D
 {
@@ -11,7 +12,6 @@ namespace Editor.Display3D
         void SetClipPlane(Vector4? Plane);
     }
 
-    // Make Water IRenderable
     class CWater
     {
         CModel waterMesh;
@@ -22,6 +22,9 @@ namespace Editor.Display3D
 
         RenderTarget2D reflectionTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
+
+        private Vector3 waterPosition;
+        private Vector2 waterSize;
 
         float Alpha;
         public float WaterAlpha
@@ -39,6 +42,9 @@ namespace Editor.Display3D
             this.content = content;
             this.graphics = graphics;
 
+            this.waterPosition = position;
+            this.waterSize = size;
+
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
             waterEffect = content.Load<Effect>("Effects/WaterEffect");
@@ -53,6 +59,11 @@ namespace Editor.Display3D
             reflectionTarg = new RenderTarget2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
         }
 
+        /// <summary>
+        /// Renders the reflection image
+        /// </summary>
+        /// <param name="camera">Camera class</param>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void renderReflection(CCamera camera, GameTime gameTime)
         {
             // Reflect the camera's properties across the water plane
@@ -94,15 +105,42 @@ namespace Editor.Display3D
             waterEffect.Parameters["ReflectionMap"].SetValue(reflectionTarg);
         }
 
+        /// <summary>
+        /// Pre-draw the water effect: gets the reflection image
+        /// </summary>
+        /// <param name="camera">The camera class</param>
+        /// <param name="gameTime">GameTime snapshot</param>
         public void PreDraw(CCamera camera, GameTime gameTime)
         {
             renderReflection(camera, gameTime);
             waterEffect.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
         }
 
+        /// <summary>
+        /// Draw the water plane
+        /// </summary>
+        /// <param name="View">The view matrix</param>
+        /// <param name="Projection">The projection matrix</param>
+        /// <param name="CameraPosition">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 CameraPosition)
         {
             waterMesh.Draw(View, Projection, CameraPosition);
+        }
+
+        /// <summary>
+        /// Checks if a position is underwater
+        /// </summary>
+        /// <param name="Position">Vector3 to check</param>
+        /// <returns>True if the position is underwater, false otherwise</returns>
+        public bool isPositionUnderWater(Vector3 Position)
+        {
+            if (Position.Y <= waterPosition.Y)
+            {
+                if ((Position.X >= waterPosition.X - waterSize.X && Position.X <= waterPosition.X + waterSize.X) && 
+                    (Position.Z >= waterPosition.Z - waterSize.Y && Position.Z <= waterPosition.Z + waterSize.Y))
+                        return true;
+            }
+            return false;
         }
     }
 }
