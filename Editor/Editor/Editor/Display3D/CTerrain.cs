@@ -44,6 +44,8 @@ namespace Editor.Display3D
         // Number of vertices and indices
         int nVertices, nIndices;
 
+        public bool isUnderWater = false;
+
         // Classes
         Effect effect;
         GraphicsDevice GraphicsDevice;
@@ -254,6 +256,11 @@ namespace Editor.Display3D
             effect.Parameters["DetailTexture"].SetValue(DetailTexture);
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
+
+            if(isUnderWater)
+                effect.Parameters["LightIntensity"].SetValue(0.1f);
+            else
+                effect.Parameters["LightIntensity"].SetValue(1.0f);
 
             effect.Techniques[0].Passes[0].Apply();
 

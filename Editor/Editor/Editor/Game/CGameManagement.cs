@@ -106,6 +106,10 @@ namespace Editor.Game
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            bool isPlayerUnderWater = water.isPositionUnderWater(cam._cameraPos);
+            water.isUnderWater = isPlayerUnderWater;
+            terrain.isUnderWater = isPlayerUnderWater;
+
             water.PreDraw(cam, gameTime);
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);

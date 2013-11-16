@@ -3,6 +3,7 @@ float4x4 Projection;
 
 float3 LightDirection = float3(1, -1, 0);
 float TextureTiling = 1;
+float LightIntensity = 1;
 
 float4 ClipPlane;
 bool ClipPlaneEnabled = false;
@@ -98,7 +99,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	if (ClipPlaneEnabled)
 		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
 
-	float light = dot(normalize(input.Normal), normalize(LightDirection));
+	float light = dot(normalize(input.Normal), normalize(LightDirection)) * LightIntensity;
 	light = clamp(light + 0.4f, 0, 1);
 
 	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);

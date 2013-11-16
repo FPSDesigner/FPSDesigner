@@ -26,6 +26,10 @@ namespace Editor.Display3D
         private Vector3 waterPosition;
         private Vector2 waterSize;
 
+        private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
+
+        public bool isUnderWater = false;
+
         float Alpha;
         public float WaterAlpha
         {
@@ -124,6 +128,10 @@ namespace Editor.Display3D
         /// <param name="CameraPosition">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 CameraPosition)
         {
+            if (isUnderWater)
+                waterMesh._modelRotation = modelRotationUnderwater;
+            else
+                waterMesh._modelRotation = Vector3.Zero;
             waterMesh.Draw(View, Projection, CameraPosition);
         }
 
