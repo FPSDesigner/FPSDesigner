@@ -35,6 +35,11 @@ float Time = 0;
 float WaveSpeed = 0.04f;
 float Alpha = 0.9f;
 
+float FogStart = 1.5;
+float FogEnd = 5.5;
+float3 FogColor = float3(1, 1, 1);
+float FogScale = 1.2;
+
 #include "PPShared.vsi"
 
 struct VertexShaderInput
@@ -49,6 +54,7 @@ struct VertexShaderOutput
     float4 ReflectionPosition : TEXCOORD1;
     float2 NormalMapPosition : TEXCOORD2;
     float4 WorldPosition : TEXCOORD3;
+	float Depth : TEXCOORD4;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -57,7 +63,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
     float4x4 wvp = mul(World, mul(View, Projection));
     output.Position = mul(input.Position, wvp);
-    
+    output.Depth = output.Position.z;
     float4x4 rwvp = mul(World, mul(ReflectedView, Projection));
     output.ReflectionPosition = mul(input.Position, rwvp);
     
@@ -85,8 +91,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float specular = dot(normalize(reflectionVector), viewDirection);
 	specular = pow(specular, 256);
 
-	return float4(lerp(reflection, BaseColor, BaseColorAmount)
-	 + specular, Alpha);
+	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+
+	return float4(lerp((lerp(reflection, BaseColor, BaseColorAmount) + specular), FogColor, fog), Alpha);
 }
 
 technique Technique1

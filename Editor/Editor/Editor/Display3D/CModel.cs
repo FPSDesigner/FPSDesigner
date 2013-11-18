@@ -105,13 +105,18 @@ namespace Editor.Display3D
                         ((BasicEffect)effect).DirectionalLight0.Direction = _lightDirection;  // coming along the x-axis
                         ((BasicEffect)effect).DirectionalLight0.SpecularColor = new Vector3(1, 1, 1); // with green highlights
                         ((BasicEffect)effect).Alpha = Alpha;
+
+                        ((BasicEffect)effect).FogEnabled = true;
+                        ((BasicEffect)effect).FogColor = new Vector3(245, 245, 245);
+                        ((BasicEffect)effect).FogStart = 400;
+                        ((BasicEffect)effect).FogEnd = 600;  
                     }
                     else
                     {
                         setEffectParameter(effect, "World", localWorld);
                         setEffectParameter(effect, "View", view);
                         setEffectParameter(effect, "Projection", projection);
-                        setEffectParameter(effect, "CameraPosition", cameraPosition);
+                        setEffectParameter(effect, "CameraPosition", cameraPosition);  
 
                         Material.SetEffectParameters(effect);
                     }

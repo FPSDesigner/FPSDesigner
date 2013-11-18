@@ -72,6 +72,10 @@ struct VertexShaderOutput
 float DetailTextureTiling;
 float DetailDistance = 2500;
 
+float FogStart = 1.5;
+float FogEnd = 5.5;
+float3 FogColor = float3(1, 1, 1);
+
 texture DetailTexture;
 sampler DetailSampler = sampler_state {
 	texture = <DetailTexture>;
@@ -93,6 +97,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
     return output;
 }
+
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
@@ -118,7 +123,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float detailAmt = input.Depth / DetailDistance;
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	return float4(detail * output * light, 1);
+	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+	return float4(lerp(detail * output * light, FogColor, fog) , 1);
 }
 
 technique Technique1

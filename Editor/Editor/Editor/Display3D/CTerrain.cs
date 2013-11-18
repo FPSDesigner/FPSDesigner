@@ -257,8 +257,10 @@ namespace Editor.Display3D
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
 
-            if(isUnderWater)
+            if (isUnderWater)
+            {
                 effect.Parameters["LightIntensity"].SetValue(0.1f);
+            }
             else
                 effect.Parameters["LightIntensity"].SetValue(1.0f);
 

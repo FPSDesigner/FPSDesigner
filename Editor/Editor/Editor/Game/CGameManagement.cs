@@ -33,6 +33,8 @@ namespace Editor.Game
         private GraphicsDevice _graphics;
         private MouseState _oldMouseState;
 
+        private bool isPlayerUnderwater = false;
+
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
@@ -87,7 +89,6 @@ namespace Editor.Game
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
-            
         }
 
         public void unloadContent(ContentManager content)
@@ -106,10 +107,12 @@ namespace Editor.Game
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            bool isPlayerUnderWater = water.isPositionUnderWater(cam._cameraPos);
-            water.isUnderWater = isPlayerUnderWater;
-            terrain.isUnderWater = isPlayerUnderWater;
-
+            if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
+            {
+                isPlayerUnderwater = !isPlayerUnderwater;
+                water.isUnderWater = isPlayerUnderwater;
+                terrain.isUnderWater = isPlayerUnderwater;
+            }
             water.PreDraw(cam, gameTime);
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
