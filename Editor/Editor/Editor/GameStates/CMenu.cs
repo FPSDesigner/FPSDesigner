@@ -133,7 +133,9 @@ namespace Editor.GameStates
                     switch (_menuData.menuButtons[_menuData.selectedButton].Action)
                     {
                         case 1:
-                            // Start InGame;
+                            Game.CGameStateManager.getInstance().ChangeState(GameStates.CInGame.getInstance());
+                            Game.CGameStateManager.getInstance().Initialize();
+                            Game.CGameStateManager.getInstance().loadContent();
                             break;
                     }
                 }
@@ -142,6 +144,8 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            spritebatch.Begin();
+
             // Draw Background
             //spritebatch.Draw(_menuData.backgroundImage, Vector2.Zero, null, Color.White);//, 0.0f, new Vector2(0.0f), _menuData.backgroundImageSize, SpriteEffects.None, 0);
             spritebatch.Draw(_menuData.backgroundImage, Vector2.Zero, null, Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
@@ -158,6 +162,8 @@ namespace Editor.GameStates
 
             // Draw Cursor
             spritebatch.Draw(_menuData.cursorImage, _mousePos - _menuData.cursorClickPosition, null, Color.White, 0.0f, Vector2.Zero, _menuData.scaleCoefficient, SpriteEffects.None, 0);
+
+            spritebatch.End();
         }
 
     }

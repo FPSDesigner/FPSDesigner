@@ -188,15 +188,19 @@ namespace Editor.Game.LevelInfo
         GameMenu = new Game.LevelInfo.GameMenu
         {
             Type = "Image",
-            BackgroundMusic = "sound.wav",
-            BGImageFile = "Background.jpg",
+            BackgroundMusic = "Sounds/Menu/MENU_SoundSelction",
+            SelectionSound = "Sounds/Menu/MENU_SoundSelction",
+            BGImageFile = "2D/Menu/MENU_Bckground",
+            CursorFile = "2D/Menu/MENU_Sight",
+            CursorClickX = 17,
+            CursorClickY = 17,
             ButtonsInfo = new Game.LevelInfo.ButtonsInfo
             {
-                ButtonsImages = "Images/Buttons.png",
+                ButtonsImages = "2D/Menu/MENU_Buttons",
                 MenuButton = new Game.LevelInfo.MenuButton[]
                 {
-                    new Game.LevelInfo.MenuButton {Action = 0, PosX = 10, PosY = 20},
-                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 100, PosY = 200},
+                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 20, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 0 },
+                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 200, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 120 },
                 }
             }
         }

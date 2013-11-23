@@ -99,9 +99,7 @@ namespace Editor
             GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State
-            spriteBatch.Begin();
             GameManagement.Draw(spriteBatch, gameTime);
-            spriteBatch.End();
 
             // Draw the Console effect
             C2DEffect.Draw(gameTime);

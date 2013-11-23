@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
     class CGameStateManager
-        // THIS CLASS IS USED TO MANAGE GAMESTATES, CHANGE IT, ETC ...
     {
+        #region "Singleton"
         // Singleton Code
         private static CGameStateManager instance = null;
         private static readonly object myLock = new object();
@@ -22,13 +28,28 @@ namespace Editor.Game
                 return instance;
             }
         }
+        #endregion
 
-        public Game.CGameState _state;
+        public Game.CGameState actualState;
 
-        public void ChangeState(Game.CGameState futurState)
+        public ContentManager content;
+        public GraphicsDevice graphics;
+        public SpriteBatch spriteBatch;
+        public GraphicsDeviceManager graphicsDevice;
+
+        public void ChangeState(Game.CGameState newState)
         {
-            _state = futurState;
-            _state.Initialize();
+            actualState = newState;
+        }
+
+        public void Initialize()
+        {
+            actualState.Initialize();
+        }
+
+        public void loadContent()
+        {
+            actualState.loadContent(content, spriteBatch, graphics);
         }
     }
 }

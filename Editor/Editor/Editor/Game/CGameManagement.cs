@@ -56,8 +56,8 @@ namespace Editor.Game
             };
 
             // First state = Menu
-            Menu = new GameStates.CMenu(data);
-            _currentState.ChangeState(Menu);   
+            _currentState.ChangeState(new GameStates.CMenu(data));
+            _currentState.Initialize();
         }
 
         /// <summary>
@@ -71,27 +71,32 @@ namespace Editor.Game
             _graphicsManager = graphicsDevice;
             _graphics = graphics;
 
-            _currentState._state.loadContent(content, spriteBatch, graphics);
+            _currentState.content = content;
+            _currentState.graphics = graphics;
+            _currentState.spriteBatch = spriteBatch;
+            _currentState.graphicsDevice = graphicsDevice;
+
+            _currentState.loadContent();
       
         }
 
         public void unloadContent(ContentManager content)
         {
             //Unload the State content
-            _currentState._state.unloadContent(content);
+            _currentState.actualState.unloadContent(content);
         }
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
         {
             //Update the current state
-            _currentState._state.Update(gameTime, kbState, mouseState, _oldMouseState);
+            _currentState.actualState.Update(gameTime, kbState, mouseState, _oldMouseState);
 
             _oldMouseState = mouseState;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            _currentState._state.Draw(spritebatch, gameTime);
+            _currentState.actualState.Draw(spritebatch, gameTime);
         }
 
 

@@ -159,7 +159,8 @@ namespace Editor.Display3D
         /// <returns></returns>
         public bool BoundingVolumeIsInView(BoundingSphere sphere)
         {
-            return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
+            return true;
+            //return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
         }
 
         /// <summary>

@@ -44,6 +44,7 @@ namespace Editor.GameStates
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
 
+
         public override void Initialize()
         {
             devConsole = Game.CConsole.getInstance();
@@ -54,8 +55,8 @@ namespace Editor.GameStates
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
+            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 75.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            cam = new Display3D.CCamera(graphics, new Vector3(0f, 55f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
 
             gameSettings.loadDatas(graphics);
 
@@ -95,9 +96,8 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             cam.Update(gameTime, kbState, mouseState);
-             
-             devConsole.Update(kbState, gameTime);
-             
+
+            devConsole.Update(kbState, gameTime);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
