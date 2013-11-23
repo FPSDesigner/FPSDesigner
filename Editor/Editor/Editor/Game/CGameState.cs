@@ -19,7 +19,7 @@ namespace Editor.Game
 
         }
 
-        public virtual void loadContent(ContentManager content)
+        public virtual void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
 
         }
@@ -29,12 +29,12 @@ namespace Editor.Game
 
         }
 
-        public virtual void Update(GameTime gametime, MouseState mouseState)
+        public virtual void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
 
         }
 
-        public virtual void Draw(SpriteBatch spritebatch, GameTime gametime)
+        public virtual void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
 
         }

@@ -13,6 +13,23 @@ namespace Editor.GameStates
 {
     class CInGame : Game.CGameState
     {
+        #region "Singleton"
+
+        // Singleton Code
+        private static CInGame instance = null;
+        private static readonly object myLock = new object();
+
+        // Singelton Methods
+        private CInGame() { }
+        public static CInGame getInstance()
+        {
+            lock (myLock)
+            {
+                if (instance == null) instance = new CInGame();
+                return instance;
+            }
+        }
+        #endregion
 
         private Display3D.CModel model; // (TEST) One Model displayed
         private Display3D.CCamera cam; // (TEST) One camera instancied
@@ -27,7 +44,7 @@ namespace Editor.GameStates
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
 
-        public void Initialize()
+        public override void Initialize()
         {
             devConsole = Game.CConsole.getInstance();
             gameSettings = Game.Settings.CGameSettings.getInstance();
@@ -35,7 +52,7 @@ namespace Editor.GameStates
 
         }
 
-        public void loadContent(ContentManager content, SpriteBatch spriteBatch,GraphicsDevice graphics)
+        public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
             cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
@@ -70,12 +87,12 @@ namespace Editor.GameStates
             water.Objects.Add(model);
         }
 
-        public void unloadContent(ContentManager content)
+        public override void unloadContent(ContentManager content)
         {
 
         }
 
-        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             cam.Update(gameTime, kbState, mouseState);
              
@@ -83,7 +100,7 @@ namespace Editor.GameStates
              
         }
 
-        public void Draw(SpriteBatch spritebatch,KeyboardState kbState ,GameTime gameTime)
+        public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {

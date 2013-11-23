@@ -45,7 +45,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
-      <HintPath>..\..\..\Ressources\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+      <HintPath>.\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +171,14 @@
       <Name>MENU_Buttons</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Sounds\Menu\MENU_SoundSelction.wav">
+      <Name>MENU_SoundSelction</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

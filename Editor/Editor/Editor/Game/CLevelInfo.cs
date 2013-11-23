@@ -117,9 +117,11 @@ namespace Editor.Game.LevelInfo
     {
         public string Type { get; set; }
         public string BackgroundMusic { get; set; }
-        public string selectionSound { get; set; }
+        public string SelectionSound { get; set; }
         public string BGImageFile { get; set; }
-        public string cursorFile { get; set; }
+        public string CursorFile { get; set; }
+        public int CursorClickX { get; set; }
+        public int CursorClickY { get; set; }
 
         public ButtonsInfo ButtonsInfo { get; set; }
     }
@@ -134,13 +136,13 @@ namespace Editor.Game.LevelInfo
 
     public class MenuButton
     {
-        public int _action { get; set; }
-        public int _posX { get; set; }
-        public int _posY { get; set; }
-        public int _imgPosX { get; set; }
-        public int _imgPosY { get; set; }
-        public int _width { get; set; }
-        public int _height { get; set; }
+        public int Action { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public int ImgPosX { get; set; }
+        public int ImgPosY { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 
     #endregion

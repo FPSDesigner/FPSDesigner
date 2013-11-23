@@ -32,7 +32,32 @@ namespace Editor.Game
         /// </summary>
         public void Initialize()
         {
+            _currentState = Game.CGameStateManager.getInstance();
 
+            // Example Menu
+            Game.LevelInfo.GameMenu data = new Game.LevelInfo.GameMenu
+            {
+                Type = "Image",
+                BackgroundMusic = "Sounds/Menu/MENU_SoundSelction",
+                SelectionSound = "Sounds/Menu/MENU_SoundSelction",
+                BGImageFile = "2D/Menu/MENU_Bckground",
+                CursorFile = "2D/Menu/MENU_Sight",
+                CursorClickX = 0,
+                CursorClickY = 0,
+                ButtonsInfo = new Game.LevelInfo.ButtonsInfo
+                {
+                    ButtonsImages = "2D/Menu/MENU_Buttons",
+                    MenuButton = new Game.LevelInfo.MenuButton[]
+                    {
+                        new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 20, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 0 },
+                        new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 200, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 120 },
+                    }
+                }
+            };
+
+            // First state = Menu
+            Menu = new GameStates.CMenu(data);
+            _currentState.ChangeState(Menu);   
         }
 
         /// <summary>
@@ -41,17 +66,13 @@ namespace Editor.Game
         /// <param name="content">ContentManager class</param>
         /// <param name="graphics">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
-        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch,GraphicsDeviceManager graphicsDevice)
+        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice)
         {
             _graphicsManager = graphicsDevice;
             _graphics = graphics;
 
-            //First state = Menu
-           //Menu = new GameStates.CMenu(content.Load<Texture2D>(""));
-            _currentState.ChangeState(Menu);
-
-            //Initialize the current state : MENU
-            _currentState._state.Initialize();            
+            _currentState._state.loadContent(content, spriteBatch, graphics);
+      
         }
 
         public void unloadContent(ContentManager content)
@@ -63,7 +84,9 @@ namespace Editor.Game
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
         {
             //Update the current state
-            _currentState._state.Update(gameTime, mouseState);
+            _currentState._state.Update(gameTime, kbState, mouseState, _oldMouseState);
+
+            _oldMouseState = mouseState;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
