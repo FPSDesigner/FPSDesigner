@@ -45,7 +45,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
-      <HintPath>.\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+      <HintPath>..\..\..\Ressources\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -54,13 +54,6 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexSpriteFontDescriptionProcessor</Processor>
       <SubType>Designer</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="3D\building.FBX">
-      <Name>building</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -78,11 +71,44 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3D\building001.FBX">
+      <Name>building001</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="3D\SkyBox.fbx">
+      <Name>SkyBox</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Sunset.dds">
       <Name>Sunset</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_PremultiplyAlpha>False</ProcessorParameters_PremultiplyAlpha>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Effects\SkyEffect.fx">
+      <Name>SkyEffect</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Heightmap.bmp">
+      <Name>Heightmap</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\terrain_grass.jpg">
+      <Name>terrain_grass</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +121,25 @@
   <ItemGroup>
     <Compile Include="Textures\clouds.dds">
       <Name>clouds</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="2D\Menu\MENU_Bckground.png">
+      <Name>MENU_Bckground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="2D\Menu\MENU_TitleGame.png">
+      <Name>MENU_TitleGame</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="2D\Menu\MENU_Sight.png">
+      <Name>MENU_Sight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -122,84 +167,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\PointLightEffect.fx">
-      <Name>PointLightEffect</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Terrain\terrain_grass.dds">
-      <Name>terrain_grass</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Terrain\noise_texture.bmp">
-      <Name>noise_texture</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Terrain\rock.bmp">
-      <Name>rock</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Terrain\sand.bmp">
-      <Name>sand</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Terrain\snow.bmp">
-      <Name>snow</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Terrain\weightMap.bmp">
-      <Name>weightMap</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Terrain\Heightmap.bmp">
-      <Name>Heightmap</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Effects\WaterEffect.fx">
-      <Name>WaterEffect</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="3D\plane.x">
-      <Name>plane</Name>
-      <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="3D\Skysphere.fbx">
-      <Name>Skysphere</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Effects\Skysphere.fx">
-      <Name>Skysphere</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\water_normal.jpg">
-      <Name>water_normal</Name>
+    <Compile Include="2D\Menu\MENU_Buttons.PNG">
+      <Name>MENU_Buttons</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

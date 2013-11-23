@@ -19,6 +19,7 @@ namespace Editor
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState oldKeyboardState; //--| These 2 variables avec used to compare new state and old state (ex : Key pressed and released)
+        MouseState oldMouseState;
 
         Game.CGameManagement GameManagement; // Class Created to relieving main's Class
 
@@ -85,6 +86,7 @@ namespace Editor
                 C2DEffect.Update(gameTime);
 
                 oldKeyboardState = kbState;
+                oldMouseState = mouseState;
                 base.Update(gameTime);
             }
         }
@@ -97,7 +99,9 @@ namespace Editor
             GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State
+            spriteBatch.Begin();
             GameManagement.Draw(spriteBatch, gameTime);
+            spriteBatch.End();
 
             // Draw the Console effect
             C2DEffect.Draw(gameTime);

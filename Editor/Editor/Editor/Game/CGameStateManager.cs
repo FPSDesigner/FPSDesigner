@@ -23,11 +23,12 @@ namespace Editor.Game
             }
         }
 
-        public Game.CGameState _currentState;
+        public Game.CGameState _state;
 
         public void ChangeState(Game.CGameState futurState)
         {
-            _currentState = futurState;
+            _state = futurState;
+            _state.Initialize();
         }
     }
 }

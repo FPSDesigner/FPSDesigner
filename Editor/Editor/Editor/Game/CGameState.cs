@@ -29,7 +29,7 @@ namespace Editor.Game
 
         }
 
-        public virtual void Update(GameTime gametime)
+        public virtual void Update(GameTime gametime, MouseState mouseState)
         {
 
         }

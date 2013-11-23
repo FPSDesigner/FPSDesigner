@@ -13,14 +13,61 @@ namespace Editor.GameStates
 {
     class CInGame : Game.CGameState
     {
+
+        private Display3D.CModel model; // (TEST) One Model displayed
+        private Display3D.CCamera cam; // (TEST) One camera instancied
+
+        private Game.CConsole devConsole;
+        private Game.Settings.CGameSettings gameSettings;
+
+        private bool isPlayerUnderwater = false;
+
+        Display3D.CSkybox skybox;
+        Display3D.CTerrain terrain;
+        Display3D.CLensFlare lensFlare;
+        Display3D.CWater water;
+
         public void Initialize()
         {
+            devConsole = Game.CConsole.getInstance();
+            gameSettings = Game.Settings.CGameSettings.getInstance();
+            lensFlare = new Display3D.CLensFlare();
 
         }
 
-        public void loadContent(ContentManager content)
+        public void loadContent(ContentManager content, SpriteBatch spriteBatch,GraphicsDevice graphics)
         {
+            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 5.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            cam = new Display3D.CCamera(graphics, new Vector3(0f, 10f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
 
+            gameSettings.loadDatas(graphics);
+
+            devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
+            devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
+
+            skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
+            terrain = new Display3D.CTerrain();
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
+
+            lensFlare = new Display3D.CLensFlare();
+            lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
+
+            skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
+
+            terrain = new Display3D.CTerrain();
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
+            terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
+            terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
+            terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
+            terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
+            terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
+
+            model._lightDirection = lensFlare.LightDirection;
+
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(10 * 30));
+            water.Objects.Add(skybox);
+            water.Objects.Add(terrain);
+            water.Objects.Add(model);
         }
 
         public void unloadContent(ContentManager content)
@@ -28,14 +75,37 @@ namespace Editor.GameStates
 
         }
 
-        public void Update(GameTime gametime)
+        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-
+            cam.Update(gameTime, kbState, mouseState);
+             
+             devConsole.Update(kbState, gameTime);
+             
         }
 
-        public void Draw(SpriteBatch spritebatch, GameTime gametime)
+        public void Draw(SpriteBatch spritebatch,KeyboardState kbState ,GameTime gameTime)
         {
+            if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
+            {
+                isPlayerUnderwater = !isPlayerUnderwater;
+                water.isUnderWater = isPlayerUnderwater;
+                terrain.isUnderWater = isPlayerUnderwater;
+            }
+            water.PreDraw(cam, gameTime);
 
+            skybox.Draw(cam._view, cam._projection, cam._cameraPos);
+
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+
+            if (cam.BoundingVolumeIsInView(model.BoundingSphere))
+                model.Draw(cam._view, cam._projection, cam._cameraPos);
+
+            water.Draw(cam._view, cam._projection, cam._cameraPos);
+
+            lensFlare.UpdateOcclusion(cam._view, cam._projection);
+            lensFlare.Draw(gameTime);
+
+            devConsole.Draw(gameTime);
         }
 
     }
