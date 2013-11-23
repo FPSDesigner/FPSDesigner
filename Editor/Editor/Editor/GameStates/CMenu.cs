@@ -50,15 +50,14 @@ namespace Editor.GameStates
 
             public Game.LevelInfo.MenuButton[] menuButtons;
 
-            public int[,] buttonsPositions;
             public int buttonsCount = 0;
             public int selectedButton = -1;
 
             public Vector2 backgroundImageSize;
-            public Vector2 cursorSize;
             public Vector2 cursorClickPosition;
             public Vector2 scaleCoefficient;
             public Vector2[] buttonsSize;
+            public Vector2[] buttonsPositions;
 
             public Texture2D buttonsImage;
             public Texture2D cursorImage;
@@ -86,22 +85,23 @@ namespace Editor.GameStates
 
             _menuData.buttonsCount = _gameMenu.ButtonsInfo.MenuButton.Count();
 
-            _menuData.buttonsPositions = new int[_menuData.buttonsCount, 2];
+            _menuData.buttonsPositions = new Vector2[_menuData.buttonsCount];
             _menuData.buttonsSize = new Vector2[_menuData.buttonsCount];
 
             _menuData.backgroundImageSize = new Vector2(graphics.PresentationParameters.BackBufferWidth, graphics.PresentationParameters.BackBufferHeight);
             _menuData.scaleCoefficient = new Vector2(
-                graphics.PresentationParameters.BackBufferWidth / _menuData.backgroundImage.Width,
-                graphics.PresentationParameters.BackBufferHeight / _menuData.backgroundImage.Height);
+                (float)graphics.PresentationParameters.BackBufferWidth / (float)_menuData.backgroundImage.Width,
+                (float)graphics.PresentationParameters.BackBufferHeight / (float)_menuData.backgroundImage.Height);
             _menuData.cursorClickPosition = new Vector2(_gameMenu.CursorClickX * _menuData.scaleCoefficient.X, _gameMenu.CursorClickY * _menuData.scaleCoefficient.Y);
-            _menuData.cursorSize = new Vector2(_menuData.cursorImage.Width * _menuData.scaleCoefficient.X, _menuData.cursorImage.Height * _menuData.scaleCoefficient.Y);
 
             for (int i = 0; i < _menuData.buttonsCount; i++)
             {
-                _menuData.buttonsPositions[i, 0] = _gameMenu.ButtonsInfo.MenuButton[i].PosX * graphics.PresentationParameters.BackBufferWidth;
-                _menuData.buttonsPositions[i, 1] = _gameMenu.ButtonsInfo.MenuButton[i].PosY * graphics.PresentationParameters.BackBufferHeight;
 
-                _menuData.buttonsSize[i] = new Vector2(_gameMenu.ButtonsInfo.MenuButton[i].Width * _menuData.scaleCoefficient.X, _gameMenu.ButtonsInfo.MenuButton[i].Height * _menuData.scaleCoefficient.Y);
+                _menuData.buttonsPositions[i] = new Vector2(_gameMenu.ButtonsInfo.MenuButton[i].PosX * _menuData.scaleCoefficient.X,
+                    _gameMenu.ButtonsInfo.MenuButton[i].PosY * _menuData.scaleCoefficient.Y);
+
+                _menuData.buttonsSize[i] = new Vector2(_gameMenu.ButtonsInfo.MenuButton[i].Width * _menuData.scaleCoefficient.X,
+                    _gameMenu.ButtonsInfo.MenuButton[i].Height * _menuData.scaleCoefficient.Y);
             }
         }
 
@@ -112,9 +112,9 @@ namespace Editor.GameStates
 
             for (int i = 0; i < _menuData.buttonsCount; i++)
             {
-                if (_mousePos.X >= _menuData.buttonsPositions[i, 0] && _mousePos.X <= (_menuData.buttonsPositions[i, 0] + _menuData.menuButtons[i].Width))
+                if (_mousePos.X >= _menuData.buttonsPositions[i].X && _mousePos.X <= (_menuData.buttonsPositions[i].X + _menuData.menuButtons[i].Width))
                 {
-                    if (_mousePos.Y >= _menuData.buttonsPositions[i, 1] && _mousePos.Y <= (_menuData.buttonsPositions[i, 1] + _menuData.menuButtons[i].Height))
+                    if (_mousePos.Y >= _menuData.buttonsPositions[i].Y && _mousePos.Y <= (_menuData.buttonsPositions[i].Y + _menuData.menuButtons[i].Height))
                     {
                         _menuData.selectedButton = i;
                         isOverAnyButton = true;
@@ -143,19 +143,21 @@ namespace Editor.GameStates
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             // Draw Background
-            spritebatch.Draw(_menuData.backgroundImage, Vector2.Zero, null, Color.White, 0.0f, new Vector2(0.0f), _menuData.backgroundImageSize, SpriteEffects.None, 0);
+            //spritebatch.Draw(_menuData.backgroundImage, Vector2.Zero, null, Color.White);//, 0.0f, new Vector2(0.0f), _menuData.backgroundImageSize, SpriteEffects.None, 0);
+            spritebatch.Draw(_menuData.backgroundImage, Vector2.Zero, null, Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
 
             // Draw Buttons
             for (int i = 0; i < _menuData.buttonsCount; i++)
             {
-                int displacementSelection = (_menuData.selectedButton == i) ? _menuData.backgroundImage.Height / 2 : 0;
-                spritebatch.Draw(_menuData.buttonsImage, _menuData.buttonsSize[i],
-                    new Rectangle(_menuData.menuButtons[i].ImgPosX, _menuData.menuButtons[i].ImgPosY + displacementSelection, (int)_menuData.buttonsSize[i].X, (int)_menuData.buttonsSize[i].Y),
-                    Color.White, 0.0f, Vector2.Zero, new Vector2(), SpriteEffects.None, 0);
+                int displacementSelection = (_menuData.selectedButton == i) ? _menuData.menuButtons[i].Width : 0;
+
+                spritebatch.Draw(_menuData.buttonsImage, _menuData.buttonsPositions[i],
+                    new Rectangle(_menuData.menuButtons[i].ImgPosX + displacementSelection, _menuData.menuButtons[i].ImgPosY, _menuData.menuButtons[i].Width, _menuData.menuButtons[i].Height),
+                    Color.White, 0.0f, Vector2.Zero, 1f/*_menuData.scaleCoefficient*/, SpriteEffects.None, 0);
             }
 
             // Draw Cursor
-            spritebatch.Draw(_menuData.cursorImage, _mousePos, null, Color.White, 0.0f, _menuData.cursorClickPosition, _menuData.cursorSize, SpriteEffects.None, 0);
+            spritebatch.Draw(_menuData.cursorImage, _mousePos - _menuData.cursorClickPosition, null, Color.White, 0.0f, Vector2.Zero, _menuData.scaleCoefficient, SpriteEffects.None, 0);
         }
 
     }

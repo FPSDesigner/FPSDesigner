@@ -42,8 +42,8 @@ namespace Editor.Game
                 SelectionSound = "Sounds/Menu/MENU_SoundSelction",
                 BGImageFile = "2D/Menu/MENU_Bckground",
                 CursorFile = "2D/Menu/MENU_Sight",
-                CursorClickX = 0,
-                CursorClickY = 0,
+                CursorClickX = 17,
+                CursorClickY = 17,
                 ButtonsInfo = new Game.LevelInfo.ButtonsInfo
                 {
                     ButtonsImages = "2D/Menu/MENU_Buttons",
