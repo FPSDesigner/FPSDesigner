@@ -96,6 +96,7 @@
     <Compile Include="Game\CGameStateManager.cs" />
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
+    <Compile Include="Game\CWeapon.cs" />
     <Compile Include="Game\CXMLManager.cs" />
     <Compile Include="Game\CGameManagement.cs" />
     <Compile Include="Display3D\CSkybox.cs" />

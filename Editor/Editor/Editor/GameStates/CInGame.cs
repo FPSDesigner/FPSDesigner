@@ -44,6 +44,7 @@ namespace Editor.GameStates
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
 
+        Game.CWeapon weapon;
 
         public override void Initialize()
         {
@@ -86,6 +87,31 @@ namespace Editor.GameStates
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
+
+
+
+
+            weapon = new Game.CWeapon();
+
+            Model[] testmodel = new Model[] { content.Load<Model>("3D//building001") };
+            object[][] testInfos = new object[][] {
+                new object[] {
+                0,
+                100,
+                100,
+                100,
+                100,
+                true,
+                2,
+                0
+                }
+            };
+            string[][] testSounds = new string[][] {
+                new string[] {
+                    "GUN_SHOT", "GUN_SHOT", "GUN_SHOT"
+                }
+            };
+            weapon.LoadContent(content, testmodel, testInfos, testSounds);
         }
 
         public override void unloadContent(ContentManager content)
@@ -96,6 +122,12 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             cam.Update(gameTime, kbState, mouseState);
+
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+                weapon.Shot(true, gameTime);
+            else if(mouseState.LeftButton == ButtonState.Pressed)
+                weapon.Shot(false, gameTime);
+
 
             devConsole.Update(kbState, gameTime);
         }
