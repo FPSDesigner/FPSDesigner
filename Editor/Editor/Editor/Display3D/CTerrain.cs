@@ -373,5 +373,6 @@ namespace Editor.Display3D
             // Interpolate between the corner vertices' heights
             return MathHelper.Lerp(h1, h2, leftOver);
         }
+
     }
 }

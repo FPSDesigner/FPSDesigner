@@ -99,8 +99,8 @@ namespace Editor.Display3D
                         ((BasicEffect)effect).World = localWorld;
                         ((BasicEffect)effect).View = view;
                         ((BasicEffect)effect).Projection = projection;
-                        //((BasicEffect)effect).EnableDefaultLighting();
-                        ((BasicEffect)effect).LightingEnabled = true; // turn on the lighting subsystem.
+                        ((BasicEffect)effect).EnableDefaultLighting();
+                        /*((BasicEffect)effect).LightingEnabled = true; // turn on the lighting subsystem.
                         ((BasicEffect)effect).DirectionalLight0.DiffuseColor = new Vector3(1, 1, 1); // a red light
                         ((BasicEffect)effect).DirectionalLight0.Direction = _lightDirection;  // coming along the x-axis
                         ((BasicEffect)effect).DirectionalLight0.SpecularColor = new Vector3(1, 1, 1); // with green highlights
@@ -109,7 +109,7 @@ namespace Editor.Display3D
                         ((BasicEffect)effect).FogEnabled = true;
                         ((BasicEffect)effect).FogColor = new Vector3(245, 245, 245);
                         ((BasicEffect)effect).FogStart = 400;
-                        ((BasicEffect)effect).FogEnd = 600;  
+                        ((BasicEffect)effect).FogEnd = 600;  */
                     }
                     else
                     {

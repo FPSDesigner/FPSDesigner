@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Editor.Display3D.Materials
 {
-    public class CLighting : Material
+    public class PointLightMaterial : Material
     {
         public Vector3 AmbientLightColor { get; set; }
         public Vector3 LightPosition { get; set; }
@@ -15,7 +11,7 @@ namespace Editor.Display3D.Materials
         public float LightAttenuation { get; set; }
         public float LightFalloff { get; set; }
 
-        public CLighting()
+        public PointLightMaterial()
         {
             AmbientLightColor = new Vector3(.15f, .15f, .15f);
             LightPosition = new Vector3(0, 0, 0);

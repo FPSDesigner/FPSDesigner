@@ -44,4 +44,22 @@ namespace Editor.Display3D.Materials
                 effect.Parameters["SpecularColor"].SetValue(SpecularColor);
         }
     }
+
+    public class NormalMapMaterial : LightingMaterial
+    {
+        public Texture2D NormalMap { get; set; }
+
+        public NormalMapMaterial(Texture2D NormalMap)
+        {
+            this.NormalMap = NormalMap;
+        }
+
+        public override void SetEffectParameters(Effect effect)
+        {
+            base.SetEffectParameters(effect);
+
+            if (effect.Parameters["NormalMap"] != null)
+                effect.Parameters["NormalMap"].SetValue(NormalMap);
+        }
+    }
 }

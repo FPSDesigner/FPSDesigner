@@ -45,6 +45,9 @@ namespace Editor.GameStates
         Display3D.CWater water;
 
         Game.CWeapon weapon;
+        Display3D.Materials.PrelightingRenderer renderer;
+        List<Display3D.CModel> models = new List<Display3D.CModel>();
+        GraphicsDevice _graphics;
 
         public override void Initialize()
         {
@@ -56,8 +59,10 @@ namespace Editor.GameStates
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 75.5f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            cam = new Display3D.CCamera(graphics, new Vector3(0f, 55f, 5f), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
+            model = new Display3D.CModel(content.Load<Model>("3D//Ground"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            models.Add(model);
+
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
 
             gameSettings.loadDatas(graphics);
 
@@ -89,7 +94,7 @@ namespace Editor.GameStates
             water.Objects.Add(model);
 
 
-
+            _graphics = graphics;
 
             weapon = new Game.CWeapon();
 
@@ -112,6 +117,25 @@ namespace Editor.GameStates
                 }
             };
             weapon.LoadContent(content, testmodel, testInfos, testSounds);
+
+
+            Effect effect = content.Load<Effect>("Effects/ProjectedTexture");
+            model.SetModelEffect(effect, true);
+            Display3D.Materials.ProjectedTextureMaterial mat = new Display3D.Materials.ProjectedTextureMaterial(
+                content.Load<Texture2D>("projected texture"), graphics);
+            mat.ProjectorPosition = new Vector3(0, 175.5f, 0);
+            mat.ProjectorTarget = new Vector3(0, 0, 0);
+            mat.Scale = 2;
+            model.Material = mat;
+
+            renderer = new Display3D.Materials.PrelightingRenderer(graphics, content);
+            renderer.Models = models;
+            renderer.Camera = cam;
+            renderer.Lights = new List<Display3D.Materials.PPPointLight>() {
+                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 0), Color.Red * .85f, 60),
+                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 100.0f), Color.Blue * .85f, 60),
+            };
+
         }
 
         public override void unloadContent(ContentManager content)
@@ -134,6 +158,10 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            renderer.Draw();
+
+            _graphics.Clear(Color.Black);
+
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
