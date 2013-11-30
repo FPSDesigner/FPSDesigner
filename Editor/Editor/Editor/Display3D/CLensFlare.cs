@@ -113,7 +113,7 @@ namespace Editor.Display3D
             graphicsDevice = _graphicsDevice;
             LightDirection = Vector3.Normalize(lightDirection);
             occlusionQuery = new OcclusionQuery(graphicsDevice);
-            
+
         }
 
 
@@ -127,7 +127,7 @@ namespace Editor.Display3D
             DrawFlares();
         }
 
-        
+
         /// <summary>
         /// Measures how much the sun is visible using Occlusion Query.
         /// It draws a rectangle and checks how much of this rectangle is hidden behind an object
@@ -155,13 +155,13 @@ namespace Editor.Display3D
                 if (!occlusionQuery.IsComplete)
                     return;
 
-               const float queryArea = querySize * querySize;
+                const float queryArea = querySize * querySize;
 
                 occlusionAlpha = Math.Min(occlusionQuery.PixelCount / queryArea, 1);
             }
 
             basicEffect.World = Matrix.CreateTranslation(lightPosition.X, lightPosition.Y, 0);
-            basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0,viewport.Width,viewport.Height,0, 0, 1);
+            basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
             basicEffect.CurrentTechnique.Passes[0].Apply();
 
             occlusionQuery.Begin();
@@ -179,12 +179,12 @@ namespace Editor.Display3D
         {
             if (lightBehindCamera || occlusionAlpha <= 0)
                 return;
-            
+
             Color color = Color.White * occlusionAlpha;
             Vector2 origin = new Vector2(glowSprite.Width, glowSprite.Height) / 2;
             float scale = glowSize * 2 / glowSprite.Width;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(0, BlendState.Additive);
             spriteBatch.Draw(glowSprite, lightPosition, null, color, 0,
                              origin, scale, SpriteEffects.None, 0);
             spriteBatch.End();
@@ -220,7 +220,7 @@ namespace Editor.Display3D
 
                 spriteBatch.Draw(flare.Texture, flarePosition, null, new Color(flareColor), 1, flareOrigin, flare.Scale, SpriteEffects.None, 0);
             }
-            
+
             spriteBatch.End();
         }
 

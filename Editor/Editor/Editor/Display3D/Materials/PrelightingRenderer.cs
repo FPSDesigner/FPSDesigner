@@ -87,13 +87,15 @@ namespace Editor.Display3D.Materials
                 model.Draw(Camera._view, Camera._projection, Camera._cameraPos);
                 model.RestoreEffects();
             }
-
+            
             // Un-set the render targets
             graphicsDevice.SetRenderTargets(null);
+            
         }
 
         void drawLightMap()
         {
+            
             // Set the depth and normal map info to the effect
             lightingEffect.Parameters["DepthTexture"].SetValue(depthTarg);
             lightingEffect.Parameters["NormalTexture"].SetValue(normalTarg);
@@ -144,13 +146,15 @@ namespace Editor.Display3D.Materials
                 graphicsDevice.RasterizerState = 
                     RasterizerState.CullCounterClockwise;
             }
-
+             
             // Revert the blending and depth render states
-            graphicsDevice.BlendState = BlendState.Opaque;
-            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            graphicsDevice.BlendState = BlendState.NonPremultiplied;
+             
+            graphicsDevice.DepthStencilState = DepthStencilState.None;
 
             // Un-set the render target
             graphicsDevice.SetRenderTarget(null);
+            
         }
 
         void prepareMainPass()

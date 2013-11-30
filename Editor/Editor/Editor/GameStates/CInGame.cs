@@ -60,6 +60,8 @@ namespace Editor.GameStates
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             model = new Display3D.CModel(content.Load<Model>("3D//Ground"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            models.Add(new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70f, 10), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics));
+            
             models.Add(model);
 
             cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
@@ -107,13 +109,13 @@ namespace Editor.GameStates
                 100,
                 100,
                 true,
-                2,
+                200,
                 0
                 }
             };
             string[][] testSounds = new string[][] {
                 new string[] {
-                    "GUN_SHOT", "GUN_SHOT", "GUN_SHOT"
+                    "M4A1_SHOT", "GUN_SHOT", "GUN_SHOT"
                 }
             };
             weapon.LoadContent(content, testmodel, testInfos, testSounds);
@@ -123,7 +125,7 @@ namespace Editor.GameStates
             model.SetModelEffect(effect, true);
             Display3D.Materials.ProjectedTextureMaterial mat = new Display3D.Materials.ProjectedTextureMaterial(
                 content.Load<Texture2D>("projected texture"), graphics);
-            mat.ProjectorPosition = new Vector3(0, 175.5f, 0);
+            mat.ProjectorPosition = new Vector3(0, 105.5f, 0);
             mat.ProjectorTarget = new Vector3(0, 0, 0);
             mat.Scale = 2;
             model.Material = mat;
@@ -132,8 +134,8 @@ namespace Editor.GameStates
             renderer.Models = models;
             renderer.Camera = cam;
             renderer.Lights = new List<Display3D.Materials.PPPointLight>() {
-                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 0), Color.Red * .85f, 60),
-                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 100.0f), Color.Blue * .85f, 60),
+                new Display3D.Materials.PPPointLight(new Vector3(0, 60, 0), Color.Red * .85f, 100),
+                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };
 
         }
@@ -158,10 +160,10 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            GraphicsDevice test = _graphics;
+
             renderer.Draw();
-
-            _graphics.Clear(Color.Black);
-
+            
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
@@ -174,8 +176,10 @@ namespace Editor.GameStates
 
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            if (cam.BoundingVolumeIsInView(model.BoundingSphere))
-                model.Draw(cam._view, cam._projection, cam._cameraPos);
+            //if (cam.BoundingVolumeIsInView(model.BoundingSphere))
+                for(int i = 0; i < models.Count; i++)
+                    if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
+                        models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
