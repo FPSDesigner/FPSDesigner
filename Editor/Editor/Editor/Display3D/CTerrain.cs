@@ -47,7 +47,8 @@ namespace Editor.Display3D
         public bool isUnderWater = false;
 
         // Classes
-        Effect effect;
+        public Effect effect;
+        public Effect effectLight;
         GraphicsDevice GraphicsDevice;
         public Vector3 lightDirection;
         Texture2D heightMap;
@@ -95,6 +96,7 @@ namespace Editor.Display3D
             this.GraphicsDevice = GraphicsDevice;
 
             effect = Content.Load<Effect>("Effects/Terrain");
+            effectLight = Content.Load<Effect>("Effects/PPLight");
 
             // 1 vertex per pixel
             nVertices = width * length;
@@ -258,20 +260,17 @@ namespace Editor.Display3D
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
 
             if (isUnderWater)
-            {
                 effect.Parameters["LightIntensity"].SetValue(0.1f);
-            }
             else
                 effect.Parameters["LightIntensity"].SetValue(1.0f);
 
             effect.Techniques[0].Passes[0].Apply();
 
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0,
-                nVertices, 0, nIndices / 3);
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
         }
 
         /// <summary>
-        /// Sets the clip plane for water reflection rendereing
+        /// Sets the clip plane for water reflection rendering
         /// </summary>
         public void SetClipPlane(Vector4? Plane)
         {
@@ -373,6 +372,8 @@ namespace Editor.Display3D
             // Interpolate between the corner vertices' heights
             return MathHelper.Lerp(h1, h2, leftOver);
         }
+
+
 
     }
 }

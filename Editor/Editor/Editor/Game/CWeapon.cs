@@ -16,6 +16,7 @@ namespace Editor.Game
         private int _weaponsAmount;
         private double _lastShotMs;
         public int _selectedWeapon;
+        private bool _dryFirePlayed;
 
 
         private WeaponData[] _weaponsArray;
@@ -111,15 +112,19 @@ namespace Editor.Game
 
         public void Shot(bool firstShot, GameTime gameTime)
         {
+            if (firstShot)
+                _dryFirePlayed = false;
             if (firstShot && !_weaponsArray[_selectedWeapon]._isAutomatic)
                 InternFire();
-            else
+            else if (_weaponsArray[_selectedWeapon]._isAutomatic)
             {
+                
                 if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
                 {
                     InternFire();
                     _lastShotMs = gameTime.TotalGameTime.TotalMilliseconds;
                 }
+
             }
         }
 
@@ -132,7 +137,11 @@ namespace Editor.Game
             }
             else
             {
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._dryShotSound].Play();
+                if (!_dryFirePlayed)
+                {
+                    _weaponsSounds[_weaponsArray[_selectedWeapon]._dryShotSound].Play();
+                    _dryFirePlayed = true;
+                }
             }
         }
     }

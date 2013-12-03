@@ -121,6 +121,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
 	float detailAmt = input.Depth / DetailDistance;
+
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
 	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);

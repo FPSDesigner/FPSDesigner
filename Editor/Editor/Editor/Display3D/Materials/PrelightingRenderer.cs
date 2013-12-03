@@ -75,6 +75,7 @@ namespace Editor.Display3D.Materials
             drawDepthNormalMap();
             drawLightMap();
             prepareMainPass();
+            
         }
 
         void drawDepthNormalMap()
@@ -83,21 +84,24 @@ namespace Editor.Display3D.Materials
             // Set the render targets to 'slots' 1 and 2
             graphicsDevice.SetRenderTargets(normalTarg, depthTarg);
 
+            
             // Clear the render target to 1 (infinite depth)
             graphicsDevice.Clear(Color.White);
 
             // Draw each model with the PPDepthNormal effect
+            
             foreach (CModel model in Models)
             {
                 model.CacheEffects();
+
                 model.SetModelEffect(depthNormalEffect, false);
                 model.Draw(Camera._view, Camera._projection, Camera._cameraPos);
                 model.RestoreEffects();
             }
-            
+
+            //terrain.Draw(Camera._view, Camera._projection, Camera._cameraPos);
             // Un-set the render targets
             graphicsDevice.SetRenderTargets(null);
-            
         }
 
         void drawLightMap()

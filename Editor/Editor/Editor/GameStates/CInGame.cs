@@ -61,7 +61,7 @@ namespace Editor.GameStates
         {
             model = new Display3D.CModel(content.Load<Model>("3D//Ground"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
             models.Add(new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70f, 10), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics));
-            
+
             models.Add(model);
 
             cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
@@ -151,7 +151,7 @@ namespace Editor.GameStates
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
                 weapon.Shot(true, gameTime);
-            else if(mouseState.LeftButton == ButtonState.Pressed)
+            else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
 
 
@@ -162,7 +162,7 @@ namespace Editor.GameStates
         {
 
             renderer.Draw();
-            
+
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
@@ -173,12 +173,14 @@ namespace Editor.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+            
 
             //if (cam.BoundingVolumeIsInView(model.BoundingSphere))
-                for(int i = 0; i < models.Count; i++)
-                    if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
-                        models[i].Draw(cam._view, cam._projection, cam._cameraPos);
+            for (int i = 0; i < models.Count; i++)
+                if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
+                    models[i].Draw(cam._view, cam._projection, cam._cameraPos);
+
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
