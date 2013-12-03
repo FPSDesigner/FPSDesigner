@@ -124,6 +124,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
 	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+
 	return float4(lerp(detail * output * light, FogColor, fog) , 1);
 }
 

@@ -27,11 +27,13 @@ namespace Editor.Display3D.Materials
         public List<PPPointLight> Lights { get; set; }
         public Display3D.CCamera Camera { get; set; }
 
+        Display3D.CTerrain terrain;
+
         GraphicsDevice graphicsDevice;
         int viewWidth = 0, viewHeight = 0;
+        bool DebugMode;
 
-        public PrelightingRenderer(GraphicsDevice GraphicsDevice, 
-            ContentManager Content)
+        public PrelightingRenderer(GraphicsDevice GraphicsDevice, ContentManager Content, Display3D.CTerrain terrain, bool DebugMode = false)
         {
             viewWidth = GraphicsDevice.Viewport.Width;
             viewHeight = GraphicsDevice.Viewport.Height;
@@ -60,6 +62,11 @@ namespace Editor.Display3D.Materials
             lightMesh = Content.Load<Model>("3D/PPLightMesh");
             lightMesh.Meshes[0].MeshParts[0].Effect = lightingEffect;
 
+            if (DebugMode)
+                Display3D.CSimpleShapes.Initialize(GraphicsDevice);
+
+            this.DebugMode = DebugMode;
+            this.terrain = terrain;
             this.graphicsDevice = GraphicsDevice;
         }
 
@@ -129,7 +136,6 @@ namespace Editor.Display3D.Materials
                     * Matrix.CreateTranslation(light.Position)) * viewProjection;
 
                 lightingEffect.Parameters["WorldViewProjection"].SetValue(wvp);
-
                 // Determine the distance between the light and camera
                 float dist = Vector3.Distance(Camera._cameraPos, light.Position);
 
@@ -173,6 +179,16 @@ namespace Editor.Display3D.Materials
                         if (part.Effect.Parameters["viewportHeight"] != null)
                             part.Effect.Parameters["viewportHeight"].SetValue(viewHeight);
                     }
+        }
+
+        public void DrawDebugBoxes(GameTime gameTime, Matrix view, Matrix projection)
+        {
+            for (int i = 0; i < Lights.Count; i++)
+            {
+                BoundingSphere lightSphere = new BoundingSphere(Lights[i].Position, 0.8f);
+                Display3D.CSimpleShapes.AddBoundingSphere(lightSphere, Lights[i].Color);
+            }
+            Display3D.CSimpleShapes.Draw(gameTime, view, projection);
         }
     }
 }

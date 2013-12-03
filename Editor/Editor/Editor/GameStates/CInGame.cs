@@ -130,11 +130,11 @@ namespace Editor.GameStates
             mat.Scale = 2;
             model.Material = mat;
 
-            renderer = new Display3D.Materials.PrelightingRenderer(graphics, content);
+            renderer = new Display3D.Materials.PrelightingRenderer(graphics, content, terrain, true);
             renderer.Models = models;
             renderer.Camera = cam;
             renderer.Lights = new List<Display3D.Materials.PPPointLight>() {
-                new Display3D.Materials.PPPointLight(new Vector3(0, 60, 0), Color.Red * .85f, 100),
+                new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };
 
@@ -160,7 +160,6 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            GraphicsDevice test = _graphics;
 
             renderer.Draw();
             
@@ -187,6 +186,8 @@ namespace Editor.GameStates
             lensFlare.Draw(gameTime);
 
             devConsole.Draw(gameTime);
+
+            renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
         }
 
     }

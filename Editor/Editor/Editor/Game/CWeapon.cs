@@ -115,7 +115,6 @@ namespace Editor.Game
                 InternFire();
             else
             {
-                Console.WriteLine("test" + (gameTime.TotalGameTime.TotalMilliseconds));
                 if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
                 {
                     InternFire();
@@ -126,7 +125,15 @@ namespace Editor.Game
 
         private void InternFire()
         {
-            _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+            if (_weaponsArray[_selectedWeapon]._actualClip > 0)
+            {
+                _weaponsArray[_selectedWeapon]._actualClip--;
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+            }
+            else
+            {
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._dryShotSound].Play();
+            }
         }
     }
 }
