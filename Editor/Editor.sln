@@ -5,9 +5,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor\Edi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorContent", "Editor\EditorContent\EditorContent.contentproj", "{A70DA665-6832-42E3-A876-35B77F4F730D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModel", "SkinnedModel\SkinnedModel.csproj", "{384FCA90-5572-47E5-A01E-6B8F0982E695}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModelPipeline", "SkinnedModelPipeline\SkinnedModelPipeline.csproj", "{4A94E30D-EEEE-42D2-9803-798119807D98}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://apockalipss.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -17,6 +21,12 @@ Global
 		SccProjectUniqueName2 = Editor\\EditorContent\\EditorContent.contentproj
 		SccProjectName2 = Editor/EditorContent
 		SccLocalPath2 = Editor\\EditorContent
+		SccProjectUniqueName3 = SkinnedModel\\SkinnedModel.csproj
+		SccProjectName3 = SkinnedModel
+		SccLocalPath3 = SkinnedModel
+		SccProjectUniqueName4 = SkinnedModelPipeline\\SkinnedModelPipeline.csproj
+		SccProjectName4 = SkinnedModelPipeline
+		SccLocalPath4 = SkinnedModelPipeline
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -29,6 +39,14 @@ Global
 		{67264F9A-5D37-4A7A-8623-558392D47577}.Release|x86.Build.0 = Release|x86
 		{A70DA665-6832-42E3-A876-35B77F4F730D}.Debug|x86.ActiveCfg = Debug|x86
 		{A70DA665-6832-42E3-A876-35B77F4F730D}.Release|x86.ActiveCfg = Release|x86
+		{384FCA90-5572-47E5-A01E-6B8F0982E695}.Debug|x86.ActiveCfg = Debug|x86
+		{384FCA90-5572-47E5-A01E-6B8F0982E695}.Debug|x86.Build.0 = Debug|x86
+		{384FCA90-5572-47E5-A01E-6B8F0982E695}.Release|x86.ActiveCfg = Release|x86
+		{384FCA90-5572-47E5-A01E-6B8F0982E695}.Release|x86.Build.0 = Release|x86
+		{4A94E30D-EEEE-42D2-9803-798119807D98}.Debug|x86.ActiveCfg = Debug|x86
+		{4A94E30D-EEEE-42D2-9803-798119807D98}.Debug|x86.Build.0 = Debug|x86
+		{4A94E30D-EEEE-42D2-9803-798119807D98}.Release|x86.ActiveCfg = Release|x86
+		{4A94E30D-EEEE-42D2-9803-798119807D98}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
