@@ -45,9 +45,11 @@ namespace Editor.Display3D
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
 
         private GraphicsDevice _graphics;
-        private Game.CConsole console = Game.CConsole.getInstance();
+        private Game.CPhysics _physics = Game.CPhysics.getInstance();
 
         public BoundingFrustum Frustum { get; private set; }
+
+        
 
         /// <summary>
         /// Initialize the class
@@ -115,7 +117,7 @@ namespace Editor.Display3D
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
 
             _translation = Vector3.Transform(_translation, rotation);
-            _cameraPos += _translation;
+            _cameraPos = Vector3.Lerp(_cameraPos, _physics.checkCollisions(_cameraPos + _translation), 0.05f);
             _translation = Vector3.Zero;
 
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))

@@ -19,7 +19,7 @@ namespace Editor.Display3D
         /// </summary>
 
         // Vertexes
-        VertexPositionNormalTexture[] vertices;
+        public VertexPositionNormalTexture[] vertices;
         VertexBuffer vertexBuffer;
 
         // Indexes
@@ -40,6 +40,9 @@ namespace Editor.Display3D
 
         // Number of vertices on x and z axes
         int width, length;
+
+        // Middle of the terrain
+        public Point terrainMiddle;
 
         // Number of vertices and indices
         int nVertices, nIndices;
@@ -117,6 +120,8 @@ namespace Editor.Display3D
 
             vertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
             indexBuffer.SetData<int>(indices);
+
+            terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);
         }
 
         /// <summary>
@@ -243,6 +248,7 @@ namespace Editor.Display3D
         {
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
+            
 
             effect.Parameters["View"].SetValue(View);
             effect.Parameters["Projection"].SetValue(Projection);
@@ -266,7 +272,8 @@ namespace Editor.Display3D
 
             effect.Techniques[0].Passes[0].Apply();
 
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.LineList, 0, 0, nVertices, 0, nIndices / 3);
+
         }
 
         /// <summary>
@@ -296,7 +303,7 @@ namespace Editor.Display3D
             Vector3 nearSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MinDepth), projection, view, World);
             Vector3 farSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MaxDepth), projection, view, World);
             Vector3 direction = farSource - nearSource;
-            Point terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);
+            
 
             float t = 0f;
 
@@ -330,7 +337,7 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="X">Position X</param>
         /// <param name="Z">Position Y</param>
-        /// <param name="Steepness">The steepness at position X Z</param>
+        /// <param name="Steepness">The steepness at position X Y</param>
         /// <returns>The height & steepness at position X Y</returns>
         public float GetHeightAtPosition(float X, float Z, out float Steepness)
         {
@@ -368,9 +375,57 @@ namespace Editor.Display3D
             // Find the average of the amounts lost from coordinates during 
             // truncation above
             float leftOver = ((X - x1) + (Z - z1)) / 2f;
-
             // Interpolate between the corner vertices' heights
             return MathHelper.Lerp(h1, h2, leftOver);
+        }
+
+
+        /// <summary>
+        /// Transform a world position to a terrain position
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Z"></param>
+        /// <returns></returns>
+        public Vector2 positionToTerrain(float X, float Z)
+        {
+            // Clamp coordinates to locations on terrain
+            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
+                (width / 2) * cellSize);
+            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
+                (length / 2) * cellSize);
+
+            // Map from (-Width/2->Width/2,-Length/2->Length/2) 
+            // to (0->Width, 0->Length)
+            X += (width / 2f) * cellSize;
+            Z += (length / 2f) * cellSize;
+
+            // Map to cell coordinates
+            X /= cellSize;
+            Z /= cellSize;
+
+            // Truncate coordinates to get coordinates of top left cell vertex
+            int x1 = (int)X;
+            int z1 = (int)Z;
+
+            // Try to get coordinates of bottom right cell vertex
+            int x2 = x1 + 1 == width ? x1 : x1 + 1;
+            int z2 = z1 + 1 == length ? z1 : z1 + 1;
+
+            return new Vector2(x2, z2);
+        }
+
+        /// <summary>
+        /// Get the normal at a certain point of the world
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Z"></param>
+        /// <returns>The normal vector</returns>
+        public Vector3 getNormalAtPoint(float X, float Z)
+        {
+            Vector2 translatedPosition = positionToTerrain(X, Z);
+            int verticeIndex = (int)(translatedPosition.Y * 512 + translatedPosition.X);
+
+            return vertices[verticeIndex].Normal;
         }
 
 

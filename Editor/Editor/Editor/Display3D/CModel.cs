@@ -152,7 +152,7 @@ namespace Editor.Display3D
         /// <param name="effect">The effect the parameter is applied to</param>
         /// <param name="paramName">The parameter name</param>
         /// <param name="val">The parameter value</param>
-        void setEffectParameter(Effect effect, string paramName, object val)
+        public void setEffectParameter(Effect effect, string paramName, object val)
         {
             if (effect.Parameters[paramName] == null)
                 return;

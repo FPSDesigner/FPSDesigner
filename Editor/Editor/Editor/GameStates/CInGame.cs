@@ -45,9 +45,9 @@ namespace Editor.GameStates
         Display3D.CWater water;
 
         Game.CWeapon weapon;
-        Display3D.Materials.PrelightingRenderer renderer;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
+        Game.CPhysics _physics = Game.CPhysics.getInstance();
 
         public override void Initialize()
         {
@@ -55,12 +55,13 @@ namespace Editor.GameStates
             gameSettings = Game.Settings.CGameSettings.getInstance();
             lensFlare = new Display3D.CLensFlare();
 
+
         }
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             model = new Display3D.CModel(content.Load<Model>("3D//Ground"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            models.Add(new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70f, 10), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics));
+            models.Add(new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70.1f, 100), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics));
 
             models.Add(model);
 
@@ -95,6 +96,7 @@ namespace Editor.GameStates
             water.Objects.Add(terrain);
             water.Objects.Add(model);
 
+            _physics.Initialize(terrain, graphics);
 
             _graphics = graphics;
 
@@ -121,7 +123,7 @@ namespace Editor.GameStates
             weapon.LoadContent(content, testmodel, testInfos, testSounds);
 
 
-            Effect effect = content.Load<Effect>("Effects/ProjectedTexture");
+            /*Effect effect = content.Load<Effect>("Effects/ProjectedTexture");
             model.SetModelEffect(effect, true);
             Display3D.Materials.ProjectedTextureMaterial mat = new Display3D.Materials.ProjectedTextureMaterial(
                 content.Load<Texture2D>("projected texture"), graphics);
@@ -136,8 +138,9 @@ namespace Editor.GameStates
             renderer.Lights = new List<Display3D.Materials.PPPointLight>() {
                 new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
-            };
+            };*/
 
+            Display3D.CSimpleShapes.Initialize(graphics);
         }
 
         public override void unloadContent(ContentManager content)
@@ -154,14 +157,14 @@ namespace Editor.GameStates
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
 
-
             devConsole.Update(kbState, gameTime);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            
 
-            renderer.Draw();
+            //renderer.Draw();
 
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {
@@ -173,14 +176,13 @@ namespace Editor.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            //if (cam.BoundingVolumeIsInView(model.BoundingSphere))
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
-            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+            
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
@@ -189,7 +191,9 @@ namespace Editor.GameStates
 
             devConsole.Draw(gameTime);
 
-            renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
+            //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
+
+            _physics.Draw(gameTime, cam._view, cam._projection);
         }
 
     }
