@@ -44,6 +44,8 @@ namespace Editor.Display3D
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
 
+        private KeyboardState _oldKeyState;
+
         private GraphicsDevice _graphics;
         private Game.CPhysics _physics = Game.CPhysics.getInstance();
 
@@ -100,6 +102,7 @@ namespace Editor.Display3D
             if (!isCamFrozen)
                 CameraUpdates(gametime, keyState, mouseState);
 
+            _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
             generateFrustum();
         }
@@ -113,11 +116,13 @@ namespace Editor.Display3D
         private void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
         {
             Mouse.SetPosition(_middleScreen.X, _middleScreen.Y); 
-            Rotation(mouseState, gametime);
-            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
 
-            _translation = Vector3.Transform(_translation, rotation);
-            _cameraPos = Vector3.Lerp(_cameraPos, _physics.checkCollisions(_cameraPos + _translation), 0.05f);
+            Rotation(mouseState, gametime);
+
+            _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
+            
+            _cameraPos = Vector3.Lerp(_cameraPos, _physics.checkCollisions(_cameraPos + _translation * _cameraVelocity, gametime), 0.2f);
+            //_cameraPos = _physics.checkCollisions(_cameraPos + _translation, gametime);
             _translation = Vector3.Zero;
 
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
@@ -132,10 +137,12 @@ namespace Editor.Display3D
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                 _translation += Vector3.Right;
 
-            _translation = _translation * gametime.ElapsedGameTime.Milliseconds * _cameraVelocity;
+            if (keyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
+                _physics.Jump(_cameraPos, _yaw);
 
-            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+            Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;
+            
         }
 
         /// <summary>

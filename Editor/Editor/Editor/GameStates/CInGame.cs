@@ -60,21 +60,16 @@ namespace Editor.GameStates
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            model = new Display3D.CModel(content.Load<Model>("3D//Ground"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            models.Add(new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70.1f, 100), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics));
-
+            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            
             models.Add(model);
 
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.1f);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.3f);
 
             gameSettings.loadDatas(graphics);
 
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
-
-            skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
-            terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Heightmap"), 0.9f, 50, content.Load<Texture2D>("Textures/terrain_grass"), 150, new Vector3(1, -1, 0), graphics, content);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -82,7 +77,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 0.9f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -91,7 +86,7 @@ namespace Editor.GameStates
 
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(10 * 30));
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30));
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -111,7 +106,7 @@ namespace Editor.GameStates
                 100,
                 100,
                 true,
-                200,
+                10,
                 0
                 }
             };
@@ -139,8 +134,6 @@ namespace Editor.GameStates
                 new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };*/
-
-            Display3D.CSimpleShapes.Initialize(graphics);
         }
 
         public override void unloadContent(ContentManager content)
@@ -192,8 +185,6 @@ namespace Editor.GameStates
             devConsole.Draw(gameTime);
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
-
-            _physics.Draw(gameTime, cam._view, cam._projection);
         }
 
     }
