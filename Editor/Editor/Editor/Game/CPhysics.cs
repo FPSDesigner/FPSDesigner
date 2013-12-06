@@ -38,7 +38,7 @@ namespace Editor.Game
 
         float entityHeight = 1f;
         Vector3 velocity;
-        float gravityConstant = -9.81f / 650;
+        float gravityConstant = -9.81f / 500;
         bool isJumping = false;
 
         public void Initialize(Display3D.CTerrain terrain, GraphicsDevice graphicsDevice)
