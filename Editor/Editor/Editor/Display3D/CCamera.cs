@@ -130,7 +130,7 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos,_translation * _cameraVelocity), 0.1f);
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos,_translation * _cameraVelocity), 0.5f);
 
             _translation = Vector3.Zero;
 
