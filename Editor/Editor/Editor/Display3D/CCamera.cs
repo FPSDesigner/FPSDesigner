@@ -11,6 +11,69 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
+    class CPhysicsMap
+    {
+        public float _gravityAcceleration { get; private set; }
+        public float _charHeight { get; private set; }
+        public float _time { get; private set; }
+
+        public Vector3 _velocity;
+
+        private bool _isJumping = false;
+
+        public Display3D.CTerrain _map;
+
+        public CPhysicsMap(float gravAcc, Display3D.CTerrain map, float height)
+        {
+            this._gravityAcceleration = gravAcc;
+            this._charHeight = height;
+
+            this._map = map;
+        }
+
+        public Vector3 CollisionCheck(GameTime gameTime, Vector3 pos)
+        {
+            float Steepness;
+            float terrainHeight = _map.GetHeightAtPosition(pos.X, pos.Z, out Steepness);
+            _time += gameTime.ElapsedGameTime.Milliseconds;
+
+            if (pos.Y > terrainHeight + _charHeight || _isJumping)
+            {
+                _velocity.Y -= _gravityAcceleration * gameTime.ElapsedGameTime.Milliseconds;
+                _isJumping = false;
+            }
+            else 
+            {
+                pos.Y = terrainHeight + _charHeight;
+               _time = 0.0f;
+                _velocity = Vector3.Zero;
+
+                Vector3 normal = _map.getNormalAtPoint(pos.X, pos.Z);
+                _velocity = Vector3.Zero;
+
+                if (normal.Y > -0.6)
+                {
+                    _velocity = -0.5f * normal;
+                    _velocity.Y = -0.1f;
+                }
+            }
+            return pos + _velocity;
+        }
+
+        public void Jump(Vector3 Position)
+        {
+            float Steepness;
+            float terrainHeight = _map.GetHeightAtPosition(Position.X, Position.Z, out Steepness);
+
+            if (Position.Y <= terrainHeight + _charHeight && !_isJumping)
+            {
+                _velocity.Y += 0.3f;
+                _isJumping = true;
+            }
+
+        }
+    }
+
     /// <summary>
     /// The camera class process all the camera movement and the world view & projection matrix.
     /// </summary>
@@ -19,7 +82,7 @@ namespace Editor.Display3D
         public Matrix _view { get; private set; }
         public Matrix _projection{ get; private set; }
 
-        public Vector3 _cameraPos { get; set; }
+        public Vector3 _cameraPos { get; private set; }
         public Vector3 _cameraTarget { get; private set; }
 
         // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
@@ -27,6 +90,8 @@ namespace Editor.Display3D
         private Vector3 _up;
 
         private Point _middleScreen;
+
+        private Display3D.CTerrain _map;
 
         private Game.Settings.CGameSettings _gameSettings;
 
@@ -47,11 +112,10 @@ namespace Editor.Display3D
         private KeyboardState _oldKeyState;
 
         private GraphicsDevice _graphics;
-        private Game.CPhysics _physics = Game.CPhysics.getInstance();
 
         public BoundingFrustum Frustum { get; private set; }
 
-        
+        public CPhysicsMap _physicsMap { get; private set; }
 
         /// <summary>
         /// Initialize the class
@@ -62,7 +126,9 @@ namespace Editor.Display3D
         /// <param name="nearClip">Closest elements to be rendered</param>
         /// <param name="farClip">Farthest elements to be rentered</param>
         /// <param name="camVelocity">Camera movement speed</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity, bool isCamFrozen = false)
+        /// <param name="camVelocity">Camera Frozen or not</param>
+        /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
+        public CCamera(GraphicsDevice device, Vector3 cameraPos,Vector3 target, float nearClip, float farClip, float camVelocity,bool isCamFrozen, Display3D.CTerrain map)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -79,6 +145,10 @@ namespace Editor.Display3D
             this._yaw = 0f;
 
             this.isCamFrozen = isCamFrozen;
+
+            this._map = map;
+
+            this._physicsMap = new CPhysicsMap(9.81f/500, _map, 3.0f);
 
             this._up = Vector3.Up;
             this._translation = Vector3.Zero;
@@ -97,10 +167,11 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState))
+        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState), 
+            KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)
-                CameraUpdates(gametime, keyState, mouseState);
+                CameraUpdates(gametime, keyState, oldKeyState,mouseState);
 
             _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
@@ -113,16 +184,16 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current keyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        private void CameraUpdates (GameTime gametime, KeyboardState keyState, MouseState mouseState)
+        private void CameraUpdates (GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate ,MouseState mouseState)
         {
             Mouse.SetPosition(_middleScreen.X, _middleScreen.Y); 
 
             Rotation(mouseState, gametime);
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
-            
-            _cameraPos = Vector3.Lerp(_cameraPos, _physics.checkCollisions(_cameraPos + _translation * _cameraVelocity, gametime), 0.2f);
-            //_cameraPos = _physics.checkCollisions(_cameraPos + _translation, gametime);
+
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.CollisionCheck(gametime, _cameraPos + _translation * _cameraVelocity), 0.1f);
+
             _translation = Vector3.Zero;
 
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
@@ -137,8 +208,8 @@ namespace Editor.Display3D
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                 _translation += Vector3.Right;
 
-            if (keyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
-                _physics.Jump(_cameraPos, _yaw);
+            if (keyState.IsKeyDown(Keys.Space) && oldKeySate.IsKeyUp(Keys.Space))
+                _physicsMap.Jump(_cameraPos);
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;

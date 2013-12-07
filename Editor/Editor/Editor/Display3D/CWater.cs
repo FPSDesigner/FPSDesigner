@@ -23,6 +23,9 @@ namespace Editor.Display3D
         RenderTarget2D reflectionTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
+        //Used to pass as parameter to Cam
+        Display3D.CTerrain _map;
+
         private Vector3 waterPosition;
         private Vector2 waterSize;
 
@@ -41,13 +44,15 @@ namespace Editor.Display3D
             }
         }
 
-        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha = 0.9f)
+        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, Display3D.CTerrain map)
         {
             this.content = content;
             this.graphics = graphics;
 
             this.waterPosition = position;
             this.waterSize = size;
+
+            this._map = map;
 
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
@@ -78,7 +83,7 @@ namespace Editor.Display3D
             reflectedCameraTarget.Y = -reflectedCameraTarget.Y + waterMesh._modelPosition.Y * 2;
 
             // Create a temporary camera to render the reflected scene
-            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f, 0.1f, true);
+            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f, 0.1f,true,_map);
 
             reflectionCamera.Update(gameTime);
 

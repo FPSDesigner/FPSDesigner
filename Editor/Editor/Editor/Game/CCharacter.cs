@@ -13,18 +13,25 @@ namespace Editor.Game
 {
     class CCharacter
     {
-        public Vector3 _position { get; set; }
-        public Vector3 _rotation { get; set; }
- 
-        public Matrix[] _viewMatrix { get; set; }
- 
         float _health;
 
-        CCharacter(Vector3 position, float health, GraphicsDevice graphics)
+        public void Initialize()
         {
-            this._position = position;
 
-            this._health = health;
         }
+
+        public void LoadContent(ContentManager content)
+        {
+
+        }
+
+        public void Update(MouseState mouseState, MouseState oldMouseState, CWeapon weapon, GameTime gameTime)
+        {
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+                weapon.Shot(true, gameTime);
+            else if (mouseState.LeftButton == ButtonState.Pressed)
+                weapon.Shot(false, gameTime);
+        }
+
     }
 }

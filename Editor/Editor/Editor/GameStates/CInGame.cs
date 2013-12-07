@@ -34,8 +34,12 @@ namespace Editor.GameStates
         private Display3D.CModel model; // (TEST) One Model displayed
         private Display3D.CCamera cam; // (TEST) One camera instancied
 
+        private Game.CCharacter _character; //Character : can shoot, etc..
+
         private Game.CConsole devConsole;
         private Game.Settings.CGameSettings gameSettings;
+
+        private KeyboardState _oldKeyState;
 
         private bool isPlayerUnderwater = false;
 
@@ -47,12 +51,15 @@ namespace Editor.GameStates
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
-        Game.CPhysics _physics = Game.CPhysics.getInstance();
 
         public override void Initialize()
         {
             devConsole = Game.CConsole.getInstance();
             gameSettings = Game.Settings.CGameSettings.getInstance();
+
+            _character = new Game.CCharacter();
+            _character.Initialize();
+
             lensFlare = new Display3D.CLensFlare();
 
 
@@ -60,16 +67,18 @@ namespace Editor.GameStates
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
+            //Display 1 model : Building
             model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 70f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
             
             models.Add(model);
-
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 75f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.3f);
 
             gameSettings.loadDatas(graphics);
 
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
+
+            //Load content for Chara class
+            _character.LoadContent(content);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -84,14 +93,15 @@ namespace Editor.GameStates
             terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
+            //Load one cam : Main camera (for the moment)
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.8f, false, terrain);
+
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30));
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.9f,terrain);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
-
-            _physics.Initialize(terrain, graphics);
 
             _graphics = graphics;
 
@@ -143,28 +153,24 @@ namespace Editor.GameStates
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            cam.Update(gameTime, kbState, mouseState);
+            cam.Update(gameTime, kbState, mouseState, _oldKeyState);
 
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
-                weapon.Shot(true, gameTime);
-            else if (mouseState.LeftButton == ButtonState.Pressed)
-                weapon.Shot(false, gameTime);
-
+            //Update all chara actions
+            _character.Update(mouseState, oldMouseState, weapon, gameTime);
+            _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            
-
             //renderer.Draw();
-
             if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
                 water.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
+
             water.PreDraw(cam, gameTime);
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
