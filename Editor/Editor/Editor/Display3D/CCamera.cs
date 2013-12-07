@@ -97,6 +97,8 @@ namespace Editor.Display3D
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
+
+            generateFrustum();
         }
 
         /// <summary>
@@ -177,8 +179,7 @@ namespace Editor.Display3D
         /// <returns></returns>
         public bool BoundingVolumeIsInView(BoundingSphere sphere)
         {
-            return true;
-            //return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
+            return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
         }
 
         /// <summary>
