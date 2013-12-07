@@ -256,6 +256,28 @@ namespace Editor.Display3D
                             part.Effect.Parameters["ClipPlane"].SetValue(Plane.Value);
                 }
         }
+
+        /// <summary>
+        /// Get all the vertex positions of a mesh part.
+        /// </summary>
+        /// <param name="meshPart">The MeshPart we want the vertex positions</param>
+        /// <param name="transform">The world matrix</param>
+        /// <returns></returns>
+        private Vector3[] GenerateVertexPoints(ModelMeshPart meshPart, Matrix transform)
+        {
+            if (meshPart.VertexBuffer == null)
+                return null;
+
+            Vector3[] positions = VertexElementExtractor.GetVertexElement(meshPart, VertexElementUsage.Position);
+            if (positions == null)
+                return null;
+
+
+            Vector3[] transformedPositions = new Vector3[positions.Length];
+            Vector3.Transform(positions, ref transform, transformedPositions);
+
+            return transformedPositions;
+        }
     }
 
     public class MeshTag
@@ -270,6 +292,27 @@ namespace Editor.Display3D
             this.Color = Color;
             this.Texture = Texture;
             this.SpecularPower = SpecularPower;
+        }
+    }
+
+    public static class VertexElementExtractor
+    {
+        public static Vector3[] GetVertexElement(ModelMeshPart meshPart, VertexElementUsage usage)
+        {
+            VertexDeclaration vd = meshPart.VertexBuffer.VertexDeclaration;
+            VertexElement[] elements = vd.GetVertexElements();
+
+            Func<VertexElement, bool> elementPredicate = ve => ve.VertexElementUsage == usage && ve.VertexElementFormat == VertexElementFormat.Vector3;
+            if (!elements.Any(elementPredicate))
+                return null;
+
+            VertexElement element = elements.First(elementPredicate);
+
+            Vector3[] vertexData = new Vector3[meshPart.NumVertices];
+            meshPart.VertexBuffer.GetData((meshPart.VertexOffset * vd.VertexStride) + element.Offset,
+                vertexData, 0, vertexData.Length, vd.VertexStride);
+
+            return vertexData;
         }
     }
 }
