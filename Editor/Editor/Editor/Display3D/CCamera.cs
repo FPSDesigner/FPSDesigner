@@ -11,68 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Display3D
 {
-    class CPhysicsMap
-    {
-        public float _gravityAcceleration { get; private set; }
-        public float _charHeight { get; private set; }
-        public float _time { get; private set; }
-
-        public Vector3 _velocity;
-
-        private bool _isJumping = false;
-
-        public Display3D.CTerrain _map;
-
-        public CPhysicsMap(float gravAcc, Display3D.CTerrain map, float height)
-        {
-            this._gravityAcceleration = gravAcc;
-            this._charHeight = height;
-
-            this._map = map;
-        }
-
-        public Vector3 CollisionCheck(GameTime gameTime, Vector3 pos)
-        {
-            float Steepness;
-            float terrainHeight = _map.GetHeightAtPosition(pos.X, pos.Z, out Steepness);
-            _time += gameTime.ElapsedGameTime.Milliseconds;
-
-            if (pos.Y > terrainHeight + _charHeight || _isJumping)
-            {
-                _velocity.Y -= _gravityAcceleration * gameTime.ElapsedGameTime.Milliseconds;
-                _isJumping = false;
-            }
-            else 
-            {
-                pos.Y = terrainHeight + _charHeight;
-               _time = 0.0f;
-                _velocity = Vector3.Zero;
-
-                Vector3 normal = _map.getNormalAtPoint(pos.X, pos.Z);
-                _velocity = Vector3.Zero;
-
-                if (normal.Y > -0.6)
-                {
-                    _velocity = -0.5f * normal;
-                    _velocity.Y = -0.1f;
-                }
-            }
-            return pos + _velocity;
-        }
-
-        public void Jump(Vector3 Position)
-        {
-            float Steepness;
-            float terrainHeight = _map.GetHeightAtPosition(Position.X, Position.Z, out Steepness);
-
-            if (Position.Y <= terrainHeight + _charHeight && !_isJumping)
-            {
-                _velocity.Y += 0.3f;
-                _isJumping = true;
-            }
-
-        }
-    }
 
     /// <summary>
     /// The camera class process all the camera movement and the world view & projection matrix.
@@ -115,7 +53,7 @@ namespace Editor.Display3D
 
         public BoundingFrustum Frustum { get; private set; }
 
-        public CPhysicsMap _physicsMap { get; private set; }
+        public Game.CPhysics _physicsMap { get; private set; }
 
         /// <summary>
         /// Initialize the class
@@ -148,7 +86,7 @@ namespace Editor.Display3D
 
             this._map = map;
 
-            this._physicsMap = new CPhysicsMap(9.81f/500, _map, 3.0f);
+            this._physicsMap = new Game.CPhysics(9.81f/500, _map, 3.0f);
 
             this._up = Vector3.Up;
             this._translation = Vector3.Zero;
@@ -192,7 +130,7 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.CollisionCheck(gametime, _cameraPos + _translation * _cameraVelocity), 0.1f);
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos,_translation * _cameraVelocity), 0.1f);
 
             _translation = Vector3.Zero;
 

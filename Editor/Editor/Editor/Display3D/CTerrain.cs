@@ -337,9 +337,8 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="X">Position X</param>
         /// <param name="Z">Position Y</param>
-        /// <param name="Steepness">The steepness at position X Y</param>
         /// <returns>The height & steepness at position X Y</returns>
-        public float GetHeightAtPosition(float X, float Z, out float Steepness)
+        public float GetHeightAtPosition(float X, float Z)
         {
             // Clamp coordinates to locations on terrain
             X = MathHelper.Clamp(X, (-width / 2) * cellSize,
@@ -356,27 +355,19 @@ namespace Editor.Display3D
             X /= cellSize;
             Z /= cellSize;
 
-            // Truncate coordinates to get coordinates of top left cell vertex
-            int x1 = (int)X;
-            int z1 = (int)Z;
+            int x = (int)X;
+            int z = (int)Z;
+            float fTX = X - x;
+            float fTY = Z - z;
 
-            // Try to get coordinates of bottom right cell vertex
-            int x2 = x1 + 1 == width ? x1 : x1 + 1;
-            int z2 = z1 + 1 == length ? z1 : z1 + 1;
+            float fSampleH1 = heights[x, z];
+            float fSampleH2 = heights[x + 1, z];
+            float fSampleH3 = heights[x, z + 1];
+            float fSampleH4 = heights[x + 1, z + 1];
 
-            // Get the heights at the two corners of the cell
-            float h1 = heights[x1, z1];
-            float h2 = heights[x2, z2];
+            return (fSampleH1 * (1.0f - fTX) + fSampleH2 * fTX) * (1.0f - fTY) + (fSampleH3 * (1.0f - fTX) + fSampleH4 * fTX) * (fTY);
 
-            // Determine steepness (angle between higher and lower vertex of cell)
-            Steepness = (float)Math.Atan(Math.Abs((h1 - h2)) /
-                (cellSize * Math.Sqrt(2)));
-
-            // Find the average of the amounts lost from coordinates during 
-            // truncation above
-            float leftOver = ((X - x1) + (Z - z1)) / 2f;
-            // Interpolate between the corner vertices' heights
-            return MathHelper.Lerp(h1, h2, leftOver);
+            //return MathHelper.Lerp(h1, h2, leftOver);
         }
 
 
