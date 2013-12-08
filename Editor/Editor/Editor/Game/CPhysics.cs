@@ -34,9 +34,15 @@ namespace Editor.Game
             _velocity = Vector3.Zero;
         }
 
-        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation)
+        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation, bool applyTranslation, Vector3 triangleNormal)
         {
-            Vector3 newPosition = position + translation;
+            Vector3 newPosition = position;
+
+            if (applyTranslation)
+                newPosition += translation;
+            else
+                newPosition -= triangleNormal;
+
             // Check terrain collision
             float terrainHeight = _terrain.GetHeightAtPosition(newPosition.X, newPosition.Z);
 
@@ -68,7 +74,7 @@ namespace Editor.Game
 
             if (Position.Y <= terrainHeight + _entityHeight)
             {
-                _velocity.Y += 0.3f;
+                _velocity.Y += 0.6f;
                 _isJumping = true;
             }
         }

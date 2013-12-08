@@ -55,6 +55,7 @@ namespace Editor.Display3D
 
         public BoundingFrustum _Frustum { get; private set; }
         public BoundingSphere _BoundingSphere { get; private set; }
+        public List<CModel> _modelsList { get; set; }
 
         public Game.CPhysics _physicsMap { get; private set; }
 
@@ -137,7 +138,21 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * _cameraVelocity), 0.5f);
+            if (!isCamFrozen)
+                _BoundingSphere = new BoundingSphere(_cameraPos + _translation, _playerHeight / 2);
+
+            bool playerIntersects = false;
+            Vector3 triangleNormal = Vector3.Zero;
+            for (int i = 0; i < _modelsList.Count; i++)
+            {
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphere, out triangleNormal))
+                {
+                    playerIntersects = true;
+                    break;
+                }
+            }
+
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * _cameraVelocity, !playerIntersects, triangleNormal), 0.5f);
 
             _translation = Vector3.Zero;
 
@@ -158,9 +173,6 @@ namespace Editor.Display3D
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;
-
-            if (!isCamFrozen)
-                _BoundingSphere = new BoundingSphere(_cameraPos, _playerHeight / 2);
         }
 
         /// <summary>
