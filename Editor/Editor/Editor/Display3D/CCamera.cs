@@ -18,7 +18,7 @@ namespace Editor.Display3D
     class CCamera
     {
         public Matrix _view { get; private set; }
-        public Matrix _projection{ get; private set; }
+        public Matrix _projection { get; private set; }
 
         public Vector3 _cameraPos { get; private set; }
         public Vector3 _cameraTarget { get; private set; }
@@ -38,11 +38,13 @@ namespace Editor.Display3D
         // Rotations angles
         public float _yaw { get; private set; }
         public float _pitch { get; private set; }
-        
+
         private float _nearClip;
         private float _farClip;
         private float _cameraVelocity;
         private float _aspectRatio;
+
+        public float _playerHeight = 3.0f;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
@@ -51,7 +53,8 @@ namespace Editor.Display3D
 
         private GraphicsDevice _graphics;
 
-        public BoundingFrustum Frustum { get; private set; }
+        public BoundingFrustum _Frustum { get; private set; }
+        public BoundingSphere _BoundingSphere { get; private set; }
 
         public Game.CPhysics _physicsMap { get; private set; }
 
@@ -66,7 +69,7 @@ namespace Editor.Display3D
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="camVelocity">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos,Vector3 target, float nearClip, float farClip, float camVelocity,bool isCamFrozen, Display3D.CTerrain map)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity, bool isCamFrozen, Display3D.CTerrain map)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -86,7 +89,7 @@ namespace Editor.Display3D
 
             this._map = map;
 
-            this._physicsMap = new Game.CPhysics(9.81f/500, _map, 3.0f);
+            this._physicsMap = new Game.CPhysics(9.81f / 500, _map, _playerHeight);
 
             this._up = Vector3.Up;
             this._translation = Vector3.Zero;
@@ -99,6 +102,8 @@ namespace Editor.Display3D
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
 
             generateFrustum();
+            if (!isCamFrozen)
+                _BoundingSphere = new BoundingSphere(_cameraPos, _playerHeight / 2);
         }
 
         /// <summary>
@@ -107,11 +112,11 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState), 
+        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)
-                CameraUpdates(gametime, keyState, oldKeyState,mouseState);
+                CameraUpdates(gametime, keyState, oldKeyState, mouseState);
 
             _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
@@ -124,15 +129,15 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current keyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        private void CameraUpdates (GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate ,MouseState mouseState)
+        private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState)
         {
-            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y); 
+            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
             Rotation(mouseState, gametime);
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos,_translation * _cameraVelocity), 0.5f);
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * _cameraVelocity), 0.5f);
 
             _translation = Vector3.Zero;
 
@@ -153,7 +158,9 @@ namespace Editor.Display3D
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;
-            
+
+            if (!isCamFrozen)
+                _BoundingSphere = new BoundingSphere(_cameraPos, _playerHeight / 2);
         }
 
         /// <summary>
@@ -179,7 +186,7 @@ namespace Editor.Display3D
         /// <returns></returns>
         public bool BoundingVolumeIsInView(BoundingSphere sphere)
         {
-            return (Frustum.Contains(sphere) != ContainmentType.Disjoint);
+            return (_Frustum.Contains(sphere) != ContainmentType.Disjoint);
         }
 
         /// <summary>
@@ -189,7 +196,7 @@ namespace Editor.Display3D
         /// <returns></returns>
         public bool BoundingVolumeIsInView(BoundingBox box)
         {
-            return (Frustum.Contains(box) != ContainmentType.Disjoint);
+            return (_Frustum.Contains(box) != ContainmentType.Disjoint);
         }
 
         /// <summary>
@@ -198,7 +205,7 @@ namespace Editor.Display3D
         private void generateFrustum()
         {
             Matrix viewProjection = _view * _projection;
-            Frustum = new BoundingFrustum(viewProjection);
+            _Frustum = new BoundingFrustum(viewProjection);
         }
     }
 }
