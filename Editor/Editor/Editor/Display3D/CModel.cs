@@ -270,7 +270,7 @@ namespace Editor.Display3D
                 Matrix.CreateTranslation(_modelPosition);
 
             bool hasCollisionMesh = false;
-            ModelMesh collisionMesh;
+            ModelMesh collisionMesh = default(ModelMesh);
             foreach (ModelMesh mesh in _model.Meshes)
             {
                 if (mesh.Name == collisionShapeName)
