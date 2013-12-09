@@ -21,6 +21,7 @@ namespace Editor.Game
 
         public float _entityHeight { get; private set; }
         public float _gravityConstant = -9.81f / 500;
+        public float _maxFreeFallSpeed = -5f;
 
         public Vector3 _velocity;
 
@@ -48,7 +49,9 @@ namespace Editor.Game
             if (newPosition.Y >= terrainHeight + _entityHeight || _isJumping)
             {
                 float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
-                _velocity.Y += _gravityConstant * dt;
+                if(_velocity.Y > _maxFreeFallSpeed)
+                    _velocity.Y += _gravityConstant * dt;
+
                 _isJumping = false;
             }
             else
@@ -70,7 +73,8 @@ namespace Editor.Game
             BoundingSphere _BoundingSphereTranslation = new BoundingSphere(newPosition, _entityHeight / 2);
             for (int i = 0; i < _modelsList.Count; i++)
             {
-                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal))
+                Vector3 intersectionPoint;
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal, out intersectionPoint))
                 {
                     newPosition -= translation;
                     Display3D.CSimpleShapes.AddLine(triangleNormal, 2 * triangleNormal, Color.Red);
@@ -89,9 +93,11 @@ namespace Editor.Game
             BoundingSphere _BoundingSphereGravity = new BoundingSphere(newPosition, _entityHeight / 2);
             for (int i = 0; i < _modelsList.Count; i++)
             {
-                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal))
+                Vector3 intersectionPoint;
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal, out intersectionPoint))
                 {
                     newPosition -= _velocity;
+                    //newPosition.Y = intersectionPoint.Y + _entityHeight;
                     _velocity = Vector3.Zero;
                     _lastFreeFall = gameTime.TotalGameTime.TotalSeconds;
                     break;
