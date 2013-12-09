@@ -11,15 +11,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace SkinnedModel
 {
-    class SkinningData
+    public class SkinningData
     {
-        // store all the animations
+        // Gets a collection of animation clips, stored by name  
         [ContentSerializer]
-        public Dictionary<string, AnimationClip> _animations { get; private set; }
+        public Dictionary<string, AnimationClip> AnimationClips { get; private set; }
 
-        //Bind all the bones, following parents
-        [ContentSerializer]
-        public List<Matrix> BindPose { get; private set; }
+        // Bind pose matrices for each bone in the skeleton,    
+        // relative to the parent bone.  
+        [ContentSerializer]  public List<Matrix> BindPose { get; private set; }
 
         // Vertex to bonespace transforms for each bone in the skeleton.  
         [ContentSerializer]  public List<Matrix> InverseBindPose { get; private set; }
@@ -27,13 +27,10 @@ namespace SkinnedModel
         // For each bone in the skeleton, stores the index of the parent bone.  
         [ContentSerializer]  public List<int> SkeletonHierarchy { get; private set; }
 
-        public SkinningData(Dictionary<string, AnimationClip> animationClips,    List<Matrix> bindPose, List<Matrix> inverseBindPose,     List<int> skeletonHierarchy) 
-        {    
-            _animations = animationClips;    BindPose = bindPose;    InverseBindPose = inverseBindPose;    SkeletonHierarchy = skeletonHierarchy;  
+        public SkinningData(Dictionary<string, AnimationClip> animationClips, List<Matrix> bindPose, List<Matrix> inverseBindPose, List<int> skeletonHierarchy)
+        { 
+            AnimationClips = animationClips; BindPose = bindPose; InverseBindPose = inverseBindPose; SkeletonHierarchy = skeletonHierarchy; 
         }
-        private SkinningData()
-        {
-
-        }
+        private SkinningData() { } 
     }
 }

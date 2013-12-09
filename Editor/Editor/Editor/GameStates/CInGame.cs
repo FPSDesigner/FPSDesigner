@@ -68,7 +68,7 @@ namespace Editor.GameStates
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             //Display 1 model : Building
-            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 50f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 53.4f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
             
             models.Add(model);
 

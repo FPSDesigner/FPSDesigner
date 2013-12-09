@@ -11,25 +11,19 @@ using Microsoft.Xna.Framework.Media;
 
 namespace SkinnedModel
 {
-    class AnimationClip
+    public class AnimationClip
     {
-        //total time of an anim
-        [ContentSerializer]
-        public TimeSpan _totalTime { get; private set; }
+        // Total length of the clip  
+        [ContentSerializer]  public TimeSpan Duration { get; private set; }
 
-        //all the keys
-        [ContentSerializer]
-        public List<KeyFrame> _keyFrames{get ; private set;}
+        // List of keyframes for all bones, sorted by time  
+        [ContentSerializer]  public List<Keyframe> Keyframes { get; private set; }
 
-        public AnimationClip(TimeSpan totalTime, List<KeyFrame> keys)
-        {
-            this._totalTime = totalTime;
-            this._keyFrames = keys;
+        public AnimationClip(TimeSpan Duration, List<Keyframe> Keyframes) 
+        { 
+            this.Duration = Duration; this.Keyframes = Keyframes; 
         }
 
-        private AnimationClip()
-        {
-
-        }
+        private AnimationClip() { } 
     }
 }

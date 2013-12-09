@@ -6,8 +6,12 @@ Content\Effects\Terrain.xnb
 Content\Effects\PointLightEffect.xnb
 Content\Effects\Skysphere.xnb
 Content\Effects\WaterEffect.xnb
+Content\Effects\PPLight.xnb
+Content\Effects\ProjectedTexture.xnb
+Content\Effects\PPDepthNormal.xnb
 Content\3D\building001.xnb
 Content\3D\Skysphere.xnb
+Content\3D\PPLightMesh.xnb
 Content\2D\Menu\MENU_Bckground.xnb
 Content\2D\Menu\MENU_TitleGame.xnb
 Content\2D\Menu\MENU_Sight.xnb
@@ -28,15 +32,10 @@ Content\Textures\Terrain\snow.xnb
 Content\Textures\Terrain\weightMap.xnb
 Content\Textures\terrain_grass.xnb
 Content\Textures\water_normal.xnb
-Content\Sounds\Menu\MENU_SoundSelction.xnb
-Content\3D\plane.xnb
-Content\3D\Ground.xnb
 Content\3D\Checker.xnb
-Content\3D\Checker_0.xnb
-Content\Effects\PPLight.xnb
+Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
-Content\Effects\ProjectedTexture.xnb
-Content\projected texture.xnb
-Content\Effects\PPDepthNormal.xnb
-Content\3D\PPLightMesh.xnb
+Content\3D\plane.xnb
+Content\3D\Ground.xnb
+Content\3D\Checker_0.xnb
