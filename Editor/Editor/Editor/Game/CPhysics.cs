@@ -14,7 +14,6 @@ namespace Editor.Game
     class CPhysics
     {
 
-        public List<Model> _modelsList;
         private Display3D.CTerrain _terrain;
 
         private double _lastFreeFall = 0;
@@ -25,6 +24,9 @@ namespace Editor.Game
 
         public Vector3 _velocity;
 
+        public BoundingSphere _BoundingSphere { get; private set; }
+        public List<Display3D.CModel> _modelsList { get; set; }
+
         public CPhysics(float gravCoef, Display3D.CTerrain map, float entityHeight)
         {
             this._terrain = map;
@@ -32,16 +34,13 @@ namespace Editor.Game
             this._gravityConstant = -gravCoef;
 
             _velocity = Vector3.Zero;
+
+            _BoundingSphere = new BoundingSphere(Vector3.Zero, entityHeight / 2);
         }
 
-        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation, bool applyTranslation, Vector3 triangleNormal)
+        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation)
         {
-            Vector3 newPosition = position;
-
-            if (applyTranslation)
-                newPosition += translation;
-            else
-                newPosition -= triangleNormal;
+            Vector3 newPosition = position + translation;
 
             // Check terrain collision
             float terrainHeight = _terrain.GetHeightAtPosition(newPosition.X, newPosition.Z);
@@ -65,14 +64,46 @@ namespace Editor.Game
                     _velocity.Y = -0.1f;
                 }
             }
-            return newPosition + _velocity;
+
+            Vector3 triangleNormal = Vector3.Zero;
+
+            BoundingSphere _BoundingSphereTranslation = new BoundingSphere(newPosition, _entityHeight / 2);
+            for (int i = 0; i < _modelsList.Count; i++)
+            {
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal))
+                {
+                    newPosition -= translation;
+                    Display3D.CSimpleShapes.AddLine(triangleNormal, 2 * triangleNormal, Color.Red);
+                    //translation = Vector3.Cross(translation, triangleNormal);
+
+                    translation.Y = -triangleNormal.Y;
+                    if (Vector3.Dot(translation, triangleNormal) < -0.5f)
+                        newPosition += translation;
+                    Console.WriteLine(Vector3.Dot(translation, triangleNormal));
+                    break;
+                }
+            }
+
+            newPosition += _velocity;
+
+            BoundingSphere _BoundingSphereGravity = new BoundingSphere(newPosition, _entityHeight / 2);
+            for (int i = 0; i < _modelsList.Count; i++)
+            {
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal))
+                {
+                    newPosition -= _velocity;
+                    _velocity = Vector3.Zero;
+                    _lastFreeFall = gameTime.TotalGameTime.TotalSeconds;
+                    break;
+                }
+            }
+            Console.WriteLine(_velocity);
+            return newPosition;
         }
 
         public void Jump(Vector3 Position)
         {
-            float terrainHeight = _terrain.GetHeightAtPosition(Position.X, Position.Z);
-
-            if (Position.Y <= terrainHeight + _entityHeight)
+            if (_velocity.Y == 0)
             {
                 _velocity.Y += 0.6f;
                 _isJumping = true;

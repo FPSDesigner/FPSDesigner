@@ -69,7 +69,7 @@ namespace Editor.GameStates
         {
             //Display 1 model : Building
             model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 53.4f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-            
+
             models.Add(model);
 
             gameSettings.loadDatas(graphics);
@@ -95,12 +95,12 @@ namespace Editor.GameStates
 
             //Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.4f, false, terrain);
-            cam._modelsList = models;
+            cam._physicsMap._modelsList = models;
 
 
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.9f,terrain);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.9f, terrain);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -183,7 +183,7 @@ namespace Editor.GameStates
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
-            
+
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
