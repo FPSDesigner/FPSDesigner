@@ -34,6 +34,8 @@ namespace Editor.Display3D
         private List<Triangle> _trianglesPositions = new List<Triangle>();
         private List<Vector3> _trianglesNormal = new List<Vector3>();
 
+        private string collisionShapeName = "collision_shape";
+
         public BoundingSphere BoundingSphere
         {
             get
@@ -125,8 +127,8 @@ namespace Editor.Display3D
                         Material.SetEffectParameters(effect);
                     }
                 }
-
-                mesh.Draw();
+                if (mesh.Name != collisionShapeName)
+                    mesh.Draw();
             }
         }
 
@@ -267,38 +269,51 @@ namespace Editor.Display3D
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(_modelPosition);
 
+            bool hasCollisionMesh = false;
+            ModelMesh collisionMesh;
             foreach (ModelMesh mesh in _model.Meshes)
             {
-                Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
-                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                if (mesh.Name == collisionShapeName)
                 {
-                    List<Vector3> indices = new List<Vector3>();
-                    List<TriangleVertexIndices> triangles = new List<TriangleVertexIndices>();
-                    ExtractModelMeshPartData(meshPart, ref localWorld, indices, triangles);
-
-                    for (int x = 0; x < triangles.Count; x++)
-                    {
-                        Vector3 v0 = indices[triangles[x].A];
-                        Vector3 v1 = indices[triangles[x].B];
-                        Vector3 v2 = indices[triangles[x].C];
-
-                        _trianglesPositions.Add(new Triangle(v0, v1, v2));
-
-                        // Calculate normal
-
-                        Vector3 Vector = Vector3.Cross(v0 - v1, v0 - v2);
-                        Vector.Normalize();
-                        //Vector = Vector3.TransformNormal(Vector, localWorld);
-
-                        _trianglesNormal.Add(Vector);
-
-                        /*Vector3 mid = (v0 + v1 + v2) / 3;
-                        CSimpleShapes.AddLine(mid + Vector, mid + 1.1f * Vector, Color.Green, 255f);*/
-                    }
+                    hasCollisionMesh = true;
+                    collisionMesh = mesh;
+                    break;
                 }
             }
+            
+            foreach (ModelMesh mesh in _model.Meshes)
+            {
+                bool isCollisionOne = (hasCollisionMesh && collisionMesh.Name == mesh.Name);
+                if (!hasCollisionMesh || isCollisionOne)
+                {
+                    Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
+                    foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                    {
+                        List<Vector3> indices = new List<Vector3>();
+                        List<TriangleVertexIndices> triangles = new List<TriangleVertexIndices>();
+                        ExtractModelMeshPartData(meshPart, ref localWorld, indices, triangles);
 
+                        for (int x = 0; x < triangles.Count; x++)
+                        {
+                            Vector3 v0 = indices[triangles[x].A];
+                            Vector3 v1 = indices[triangles[x].B];
+                            Vector3 v2 = indices[triangles[x].C];
+
+                            _trianglesPositions.Add(new Triangle(v0, v1, v2));
+
+                            // Calculate normal
+                            Vector3 Vector = Vector3.Cross(v0 - v1, v0 - v2);
+                            Vector.Normalize();
+
+                            _trianglesNormal.Add(Vector);
+                        }
+                    }
+                    if (isCollisionOne)
+                        break;
+                }
+            }
         }
+
         /// <summary>
         /// Get all the triangles from each mesh part (Changed for XNA 4)
         /// </summary>
