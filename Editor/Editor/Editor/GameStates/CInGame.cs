@@ -94,7 +94,7 @@ namespace Editor.GameStates
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             //Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, 0.4f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, false, terrain);
             cam._physicsMap._modelsList = models;
 
 
@@ -155,10 +155,10 @@ namespace Editor.GameStates
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            cam.Update(gameTime, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.Run(kbState) , kbState, mouseState, _oldKeyState);
 
             //Update all chara actions
-            _character.Update(mouseState, oldMouseState, weapon, gameTime);
+            _character.Update(mouseState, oldMouseState, kbState,weapon, gameTime);
             _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);
         }

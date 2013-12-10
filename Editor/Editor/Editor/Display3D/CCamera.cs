@@ -41,7 +41,6 @@ namespace Editor.Display3D
 
         private float _nearClip;
         private float _farClip;
-        private float _cameraVelocity;
         private float _aspectRatio;
 
         public float _playerHeight = 3.0f;
@@ -69,15 +68,13 @@ namespace Editor.Display3D
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="camVelocity">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, float camVelocity, bool isCamFrozen, Display3D.CTerrain map)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, Display3D.CTerrain map)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
 
             this._nearClip = nearClip;
             this._farClip = farClip;
-
-            this._cameraVelocity = camVelocity;
 
             this._cameraPos = cameraPos;
             this._cameraTarget = target;
@@ -110,11 +107,11 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
+        public void Update(GameTime gametime,float camVelocity = 0.4f,KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)
-                CameraUpdates(gametime, keyState, oldKeyState, mouseState);
+                CameraUpdates(gametime, keyState, oldKeyState, mouseState,camVelocity);
 
             _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
@@ -127,7 +124,7 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current keyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState)
+        private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState, float camVelocity)
         {
             Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
@@ -135,8 +132,7 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * _cameraVelocity), 0.5f);
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity), 0.5f);
 
             _translation = Vector3.Zero;
 

@@ -74,7 +74,7 @@ namespace Editor.Game
             for (int i = 0; i < _modelsList.Count; i++)
             {
                 Vector3 intersectionPoint;
-                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal, out intersectionPoint))
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal))
                 {
                     newPosition -= translation;
                     Display3D.CSimpleShapes.AddLine(triangleNormal, 2 * triangleNormal, Color.Red);
@@ -94,7 +94,7 @@ namespace Editor.Game
             for (int i = 0; i < _modelsList.Count; i++)
             {
                 Vector3 intersectionPoint;
-                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal, out intersectionPoint))
+                if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal))
                 {
                     newPosition -= _velocity;
                     //newPosition.Y = intersectionPoint.Y + _entityHeight;

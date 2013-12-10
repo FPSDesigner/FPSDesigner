@@ -63,6 +63,7 @@ namespace Editor.Game.Settings
                     MRight = Keys.D,
                     MBackward = Keys.S,
                     MJump = Keys.Space,
+                    MSprint = Keys.LeftShift,
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
                     MouseSensibility = 0.001f,
                 },
@@ -102,6 +103,7 @@ namespace Editor.Game.Settings
         public Keys MLeft { get; set; }
         public Keys MBackward { get; set; }
         public Keys MJump { get; set; }
+        public Keys MSprint { get; set; }
         public Keys Console { get; set; }
         public float MouseSensibility { get; set; }
     }

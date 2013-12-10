@@ -83,7 +83,7 @@ namespace Editor.Display3D
             reflectedCameraTarget.Y = -reflectedCameraTarget.Y + waterMesh._modelPosition.Y * 2;
 
             // Create a temporary camera to render the reflected scene
-            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f, 0.1f,true,_map);
+            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f,true,_map);
 
             reflectionCamera.Update(gameTime);
 
