@@ -14,8 +14,8 @@ namespace Editor.Game
     class CCharacter
     {
         private Game.Settings.CGameSettings _gameSettings;
-        float _initSpeed = 0.4f;
-        float _velocity = 0.4f;
+        float _initSpeed = 0.3f;
+        float _velocity = 0.3f;
 
         public void Initialize()
         {
@@ -35,14 +35,16 @@ namespace Editor.Game
                 weapon.Shot(false, gameTime);
         }
 
-        public float Run(KeyboardState state)
+        //This function allows the player to Run
+            //the fallVelocity argument is used to prevent the player from speed in the air
+        public float Run(KeyboardState state, Vector3 fallVelocity)
         {
             if (state.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
             {
-
-                if (_velocity < _initSpeed + 0.2f)
+                if ((_velocity < _initSpeed + 0.4f) && fallVelocity.Y <= 0.0f)
                 {
                     _velocity += .01f;
+                    //_velocity += 2f;
                 }
             }
             else

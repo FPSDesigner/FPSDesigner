@@ -44,6 +44,9 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="SkinnedModelPipeline">
+      <HintPath>..\..\SkinnedModelPipeline\bin\x86\Debug\SkinnedModelPipeline.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="2D\consoleFont.spritefont">
@@ -291,10 +294,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
-      <Project>{4a94e30d-eeee-42d2-9803-798119807d98}</Project>
-      <Name>SkinnedModelPipeline</Name>
-    </ProjectReference>
+    <Compile Include="Textures\Model textures\Uvw_Hand.png">
+      <Name>Uvw_Hand</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="3D\3DModels\" />

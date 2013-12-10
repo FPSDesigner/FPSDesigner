@@ -107,7 +107,7 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime,float camVelocity = 0.4f,KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
+        public void Update(GameTime gametime,float camVelocity = 0.3f,KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)

@@ -62,7 +62,6 @@ namespace Editor.GameStates
 
             lensFlare = new Display3D.CLensFlare();
 
-
         }
 
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
@@ -155,10 +154,12 @@ namespace Editor.GameStates
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            cam.Update(gameTime, _character.Run(kbState) , kbState, mouseState, _oldKeyState);
-
             //Update all chara actions
-            _character.Update(mouseState, oldMouseState, kbState,weapon, gameTime);
+            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime);
+
+            //Update camera - _charac.Run is a functions allows player to run, loook at the param
+            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity) , kbState, mouseState, _oldKeyState);
+
             _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);
         }

@@ -13,7 +13,6 @@ namespace Editor.Game
 {
     class CPhysics
     {
-
         private Display3D.CTerrain _terrain;
 
         private double _lastFreeFall = 0;
@@ -83,7 +82,6 @@ namespace Editor.Game
                     translation.Y = -triangleNormal.Y;
                     if (Vector3.Dot(translation, triangleNormal) < -0.5f)
                         newPosition += translation;
-                    Console.WriteLine(Vector3.Dot(translation, triangleNormal));
                     break;
                 }
             }
