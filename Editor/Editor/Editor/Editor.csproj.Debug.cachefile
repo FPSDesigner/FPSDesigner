@@ -33,10 +33,11 @@ Content\Textures\Terrain\weightMap.xnb
 Content\Textures\terrain_grass.xnb
 Content\Textures\water_normal.xnb
 Content\3D\Checker.xnb
+Content\Textures\Model textures\Uvw_Hand.xnb
 Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
 Content\3D\plane.xnb
 Content\3D\Ground.xnb
 Content\3D\Checker_0.xnb
-Content\Textures\Model textures\Uvw_Hand.xnb
+Content\3D\3DModels\Arm_NoWeap.xnb

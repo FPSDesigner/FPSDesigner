@@ -14,9 +14,10 @@ using TOutput = System.String;
 
 namespace SkinnedModelPipeline
 {
-    [ContentProcessor]
+    [ContentProcessor(DisplayName = "Skinned Model Processor")]
     public class SkinnedModelProcessor : ModelProcessor 
     {
+        
         public override ModelContent Process(NodeContent input, ContentProcessorContext context) 
         {
             // Find the skeleton. 

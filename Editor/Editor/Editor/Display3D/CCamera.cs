@@ -43,7 +43,7 @@ namespace Editor.Display3D
         private float _farClip;
         private float _aspectRatio;
 
-        public float _playerHeight = 3.0f;
+        public float _playerHeight = 2.2f;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;

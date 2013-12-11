@@ -98,7 +98,6 @@
     <Compile Include="Display3D\Materials\PrelightingRenderer.cs" />
     <Compile Include="Display3D\Materials\ProjectedTextureMaterial.cs" />
     <Compile Include="Display3D\Materials\SpotLightMaterial.cs" />
-    <Compile Include="Display3D\SkinnedModel.cs" />
     <Compile Include="GameStates\CInGame.cs" />
     <Compile Include="GameStates\CLoading.cs" />
     <Compile Include="GameStates\CMenu.cs" />
@@ -128,9 +127,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModel\SkinnedModel.csproj">
-      <Project>{384fca90-5572-47e5-a01e-6b8f0982e695}</Project>
-      <Name>SkinnedModel</Name>
+    <ProjectReference Include="..\..\..\..\..\Downloads\SkinnedModelExtensions_4_0\SkinnedModel\SkinnedModelWindows.csproj">
+      <Project>{0d41e29b-829f-4255-bca5-64dc2677da6d}</Project>
+      <Name>SkinnedModelWindows</Name>
     </ProjectReference>
     <ProjectReference Include="..\EditorContent\EditorContent.contentproj">
       <Name>EditorContent %28Content%29</Name>
