@@ -16,7 +16,7 @@ namespace Editor.Game.Script
             base.Initialize();
 
             VMHandler = new Lua();
-            VMHandler.LoadCLRPackage();
+            //VMHandler.LoadCLRPackage();
 
             // Initialize Events
            RegisterFunction("addEvent", this, this.GetType().GetMethod("internal_AddEvent"));
