@@ -43,7 +43,7 @@ namespace Editor.Display3D
         private float _farClip;
         private float _aspectRatio;
 
-        public float _playerHeight = 2.2f;
+        public float _playerHeight = 1.9f;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
@@ -150,6 +150,7 @@ namespace Editor.Display3D
 
             if (keyState.IsKeyDown(Keys.Space) && oldKeySate.IsKeyUp(Keys.Space))
                 _physicsMap.Jump(_cameraPos);
+            _translation.Normalize();
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;

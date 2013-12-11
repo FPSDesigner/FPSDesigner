@@ -77,7 +77,7 @@ namespace Editor.GameStates
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
             //Load content for Chara class
-            _character.LoadContent(content);
+            _character.LoadContent(content, graphics);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -158,7 +158,7 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             //Update all chara actions
-            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime);
+            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam._view,cam._projection,cam._cameraPos);
 
             //Update camera - _charac.Run is a functions allows player to run, loook at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity) , kbState, mouseState, _oldKeyState);
