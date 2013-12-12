@@ -10,12 +10,14 @@ namespace Editor.Game.Script
     class CLuaVM : CScriptVM
     {
         public Lua VMHandler;
+        private CLuaScriptFunctions scriptFunctions;
 
         public override void Initialize()
         {
             base.Initialize();
 
             VMHandler = new Lua();
+            scriptFunctions = new CLuaScriptFunctions();
             //VMHandler.LoadCLRPackage();
 
             // Initialize Events
@@ -51,6 +53,11 @@ namespace Editor.Game.Script
                 LuaFunction eventFunc = (LuaFunction)VMHandler["onPlayerDieEvent"];
                 eventFunc.Call(parameters);
             }
+        }
+
+        public override void LoadDefaultFunctions()
+        {
+            RegisterFunction("setTimer", scriptFunctions, scriptFunctions.GetType().GetMethod("SetTimer"));
         }
     }
 }

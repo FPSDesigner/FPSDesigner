@@ -14,6 +14,7 @@ namespace Editor.Game.Script
         public abstract void LoadScript(string scriptName);
         public abstract void RegisterFunction(string functionName, object target, System.Reflection.MethodBase function);
         public abstract void CallEvent(string eventName, object[] parameters);
+        public abstract void LoadDefaultFunctions();
 
         public virtual void Initialize()
         {
@@ -26,5 +27,6 @@ namespace Editor.Game.Script
                 EventsListVM.Add(eventName, functionVMName);
             }
         }
+
     }
 }
