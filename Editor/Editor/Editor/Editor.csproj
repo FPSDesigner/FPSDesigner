@@ -128,7 +128,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\SkinnedModelExtensions_4_0\SkinnedModel\SkinnedModelWindows.csproj">
+    <ProjectReference Include="..\..\SkinnedModel\SkinnedModel.csproj">
       <Project>{0d41e29b-829f-4255-bca5-64dc2677da6d}</Project>
       <Name>SkinnedModelWindows</Name>
     </ProjectReference>

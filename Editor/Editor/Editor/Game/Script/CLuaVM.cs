@@ -18,10 +18,11 @@ namespace Editor.Game.Script
 
             VMHandler = new Lua();
             scriptFunctions = new CLuaScriptFunctions();
+            scriptFunctions.LuaVM = this;
             //VMHandler.LoadCLRPackage();
 
             // Initialize Events
-           RegisterFunction("addEvent", this, this.GetType().GetMethod("internal_AddEvent"));
+            RegisterFunction("addEvent", this, this.GetType().GetMethod("internal_AddEvent"));
         }
 
         public override void internal_AddEvent(string eventName, string functionVMName)
@@ -42,7 +43,7 @@ namespace Editor.Game.Script
             }
             catch (Exception e)
             {
-                //throw e;
+                throw e;
             }
         }
 
@@ -50,8 +51,9 @@ namespace Editor.Game.Script
         {
             if (EventsListVM.ContainsKey(eventName))
             {
-                LuaFunction eventFunc = (LuaFunction)VMHandler["onPlayerDieEvent"];
-                eventFunc.Call(parameters);
+                LuaFunction eventFunc = (LuaFunction)VMHandler[EventsListVM[eventName]];
+                if(eventFunc != null)
+                    eventFunc.Call(parameters);
             }
         }
 

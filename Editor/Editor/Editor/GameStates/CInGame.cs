@@ -147,7 +147,10 @@ namespace Editor.GameStates
             };*/
 
             Game.Script.CLuaVM lua = new Game.Script.CLuaVM();
+            lua.Initialize();
+            lua.LoadDefaultFunctions();
             lua.LoadScript("test.lua");
+            
         }
 
         public override void unloadContent(ContentManager content)

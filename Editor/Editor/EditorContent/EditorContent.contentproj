@@ -298,7 +298,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\SkinnedModelExtensions_4_0\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
+    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
       <Project>{4636c7e1-b845-4b83-b96d-64a11b8a4515}</Project>
       <Name>SkinnedModelPipeline</Name>
     </ProjectReference>
@@ -309,6 +309,7 @@
       <Name>Arm_Animation</Name>
       <Importer>FbxImporter</Importer>
       <Processor>SkinnedModelProcessor</Processor>
+      <ProcessorParameters_DefaultEffect>SkinnedEffect</ProcessorParameters_DefaultEffect>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
