@@ -194,6 +194,8 @@ namespace Editor.GameStates
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);
 
+            _character.Draw(spritebatch, gameTime, cam._view, cam._projection);
+
             devConsole.Draw(gameTime);
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

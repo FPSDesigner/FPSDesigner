@@ -101,7 +101,7 @@ namespace Editor.Game
                     break;
                 }
             }
-            Console.WriteLine(_velocity);
+
             return newPosition;
         }
 

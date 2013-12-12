@@ -16,10 +16,11 @@ namespace Editor.Game
     {
         private Game.Settings.CGameSettings _gameSettings;
 
-        private Display3D.CModel _rHandModel;
+        private Model _rHandModel;
         private SkinnedModel.SkinningData _skinningData;
         private AnimationPlayer _animation;
         private Matrix[] boneTransforms;
+        private Matrix[] _modelTransforms;
 
         float _initSpeed = 0.3f;
         float _velocity = 0.3f;
@@ -31,12 +32,24 @@ namespace Editor.Game
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
         {
-            _rHandModel = new Display3D.CModel(content.Load<Model>("3D//3DModels//Arm_Animation"), new Vector3(0, 53.4f, 0), Vector3.Zero, new Vector3(1.0f), graphics);
+            _rHandModel = content.Load<Model>("3D//3DModels//Arm_Animation");
+            _modelTransforms = new Matrix[_rHandModel.Bones.Count];
+            _rHandModel.CopyAbsoluteBoneTransformsTo(_modelTransforms);
+
+            // Look up our custom skinning information.
+            _skinningData = _rHandModel.Tag as SkinningData;
+
             if (_skinningData == null)
                 throw new InvalidOperationException
                     ("This model does not contain a SkinningData tag.");
 
-            AnimationClip clip = _skinningData.AnimationClips["HandMove"];
+            boneTransforms = new Matrix[_skinningData.BindPose.Count];
+
+            // Create an animation player, and start decoding an animation clip.
+            _animation = new AnimationPlayer(_skinningData);
+
+            AnimationClip clip = _skinningData.AnimationClips["RunCycleMove"];
+
             _animation.StartClip(clip);
         }
 
@@ -47,14 +60,32 @@ namespace Editor.Game
                 weapon.Shot(true, gameTime);
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
+        }
 
-            // Tell the animation player to compute the latest bone transform matrices.
-            _animation.UpdateBoneTransforms(gameTime.ElapsedGameTime, true);
+        public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection)
+        {
+            Matrix[] bones = _animation.GetSkinTransforms();
+            Matrix world = Matrix.CreateTranslation(new Vector3(-10.191149f, 57.28934f, -6.645897f))* Matrix.CreateScale(20.0f);
+            // Render the skinned mesh.
+            foreach (ModelMesh mesh in _rHandModel.Meshes)
+            {
+                Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
 
-            // Copy the transforms into our own array, so we can safely modify the values.
-            _animation.GetBoneTransforms().CopyTo(boneTransforms, 0);
+                foreach (SkinnedEffect effect in mesh.Effects)
+                {
+                    effect.SetBoneTransforms(bones);
 
-            _rHandModel.Draw(camView,camProjection,camPos);
+                    effect.View = view;
+                    effect.Projection = projection;
+                    effect.World = localWorld;
+                    effect.EnableDefaultLighting();
+
+                    effect.SpecularColor = new Vector3(0.25f);
+                    effect.SpecularPower = 16;
+                }
+
+                mesh.Draw();
+            }
         }
 
 
