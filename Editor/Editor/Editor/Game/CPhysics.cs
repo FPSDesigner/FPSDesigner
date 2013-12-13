@@ -17,10 +17,17 @@ namespace Editor.Game
 
         private double _lastFreeFall = 0;
         private bool _isJumping = false;
+        private bool _isUnderWaterOld = false;
 
         public float _entityHeight { get; private set; }
         public float _gravityConstant = -9.81f / 500;
-        public float _maxFreeFallSpeed = -5f;
+        public float _waterGravityConstant = -9.81f / 1000;
+        private float _maxFreeFallSpeed = -5f;
+        private float _maxFreeFallSpeedWater = -0.3f;
+        private float _maxSwimSpeed = 0.30f;
+        private float _waterLevel = 0f;
+        private bool _isPressingSpace = false;
+
 
         public Vector3 _velocity;
 
@@ -38,20 +45,46 @@ namespace Editor.Game
             _BoundingSphere = new BoundingSphere(Vector3.Zero, entityHeight / 2);
         }
 
-        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation)
+        public Vector3 checkCollisions(GameTime gameTime, Vector3 position, Vector3 translation, bool isUnderWater = false, float waterLevel = 0f)
         {
             Vector3 newPosition = position + translation;
+            _waterLevel = waterLevel;
 
             // Check terrain collision
             float terrainHeight = _terrain.GetHeightAtPosition(newPosition.X, newPosition.Z);
 
+            if (_isUnderWaterOld && _isPressingSpace && position.Y + _velocity.Y >= waterLevel)
+            {
+                newPosition.Y = waterLevel + 0.1f;
+                _isJumping = false;
+                _isUnderWaterOld = true;
+                _isPressingSpace = false;
+                _velocity.Y = 0;
+                _terrain.isUnderWater = false;
+            }
             if (newPosition.Y >= terrainHeight + _entityHeight || _isJumping)
             {
                 float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
-                if(_velocity.Y > _maxFreeFallSpeed)
-                    _velocity.Y += _gravityConstant * dt;
+                if (_velocity.Y > _maxFreeFallSpeed)
+                    _velocity.Y += ((isUnderWater) ? _waterGravityConstant : _gravityConstant) * dt;
+
+                if (!_isUnderWaterOld && isUnderWater)
+                    _velocity.Y = 0.05f * _velocity.Y;
+
+                if (isUnderWater)
+                {
+                    if (_velocity.Y < _maxFreeFallSpeedWater)
+                    {
+                        _velocity.Y += 0.1f;
+                        //_lastFreeFall = 0;
+                    }
+                    else if (_velocity.Y - 0.05f < _maxFreeFallSpeedWater)
+                        _velocity.Y = _maxFreeFallSpeedWater;
+
+                }
 
                 _isJumping = false;
+                _isUnderWaterOld = isUnderWater;
             }
             else
             {
@@ -67,12 +100,12 @@ namespace Editor.Game
                 }
             }
 
+            // Check models collision
             Vector3 triangleNormal = Vector3.Zero;
 
             BoundingSphere _BoundingSphereTranslation = new BoundingSphere(newPosition, _entityHeight / 2);
             for (int i = 0; i < _modelsList.Count; i++)
             {
-                Vector3 intersectionPoint;
                 if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereTranslation, out triangleNormal))
                 {
                     newPosition -= translation;
@@ -91,7 +124,6 @@ namespace Editor.Game
             BoundingSphere _BoundingSphereGravity = new BoundingSphere(newPosition, _entityHeight / 2);
             for (int i = 0; i < _modelsList.Count; i++)
             {
-                Vector3 intersectionPoint;
                 if (_modelsList[i].IsBoundingSphereIntersecting(_BoundingSphereGravity, out triangleNormal))
                 {
                     newPosition -= _velocity;
@@ -101,17 +133,26 @@ namespace Editor.Game
                     break;
                 }
             }
-
             return newPosition;
         }
 
-        public void Jump(Vector3 Position)
+        public void Jump(Vector3 Position, bool isUnderWater = false, bool firstWaterPress = false)
         {
-            if (_velocity.Y == 0)
+            _isPressingSpace = true;
+            if (isUnderWater)
+            {
+                if (_velocity.Y + 0.1f < _maxSwimSpeed)
+                    _velocity.Y += 0.1f;
+                else
+                    _velocity.Y = _maxSwimSpeed;
+                _isJumping = firstWaterPress;
+            }
+            else if (_velocity.Y == 0)
             {
                 _velocity.Y += 0.6f;
                 _isJumping = true;
             }
+
         }
 
     }

@@ -164,7 +164,7 @@ namespace Editor.GameStates
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam._view,cam._projection,cam._cameraPos);
 
             //Update camera - _charac.Run is a functions allows player to run, loook at the param
-            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity) , kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);
@@ -173,7 +173,10 @@ namespace Editor.GameStates
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             //renderer.Draw();
-            if (isPlayerUnderwater != water.isPositionUnderWater(cam._cameraPos))
+            Vector3 playerPos = cam._cameraPos;
+            //playerPos.Y -= cam._playerHeight;
+
+            if (isPlayerUnderwater != water.isPositionUnderWater(playerPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
                 water.isUnderWater = isPlayerUnderwater;

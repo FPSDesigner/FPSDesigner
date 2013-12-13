@@ -53,7 +53,7 @@ namespace Editor.Display3D
         private GraphicsDevice _graphics;
 
         public BoundingFrustum _Frustum { get; private set; }
-        
+
 
         public Game.CPhysics _physicsMap { get; private set; }
 
@@ -107,11 +107,11 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime,float camVelocity = 0.3f,KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
+        public void Update(GameTime gametime, float camVelocity = 0.3f, bool isUnderWater = false, float waterLevel = 0f, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)
-                CameraUpdates(gametime, keyState, oldKeyState, mouseState,camVelocity);
+                CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
 
             _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
@@ -124,7 +124,7 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current keyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState, float camVelocity)
+        private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState, float camVelocity, bool isUnderWater, float waterLevel)
         {
             Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
@@ -132,7 +132,7 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity), 0.5f);
+            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
 
             _translation = Vector3.Zero;
 
@@ -148,8 +148,8 @@ namespace Editor.Display3D
             if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                 _translation += Vector3.Right;
 
-            if (keyState.IsKeyDown(Keys.Space) && oldKeySate.IsKeyUp(Keys.Space))
-                _physicsMap.Jump(_cameraPos);
+            if (keyState.IsKeyDown(Keys.Space))
+                _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
             _cameraTarget = _cameraPos + forward;

@@ -26,8 +26,8 @@ namespace Editor.Display3D
         //Used to pass as parameter to Cam
         Display3D.CTerrain _map;
 
-        private Vector3 waterPosition;
-        private Vector2 waterSize;
+        public Vector3 waterPosition;
+        public Vector2 waterSize;
 
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
 
