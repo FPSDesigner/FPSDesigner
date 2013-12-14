@@ -12,8 +12,8 @@ namespace Editor.Display3D
     public class CSkybox : IRenderable
     {
         CModel model;
-        Effect effect;
-        GraphicsDevice graphics;
+        private Effect effect;
+        private GraphicsDevice graphics;
 
         float Intensity;
         public float ColorIntensity

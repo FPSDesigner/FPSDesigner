@@ -183,7 +183,9 @@ namespace Editor.GameStates
                 terrain.isUnderWater = isPlayerUnderwater;
             }
 
+            skybox.ColorIntensity = 0.5f;
             water.PreDraw(cam, gameTime);
+            skybox.ColorIntensity = 1;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 

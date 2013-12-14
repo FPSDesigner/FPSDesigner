@@ -47,7 +47,20 @@ namespace Editor.Display3D
         // Number of vertices and indices
         int nVertices, nIndices;
 
-        public bool isUnderWater = false;
+        public bool _isUnderWater = false;
+
+        public bool isUnderWater
+        {
+            set
+            {
+                effect.Parameters["IsUnderWater"].SetValue(value);
+                _isUnderWater = value;
+            }
+            get
+            {
+                return _isUnderWater;
+            }
+        }
 
         // Classes
         public Effect effect;
@@ -246,9 +259,10 @@ namespace Editor.Display3D
         /// <param name="cameraPos">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
+            // TODO: SetValue() is pretty slow from MSDN doc
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
-            
+
 
             effect.Parameters["View"].SetValue(View);
             effect.Parameters["Projection"].SetValue(Projection);
@@ -265,7 +279,7 @@ namespace Editor.Display3D
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
 
-            if (isUnderWater)
+            if (_isUnderWater)
                 effect.Parameters["LightIntensity"].SetValue(0.1f);
             else
                 effect.Parameters["LightIntensity"].SetValue(1.0f);
@@ -303,7 +317,7 @@ namespace Editor.Display3D
             Vector3 nearSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MinDepth), projection, view, World);
             Vector3 farSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MaxDepth), projection, view, World);
             Vector3 direction = farSource - nearSource;
-            
+
 
             float t = 0f;
 

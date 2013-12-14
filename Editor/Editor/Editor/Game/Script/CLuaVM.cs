@@ -43,7 +43,7 @@ namespace Editor.Game.Script
             }
             catch (Exception e)
             {
-                throw e;
+                //throw e;
             }
         }
 

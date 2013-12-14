@@ -74,7 +74,11 @@ float DetailDistance = 2500;
 
 float FogStart = 1.5;
 float FogEnd = 5.5;
-float3 FogColor = float3(1, 1, 1);
+bool FogWaterActivated = true;
+bool IsUnderWater = false;
+float FogWaterHeight = 44.5;
+float3 FogColor = float3(1,1,1);
+float3 FogColorWater = float3(0.0588,0.156,0.1607);
 
 texture DetailTexture;
 sampler DetailSampler = sampler_state {
@@ -124,9 +128,20 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+	if(FogWaterActivated && input.WorldPosition.y < FogWaterHeight)
+	{
+		float fog = clamp(input.Depth*0.005*(FogWaterHeight - input.WorldPosition.y), 0, 1);
+		if(IsUnderWater)
+			fog = clamp(input.Depth*0.02, 0, 1);
 
-	return float4(lerp(detail * output * light, FogColor, fog) , 1);
+		return float4(lerp(detail * output * light, FogColorWater, fog) , 1);
+	}
+	else
+	{
+		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+		return float4(lerp(detail * output * light, FogColor, fog) , 1);
+	}
+	
 }
 
 technique Technique1

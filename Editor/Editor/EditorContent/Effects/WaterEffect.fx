@@ -9,7 +9,7 @@ float4x4 ReflectedView;
 texture ReflectionMap;
 
 float3 BaseColor = float3(0.2, 0.2, 0.0);
-float BaseColorAmount = 0.3f;
+float BaseColorAmount = 0.1f;
 
 float3 LightDirection = float3(1, 1, 1);
 
@@ -29,16 +29,20 @@ sampler2D waterNormalSampler = sampler_state {
 	MagFilter = Anisotropic;
 };
 
-float WaveLength = 0.2;
-float WaveHeight = 0.15;
+float WaveLength = 0.1;
+float WaveHeight = 0.1;
 float Time = 0;
 float WaveSpeed = 0.04f;
-float Alpha = 0.9f;
+float Alpha = 0;
 
 float FogStart = 1.5;
 float FogEnd = 5.5;
 float3 FogColor = float3(1, 1, 1);
 float FogScale = 1.2;
+
+bool IsUnderWater = false;
+float3 BaseColorUnderWater = float3(0.0588, 0.1568, 0.16);
+float AlphaUnderWater = 0.9f;
 
 #include "PPShared.vsi"
 
@@ -92,6 +96,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	specular = pow(specular, 256);
 
 	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+
+	if(IsUnderWater)
+	{
+		return float4(lerp((lerp(reflection, BaseColorUnderWater, 0.1) + specular), FogColor, fog), 0.9);
+	}
 
 	return float4(lerp((lerp(reflection, BaseColor, BaseColorAmount) + specular), FogColor, fog), Alpha);
 }

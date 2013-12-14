@@ -31,7 +31,24 @@ namespace Editor.Display3D
 
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
 
-        public bool isUnderWater = false;
+        public bool _isUnderWater = false;
+        public float _waveSpeed = 0.04f;
+
+        public bool isUnderWater
+        {
+            set
+            {
+                _isUnderWater = value;
+                _waveSpeed = -_waveSpeed;
+
+                waterEffect.Parameters["IsUnderWater"].SetValue(_isUnderWater);
+                waterEffect.Parameters["WaveSpeed"].SetValue(_waveSpeed);
+            }
+            get
+            {
+                return _isUnderWater;
+            }
+        }
 
         float Alpha;
         public float WaterAlpha
@@ -101,7 +118,7 @@ namespace Editor.Display3D
             foreach (IRenderable renderable in Objects)
             {
                 renderable.SetClipPlane(clipPlane);
-
+                
                 renderable.Draw(reflectionCamera._view, reflectionCamera._projection, reflectedCameraPosition);
 
                 renderable.SetClipPlane(null);
@@ -133,7 +150,7 @@ namespace Editor.Display3D
         /// <param name="CameraPosition">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 CameraPosition)
         {
-            if (isUnderWater)
+            if (_isUnderWater)
                 waterMesh._modelRotation = modelRotationUnderwater;
             else
                 waterMesh._modelRotation = Vector3.Zero;
