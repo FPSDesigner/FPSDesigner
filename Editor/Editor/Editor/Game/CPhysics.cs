@@ -51,7 +51,8 @@ namespace Editor.Game
             _waterLevel = waterLevel;
 
             // Check terrain collision
-            float terrainHeight = _terrain.GetHeightAtPosition(newPosition.X, newPosition.Z);
+            float Steepness;
+            float terrainHeight = _terrain.GetHeightAtPosition(newPosition.X, newPosition.Z, out Steepness);
 
             if (_isUnderWaterOld && _isPressingSpace && position.Y + _velocity.Y >= waterLevel)
             {

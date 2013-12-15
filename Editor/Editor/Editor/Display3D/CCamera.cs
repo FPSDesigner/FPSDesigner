@@ -25,7 +25,8 @@ namespace Editor.Display3D
 
         // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
         private Vector3 _translation;
-        private Vector3 _up;
+        public Vector3 _up;
+        public Vector3 _right;
 
         private Point _middleScreen;
 
@@ -66,7 +67,7 @@ namespace Editor.Display3D
         /// <param name="nearClip">Closest elements to be rendered</param>
         /// <param name="farClip">Farthest elements to be rentered</param>
         /// <param name="camVelocity">Camera movement speed</param>
-        /// <param name="camVelocity">Camera Frozen or not</param>
+        /// <param name="isCamFrozen">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
         public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, Display3D.CTerrain map)
         {
@@ -89,6 +90,7 @@ namespace Editor.Display3D
             this._physicsMap = new Game.CPhysics(9.81f / 500, _map, _playerHeight);
 
             this._up = Vector3.Up;
+            this._right = Vector3.Cross(Vector3.Forward, _up);
             this._translation = Vector3.Zero;
 
             this._middleScreen = new Point(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
@@ -151,8 +153,15 @@ namespace Editor.Display3D
             if (keyState.IsKeyDown(Keys.Space))
                 _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
 
-            Vector3 forward = Vector3.Transform(Vector3.Forward, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0));
+            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
+
+            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
             _cameraTarget = _cameraPos + forward;
+
+            Vector3 up = Vector3.Transform(Vector3.Up, rotation);
+
+            this._up = up;
+            this._right = Vector3.Cross(forward, up);
         }
 
         /// <summary>

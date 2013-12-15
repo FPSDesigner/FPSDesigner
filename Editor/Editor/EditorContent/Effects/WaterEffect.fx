@@ -95,7 +95,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float specular = dot(normalize(reflectionVector), viewDirection);
 	specular = pow(specular, 256);
 
-	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 1);
+	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
 
 	if(IsUnderWater)
 	{

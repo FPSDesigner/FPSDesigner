@@ -33,13 +33,13 @@ namespace Editor.Display3D
         float height;
 
         // Distance between vertices on x and z axes
-        float cellSize;
+        public float cellSize;
 
         // How many times we need to draw the texture
         float textureTiling;
 
         // Number of vertices on x and z axes
-        int width, length;
+        public int width, length;
 
         // Middle of the terrain
         public Point terrainMiddle;
@@ -54,6 +54,7 @@ namespace Editor.Display3D
             set
             {
                 effect.Parameters["IsUnderWater"].SetValue(value);
+                effect.Parameters["LightIntensity"].SetValue((value) ? 0.1f : 1.0f);
                 _isUnderWater = value;
             }
             get
@@ -134,7 +135,7 @@ namespace Editor.Display3D
             vertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
             indexBuffer.SetData<int>(indices);
 
-            terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);
+            terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);            
         }
 
         /// <summary>
@@ -279,11 +280,6 @@ namespace Editor.Display3D
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
 
-            if (_isUnderWater)
-                effect.Parameters["LightIntensity"].SetValue(0.1f);
-            else
-                effect.Parameters["LightIntensity"].SetValue(1.0f);
-
             effect.Techniques[0].Passes[0].Apply();
 
             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
@@ -352,7 +348,7 @@ namespace Editor.Display3D
         /// <param name="X">Position X</param>
         /// <param name="Z">Position Y</param>
         /// <returns>The height & steepness at position X Y</returns>
-        public float GetHeightAtPosition(float X, float Z)
+        public float GetHeightAtPosition(float X, float Z, out float Steepness)
         {
             // Clamp coordinates to locations on terrain
             X = MathHelper.Clamp(X, (-width / 2) * cellSize,
@@ -379,7 +375,10 @@ namespace Editor.Display3D
             float fSampleH3 = heights[x, z + 1];
             float fSampleH4 = heights[x + 1, z + 1];
 
+            Steepness = (float)Math.Atan(Math.Abs((fSampleH1 - fSampleH4)) / (cellSize * Math.Sqrt(2)));
+
             return (fSampleH1 * (1.0f - fTX) + fSampleH2 * fTX) * (1.0f - fTY) + (fSampleH3 * (1.0f - fTX) + fSampleH4 * fTX) * (fTY);
+            
 
             //return MathHelper.Lerp(h1, h2, leftOver);
         }

@@ -270,7 +270,7 @@ namespace Editor.Display3D
                     break;
                 }
             }
-            
+
             foreach (ModelMesh mesh in _model.Meshes)
             {
                 bool isCollisionOne = (hasCollisionMesh && collisionMesh.Name == mesh.Name);
@@ -563,7 +563,22 @@ namespace Editor.Display3D
         /// </summary>
         public static Vector3 NearestPointOnTriangle(ref Vector3 p, ref Vector3 v0, ref Vector3 v1, ref Vector3 v2)
         {
-            Vector3 D = p - v0;
+            Vector3 r0 = p - v0;
+            Vector3 r1 = v1 - v0;
+            Vector3 r2 = v2 - v0;
+
+            //q1 = (r1 dot r0)/length(r1)^2
+            //q2 = (r2 dot r0)/length(r2)^2
+
+            float q1 = (Vector3.Dot(r1, r0)) / r1.LengthSquared();
+            float q2 = (Vector3.Dot(r2, r0)) / r2.LengthSquared();
+
+            if (q1 > 0 && q2 > 0 && q1 + q2 < 1)
+                return v0 + r1 * q1 + r2 * q2;
+            else
+                return Vector3.Zero;
+
+            /*Vector3 D = p - v0;
             Vector3 E1 = (v1 - v0);
             Vector3 E2 = (v2 - v0);
             float dot11 = E1.LengthSquared();
@@ -605,7 +620,7 @@ namespace Editor.Display3D
             {
                 return v2;
             }
-            return v1 + (v2 - v1) * (u12_num / u12_den);
+            return v1 + (v2 - v1) * (u12_num / u12_den);*/
         }
 
         /// <summary>
