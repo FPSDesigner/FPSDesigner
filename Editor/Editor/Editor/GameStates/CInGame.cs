@@ -189,12 +189,12 @@ namespace Editor.GameStates
                 // Randomly place a billboard here based on pixel color in grass
                 // map
                 if ((int)((float)r.NextDouble() * texVal * 10) == 1)
-                    grassPositions.Add(new Vector3(x+(r.Next(1,20)/15), y, z+(r.Next(1,20)/15)));
+                    grassPositions.Add(new Vector3(x+(r.Next(1,20)/15), y + 0.9f, z+(r.Next(1,20)/15)));
                 else
                     i--;
             }
 
-            grass = new Display3D.CBillboards(graphics, content, content.Load<Texture2D>("Textures/grass"), new Vector2(2), grassPositions.ToArray());
+            grass = new Display3D.CBillboards(graphics, content, content.Load<Texture2D>("Textures/grass"), new Vector2(1.1f), grassPositions.ToArray());
 
             grass.Mode = Display3D.CBillboards.BillboardMode.Spherical;
             grass.EnsureOcclusion = false;

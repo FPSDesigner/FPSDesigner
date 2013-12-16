@@ -38,10 +38,10 @@ struct VertexShaderOutput
 
 
 float3 WindDirection = float3(1, 0, 0);
-float WindWaveSize = 0.1;
+float WindWaveSize = 15;
 float WindRandomness = 1;
-float WindSpeed = 4;
-float WindAmount = 0;
+float WindSpeed = 0.2;
+float WindAmount = 1;
 float WindTime = 0;
 
 // Parameters describing the billboard itself.
@@ -129,8 +129,17 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	// Move the vertex along the camera's 'plane' to its corner
 	position += offset.x * Size.x * Side + offset.y * Size.y * Up;
 
+	///float wind = sin(WindTime * WindSpeed + waveOffset) * WindAmount;
+
+	float wind = sin(WindTime * WindSpeed * WindWaveSize) * WindAmount;
+	wind *= (1 - input.TexCoord.y);
+    //wind *= (1 - input.TexCoord.y);
+	position += WindDirection * wind;
+
 	// Transform the position by view and projection
-	output.Position = mul(float4(position, 1), mul(View, Projection));
+	float4 viewPosition = mul(float4(position, 1), View);
+    output.Position = mul(viewPosition, Projection);
+
 	output.Depth = output.Position.z;
 
 	output.TexCoord = input.TexCoord;
