@@ -20,9 +20,8 @@ namespace Editor.Game
         private SkinnedModel.SkinningData _skinningData;
         private AnimationPlayer _animation;
         private Matrix[] boneTransforms;
-        private Matrix[] _modelTransforms;
 
-        float _initSpeed = 0.3f;
+        float _initSpeed = 0.2f;
         float _velocity = 0.3f;
 
         public void Initialize()
@@ -33,9 +32,6 @@ namespace Editor.Game
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
         {
             _rHandModel = content.Load<Model>("3D//3DModels//Arm_Animation");
-            _modelTransforms = new Matrix[_rHandModel.Bones.Count];
-            _rHandModel.CopyAbsoluteBoneTransformsTo(_modelTransforms);
-
             // Look up our custom skinning information.
             _skinningData = _rHandModel.Tag as SkinningData;
 
@@ -48,9 +44,9 @@ namespace Editor.Game
             // Create an animation player, and start decoding an animation clip.
             _animation = new AnimationPlayer(_skinningData);
 
-            AnimationClip clip = _skinningData.AnimationClips["RunCycleMove"];
+            //AnimationClip clip = _skinningData.AnimationClips["RunCycleMove"];
 
-            _animation.StartClip(clip);
+            _animation.StartClip(_skinningData.AnimationClips["RunCycleMove"]);
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Matrix camView,
@@ -62,26 +58,25 @@ namespace Editor.Game
                 weapon.Shot(false, gameTime);
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection)
+        public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos)
         {
             Matrix[] bones = _animation.GetSkinTransforms();
-            Matrix world = Matrix.CreateTranslation(new Vector3(-10.191149f, 57.28934f, -6.645897f))* Matrix.CreateScale(20.0f);
             // Render the skinned mesh.
             foreach (ModelMesh mesh in _rHandModel.Meshes)
             {
-                Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
-
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
                     effect.SetBoneTransforms(bones);
+                    effect.EnableDefaultLighting();
+
+                    effect.World = bones[mesh.ParentBone.Index] *
+                    Matrix.CreateRotationY(0f)
+                    * Matrix.CreateTranslation(new Vector3(-19.191149f, 59.28934f, 5.47f)); ;
 
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = localWorld;
-                    effect.EnableDefaultLighting();
+                    
 
-                    effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 16;
                 }
 
                 mesh.Draw();
@@ -95,7 +90,7 @@ namespace Editor.Game
         {
             if (state.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
             {
-                if ((_velocity < _initSpeed + 0.4f) && fallVelocity.Y <= 0.0f)
+                if ((_velocity < _initSpeed + 0.25f) && fallVelocity.Y <= 0.0f)
                 {
                     _velocity += .01f;
                     //_velocity += 2f;

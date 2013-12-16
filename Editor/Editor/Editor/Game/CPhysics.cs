@@ -72,16 +72,14 @@ namespace Editor.Game
                 if (!_isUnderWaterOld && isUnderWater)
                     _velocity.Y = 0.05f * _velocity.Y;
 
-                if (isUnderWater)
+                if (isUnderWater && !_isPressingSpace)
                 {
                     if (_velocity.Y < _maxFreeFallSpeedWater)
                     {
-                        _velocity.Y += 0.1f;
-                        //_lastFreeFall = 0;
+                        _velocity.Y += 0.02f;
                     }
                     else if (_velocity.Y - 0.05f < _maxFreeFallSpeedWater)
                         _velocity.Y = _maxFreeFallSpeedWater;
-
                 }
 
                 _isJumping = false;
@@ -143,7 +141,7 @@ namespace Editor.Game
             if (isUnderWater)
             {
                 if (_velocity.Y + 0.1f < _maxSwimSpeed)
-                    _velocity.Y += 0.1f;
+                    _velocity.Y += 0.01f;
                 else
                     _velocity.Y = _maxSwimSpeed;
                 _isJumping = firstWaterPress;

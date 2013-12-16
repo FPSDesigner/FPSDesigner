@@ -132,6 +132,13 @@ namespace Editor.Display3D
 
             Rotation(mouseState, gametime);
 
+            Console.WriteLine(_translation);
+
+            if (_translation != Vector3.Zero)
+            {
+                _translation.Normalize();
+            }
+
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
             _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
@@ -152,6 +159,11 @@ namespace Editor.Display3D
 
             if (keyState.IsKeyDown(Keys.Space))
                 _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
+
+            if (isUnderWater)
+            {
+                _translation = _translation * 0.5f;
+            }
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
 

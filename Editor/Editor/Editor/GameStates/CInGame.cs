@@ -194,7 +194,7 @@ namespace Editor.GameStates
                     i--;
             }
 
-            grass = new Display3D.CBillboards(graphics, content, content.Load<Texture2D>("Textures/grass"), new Vector2(1.1f), grassPositions.ToArray());
+            grass = new Display3D.CBillboards(graphics, content, content.Load<Texture2D>("Textures/grass"), new Vector2(0.8f), grassPositions.ToArray());
 
             grass.Mode = Display3D.CBillboards.BillboardMode.Spherical;
             grass.EnsureOcclusion = false;
@@ -252,7 +252,7 @@ namespace Editor.GameStates
 
             grass.Draw(gameTime, cam._view, cam._projection, cam._up, cam._right);
 
-            _character.Draw(spritebatch, gameTime, cam._view, cam._projection);
+            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos);
 
             devConsole.Draw(gameTime);
 

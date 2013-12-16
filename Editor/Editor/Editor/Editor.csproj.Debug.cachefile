@@ -41,3 +41,6 @@ Content\3D\plane.xnb
 Content\3D\Ground.xnb
 Content\3D\Checker_0.xnb
 Content\3D\3DModels\Arm_Animation.xnb
+Content\Effects\BillboardEffect.xnb
+Content\Textures\grass.xnb
+Content\Textures\Terrain\grassMap.xnb

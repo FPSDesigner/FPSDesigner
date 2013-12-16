@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Display2D\C2DEffect.cs" />
     <Compile Include="Display2D\CPostProcessing.cs" />
+    <Compile Include="Display3D\CBillboards.cs" />
     <Compile Include="Display3D\CCamera.cs" />
     <Compile Include="Display3D\CLensFlare.cs" />
     <Compile Include="Display3D\CWater.cs" />
