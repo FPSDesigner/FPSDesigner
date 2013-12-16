@@ -159,6 +159,7 @@ namespace Editor.Display3D
 
             if (keyState.IsKeyDown(Keys.Space))
                 _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
+                _physicsMap.Swin(isUnderWater);
 
             if (isUnderWater)
             {

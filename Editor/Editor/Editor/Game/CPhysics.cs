@@ -138,20 +138,24 @@ namespace Editor.Game
         public void Jump(Vector3 Position, bool isUnderWater = false, bool firstWaterPress = false)
         {
             _isPressingSpace = true;
+
+            if (_velocity.Y == 0)
+            {
+                _velocity.Y += 0.6f;
+                _isJumping = true;
+            }
+
+        }
+
+        public void Swin(bool isUnderWater = false)
+        {
             if (isUnderWater)
             {
                 if (_velocity.Y + 0.1f < _maxSwimSpeed)
                     _velocity.Y += 0.01f;
                 else
                     _velocity.Y = _maxSwimSpeed;
-                _isJumping = firstWaterPress;
             }
-            else if (_velocity.Y == 0)
-            {
-                _velocity.Y += 0.6f;
-                _isJumping = true;
-            }
-
         }
 
     }
