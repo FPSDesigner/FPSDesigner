@@ -41,18 +41,18 @@ float3 WindDirection = float3(1, 0, 0);
 float WindWaveSize = 0.1;
 float WindRandomness = 1;
 float WindSpeed = 4;
-float WindAmount;
-float WindTime;
+float WindAmount = 0;
+float WindTime = 0;
 
 // Parameters describing the billboard itself.
-float BillboardWidth;
-float BillboardHeight;
+float BillboardWidth = 10;
+float BillboardHeight = 10;
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
-	// Apply a scaling factor to make some of the billboards
+	/*// Apply a scaling factor to make some of the billboards
     // shorter and fatter while others are taller and thinner.
 
     //float squishFactor = 0.75 + abs(input.Random) / 2;
@@ -64,8 +64,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     // Flip half of the billboards from left to right. This gives visual variety
     // even though we are actually just repeating the same texture over and over.
 
-    /*if (input.Random < 0)
-        width = -width;*/
+    ////if (input.Random < 0)
+    ////   width = -width;
 
 	// Work out what direction we are viewing the billboard from.
     float3 viewDirection = View._m02_m12_m22;
@@ -114,15 +114,17 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     
     return output;
 
+	*/
 
-
-	/*
+	
 	// Determine which corner of the rectangle this vertex
 	// represents
 	float2 offset = float2(
-		(input.UV.x - 0.5f) * 2.0f, 
-		-(input.UV.y - 0.5f) * 2.0f
+		(input.TexCoord.x - 0.5f) * 2.0f, 
+		-(input.TexCoord.y - 0.5f) * 2.0f
 	);
+
+	float3 position = input.Position;
 
 	// Move the vertex along the camera's 'plane' to its corner
 	position += offset.x * Size.x * Side + offset.y * Size.y * Up;
@@ -131,9 +133,12 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(float4(position, 1), mul(View, Projection));
 	output.Depth = output.Position.z;
 
-	output.UV = input.UV;
+	output.TexCoord = input.TexCoord;
 
-    return output;*/
+	output.Color.rgb = 1;
+	output.Color.a = 1;
+
+    return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
@@ -142,7 +147,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	if (AlphaTest)
 		clip((color.a - AlphaTestValue) * (AlphaTestGreater ? 1 : -1));
-	return 1;
+
 	return clamp(1/(DrawingDistance * input.Depth), 0, 1) * color;
 }
 
