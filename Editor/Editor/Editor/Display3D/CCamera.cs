@@ -115,6 +115,8 @@ namespace Editor.Display3D
             if (!isCamFrozen)
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
 
+            _gameSettings.reloadGamepadState();
+
             _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
             generateFrustum();
@@ -145,21 +147,33 @@ namespace Editor.Display3D
 
             _translation = Vector3.Zero;
 
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
-                _translation += Vector3.Forward;
+            if (_gameSettings.useGamepad)
+            {
+                Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
+                _translation += new Vector3(direction.X, 0, direction.Y);
 
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward))
-                _translation += Vector3.Backward;
+                if(_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
+                    _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));
+            }
+            else
+            {
+                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
+                    _translation += Vector3.Forward;
 
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft))
-                _translation += Vector3.Left;
+                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward))
+                    _translation += Vector3.Backward;
 
-            if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
-                _translation += Vector3.Right;
+                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft))
+                    _translation += Vector3.Left;
 
-            if (keyState.IsKeyDown(Keys.Space))
-                _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
-                _physicsMap.Swin(isUnderWater);
+                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
+                    _translation += Vector3.Right;
+
+                if (keyState.IsKeyDown(Keys.Space))
+                    _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
+            }
+
+            _physicsMap.Swin(isUnderWater);
 
             if (isUnderWater)
             {
@@ -184,8 +198,16 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         private void Rotation(MouseState mouseState, GameTime gametime)
         {
-            this._yaw -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
-            this._pitch -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
+            if (_gameSettings.useGamepad)
+            {
+                this._yaw -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Left.X;
+                this._pitch -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Left.Y;
+            }
+            else
+            {
+                this._yaw -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
+                this._pitch -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
+            }
 
             if (this._pitch < lowestPitchAngle)
                 this._pitch = lowestPitchAngle;

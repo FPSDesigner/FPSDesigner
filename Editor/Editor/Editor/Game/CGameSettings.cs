@@ -21,6 +21,11 @@ namespace Editor.Game.Settings
         CXMLManager _xmlManager;
         GraphicsDevice _graphicsDevice;
 
+        public GamePadState gamepadState;
+        public GamePadState oldGamepadState;
+        public bool useGamepad = false;
+
+
         // Singleton Code
         private static CGameSettings instance = null;
         private static readonly object myLock = new object();
@@ -47,8 +52,20 @@ namespace Editor.Game.Settings
             else
                 generateDefaultSettings();
 
+            gamepadState = GamePad.GetState(PlayerIndex.One);
+            useGamepad = gamepadState.IsConnected;
+
             return _gameSettings;
         }
+
+        public void reloadGamepadState()
+        {
+            oldGamepadState = gamepadState;
+
+            gamepadState = GamePad.GetState(PlayerIndex.One);
+            useGamepad = gamepadState.IsConnected;
+        }
+
 
         public void generateDefaultSettings()
         {
@@ -66,6 +83,10 @@ namespace Editor.Game.Settings
                     MSprint = Keys.LeftShift,
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
                     MouseSensibility = 0.001f,
+
+                    GPSensibility = 0.001f,
+                    GPJump = Buttons.A,
+                    GPShot = Buttons.RightTrigger,
                 },
                 Video = new Video
                 {
@@ -105,7 +126,10 @@ namespace Editor.Game.Settings
         public Keys MJump { get; set; }
         public Keys MSprint { get; set; }
         public Keys Console { get; set; }
+        public Buttons GPJump { get; set; }
+        public Buttons GPShot { get; set; }
         public float MouseSensibility { get; set; }
+        public float GPSensibility { get; set; }
     }
     #endregion
 
