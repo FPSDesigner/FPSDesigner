@@ -308,7 +308,7 @@
     <Compile Include="Models\Arm_Animation.fbx">
       <Name>Arm_Animation</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
