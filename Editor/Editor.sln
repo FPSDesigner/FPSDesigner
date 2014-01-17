@@ -5,13 +5,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor\Edi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorContent", "Editor\EditorContent\EditorContent.contentproj", "{A70DA665-6832-42E3-A876-35B77F4F730D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModelPipeline", "SkinnedModelPipeline\SkinnedModelPipeline.csproj", "{4636C7E1-B845-4B83-B96D-64A11B8A4515}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "..\..\..\Downloads\XNAnimation\XNAnimation\XNAnimation\XNAnimation.csproj", "{2A857645-A225-4177-99BD-C8F6D22B72FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModel", "SkinnedModel\SkinnedModel.csproj", "{0D41E29B-829F-4255-BCA5-64DC2677DA6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "..\..\..\Downloads\XNAnimation\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://apockalipss.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -21,12 +21,6 @@ Global
 		SccProjectUniqueName2 = Editor\\EditorContent\\EditorContent.contentproj
 		SccProjectName2 = Editor/EditorContent
 		SccLocalPath2 = Editor\\EditorContent
-		SccProjectUniqueName3 = SkinnedModelPipeline\\SkinnedModelPipeline.csproj
-		SccProjectName3 = SkinnedModelPipeline
-		SccLocalPath3 = SkinnedModelPipeline
-		SccProjectUniqueName4 = SkinnedModel\\SkinnedModel.csproj
-		SccProjectName4 = SkinnedModel
-		SccLocalPath4 = SkinnedModel
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -45,20 +39,20 @@ Global
 		{A70DA665-6832-42E3-A876-35B77F4F730D}.Debug|Xbox 360.ActiveCfg = Debug|x86
 		{A70DA665-6832-42E3-A876-35B77F4F730D}.Release|x86.ActiveCfg = Release|x86
 		{A70DA665-6832-42E3-A876-35B77F4F730D}.Release|Xbox 360.ActiveCfg = Release|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Debug|x86.ActiveCfg = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Debug|x86.Build.0 = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Debug|Xbox 360.ActiveCfg = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Debug|Xbox 360.Build.0 = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Release|x86.ActiveCfg = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Release|x86.Build.0 = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Release|Xbox 360.ActiveCfg = Debug|x86
-		{4636C7E1-B845-4B83-B96D-64A11B8A4515}.Release|Xbox 360.Build.0 = Debug|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Debug|x86.ActiveCfg = Debug|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Debug|x86.Build.0 = Debug|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Debug|Xbox 360.ActiveCfg = Debug|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Release|x86.ActiveCfg = Release|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Release|x86.Build.0 = Release|x86
-		{0D41E29B-829F-4255-BCA5-64DC2677DA6D}.Release|Xbox 360.ActiveCfg = Release|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Debug|x86.ActiveCfg = Debug|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Debug|x86.Build.0 = Debug|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Release|x86.ActiveCfg = Release|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Release|x86.Build.0 = Release|x86
+		{2A857645-A225-4177-99BD-C8F6D22B72FA}.Release|Xbox 360.ActiveCfg = Release|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Debug|x86.ActiveCfg = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Debug|x86.Build.0 = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Debug|Xbox 360.Build.0 = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|x86.ActiveCfg = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|x86.Build.0 = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|Xbox 360.ActiveCfg = Debug|x86
+		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|Xbox 360.Build.0 = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,10 +9,10 @@ Content\Effects\WaterEffect.xnb
 Content\Effects\PPLight.xnb
 Content\Effects\ProjectedTexture.xnb
 Content\Effects\PPDepthNormal.xnb
-Content\3D\building001.xnb
+Content\Effects\BillboardEffect.xnb
+Content\Models\building001.xnb
 Content\3D\Skysphere.xnb
 Content\3D\PPLightMesh.xnb
-Content\3D\Cube.xnb
 Content\2D\Menu\MENU_Bckground.xnb
 Content\2D\Menu\MENU_TitleGame.xnb
 Content\2D\Menu\MENU_Sight.xnb
@@ -34,17 +34,13 @@ Content\Textures\Terrain\weightMap.xnb
 Content\Textures\terrain_grass.xnb
 Content\Textures\water_normal.xnb
 Content\3D\Checker.xnb
-Content\Textures\Model textures\Uvw_Hand.xnb
+Content\Textures\Uvw_Hand.xnb
+Content\Textures\grass.xnb
+Content\Textures\Terrain\grassMap.xnb
 Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
 Content\3D\plane.xnb
 Content\3D\Ground.xnb
+Content\Models\Arm_Animation.xnb
 Content\3D\Checker_0.xnb
-Content\Textures\Terrain\grassMap.xnb
-Content\Textures\grass.xnb
-Content\Effects\BillboardEffect.xnb
-Content\3D\3DModels\Arm_Animation.xnb
-Content\Effects\BillboardEffect.xnb
-Content\Textures\grass.xnb
-Content\Textures\Terrain\grassMap.xnb

@@ -8,7 +8,9 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using SkinnedModel;
+
+using XNAnimation;
+using XNAnimation.Controllers;
 
 namespace Editor.Game
 {
@@ -16,10 +18,8 @@ namespace Editor.Game
     {
         private Game.Settings.CGameSettings _gameSettings;
 
-        private Model _rHandModel;
-        private SkinnedModel.SkinningData _skinningData;
-        private AnimationPlayer _animation;
-        private Matrix[] boneTransforms;
+        private SkinnedModel _hand;
+        private AnimationController animationController;
 
         float _initSpeed = 0.2f;
         float _velocity = 0.3f;
@@ -31,22 +31,35 @@ namespace Editor.Game
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
         {
-            _rHandModel = content.Load<Model>("3D//3DModels//Arm_Animation");
-            // Look up our custom skinning information.
-            _skinningData = _rHandModel.Tag as SkinningData;
+            _hand = content.Load<SkinnedModel>("Models\\Arm_Animation");
 
-            if (_skinningData == null)
-                throw new InvalidOperationException
-                    ("This model does not contain a SkinningData tag.");
+            Texture2D armTexture = content.Load<Texture2D>("Textures\\Uvw_Hand");
 
-            boneTransforms = new Matrix[_skinningData.BindPose.Count];
 
-            // Create an animation player, and start decoding an animation clip.
-            _animation = new AnimationPlayer(_skinningData);
+            foreach (ModelMesh mesh in _hand.Model.Meshes)
+            {
+                foreach (SkinnedEffect effect in mesh.Effects)
+                {
+                    effect.Texture = armTexture;
 
-            //AnimationClip clip = _skinningData.AnimationClips["RunCycleMove"];
+                    effect.EnableDefaultLighting();
 
-            _animation.StartClip(_skinningData.AnimationClips["RunCycleMove"]);
+                    effect.SpecularColor = new Vector3(0.25f);
+                    effect.SpecularPower = 16;
+                }
+            }
+
+            // Create an animation controller and start a clip
+            animationController = new AnimationController(_hand.SkeletonBones);
+            animationController.Speed = 0.5f;
+
+            animationController.TranslationInterpolation = InterpolationMode.Linear;
+            animationController.OrientationInterpolation = InterpolationMode.Linear;
+            animationController.ScaleInterpolation = InterpolationMode.Linear;
+
+            animationController.StartClip(_hand.AnimationClips["Take 001"]);
+
+            animationController.LoopEnabled = true;
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Matrix camView,
@@ -56,27 +69,23 @@ namespace Editor.Game
                 weapon.Shot(true, gameTime);
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
+
+            // Update the models animation.
+            animationController.Update(gameTime.ElapsedGameTime, Matrix.Identity);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos)
         {
-            Matrix[] bones = _animation.GetSkinTransforms();
-            // Render the skinned mesh.
-            foreach (ModelMesh mesh in _rHandModel.Meshes)
+            foreach (ModelMesh mesh in _hand.Model.Meshes)
             {
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
-                    effect.SetBoneTransforms(bones);
-                    effect.EnableDefaultLighting();
-
-                    effect.World = bones[mesh.ParentBone.Index] *
-                    Matrix.CreateRotationY(0f)
-                    * Matrix.CreateTranslation(new Vector3(-19.191149f, 59.28934f, 5.47f)); ;
+                    effect.SetBoneTransforms(animationController.SkinnedBoneTransforms);
+                    effect.World = Matrix.CreateRotationY(0.0f) * Matrix.CreateTranslation(13.0f,10.0f, 0.0f) *
+                        Matrix.CreateScale(1.5f);
 
                     effect.View = view;
                     effect.Projection = projection;
-                    
-
                 }
 
                 mesh.Draw();

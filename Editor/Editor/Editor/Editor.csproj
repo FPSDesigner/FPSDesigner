@@ -81,6 +81,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net" />
+    <Reference Include="XNAnimation, Version=0.7.0.0, Culture=neutral, PublicKeyToken=0c21691816f8c6d0, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Ressources\XNAnimation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Display2D\C2DEffect.cs" />
@@ -129,10 +133,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModel\SkinnedModel.csproj">
-      <Project>{0d41e29b-829f-4255-bca5-64dc2677da6d}</Project>
-      <Name>SkinnedModelWindows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EditorContent\EditorContent.contentproj">
       <Name>EditorContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>

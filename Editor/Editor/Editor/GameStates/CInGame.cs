@@ -69,7 +69,7 @@ namespace Editor.GameStates
         public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             //Display 1 model : Building
-            model = new Display3D.CModel(content.Load<Model>("3D//building001"), new Vector3(0, 53.4f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
+            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 53.4f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
 
             models.Add(model);
 
@@ -110,7 +110,7 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("3D//building001") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//building001") };
             object[][] testInfos = new object[][] {
                 new object[] {
                 0,
