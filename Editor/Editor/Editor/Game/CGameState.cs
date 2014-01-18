@@ -38,5 +38,10 @@ namespace Editor.Game
         {
 
         }
+
+        public virtual void SendParam(object param)
+        {
+
+        }
     }
 }

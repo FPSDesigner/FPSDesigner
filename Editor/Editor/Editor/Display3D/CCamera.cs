@@ -134,8 +134,6 @@ namespace Editor.Display3D
 
             Rotation(mouseState, gametime);
 
-            Console.WriteLine(_translation);
-
             if (_translation != Vector3.Zero)
             {
                 _translation.Normalize();

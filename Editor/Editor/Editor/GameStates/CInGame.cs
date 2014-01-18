@@ -52,6 +52,8 @@ namespace Editor.GameStates
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
 
+        Game.CGUIManager guiManager;
+
         public override void Initialize()
         {
             devConsole = Game.CConsole.getInstance();
@@ -150,7 +152,13 @@ namespace Editor.GameStates
             lua.Initialize();
             lua.LoadDefaultFunctions();
             lua.LoadScript("test.lua");
-            
+
+            /*int color2;
+            Console.WriteLine(int.TryParse("C", System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out color2));
+            Console.WriteLine(color2);*/
+            guiManager = new Game.CGUIManager();
+            guiManager.LoadGUIFile("GUI.xml");
+            Console.WriteLine("DONE");
         }
 
         public override void unloadContent(ContentManager content)

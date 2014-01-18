@@ -51,5 +51,10 @@ namespace Editor.Game
         {
             actualState.loadContent(content, spriteBatch, graphics);
         }
+
+        public void SendParam(object param)
+        {
+            actualState.SendParam(param);
+        }
     }
 }

@@ -99,6 +99,11 @@ namespace Editor.Game
             _currentState.actualState.Draw(spritebatch, gameTime);
         }
 
+        public void SendParam(object param)
+        {
+            _currentState.actualState.SendParam(param);
+        }
+
 
     }
 }
