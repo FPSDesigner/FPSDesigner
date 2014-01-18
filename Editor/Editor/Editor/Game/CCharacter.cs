@@ -18,8 +18,11 @@ namespace Editor.Game
     {
         private Game.Settings.CGameSettings _gameSettings;
 
-        private SkinnedModel _hand;
-        private AnimationController animationController;
+        private Display3D.MeshAnimation _handAnimation; //The 3Dmodel + all animation
+        private Texture2D[] _handTexture; //ALl the texture storaged in an array
+        private Matrix _handRotation;
+
+        private Display3D.CCamera _cam; //Will back up all camera's attributes
 
         float _initSpeed = 0.2f;
         float _velocity = 0.3f;
@@ -27,29 +30,39 @@ namespace Editor.Game
         public void Initialize()
         {
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
+            _handTexture = new Texture2D[1];
+            
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
         {
-
-            Texture2D armTexture = content.Load<Texture2D>("Textures\\Uvw_Hand");
-
+            _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
+            _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
+            _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.04f,_handTexture, true);
+            _handAnimation.LoadContent(content);
         }
 
-        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Matrix camView,
-            Matrix camProjection, Vector3 camPos)
+        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
+            _cam = cam;
+
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+            {
                 weapon.Shot(true, gameTime);
+                _handAnimation.StartAnimation("run", true);
+            }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
 
-
+            _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw, 90, 0);
+            _handAnimation.Update(gameTime, new Vector3(_cam._cameraPos.X,_cam._cameraPos.Y,_cam._cameraPos.Z), _handRotation);
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos)
         {
-
+            _handAnimation.Draw(gametime, spriteBatch, view, projection);
         }
 
 

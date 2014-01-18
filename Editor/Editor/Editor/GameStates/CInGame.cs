@@ -93,7 +93,7 @@ namespace Editor.GameStates
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             //Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.1f, 10000.0f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.05f, 10000.0f, false, terrain);
             cam._physicsMap._modelsList = models;
 
 
@@ -161,7 +161,7 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             //Update all chara actions
-            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam._view,cam._projection,cam._cameraPos);
+            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam);
 
             //Update camera - _charac.Run is a functions allows player to run, loook at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);

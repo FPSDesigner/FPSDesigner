@@ -20,22 +20,24 @@ namespace Editor.Display3D
         private int _animationNumber;
         private int _meshNumber;
         private float _animationSpeed;
+        private float _scale;
         private bool _isLooped;
         private Texture2D[] _textures;
 
         private Vector3 _position;
-        private float _rotation;
+        private Matrix _rotation;
 
         private SkinnedModel skinnedModel;
         private AnimationController animationController;
 
-        public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, float rot,Texture2D[] text, bool isLooped)
+        public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, Matrix rot,float scale,Texture2D[] text, bool isLooped)
         {
             this._modelName = model;
             this._animationNumber = animNbr;
             this._textures = text;
             this._animationSpeed = animSpeed;
             this._meshNumber = meshNbr;
+            this._scale = scale;
             this._isLooped = isLooped;
             this._position = pos;
             this._rotation = rot;
@@ -43,7 +45,6 @@ namespace Editor.Display3D
 
         public void LoadContent(ContentManager content)
         {
-
             skinnedModel = content.Load<SkinnedModel>("Models\\"+_modelName);
 
             foreach (ModelMesh mesh in skinnedModel.Model.Meshes)
@@ -71,7 +72,7 @@ namespace Editor.Display3D
 
         }
 
-        public void Update(GameTime gameTime, Vector3 position, float rotation)
+        public void Update(GameTime gameTime, Vector3 position, Matrix rotation)
         {
             _position = position;
             _rotation = rotation;
@@ -88,8 +89,7 @@ namespace Editor.Display3D
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
                     effect.SetBoneTransforms(animationController.SkinnedBoneTransforms);
-                    effect.World = Matrix.CreateRotationY(_rotation);
-
+                    effect.World = Matrix.CreateScale(_scale) * _rotation *  Matrix.CreateTranslation(_position);
                     effect.View = view;
                     effect.Projection = projection;
                 }
