@@ -52,8 +52,6 @@ namespace Editor.GameStates
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
 
-        Display3D.CBillboards grass;
-
         public override void Initialize()
         {
             devConsole = Game.CConsole.getInstance();
@@ -152,52 +150,6 @@ namespace Editor.GameStates
             lua.Initialize();
             lua.LoadDefaultFunctions();
             lua.LoadScript("test.lua");
-
-
-
-            Random r = new Random();
-
-            // Retrieve pixel grid from grass map
-            Texture2D grassMap = content.Load<Texture2D>("Textures/Terrain/grassMap");
-            Color[] grassPixels = new Color[grassMap.Width * grassMap.Height];
-            grassMap.GetData<Color>(grassPixels);
-
-            List<Vector3> grassPositions = new List<Vector3>();
-            for (int i = 0; i < 400000; i++)
-            {
-                // Get X and Z coordinates from the random generator, between
-                // [-(terrain width) / 2 * (cell size), (terrain width) / 2 * (cell size)]
-                //float x = r.Next((int)(-256 * 1.7f), (int)(256 * 1.7f));
-                //float z = r.Next((int)(-256 * 1.7f), (int)(256 * 1.7f));
-
-                float x = r.Next(Convert.ToInt32(Math.Floor(-terrain.width/2 * terrain.cellSize+1)), Convert.ToInt32(Math.Floor(terrain.width/2 * terrain.cellSize-1)));
-                float z = r.Next(Convert.ToInt32(Math.Floor(-terrain.length/2 * terrain.cellSize+1)), Convert.ToInt32(Math.Floor(terrain.length/2 * terrain.cellSize-1)));
-
-                Vector2 pos = terrain.positionToTerrain(x, z);
-
-                // Get corresponding coordinates in grass map
-                int xCoord = (int)pos.X;
-                int zCoord = (int)pos.Y;
-
-                // Get value between 0 and 1 from grass map
-                float texVal = grassPixels[zCoord * 512 + xCoord].R / 255f;
-
-                // Retrieve height
-                float steepness;
-                float y = terrain.GetHeightAtPosition(x, z, out steepness);
-
-                // Randomly place a billboard here based on pixel color in grass
-                // map
-                if ((int)((float)r.NextDouble() * texVal * 10) == 1)
-                    grassPositions.Add(new Vector3(x+(r.Next(1,20)/15), y + 0.9f, z+(r.Next(1,20)/15)));
-                else
-                    i--;
-            }
-
-            grass = new Display3D.CBillboards(graphics, content, content.Load<Texture2D>("Textures/grass"), new Vector2(0.8f), grassPositions.ToArray());
-
-            grass.Mode = Display3D.CBillboards.BillboardMode.Spherical;
-            grass.EnsureOcclusion = false;
             
         }
 
@@ -249,8 +201,6 @@ namespace Editor.GameStates
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);
-
-            grass.Draw(gameTime, cam._view, cam._projection, cam._up, cam._right);
 
             _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos);
 
