@@ -5,13 +5,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor\Edi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorContent", "Editor\EditorContent\EditorContent.contentproj", "{A70DA665-6832-42E3-A876-35B77F4F730D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "..\..\..\Downloads\XNAnimation\XNAnimation\XNAnimation\XNAnimation.csproj", "{2A857645-A225-4177-99BD-C8F6D22B72FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj", "{2A857645-A225-4177-99BD-C8F6D22B72FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "..\..\..\Downloads\XNAnimation\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://apockalipss.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -21,6 +21,12 @@ Global
 		SccProjectUniqueName2 = Editor\\EditorContent\\EditorContent.contentproj
 		SccProjectName2 = Editor/EditorContent
 		SccLocalPath2 = Editor\\EditorContent
+		SccProjectUniqueName3 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimation\\XNAnimation.csproj
+		SccProjectName3 = XNAnimation
+		SccLocalPath3 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimation
+		SccProjectUniqueName4 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimationPipeline\\XNAnimationPipeline.csproj
+		SccProjectName4 = XNAnimationPipeline
+		SccLocalPath4 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimationPipeline
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
