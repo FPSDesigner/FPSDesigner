@@ -55,8 +55,10 @@ namespace Editor.Game
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
 
-            _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw, 90, 0);
-            _handAnimation.Update(gameTime, new Vector3(_cam._cameraPos.X,_cam._cameraPos.Y,_cam._cameraPos.Z), _handRotation);
+            _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw, cam._pitch + MathHelper.PiOver2, 0);
+            _handAnimation.Update(gameTime, cam._cameraPos, _handRotation);
+
+            Console.WriteLine(cam._pitch);
             
         }
 
