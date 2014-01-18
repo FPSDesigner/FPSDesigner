@@ -184,7 +184,7 @@ namespace Editor.Display3D
             Vector2 origin = new Vector2(glowSprite.Width, glowSprite.Height) / 2;
             float scale = glowSize * 2 / glowSprite.Width;
 
-            spriteBatch.Begin(0, BlendState.Additive);
+            spriteBatch.Begin(0, BlendState.AlphaBlend);
             spriteBatch.Draw(glowSprite, lightPosition, null, color, 0,
                              origin, scale, SpriteEffects.None, 0);
             spriteBatch.End();
