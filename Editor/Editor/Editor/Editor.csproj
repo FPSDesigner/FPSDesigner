@@ -64,16 +64,22 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua">
-      <HintPath>..\..\packages\NLua.1.3.0.1\lib\net40\x86\KeraLua.dll</HintPath>
+    <Reference Include="KeraLua, Version=1.3.0.0, Culture=neutral, PublicKeyToken=04d04586786c6f34, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\KeraLua.dll</HintPath>
     </Reference>
+    <Reference Include="LearningMahesh.DynamicIOStream">
+      <HintPath>..\..\LearningMahesh.DynamicIOStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="mscorlib" />
-    <Reference Include="NLua">
-      <HintPath>..\..\packages\NLua.1.3.0.1\lib\net40\x86\NLua.dll</HintPath>
+    <Reference Include="NLua, Version=1.3.0.0, Culture=neutral, PublicKeyToken=8df2ab518030ea95, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
@@ -99,6 +105,7 @@
     <Compile Include="Display3D\Materials\ProjectedTextureMaterial.cs" />
     <Compile Include="Display3D\Materials\SpotLightMaterial.cs" />
     <Compile Include="Display3D\MeshAnimation.cs" />
+    <Compile Include="GameStates\CError.cs" />
     <Compile Include="GameStates\CInGame.cs" />
     <Compile Include="GameStates\CLoading.cs" />
     <Compile Include="GameStates\CMenu.cs" />
@@ -107,6 +114,7 @@
     <Compile Include="Game\CGameState.cs" />
     <Compile Include="Game\CCharacter.cs" />
     <Compile Include="Game\CGameStateManager.cs" />
+    <Compile Include="Game\CGUIManager.cs" />
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CPhysics.cs" />
@@ -129,7 +137,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>

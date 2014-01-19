@@ -198,7 +198,8 @@ namespace Editor.Game
         {
             if (_drawGui)
             {
-                _Cursor[_drawGuiId].MousePos = new Vector2(mouseState.X, mouseState.Y);
+                if(_Cursor[_drawGuiId] != null)
+                    _Cursor[_drawGuiId].MousePos = new Vector2(mouseState.X, mouseState.Y);
                 for (int i = 0; i < _Textures2D[_drawGuiId].Count; i++)
                 {
                     if (_Textures2D[_drawGuiId][i].HasOverAction)
