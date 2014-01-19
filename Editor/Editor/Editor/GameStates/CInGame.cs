@@ -152,13 +152,6 @@ namespace Editor.GameStates
             lua.Initialize();
             lua.LoadDefaultFunctions();
             lua.LoadScript("test.lua");
-
-            /*int color2;
-            Console.WriteLine(int.TryParse("C", System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out color2));
-            Console.WriteLine(color2);*/
-            guiManager = new Game.CGUIManager();
-            guiManager.LoadGUIFile("GUI.xml");
-            Console.WriteLine("DONE");
         }
 
         public override void unloadContent(ContentManager content)

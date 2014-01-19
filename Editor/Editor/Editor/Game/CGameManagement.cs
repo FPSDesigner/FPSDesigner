@@ -22,6 +22,7 @@ namespace Editor.Game
 
         // Current State
         Game.CGameStateManager _currentState;
+        Game.CGUIManager _GUIManager;
 
         private GraphicsDeviceManager _graphicsManager;
         private GraphicsDevice _graphics;
@@ -33,9 +34,11 @@ namespace Editor.Game
         public void Initialize()
         {
             _currentState = Game.CGameStateManager.getInstance();
+            _GUIManager = new Game.CGUIManager(_currentState);
+            _GUIManager.LoadGUIFile("GUI.xml");
 
             // Example Menu
-            Game.LevelInfo.GameMenu data = new Game.LevelInfo.GameMenu
+            /*Game.LevelInfo.GameMenu data = new Game.LevelInfo.GameMenu
             {
                 Type = "Image",
                 BackgroundMusic = "Sounds/Menu/MENU_SoundSelction",
@@ -53,10 +56,10 @@ namespace Editor.Game
                         new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 200, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 120 },
                     }
                 }
-            };
+            };*/
 
             // First state = Menu
-            _currentState.ChangeState(new GameStates.CMenu(data));
+            _currentState.ChangeState(new GameStates.CMenu(_GUIManager));
             _currentState.Initialize();
         }
 

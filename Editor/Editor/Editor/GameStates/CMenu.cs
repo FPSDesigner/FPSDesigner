@@ -30,6 +30,55 @@ namespace Editor.GameStates
         }
         #endregion
 
+        
+
+        Game.CGUIManager GUIManager;
+        public CMenu(Game.CGUIManager guimanager)
+        {
+            GUIManager = guimanager;
+        }
+
+        public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        {
+            if(!GUIManager.IsGUILoaded("MainMenu"))
+                GUIManager.LoadGUI(GUIManager.GetGUIId("MainMenu"), content, graphics);
+        }
+
+        public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        {
+            GUIManager.Update(gameTime, kbState, mouseState, oldMouseState);
+        }
+
+        public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        {
+            GUIManager.Draw(spritebatch, gameTime);
+        }
+
+    }
+}
+
+
+/*namespace Editor.GameStates
+{
+    class CMenu : Game.CGameState
+    {
+        #region "Singleton"
+        // Singleton Code
+        private static CMenu instance = null;
+        private static readonly object myLock = new object();
+
+        // Singelton Methods
+        private CMenu() { }
+        public static CMenu getInstance()
+        {
+            lock (myLock)
+            {
+                if (instance == null) instance = new CMenu();
+                return instance;
+            }
+        }
+        #endregion
+
         #region "Internal Datas Class"
         class menuDatas
         {
@@ -157,7 +206,8 @@ namespace Editor.GameStates
 
                 spritebatch.Draw(_menuData.buttonsImage, _menuData.buttonsPositions[i],
                     new Rectangle(_menuData.menuButtons[i].ImgPosX + displacementSelection, _menuData.menuButtons[i].ImgPosY, _menuData.menuButtons[i].Width, _menuData.menuButtons[i].Height),
-                    Color.White, 0.0f, Vector2.Zero, 1f/*_menuData.scaleCoefficient*/, SpriteEffects.None, 0);
+                    //Color.White, 0.0f, Vector2.Zero, _menuData.scaleCoefficient, SpriteEffects.None, 0);
+                    Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0);
             }
 
             // Draw Cursor
@@ -167,4 +217,4 @@ namespace Editor.GameStates
         }
 
     }
-}
+}*/

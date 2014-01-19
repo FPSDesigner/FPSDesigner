@@ -57,8 +57,6 @@ namespace Editor.Game
 
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw, cam._pitch + MathHelper.PiOver2, 0);
             _handAnimation.Update(gameTime, cam._cameraPos, _handRotation);
-
-            Console.WriteLine(cam._pitch);
             
         }
 

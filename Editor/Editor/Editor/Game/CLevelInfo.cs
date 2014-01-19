@@ -37,7 +37,6 @@ namespace Editor.Game.LevelInfo
         public MapTerrain MapTerrain { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
-        public GameMenu GameMenu { get; set; }
     }
 
 
@@ -113,7 +112,7 @@ namespace Editor.Game.LevelInfo
     #region "Node - Menu"
 
     // 2D Menu
-    public class GameMenu
+   /* public class GameMenu
     {
         public string Type { get; set; }
         public string BackgroundMusic { get; set; }
@@ -124,7 +123,7 @@ namespace Editor.Game.LevelInfo
         public int CursorClickY { get; set; }
 
         public ButtonsInfo ButtonsInfo { get; set; }
-    }
+    }*/
 
 
     // 3D Models - Model - Info
