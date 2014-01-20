@@ -39,6 +39,10 @@ namespace Editor
             graphics.PreferredBackBufferHeight = 800;
             Window.AllowUserResizing = true;
 
+            // Icon
+            if(System.IO.File.Exists("Icon.ico"))
+                ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon("Icon.ico");
+
         }
         protected override void Initialize()
         {
