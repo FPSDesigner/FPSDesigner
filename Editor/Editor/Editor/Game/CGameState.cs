@@ -19,12 +19,12 @@ namespace Editor.Game
 
         }
 
-        public virtual void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public virtual void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
 
         }
 
-        public virtual void unloadContent(ContentManager content)
+        public virtual void UnloadContent(ContentManager content)
         {
 
         }

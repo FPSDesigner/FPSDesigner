@@ -38,7 +38,7 @@ namespace Editor.GameStates
             GUIManager = guimanager;
         }
 
-        public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             if(!GUIManager.IsGUILoaded("MainMenu"))
                 GUIManager.LoadGUI(GUIManager.GetGUIId("MainMenu"), content, graphics);
@@ -127,7 +127,7 @@ namespace Editor.GameStates
             _gameMenu = GameMenu;
         }
 
-        public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             _menuData = new menuDatas(_gameMenu.ButtonsInfo.MenuButton, content.Load<Texture2D>(_gameMenu.ButtonsInfo.ButtonsImages), content.Load<Texture2D>(_gameMenu.CursorFile),
                 content.Load<Texture2D>(_gameMenu.BGImageFile), content.Load<SoundEffect>(_gameMenu.SelectionSound), content.Load<SoundEffect>(_gameMenu.BackgroundMusic));
@@ -184,7 +184,7 @@ namespace Editor.GameStates
                         case 1:
                             Game.CGameStateManager.getInstance().ChangeState(GameStates.CInGame.getInstance());
                             Game.CGameStateManager.getInstance().Initialize();
-                            Game.CGameStateManager.getInstance().loadContent();
+                            Game.CGameStateManager.getInstance().LoadContent();
                             break;
                     }
                 }

@@ -86,7 +86,7 @@ namespace Editor.Game
         public void unloadContent(ContentManager content)
         {
             //Unload the State content
-            _currentState.actualState.unloadContent(content);
+            _currentState.actualState.UnloadContent(content);
         }
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)

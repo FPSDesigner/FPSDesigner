@@ -34,7 +34,7 @@ namespace Editor.GameStates
         private GraphicsDevice graphics;
 
 
-        public override void loadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             this.spriteBatch = spriteBatch;
             this.graphics = graphics;
@@ -53,7 +53,7 @@ namespace Editor.GameStates
             _errorColor = new Color(164, 0, 4, 80);
         }
 
-        public override void unloadContent(ContentManager content)
+        public override void UnloadContent(ContentManager content)
         {
 
         }

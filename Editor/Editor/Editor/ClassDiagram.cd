@@ -59,6 +59,13 @@
   </Class>
   <Class Name="Editor.Display3D.CSimpleShapes" Collapsed="true">
     <Position X="19.25" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Editor.Display3D.CSimpleShapes.SimpleShape" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Display3D\CSimpleShapes.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AggADABAAACAAwAAQACAAAAAgMAAAIgAAAAgAFAgAAA=</HashCode>
       <FileName>Display3D\CSimpleShapes.cs</FileName>
@@ -94,7 +101,7 @@
       <FileName>Display3D\MeshAnimation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Editor.Display3D.Materials.Material" Collapsed="true">
+  <Class Name="Editor.Display3D.Materials.Material">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -178,10 +185,10 @@
       <FileName>Game\CGameManagement.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Editor.Game.CGameState" Collapsed="true">
-    <Position X="3" Y="4.5" Width="1.5" />
+  <Class Name="Editor.Game.CGameState">
+    <Position X="7" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQABAAAAAAAAwAAAAAgAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAEAAAAAAAAwAAAAAgAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>Game\CGameState.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -346,8 +353,8 @@
       <FileName>Game\Script\CLuaVM.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Editor.Game.Script.CScriptVM" Collapsed="true">
-    <Position X="0.5" Y="7.5" Width="1.5" />
+  <Class Name="Editor.Game.Script.CScriptVM">
+    <Position X="0.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQiAQAAACAAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Game\Script\CScriptVM.cs</FileName>
@@ -360,17 +367,17 @@
       <FileName>Game\Script\CSquirrelVM.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Editor.GameStates.CError" Collapsed="true">
-    <Position X="3" Y="5.75" Width="1.5" />
+  <Class Name="Editor.GameStates.CError">
+    <Position X="7" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAUCBEAEQAAAAgAQBAAgAAABAAAAAAgQQAAAAAAQAAA=</HashCode>
+      <HashCode>AAUCFEAEQAAAAgAQBAAgAAABAAAAAAgAQAAAAAAQAAQ=</HashCode>
       <FileName>GameStates\CError.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Editor.GameStates.CInGame" Collapsed="true">
-    <Position X="5.25" Y="5.75" Width="1.5" />
+  <Class Name="Editor.GameStates.CInGame">
+    <Position X="9.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQCBAAAEICAA0AAAAAAUAAACABAAEQSIBAAAABIAAA=</HashCode>
+      <HashCode>AAQCFAAAEICAA0AAAAAAUAAACABAAEQCIBAAAABIAAQ=</HashCode>
       <FileName>GameStates\CInGame.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -382,9 +389,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Editor.GameStates.CMenu" Collapsed="true">
-    <Position X="0.75" Y="5.75" Width="1.5" />
+    <Position X="4.75" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQABAAAAAAAAgAAAAAAQAAAAABAAAQAAAAAAAAAQAA=</HashCode>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAQAAAAABAAAQAAAAAAAAAQAQ=</HashCode>
       <FileName>GameStates\CMenu.cs</FileName>
     </TypeIdentifier>
   </Class>

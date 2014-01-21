@@ -49,7 +49,7 @@ namespace Editor.Game
 
         public void loadContent()
         {
-            actualState.loadContent(content, spriteBatch, graphics);
+            actualState.LoadContent(content, spriteBatch, graphics);
         }
 
         public void SendParam(object param)
