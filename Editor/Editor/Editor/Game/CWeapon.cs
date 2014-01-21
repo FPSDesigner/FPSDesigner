@@ -160,11 +160,15 @@ namespace Editor.Game
             }
         }
 
-        public string[] GetAnims(int weaponSelected)
+        public string GetAnims(int weaponSelected, int animNumber)
         {
-            return _weaponsArray[weaponSelected]._weapAnim;
+            return _weaponsArray[weaponSelected]._weapAnim[animNumber];
         }
 
-        public 
+        public Model GetModel(int modelNumber)
+        {
+            return _weaponsArray[modelNumber]._wepModel;
+        }
+        
     }
 }

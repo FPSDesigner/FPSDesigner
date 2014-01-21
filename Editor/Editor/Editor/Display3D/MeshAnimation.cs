@@ -66,7 +66,6 @@ namespace Editor.Display3D
             animationController.TranslationInterpolation = InterpolationMode.Linear;
             animationController.OrientationInterpolation = InterpolationMode.Linear;
             animationController.ScaleInterpolation = InterpolationMode.Linear;
-
             animationController.LoopEnabled = _isLooped;
             //animationController.StartClip(skinnedModel.AnimationClips["HandArmatureAction"]);
 
@@ -108,13 +107,19 @@ namespace Editor.Display3D
         public void StartAnimation(string name, bool looping)
         {
                 //Change the animation smoothly
-                animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.05f));
+                animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.1f));
                 animationController.LoopEnabled = looping;
+          
         }
 
         public bool isPlaying()
         {
             return animationController.IsPlaying;
+        }
+
+        public bool HasFinished()
+        {
+            return animationController.HasFinished;
         }
     }
 }

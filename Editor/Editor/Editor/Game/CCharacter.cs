@@ -24,14 +24,18 @@ namespace Editor.Game
 
         private Display3D.CCamera _cam; //Will back up all camera's attributes
 
-        float _initSpeed = 0.2f;
-        float _velocity = 0.3f;
+        private float _initSpeed = 0.2f;
+        private float _velocity = 0.3f;
+
+        private bool _isWalking; //Know if the player walk for animation
+        private bool _isShoting; // Know if the player shot for animation
 
         public void Initialize()
         {
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
             _handTexture = new Texture2D[1];
-            
+            _isWalking = true;
+            _isShoting = false;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
@@ -46,15 +50,7 @@ namespace Editor.Game
         {
             _cam = cam;
 
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
-            {
-                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[0], true);
-                weapon.Shot(true, gameTime);
-               
-            }
-            else if (mouseState.LeftButton == ButtonState.Pressed)
-                weapon.Shot(false, gameTime);
-
+            //We place the hand like we want
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);
@@ -62,6 +58,9 @@ namespace Editor.Game
                 + 0.028f * Vector3.Transform(Vector3.Down, rotation);
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
+
+            //All arround weapons, the shot, animations ..
+            WeaponHandle(weapon, gameTime, mouseState, oldMouseState);
             
         }
 
@@ -89,33 +88,43 @@ namespace Editor.Game
                 {
                     _velocity -= .01f;
                 }
+                _isWalking = true;
             }
             return _velocity;
         }
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState)
         {
-            _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[0], false);
+            if (_handAnimation.HasFinished() && !_isWalking)
+            {
+                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
+                _isShoting = false;
+                _isWalking = true;
+            }
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
-                weapon.Shot(true, gameTime);
-                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[1], false);
+                if (!_isShoting)
+                {
+                    weapon.Shot(true, gameTime);
+                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
+                    _isWalking = false;
+                    _isShoting = true;
+                }
             }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
         }
 
-        public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch)
+        public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
-            foreach (ModelMesh mesh in weap..Meshes) 
+            foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {  
                 foreach (BasicEffect effect in mesh.Effects)  
                 {    
-                    Matrix gunTransform = Matrix.CreateScale(0.65f) * Matrix.CreateFromYawPitchRoll(-MathHelper.PiOver2, 0, MathHelper.Pi);
-                    effect.World = gunTransform * skinnedModel.Player.WorldTransforms[handIndex];
-                    effect.View = camera.View;    
-                    effect.Projection = camera.Projection;
+                    
+                    effect.View = view;    
+                    effect.Projection = projection;
                 }
             }
         }
