@@ -95,7 +95,7 @@ namespace Editor.GameStates
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             //Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.05f, 10000.0f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain);
             cam._physicsMap._modelsList = models;
 
 

@@ -39,7 +39,7 @@ namespace Editor.Game
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
-            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.04f,_handTexture, true);
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.02f,_handTexture, true);
             _handAnimation.LoadContent(content);
         }
         float i = 0;
@@ -60,7 +60,8 @@ namespace Editor.Game
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);
-            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y-i, cam._cameraPos.Z) + 0.05f * Vector3.Transform(Vector3.Forward, rotation);
+            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y-i, cam._cameraPos.Z) + 0.03f * Vector3.Transform(Vector3.Forward, rotation)
+                +0.02f * Vector3.Transform(Vector3.Down,rotation);
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
             
