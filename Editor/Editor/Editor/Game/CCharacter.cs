@@ -42,11 +42,13 @@ namespace Editor.Game
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.04f,_handTexture, true);
             _handAnimation.LoadContent(content);
         }
-
+        float i = 0;
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
             _cam = cam;
-
+            if (kbState.IsKeyDown(Keys.Down))
+                i += 0.001f;
+            Console.WriteLine(i);
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
                 weapon.Shot(true, gameTime);
@@ -55,8 +57,12 @@ namespace Editor.Game
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
 
-            _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw, cam._pitch + MathHelper.PiOver2, 0);
-            _handAnimation.Update(gameTime, cam._cameraPos, _handRotation);
+            _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
+
+            Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);
+            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y-i, cam._cameraPos.Z) + 0.05f * Vector3.Transform(Vector3.Forward, rotation);
+
+            _handAnimation.Update(gameTime, _handPos, _handRotation);
             
         }
 
