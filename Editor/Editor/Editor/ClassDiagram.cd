@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Editor.Display2D.C2DEffect" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAgAAAABQkgBQKAAUAFgQEBgAAQAAKAEABADAA4=</HashCode>
+      <FileName>Display2D\C2DEffect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display2D.CPostProcessor" Collapsed="true">
+    <Position X="15.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAEAAAAABQgABAABAAAAAEgAAAIQAAAAAAAACAgg=</HashCode>
+      <FileName>Display2D\CPostProcessing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display2D.CRenderCapture" Collapsed="true">
+    <Position X="17.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAACAAAgAAAAAAAAAAAAAAAAEAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Display2D\CPostProcessing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.CCamera" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>lB4AAAABACQAAIAAAQCAEACAAAAAAQwCCGAAApAAQhA=</HashCode>
+      <FileName>Display3D\CCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.CLensFlare" Collapsed="true">
+    <Position X="17.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAKEEAAEAAAAgBAABAIAAAAABAAIAQAAABEwCCAAAQ=</HashCode>
+      <FileName>Display3D\CLensFlare.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.CModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkJAAAEAgABNEgABAkAAQgDAAAABABAAAAABACAAAAA=</HashCode>
+      <FileName>Display3D\CModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Editor.Display3D.MeshTag" Collapsed="true">
+    <Position X="15.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAIAgAQAAAA=</HashCode>
+      <FileName>Display3D\CModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.TriangleTest" Collapsed="true">
+    <Position X="12.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAQAAAAAAAEAAQAIA=</HashCode>
+      <FileName>Display3D\CModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.CSimpleShapes" Collapsed="true">
+    <Position X="19.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggADABAAACAAwAAQACAAAAAgMAAAIgAAAAgAFAgAAA=</HashCode>
+      <FileName>Display3D\CSimpleShapes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.CSkybox" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="21" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAgAAAAAAQAAIAAAAAAgAAAAACAAIAAA=</HashCode>
+      <FileName>Display3D\CSkybox.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Editor.Display3D.CTerrain" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEQSAgACBESAwwAQEAIREIQABEQUAAAhAAEAEYQAAw=</HashCode>
+      <FileName>Display3D\CTerrain.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Editor.Display3D.CWater" Collapsed="true">
+    <Position X="14" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGBEAAAIAQIgAAAAAIAEAAAEAACBkBAEAAAAAAAAA=</HashCode>
+      <FileName>Display3D\CWater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.MeshAnimation" Collapsed="true">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAEQAAAgAYAIAEAABAAABAIAAEAQAAgAAAACQ=</HashCode>
+      <FileName>Display3D\MeshAnimation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.Material" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Display3D\Materials\Material.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.LightingMaterial" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAAAAAAAAAABAAAAAAAAAAAACAAAAAAEAAAAA=</HashCode>
+      <FileName>Display3D\Materials\Material.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.NormalMapMaterial" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Display3D\Materials\Material.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.MultiLightingMaterial" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAAAAAAAAAABAAAAAAAAAAAACAAAAAAEAAAAA=</HashCode>
+      <FileName>Display3D\Materials\MultiLightingMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.PointLightMaterial" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAABCAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAA=</HashCode>
+      <FileName>Display3D\Materials\PointLightMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.PPPointLight" Collapsed="true">
+    <Position X="17.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgQAAAAA=</HashCode>
+      <FileName>Display3D\Materials\PPPointLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.PrelightingRenderer" Collapsed="true">
+    <Position X="19.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEACAAAEAAAAAmAAAAAgBgAAQQAgAAQAAAkAAABABAA=</HashCode>
+      <FileName>Display3D\Materials\PrelightingRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.ProjectedTextureMaterial" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIBAAAAAACAAAAIIAAAAAAAAAAAAAAAAEAAAgAAg=</HashCode>
+      <FileName>Display3D\Materials\ProjectedTextureMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Display3D.Materials.SpotLightMaterial" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAABAAAAIAAAAAABAAAAAAAAAAAAAAAAJAAAAAAAA=</HashCode>
+      <FileName>Display3D\Materials\SpotLightMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CCharacter" Collapsed="true">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAUAAAAAAAIAAwAAAAQACAAIAAAAAAAAAAAIAAAAAAc=</HashCode>
+      <FileName>Game\CCharacter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CConsole" Collapsed="true">
+    <Position X="19.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEUSUAIpUgAoggAgCAAEQAFAAgBAAEQQAIIAAQAAAYQ=</HashCode>
+      <FileName>Game\CConsole.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CGameManagement" Collapsed="true">
+    <Position X="21" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAIAABAAAwAAAAAgAAAAAAAoCAASAAAAAAAAABA=</HashCode>
+      <FileName>Game\CGameManagement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CGameState" Collapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAAAwAAAAAgAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CGameState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CGameStateManager" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBEAAABAABQAAAAAgQAAAAABAAAwAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CGameStateManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CGUIManager" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAIAgCgoAYAAAAAAAAACAQAIAhIAAAAAAARAA=</HashCode>
+      <FileName>Game\CGUIManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CInput" Collapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAgQAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAA=</HashCode>
+      <FileName>Game\CInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CPhysics" Collapsed="true">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAARAgAQgIAAAABAAACAAAAAIAAAgQgBAAUAAAAAAI=</HashCode>
+      <FileName>Game\CPhysics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CWeapon" Collapsed="true">
+    <Position X="15.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAgAAIAAAAAACBAAAAAAIAAAAAAAACAIAAAQ=</HashCode>
+      <FileName>Game\CWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.CXMLManager" Collapsed="true">
+    <Position X="17.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\CXMLManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Settings.CGameSettings" Collapsed="true">
+    <Position X="22.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAABAAAAAAAAAAABAIQAJAAABAABUAAEAAAYAAAAA=</HashCode>
+      <FileName>Game\CGameSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Settings.GameSettingsInfos" Collapsed="true">
+    <Position X="21" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Game\CGameSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Settings.KeyMapping" Collapsed="true">
+    <Position X="22.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCQAAOAAAAAAIAAAAAAAAAAAAABAAABAAgAAAAEAAA=</HashCode>
+      <FileName>Game\CGameSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Settings.Video" Collapsed="true">
+    <Position X="14" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CGameSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.CLevelInfo" Collapsed="true">
+    <Position X="19.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAABAAAAAAAAAEAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.LevelData" Collapsed="true">
+    <Position X="12.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAgAAAAAAACAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.Properties" Collapsed="true">
+    <Position X="22.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAACBAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MapTerrain" Collapsed="true">
+    <Position X="22.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MapModels" Collapsed="true">
+    <Position X="15.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MapModels_Model" Collapsed="true">
+    <Position X="17.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MapModels_Model_Info" Collapsed="true">
+    <Position X="19.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MapModels_Model_Position" Collapsed="true">
+    <Position X="21" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAE=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.GameFiles" Collapsed="true">
+    <Position X="19.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAoAAAAAACA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.ButtonsInfo" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.LevelInfo.MenuButton" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAwEAAAAAAAAAAgAEAAAAAAAQ=</HashCode>
+      <FileName>Game\CLevelInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Script.CLuaScriptFunctions" Collapsed="true">
+    <Position X="22.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Game\Script\CLuaScriptFunctions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Script.CLuaVM" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQiAQEAACAAAAAAAAAAAAAAAAABgAAA=</HashCode>
+      <FileName>Game\Script\CLuaVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Script.CScriptVM" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQiAQAAACAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Game\Script\CScriptVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Game.Script.CSquirrelVM" Collapsed="true">
+    <Position X="22.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\Script\CSquirrelVM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.GameStates.CError" Collapsed="true">
+    <Position X="3" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUCBEAEQAAAAgAQBAAgAAABAAAAAAgQQAAAAAAQAAA=</HashCode>
+      <FileName>GameStates\CError.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.GameStates.CInGame" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCBAAAEICAA0AAAAAAUAAACABAAEQSIBAAAABIAAA=</HashCode>
+      <FileName>GameStates\CInGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.GameStates.CLoading" Collapsed="true">
+    <Position X="21" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameStates\CLoading.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.GameStates.CMenu" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAAAgAAAAAAQAAAAABAAAQAAAAAAAAAQAA=</HashCode>
+      <FileName>GameStates\CMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Main" Collapsed="true">
+    <Position X="14" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCEEAAAAACAwAAABAAAAEAAAAABAgABAAAAAAAAAQ=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Editor.Program" Collapsed="true">
+    <Position X="21" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Editor.Display3D.TriangleVertexIndices" Collapsed="true">
+    <Position X="14" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAEAAAA=</HashCode>
+      <FileName>Display3D\CModel.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Editor.Display3D.Triangle" Collapsed="true">
+    <Position X="12.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAgAQAAAAAAAAAAA=</HashCode>
+      <FileName>Display3D\CModel.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Editor.Display3D.IRenderable" Collapsed="true">
+    <Position X="12.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Display3D\CWater.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
