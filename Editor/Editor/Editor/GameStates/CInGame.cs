@@ -110,25 +110,32 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//building001") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machet") };
             object[][] testInfos = new object[][] {
                 new object[] {
-                0,
-                100,
-                100,
-                100,
-                100,
-                true,
-                10,
-                0
+                2,
+                1,
+                1,
+                1,
+                1,
+                false,
+                2.0f,
+                1
                 }
             };
             string[][] testSounds = new string[][] {
                 new string[] {
-                    "M4A1_SHOT", "GUN_SHOT", "GUN_SHOT"
+                    "MACHET_ATTACK"
                 }
             };
-            weapon.LoadContent(content, testmodel, testInfos, testSounds);
+
+            string[][] anims = new string[][] {
+                new string[] {
+                    "Machete_Walk", "Machete_Attack"
+                }
+            };
+
+            weapon.LoadContent(content, testmodel, testInfos, testSounds, anims);
 
 
             /*Effect effect = content.Load<Effect>("Effects/ProjectedTexture");

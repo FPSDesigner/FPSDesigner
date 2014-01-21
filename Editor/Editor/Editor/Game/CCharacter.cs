@@ -39,20 +39,18 @@ namespace Editor.Game
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
-            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.02f,_handTexture, true);
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
             _handAnimation.LoadContent(content);
         }
-        float i = 0;
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
             _cam = cam;
-            if (kbState.IsKeyDown(Keys.Down))
-                i += 0.001f;
-            Console.WriteLine(i);
+
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
+                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[0], true);
                 weapon.Shot(true, gameTime);
-                _handAnimation.StartAnimation("run", true);
+               
             }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
@@ -60,8 +58,8 @@ namespace Editor.Game
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);
-            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y-i, cam._cameraPos.Z) + 0.03f * Vector3.Transform(Vector3.Forward, rotation)
-                +0.02f * Vector3.Transform(Vector3.Down,rotation);
+            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y, cam._cameraPos.Z) + 0.025f * Vector3.Transform(Vector3.Forward, rotation)
+                + 0.028f * Vector3.Transform(Vector3.Down, rotation);
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
             
@@ -93,6 +91,33 @@ namespace Editor.Game
                 }
             }
             return _velocity;
+        }
+
+        public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState)
+        {
+            _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[0], false);
+
+            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+            {
+                weapon.Shot(true, gameTime);
+                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon)[1], false);
+            }
+            else if (mouseState.LeftButton == ButtonState.Pressed)
+                weapon.Shot(false, gameTime);
+        }
+
+        public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch)
+        {
+            foreach (ModelMesh mesh in weap..Meshes) 
+            {  
+                foreach (BasicEffect effect in mesh.Effects)  
+                {    
+                    Matrix gunTransform = Matrix.CreateScale(0.65f) * Matrix.CreateFromYawPitchRoll(-MathHelper.PiOver2, 0, MathHelper.Pi);
+                    effect.World = gunTransform * skinnedModel.Player.WorldTransforms[handIndex];
+                    effect.View = camera.View;    
+                    effect.Projection = camera.Projection;
+                }
+            }
         }
 
     }

@@ -18,7 +18,6 @@ namespace Editor.Game
         public int _selectedWeapon;
         private bool _dryFirePlayed;
 
-
         private WeaponData[] _weaponsArray;
         private Dictionary<string, SoundEffect> _weaponsSounds;
 
@@ -26,7 +25,7 @@ namespace Editor.Game
         class WeaponData
         {
             #region "Constructor"
-            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound)
+            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim)
             {
                 // Model Assignement
                 this._wepModel = weaponModel;
@@ -38,13 +37,19 @@ namespace Editor.Game
                 this._bulletsAvailable = (int)weaponInfo[3];
                 this._magazinesAvailables = (int)weaponInfo[4];
                 this._isAutomatic = (bool)weaponInfo[5];
-                this._shotPerSeconds = (int)(1000.0f / (float)(int)weaponInfo[6]);
+                this._shotPerSeconds = (int)(1000.0f / (float)weaponInfo[6]);
                 this._range = (int)weaponInfo[7];
 
                 // SoundEffect Assignement
                 this._shotSound = weaponsSound[0];
-                this._dryShotSound = weaponsSound[1];
-                this._reloadSound = weaponsSound[2];
+                if (_wepType != 2)
+                {
+                    this._dryShotSound = weaponsSound[1];
+                    this._reloadSound = weaponsSound[2];
+                }
+
+                //Anim
+                this._weapAnim = weapAnim;
             }
             #endregion
 
@@ -68,6 +73,8 @@ namespace Editor.Game
             // Models
             public Model _wepModel;
 
+            //Anim
+            public String[] _weapAnim;
             // Sounds
             public string _shotSound;
             public string _dryShotSound;
@@ -80,9 +87,10 @@ namespace Editor.Game
         {
         }
 
-        public void LoadContent(ContentManager content, Model[] modelsList, object[][] weaponsInfo, string[][] weaponsSounds)
+        public void LoadContent(ContentManager content, Model[] modelsList, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
         {
-            if (modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length)
+            if ((modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length
+                )&& weapAnim.Length != modelsList.Length)
                 throw new Exception("Weapons Loading Error - Arrays of different lengths");
 
             _weaponsAmount = modelsList.Length;
@@ -101,7 +109,7 @@ namespace Editor.Game
 
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i]);
+                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i]);
             }
         }
 
@@ -112,19 +120,26 @@ namespace Editor.Game
 
         public void Shot(bool firstShot, GameTime gameTime)
         {
-            if (firstShot)
-                _dryFirePlayed = false;
-            if (firstShot && !_weaponsArray[_selectedWeapon]._isAutomatic)
-                InternFire();
-            else if (_weaponsArray[_selectedWeapon]._isAutomatic)
+            if (_weaponsArray[_selectedWeapon]._wepType != 2)
             {
-                
-                if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
-                {
+                if (firstShot)
+                    _dryFirePlayed = false;
+                if (firstShot && !_weaponsArray[_selectedWeapon]._isAutomatic)
                     InternFire();
-                    _lastShotMs = gameTime.TotalGameTime.TotalMilliseconds;
-                }
+                else if (_weaponsArray[_selectedWeapon]._isAutomatic)
+                {
 
+                    if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
+                    {
+                        InternFire();
+                        _lastShotMs = gameTime.TotalGameTime.TotalMilliseconds;
+                    }
+
+                }
+            }
+            else
+            {
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
         }
 
@@ -144,5 +159,12 @@ namespace Editor.Game
                 }
             }
         }
+
+        public string[] GetAnims(int weaponSelected)
+        {
+            return _weaponsArray[weaponSelected]._weapAnim;
+        }
+
+        public 
     }
 }

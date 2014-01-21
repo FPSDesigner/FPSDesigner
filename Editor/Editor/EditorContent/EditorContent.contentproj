@@ -329,6 +329,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Machet.fbx">
+      <Name>Machet</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Machete.png">
+      <Name>Machete</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MACHET_ATTACK.wav">
+      <Name>MACHET_ATTACK</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Models\Arm_Animation.fbx">
       <Name>Arm_Animation</Name>
       <Importer>FbxImporter</Importer>

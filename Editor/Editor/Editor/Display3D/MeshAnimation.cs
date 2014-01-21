@@ -107,12 +107,14 @@ namespace Editor.Display3D
 
         public void StartAnimation(string name, bool looping)
         {
-            if (!animationController.IsPlaying)
-            {
                 //Change the animation smoothly
                 animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.05f));
                 animationController.LoopEnabled = looping;
-            }
+        }
+
+        public bool isPlaying()
+        {
+            return animationController.IsPlaying;
         }
     }
 }

@@ -36,10 +36,14 @@ Content\3D\Checker.xnb
 Content\Textures\Uvw_Hand.xnb
 Content\Textures\grass.xnb
 Content\Textures\Terrain\grassMap.xnb
+Content\2D\ErrorSmiley.xnb
 Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
 Content\3D\plane.xnb
 Content\3D\Ground.xnb
 Content\3D\Checker_0.xnb
+Content\Models\Machet.xnb
+Content\Textures\Machete.xnb
+Content\MACHET_ATTACK.xnb
 Content\Models\Arm_Animation.xnb

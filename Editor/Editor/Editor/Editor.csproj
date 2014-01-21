@@ -68,8 +68,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\KeraLua.dll</HintPath>
     </Reference>
-    <Reference Include="LearningMahesh.DynamicIOStream">
-      <HintPath>..\..\Ressources\LearningMahesh.DynamicIOStream.dll</HintPath>
+    <Reference Include="LearningMahesh.DynamicIOStream, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Ressources\LearningMahesh.DynamicIOStream.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
