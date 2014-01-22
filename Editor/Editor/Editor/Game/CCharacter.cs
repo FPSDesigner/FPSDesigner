@@ -74,7 +74,7 @@ namespace Editor.Game
             //the fallVelocity argument is used to prevent the player from speed in the air
         public float Run(KeyboardState state, Vector3 fallVelocity)
         {
-            if (state.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
+            if ((_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPRun)) || state.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
             {
                 if ((_velocity < _initSpeed + 0.25f) && fallVelocity.Y <= 0.0f)
                 {

@@ -93,15 +93,16 @@ namespace Editor.Display3D.Materials
             foreach (CModel model in Models)
             {
                 model.CacheEffects();
-
                 model.SetModelEffect(depthNormalEffect, false);
                 model.Draw(Camera._view, Camera._projection, Camera._cameraPos);
                 model.RestoreEffects();
             }
 
-            //terrain.Draw(Camera._view, Camera._projection, Camera._cameraPos);
+            terrain.Draw(Camera._view, Camera._projection, Camera._cameraPos);
             // Un-set the render targets
             graphicsDevice.SetRenderTargets(null);
+
+
         }
 
         void drawLightMap()

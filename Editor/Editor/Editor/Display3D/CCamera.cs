@@ -148,7 +148,7 @@ namespace Editor.Display3D
             if (_gameSettings.useGamepad)
             {
                 Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
-                _translation += new Vector3(direction.X, 0, direction.Y);
+                _translation += new Vector3(direction.X, 0, -direction.Y);
 
                 if(_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
                     _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));
@@ -198,8 +198,8 @@ namespace Editor.Display3D
         {
             if (_gameSettings.useGamepad)
             {
-                this._yaw -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Left.X;
-                this._pitch -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Left.Y;
+                this._yaw -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Right.X;
+                this._pitch -= _gameSettings._gameSettings.KeyMapping.GPSensibility * -_gameSettings.gamepadState.ThumbSticks.Right.Y;
             }
             else
             {

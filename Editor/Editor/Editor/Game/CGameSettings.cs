@@ -84,9 +84,10 @@ namespace Editor.Game.Settings
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
                     MouseSensibility = 0.001f,
 
-                    GPSensibility = 0.001f,
+                    GPSensibility = 0.05f,
                     GPJump = Buttons.A,
                     GPShot = Buttons.RightTrigger,
+                    GPRun = Buttons.LeftShoulder,
                 },
                 Video = new Video
                 {
@@ -128,6 +129,7 @@ namespace Editor.Game.Settings
         public Keys Console { get; set; }
         public Buttons GPJump { get; set; }
         public Buttons GPShot { get; set; }
+        public Buttons GPRun { get; set; }
         public float MouseSensibility { get; set; }
         public float GPSensibility { get; set; }
     }
