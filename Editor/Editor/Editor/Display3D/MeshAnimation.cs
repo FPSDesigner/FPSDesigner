@@ -67,7 +67,6 @@ namespace Editor.Display3D
             animationController.OrientationInterpolation = InterpolationMode.Linear;
             animationController.ScaleInterpolation = InterpolationMode.Linear;
             animationController.LoopEnabled = _isLooped;
-            //animationController.StartClip(skinnedModel.AnimationClips["HandArmatureAction"]);
 
         }
 

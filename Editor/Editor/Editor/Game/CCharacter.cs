@@ -59,7 +59,6 @@ namespace Editor.Game
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
-
             
         }
 
@@ -94,19 +93,19 @@ namespace Editor.Game
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
             //If player isnt moving, we stop all animation
-            /*if (cam._isMoving && !_isWalkAnimPlaying)
+            if (cam._isMoving && !_isWalkAnimPlaying)
             {
                 _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
                 _handAnimation.ChangeAnimSpeed(1.0f);
                 _isWalkAnimPlaying = true;
-            }*/
+            }
 
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
                     weapon.Shot(true, gameTime);
                     _handAnimation.ChangeAnimSpeed(1.5f);
-                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
+                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), true);
             }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);
