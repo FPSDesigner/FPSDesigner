@@ -27,7 +27,9 @@ namespace Editor.Game
         private float _initSpeed = 0.2f;
         private float _velocity = 0.3f;
 
+
         private bool _isWalkAnimPlaying = false;
+        private bool _isShoting = false;
 
         public void Initialize()
         {
@@ -35,13 +37,15 @@ namespace Editor.Game
             _handTexture = new Texture2D[1];
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice graphics)
+        public void LoadContent(ContentManager content, GraphicsDevice graphics, CWeapon weap)
         {
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
             _handAnimation.LoadContent(content);
+            _handAnimation.ChangeAnimSpeed(1.8f);
+            _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 0), true);
         }
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
@@ -92,20 +96,39 @@ namespace Editor.Game
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
-            //If player isnt moving, we stop all animation
-            if (cam._isMoving && !_isWalkAnimPlaying)
+            //If He is doing nothing, we stop him
+            if ((!_isShoting && !cam._isMoving) && !_isWalkAnimPlaying)
             {
-                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
-                _handAnimation.ChangeAnimSpeed(1.0f);
+                _handAnimation.ChangeAnimSpeed(0.04f);
+            }
+
+            //We wanted to know if the shoting animation is finished
+            if (_isShoting && _handAnimation.HasFinished())
+            {
+                _handAnimation.ChangeAnimSpeed(1.8f);
+                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
+                _isWalkAnimPlaying = true;
+                _isShoting = false;
+            }
+
+            //If player isnt moving, we stop all animation
+            if ((cam._isMoving && !_isWalkAnimPlaying) && !_isShoting)
+            {
+                _handAnimation.ChangeAnimSpeed(1.8f);
+                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
                 _isWalkAnimPlaying = true;
             }
 
-
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
+                if (!_isShoting)
+                {
                     weapon.Shot(true, gameTime);
-                    _handAnimation.ChangeAnimSpeed(1.5f);
-                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), true);
+                    _handAnimation.ChangeAnimSpeed(3.6f);
+                    _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
+                    _isWalkAnimPlaying = false;
+                    _isShoting = true;
+                }
             }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);

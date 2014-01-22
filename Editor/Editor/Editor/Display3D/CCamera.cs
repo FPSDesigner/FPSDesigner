@@ -195,7 +195,9 @@ namespace Editor.Display3D
             if (_translation != Vector3.Zero)
             {
                 _isMoving = true;
+                
             }
+
         }
 
         /// <summary>

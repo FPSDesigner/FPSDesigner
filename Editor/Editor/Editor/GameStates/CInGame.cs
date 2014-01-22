@@ -78,9 +78,6 @@ namespace Editor.GameStates
             devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
-            //Load content for Chara class
-            _character.LoadContent(content, graphics);
-
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
 
@@ -137,6 +134,8 @@ namespace Editor.GameStates
 
             weapon.LoadContent(content, testmodel, testInfos, testSounds, anims);
 
+            //Load content for Chara class
+            _character.LoadContent(content, graphics, weapon);
 
             /*Effect effect = content.Load<Effect>("Effects/ProjectedTexture");
             model.SetModelEffect(effect, true);
