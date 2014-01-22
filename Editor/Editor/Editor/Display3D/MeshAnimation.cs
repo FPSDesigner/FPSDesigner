@@ -55,7 +55,7 @@ namespace Editor.Display3D
                     effect.EnableDefaultLighting();
 
                     effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 16;
+                    effect.SpecularPower = 8;
                 }
             }
 

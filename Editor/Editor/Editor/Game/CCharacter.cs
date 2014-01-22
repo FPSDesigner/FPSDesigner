@@ -27,15 +27,12 @@ namespace Editor.Game
         private float _initSpeed = 0.2f;
         private float _velocity = 0.3f;
 
-        private bool _isWalking; //Know if the player walk for animation
-        private bool _isShoting; // Know if the player shot for animation
+        private bool _isWalkAnimPlaying = false;
 
         public void Initialize()
         {
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
             _handTexture = new Texture2D[1];
-            _isWalking = true;
-            _isShoting = false;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
@@ -57,10 +54,12 @@ namespace Editor.Game
             Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y, cam._cameraPos.Z) + 0.025f * Vector3.Transform(Vector3.Forward, rotation)
                 + 0.028f * Vector3.Transform(Vector3.Down, rotation);
 
+            //All arround weapons, the shot, animations ..
+            WeaponHandle(weapon, gameTime, mouseState, oldMouseState, cam);
+
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
-            //All arround weapons, the shot, animations ..
-            WeaponHandle(weapon, gameTime, mouseState, oldMouseState);
+
             
         }
 
@@ -88,29 +87,26 @@ namespace Editor.Game
                 {
                     _velocity -= .01f;
                 }
-                _isWalking = true;
             }
             return _velocity;
         }
 
-        public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState)
+        public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
-            if (_handAnimation.HasFinished() && !_isWalking)
+            //If player isnt moving, we stop all animation
+            /*if (cam._isMoving && !_isWalkAnimPlaying)
             {
-                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
-                _isShoting = false;
-                _isWalking = true;
-            }
+                _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
+                _handAnimation.ChangeAnimSpeed(1.0f);
+                _isWalkAnimPlaying = true;
+            }*/
+
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
-                if (!_isShoting)
-                {
                     weapon.Shot(true, gameTime);
-                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
-                    _isWalking = false;
-                    _isShoting = true;
-                }
+                    _handAnimation.ChangeAnimSpeed(1.5f);
+                    _handAnimation.StartAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
             }
             else if (mouseState.LeftButton == ButtonState.Pressed)
                 weapon.Shot(false, gameTime);

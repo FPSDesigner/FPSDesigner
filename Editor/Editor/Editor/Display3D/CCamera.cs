@@ -35,6 +35,7 @@ namespace Editor.Display3D
         private Game.Settings.CGameSettings _gameSettings;
 
         private bool isCamFrozen = false;
+        public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
         public float _yaw { get; private set; }
@@ -97,6 +98,8 @@ namespace Editor.Display3D
 
             this._gameSettings = Game.Settings.CGameSettings.getInstance();
 
+            _isMoving = false;
+
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
             _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
 
@@ -130,6 +133,7 @@ namespace Editor.Display3D
         /// <param name="mouseState">Current mouseState</param>
         private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState, float camVelocity, bool isUnderWater, float waterLevel)
         {
+            _isMoving = false;
             Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
             Rotation(mouseState, gametime);
@@ -150,7 +154,7 @@ namespace Editor.Display3D
                 Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
                 _translation += new Vector3(direction.X, 0, -direction.Y);
 
-                if(_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
+                if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
                     _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));
             }
             else
@@ -187,6 +191,11 @@ namespace Editor.Display3D
 
             this._up = up;
             this._right = Vector3.Cross(forward, up);
+
+            if (_translation != Vector3.Zero)
+            {
+                _isMoving = true;
+            }
         }
 
         /// <summary>
