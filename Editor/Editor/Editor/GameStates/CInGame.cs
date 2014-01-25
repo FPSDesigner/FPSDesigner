@@ -128,7 +128,7 @@ namespace Editor.GameStates
 
             string[][] anims = new string[][] {
                 new string[] {
-                    "Machete_Walk", "Machete_Attack"
+                    "Machete_Walk", "Machete_Attack", "Machete_Wait"
                 }
             };
 

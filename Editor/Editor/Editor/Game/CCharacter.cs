@@ -29,6 +29,8 @@ namespace Editor.Game
 
 
         private bool _isWalkAnimPlaying = false;
+        private bool _isWaitAnimPlaying = false;
+        private bool _isRunning = false;
         private bool _isShoting = false;
 
         public void Initialize()
@@ -44,8 +46,8 @@ namespace Editor.Game
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
             _handAnimation.LoadContent(content);
-            _handAnimation.ChangeAnimSpeed(1.8f);
-            _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 0), true);
+            _handAnimation.ChangeAnimSpeed(0.7f);
+            _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
         }
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
@@ -83,6 +85,7 @@ namespace Editor.Game
                     _velocity += .01f;
                     //_velocity += 2f;
                 }
+                _isRunning = true;
             }
             else
             {
@@ -90,6 +93,8 @@ namespace Editor.Game
                 {
                     _velocity -= .01f;
                 }
+
+                _isRunning = false;
             }
             return _velocity;
         }
@@ -97,26 +102,36 @@ namespace Editor.Game
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
             //If He is doing nothing, we stop him
-            if ((!_isShoting && !cam._isMoving) && !_isWalkAnimPlaying)
+            if ((!cam._isMoving && !_isWaitAnimPlaying) && !_isShoting)
             {
-                _handAnimation.ChangeAnimSpeed(0.04f);
+                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+                _isWalkAnimPlaying = false;
+                _isWaitAnimPlaying = true;
             }
 
             //We wanted to know if the shoting animation is finished
             if (_isShoting && _handAnimation.HasFinished())
             {
-                _handAnimation.ChangeAnimSpeed(1.8f);
-                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0), true);
-                _isWalkAnimPlaying = true;
+                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+                _isWalkAnimPlaying = false;
+                _isWaitAnimPlaying = true;
                 _isShoting = false;
             }
 
-            //If player isnt moving, we stop all animation
+            //If player move, we play the walk anim
             if ((cam._isMoving && !_isWalkAnimPlaying) && !_isShoting)
             {
-                _handAnimation.ChangeAnimSpeed(1.8f);
+                _handAnimation.ChangeAnimSpeed(1.6f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
+                _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = true;
+            }
+
+            if (_isRunning)
+            {
+                _handAnimation.ChangeAnimSpeed(2.4f);
             }
 
             if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
@@ -124,9 +139,10 @@ namespace Editor.Game
                 if (!_isShoting)
                 {
                     weapon.Shot(true, gameTime);
-                    _handAnimation.ChangeAnimSpeed(3.6f);
+                    _handAnimation.ChangeAnimSpeed(3.8f);
                     _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
                     _isWalkAnimPlaying = false;
+                    _isWaitAnimPlaying = false;
                     _isShoting = true;
                 }
             }
