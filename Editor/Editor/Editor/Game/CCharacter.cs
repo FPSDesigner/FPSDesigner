@@ -49,6 +49,7 @@ namespace Editor.Game
             _handAnimation.ChangeAnimSpeed(0.7f);
             _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
         }
+
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
         {
             _cam = cam;
@@ -134,7 +135,8 @@ namespace Editor.Game
                 _handAnimation.ChangeAnimSpeed(2.4f);
             }
 
-            if (mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+            if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
+                (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot) && _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPShot)))
             {
                 if (!_isShoting)
                 {
@@ -146,7 +148,7 @@ namespace Editor.Game
                     _isShoting = true;
                 }
             }
-            else if (mouseState.LeftButton == ButtonState.Pressed)
+            else if (mouseState.LeftButton == ButtonState.Pressed || (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot)))
                 weapon.Shot(false, gameTime);
         }
 
