@@ -126,5 +126,10 @@ namespace Editor.Display3D
         {
             return animationController.HasFinished;
         }
+
+        public  SkinnedModel GetModel()
+        {
+            return skinnedModel;
+        }
     }
 }

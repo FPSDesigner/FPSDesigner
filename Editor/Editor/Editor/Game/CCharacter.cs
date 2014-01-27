@@ -58,8 +58,8 @@ namespace Editor.Game
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);
-            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y, cam._cameraPos.Z) + 0.025f * Vector3.Transform(Vector3.Forward, rotation)
-                + 0.028f * Vector3.Transform(Vector3.Down, rotation);
+            Vector3 _handPos = new Vector3(cam._cameraPos.X, cam._cameraPos.Y, cam._cameraPos.Z) + 0.015f * Vector3.Transform(Vector3.Forward, rotation)
+                + 0.025f * Vector3.Transform(Vector3.Down, rotation);
 
             //All arround weapons, the shot, animations ..
             WeaponHandle(weapon, gameTime, mouseState, oldMouseState, cam);
@@ -154,11 +154,16 @@ namespace Editor.Game
 
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
+            Matrix[] bonesMatrix = new Matrix[_handAnimation.GetModel().Model.Bones.Count];
+            _handAnimation.GetModel().Model.CopyAbsoluteBoneTransformsTo(bonesMatrix);
+
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {  
                 foreach (BasicEffect effect in mesh.Effects)  
-                {    
-                    
+                {
+                    Matrix model2Transform = Matrix.CreateScale(1.0f) * Matrix.CreateFromYawPitchRoll(0, 0, 0);
+                    //effect.World = model2Transform * bonesMatrix;
+
                     effect.View = view;    
                     effect.Projection = projection;
                 }
