@@ -204,7 +204,7 @@ namespace Editor.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos);
+            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos,weapon);
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);

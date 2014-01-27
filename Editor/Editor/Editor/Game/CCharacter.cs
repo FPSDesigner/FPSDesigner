@@ -30,8 +30,8 @@ namespace Editor.Game
 
         private bool _isWalkAnimPlaying = false;
         private bool _isWaitAnimPlaying = false;
-        private bool _isRunning = false;
         private bool _isShoting = false;
+        private bool _isRunning = false;
 
         public void Initialize()
         {
@@ -69,9 +69,10 @@ namespace Editor.Game
             
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos)
+        public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
         {
             _handAnimation.Draw(gametime, spriteBatch, view, projection);
+            WeaponDrawing(weap, spriteBatch, view, projection);
         }
 
 
@@ -83,18 +84,19 @@ namespace Editor.Game
             {
                 if ((_velocity < _initSpeed + 0.25f) && fallVelocity.Y <= 0.0f)
                 {
-                    _velocity += .01f;
-                    //_velocity += 2f;
+                    _velocity += .008f;
                 }
                 _handAnimation.ChangeAnimSpeed(2.3f);
+                _isRunning = true;
             }
             else
             {
                 if (_velocity > _initSpeed)
                 {
-                    _velocity -= .01f;
+                    _velocity -= .012f;
                 }
 
+                if (_isRunning) _handAnimation.ChangeAnimSpeed(1.6f);
                 _isRunning = false;
             }
             return _velocity;
@@ -157,8 +159,8 @@ namespace Editor.Game
             {  
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    Matrix model2Transform = Matrix.CreateScale(1.0f) * Matrix.CreateFromYawPitchRoll(0, 0, 0);
-                    //effect.World = model2Transform * bonesMatrix;
+                    Matrix model2Transform = Matrix.CreateScale(3.0f);
+                    effect.World = model2Transform * bonesMatrix[1];
 
                     effect.View = view;    
                     effect.Projection = projection;
