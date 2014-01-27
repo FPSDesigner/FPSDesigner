@@ -179,7 +179,6 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            spritebatch.Begin();
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -214,7 +213,6 @@ namespace Editor.GameStates
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
-            spritebatch.End();
         }
 
     }
