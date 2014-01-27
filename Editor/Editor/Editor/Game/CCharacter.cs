@@ -86,7 +86,7 @@ namespace Editor.Game
                     _velocity += .01f;
                     //_velocity += 2f;
                 }
-                _isRunning = true;
+                _handAnimation.ChangeAnimSpeed(2.3f);
             }
             else
             {
@@ -105,7 +105,7 @@ namespace Editor.Game
             //If He is doing nothing, we stop him
             if ((!cam._isMoving && !_isWaitAnimPlaying) && !_isShoting)
             {
-                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
                 _isWalkAnimPlaying = false;
                 _isWaitAnimPlaying = true;
@@ -114,7 +114,7 @@ namespace Editor.Game
             //We wanted to know if the shoting animation is finished
             if (_isShoting && _handAnimation.HasFinished())
             {
-                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
                 _isWalkAnimPlaying = false;
                 _isWaitAnimPlaying = true;
@@ -130,10 +130,6 @@ namespace Editor.Game
                 _isWalkAnimPlaying = true;
             }
 
-            if (_isRunning)
-            {
-                _handAnimation.ChangeAnimSpeed(2.4f);
-            }
 
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
                 (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot) && _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPShot)))
@@ -141,7 +137,7 @@ namespace Editor.Game
                 if (!_isShoting)
                 {
                     weapon.Shot(true, gameTime);
-                    _handAnimation.ChangeAnimSpeed(3.8f);
+                    _handAnimation.ChangeAnimSpeed(3.0f);
                     _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = false;
