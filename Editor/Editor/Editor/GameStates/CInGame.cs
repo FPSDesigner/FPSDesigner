@@ -47,12 +47,11 @@ namespace Editor.GameStates
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
+        Display2D.C2DEffect _2DEffect;
 
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
-
-        Game.CGUIManager guiManager;
 
         public override void Initialize()
         {
@@ -70,8 +69,9 @@ namespace Editor.GameStates
         {
             //Display 1 model : Building
             model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 53.4f, 0), new Vector3(0, -90f, 0), new Vector3(0.01f, 0.01f, 0.01f), graphics);
-
             models.Add(model);
+
+            _2DEffect = Display2D.C2DEffect.getInstance();
 
             gameSettings.loadDatas(graphics);
 
@@ -98,7 +98,7 @@ namespace Editor.GameStates
 
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.9f, terrain);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.9f, terrain, _2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -179,6 +179,7 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            spritebatch.Begin();
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -214,6 +215,8 @@ namespace Editor.GameStates
             devConsole.Draw(gameTime);
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
+
+            spritebatch.End();
         }
 
     }

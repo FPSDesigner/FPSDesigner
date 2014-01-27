@@ -28,6 +28,7 @@ namespace Editor.Display2D
         private GraphicsDevice _graphicsDevice;
         private ContentManager _content;
         private CPostProcessor _postProcessor;
+        public CRenderCapture _renderCapture;
 
         // fadeEffect
         private bool _isFading = false;
@@ -55,12 +56,13 @@ namespace Editor.Display2D
         /// <param name="graphicsDevice">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
         /// <param name="postProcessor">CPostProcessor class</param>
-        public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, CPostProcessor postProcessor)
+        public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, CPostProcessor postProcessor, CRenderCapture renderCapture)
         {
             this._spriteBatch = spriteBatch;
             this._graphicsDevice = graphicsDevice;
             this._content = content;
             this._postProcessor = postProcessor;
+            this._renderCapture = renderCapture;
         }
 
         /// <summary>

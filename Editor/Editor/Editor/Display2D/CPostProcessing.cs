@@ -149,8 +149,8 @@ namespace Editor.Display2D
     /// </summary>
     public class CRenderCapture
     {
-        RenderTarget2D renderTarget;
-        GraphicsDevice graphicsDevice;
+        public RenderTarget2D renderTarget;
+        private GraphicsDevice graphicsDevice;
 
 
         /// <summary>

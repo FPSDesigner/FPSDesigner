@@ -21,6 +21,7 @@ namespace Editor.Display3D
         GraphicsDevice graphics;
 
         RenderTarget2D reflectionTarg;
+        RenderTarget2D defaultRenderTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
         //Used to pass as parameter to Cam
@@ -61,13 +62,15 @@ namespace Editor.Display3D
             }
         }
 
-        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, Display3D.CTerrain map)
+        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, Display3D.CTerrain map, RenderTarget2D renderTarget)
         {
             this.content = content;
             this.graphics = graphics;
 
             this.waterPosition = position;
             this.waterSize = size;
+
+            this.defaultRenderTarg = renderTarget;
 
             this._map = map;
 
@@ -124,7 +127,7 @@ namespace Editor.Display3D
                 renderable.SetClipPlane(null);
             }
 
-            graphics.SetRenderTarget(null);
+            graphics.SetRenderTarget(defaultRenderTarg);
 
             // Set the reflected scene to its effect parameter in
             // the water effect

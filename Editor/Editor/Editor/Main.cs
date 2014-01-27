@@ -65,7 +65,7 @@ namespace Editor
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
-            C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor);
+            C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
         }
 
 
@@ -98,7 +98,7 @@ namespace Editor
         protected override void Draw(GameTime gameTime)
         {
             // Capture the render
-            //renderCapture.Begin();
+            renderCapture.Begin();
 
             GraphicsDevice.Clear(Color.Black);
 
@@ -109,11 +109,11 @@ namespace Editor
             C2DEffect.Draw(gameTime);
 
             // End capturing
-            /*renderCapture.End();
+            renderCapture.End();
 
             // Draw the render via post processing
             postProcessor.Input = renderCapture.GetTexture();
-            postProcessor.Draw();*/
+            postProcessor.Draw();
 
             base.Draw(gameTime);
         }
