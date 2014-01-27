@@ -92,7 +92,7 @@ namespace Editor.GameStates
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
 
             //Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
             cam._physicsMap._modelsList = models;
 
 
@@ -202,8 +202,6 @@ namespace Editor.GameStates
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
-
-
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 

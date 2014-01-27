@@ -28,6 +28,8 @@ namespace Editor.Display3D
         public Vector3 _up;
         public Vector3 _right;
 
+        private Display2D.C2DEffect _2DEffect;
+
         private Point _middleScreen;
 
         private Display3D.CTerrain _map;
@@ -35,6 +37,7 @@ namespace Editor.Display3D
         private Game.Settings.CGameSettings _gameSettings;
 
         private bool isCamFrozen = false;
+        private bool hasPlayerBlurEffect = false;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
@@ -56,7 +59,6 @@ namespace Editor.Display3D
 
         public BoundingFrustum _Frustum { get; private set; }
 
-
         public Game.CPhysics _physicsMap { get; private set; }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace Editor.Display3D
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="isCamFrozen">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, Display3D.CTerrain map)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map, Display2D.C2DEffect C2DEffect)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -87,6 +89,7 @@ namespace Editor.Display3D
             this.isCamFrozen = isCamFrozen;
 
             this._map = map;
+            this._2DEffect = C2DEffect;
 
             this._physicsMap = new Game.CPhysics(9.81f / 500, _map, _playerHeight);
 
@@ -177,6 +180,11 @@ namespace Editor.Display3D
 
             _physicsMap.Swin(isUnderWater);
 
+            if (hasPlayerBlurEffect != isUnderWater)
+            {
+                _2DEffect.gaussianBlurEffect(2.5f, isUnderWater);
+                hasPlayerBlurEffect = isUnderWater;
+            }
             if (isUnderWater)
             {
                 _translation = _translation * 0.5f;

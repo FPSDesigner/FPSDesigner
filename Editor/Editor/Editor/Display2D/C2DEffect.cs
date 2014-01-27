@@ -109,11 +109,13 @@ namespace Editor.Display2D
         /// <param name="toggle">If true, then deactivate it if already activated</param>
         public void gaussianBlurEffect(float blurAmount, bool toggle = false)
         {
-            if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
+            if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
             {
                 _postProcessor.removeEffect("GaussianBlur");
                 return;
             }
+            else if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
+                return;
 
             this._gbBlurAmount = blurAmount;
 
