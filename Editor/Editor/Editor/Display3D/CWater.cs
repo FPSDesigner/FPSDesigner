@@ -83,7 +83,7 @@ namespace Editor.Display3D
             waterEffect.Parameters["viewportHeight"].SetValue(graphics.Viewport.Height);
             waterEffect.Parameters["WaterNormalMap"].SetValue(content.Load<Texture2D>("Textures/water_normal"));
 
-            this.Alpha = alpha;
+            this.WaterAlpha = alpha;
 
             reflectionTarg = new RenderTarget2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
         }
