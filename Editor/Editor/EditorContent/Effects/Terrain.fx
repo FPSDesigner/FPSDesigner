@@ -129,9 +129,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	float shore = clamp(0.2*(1/(FogWaterHeight - input.WorldPosition.y)), 0, 0.4);
+	float shore = 0;
 	if(input.WorldPosition.y > FogWaterHeight)
-		shore = clamp(0.2*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.4);
+		shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
 
 
 	if(FogWaterActivated && input.WorldPosition.y < FogWaterHeight)
