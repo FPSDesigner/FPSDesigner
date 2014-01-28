@@ -88,6 +88,9 @@ namespace Editor.Display2D
         public Vector2[] gboffsetsV { get; set; }
         public CRenderCapture gbCapture { get; set; }
 
+        // Color Filter vars
+        public float[] cfColors { get; set; }
+
         /// <summary>
         /// Draws the input textures using the pixel shade post processor
         /// </summary>
@@ -102,7 +105,15 @@ namespace Editor.Display2D
                 effectList["GaussianBlur"].Parameters["Weights"].SetValue(gbweightsH);
             }
 
+            if (effectList.ContainsKey("ColorFilter"))
+            {
+                effectList["ColorFilter"].Parameters["redPercent"].SetValue(cfColors[0]);
+                effectList["ColorFilter"].Parameters["greenPercent"].SetValue(cfColors[1]);
+                effectList["ColorFilter"].Parameters["bluePercent"].SetValue(cfColors[2]);
+            }
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
             foreach (KeyValuePair<string, Effect> effectPair in effectList)
             {
                 Effect effect = effectPair.Value;
@@ -128,7 +139,6 @@ namespace Editor.Display2D
 
             if (!gaussianBlurStop && effectList.ContainsKey("GaussianBlur"))
             {
-                
                 gbCapture.End();
 
                 // Get the results of the first pass

@@ -66,7 +66,7 @@ namespace Editor.Display2D
         }
 
         /// <summary>
-        /// Create a new fade effect
+        /// Creates a new fade effect
         /// </summary>
         /// <param name="fadeTo">Opacity to fade to. 255 = transparent, 0 = opaque</param>
         /// <param name="timeMilliSecs">Duration of the effect</param>
@@ -95,7 +95,7 @@ namespace Editor.Display2D
         }
 
         /// <summary>
-        /// Create a new Black and White effect.
+        /// Creates a new Black and White effect.
         /// </summary>
         public void BlackAndWhiteEffect()
         {
@@ -103,11 +103,28 @@ namespace Editor.Display2D
         }
 
         /// <summary>
-        /// Create a new Gaussian Blur Effect
+        /// Creates a colored filtered on the screen (red + green + blue = 1f)
+        /// </summary>
+        /// <param name="redPercent">Percentage of red color</param>
+        /// <param name="greenPercent">Percentage of green color</param>
+        /// <param name="bluePercent">Percentage of blue color</param>
+        public void ColorFilterEffect(float redPercent, float greenPercent, float bluePercent)
+        {
+            _postProcessor.LoadEffect("ColorFilter", _content.Load<Effect>("Effects/ColorFilter_PP"));
+            _postProcessor.cfColors = new float[3] { redPercent, greenPercent, bluePercent };
+        }
+
+        public void UnderwaterEffect()
+        {
+            this.gaussianBlurEffect(2f, true, "WaterEffect_PP");
+        }
+
+        /// <summary>
+        /// Creates a new Gaussian Blur Effect
         /// </summary>
         /// <param name="blurAmount">Intensity of the blur</param>
         /// <param name="toggle">If true, then deactivate it if already activated</param>
-        public void gaussianBlurEffect(float blurAmount, bool toggle = false)
+        public void gaussianBlurEffect(float blurAmount, bool toggle = false, string effectFileName = "GaussianBlur_PP")
         {
             if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
             {
@@ -119,7 +136,7 @@ namespace Editor.Display2D
 
             this._gbBlurAmount = blurAmount;
 
-            _postProcessor.LoadEffect("GaussianBlur", _content.Load<Effect>("Effects/GaussianBlur_PP"));
+            _postProcessor.LoadEffect("GaussianBlur", _content.Load<Effect>("Effects/"+effectFileName));
 
             // Calculate weights/offsets for horizontal pass
             gaussianCalcSettings(1.0f / (float)_graphicsDevice.Viewport.Width, 0,
