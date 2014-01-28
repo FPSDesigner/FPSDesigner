@@ -124,7 +124,7 @@ namespace Editor.Display2D
 
             // Clean up render states changed by the spritebatch
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
-            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.BlendState = BlendState.AlphaBlend;
 
             if (!gaussianBlurStop && effectList.ContainsKey("GaussianBlur"))
             {
