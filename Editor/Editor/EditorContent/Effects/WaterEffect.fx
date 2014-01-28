@@ -40,9 +40,14 @@ float FogEnd = 5.5;
 float3 FogColor = float3(1, 1, 1);
 float FogScale = 1.2;
 
+float FogStartUw = 0.5;
+float FogEndUw = 1;
+float3 FogColorUw = float3(0.0588,0.156,0.1607);
+
 bool IsUnderWater = false;
-float3 BaseColorUnderWater = float3(0.0588, 0.1568, 0.16);
-float AlphaUnderWater = 0.9f;
+//float3 BaseColorUnderWater = float3(0.0588, 0.1568, 0.16);
+float3 BaseColorUnderWater = float3(1,1,1);
+float AlphaUnderWater = 0.2f;
 
 #include "PPShared.vsi"
 
@@ -95,14 +100,18 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float specular = dot(normalize(reflectionVector), viewDirection);
 	specular = pow(specular, 256);
 
-	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+	
 
 	if(IsUnderWater)
 	{
-		return float4(lerp((lerp(reflection, BaseColorUnderWater, 0.1) + specular), FogColor, fog), 0.9);
+		float fog = clamp((input.Depth*0.3 - FogStartUw) / (FogEndUw - FogStartUw), 0, 1);
+		return float4(lerp((lerp(reflection, BaseColorUnderWater, AlphaUnderWater) + specular), FogColorUw, fog), 0.9+clamp(input.Depth*0.002, 0, 0.1));
 	}
-
-	return float4(lerp((lerp(reflection, BaseColor, BaseColorAmount) + specular), FogColor, fog), Alpha);
+	else
+	{
+		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+		return float4(lerp((lerp(reflection, BaseColor, BaseColorAmount) + specular), FogColor, fog), Alpha);
+	}
 }
 
 technique Technique1

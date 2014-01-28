@@ -182,7 +182,7 @@ namespace Editor.Display3D
 
             if (hasPlayerBlurEffect != isUnderWater)
             {
-                _2DEffect.UnderwaterEffect();
+                _2DEffect.UnderwaterEffect(isUnderWater);
                 hasPlayerBlurEffect = isUnderWater;
             }
             if (isUnderWater)

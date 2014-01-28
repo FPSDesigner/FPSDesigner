@@ -28,6 +28,7 @@ namespace Editor.Display2D
         private GraphicsDevice _graphicsDevice;
         private ContentManager _content;
         private CPostProcessor _postProcessor;
+
         public CRenderCapture _renderCapture;
 
         // fadeEffect
@@ -47,6 +48,9 @@ namespace Editor.Display2D
         private float[] gbWeightsH, gbweightsV;
         private Vector2[] gboffsetsH, gboffsetsV;
         private CRenderCapture gbRenderCapture;
+
+        // Private
+        private Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
 
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace Editor.Display2D
         /// </summary>
         public void BlackAndWhiteEffect()
         {
-            _postProcessor.LoadEffect("BlackWhite", _content.Load<Effect>("Effects/BlackWhite_PP"));
+            _postProcessor.LoadEffect("BlackWhite", GetEffect("BlackWhite_PP"));
         }
 
         /// <summary>
@@ -110,13 +114,39 @@ namespace Editor.Display2D
         /// <param name="bluePercent">Percentage of blue color</param>
         public void ColorFilterEffect(float redPercent, float greenPercent, float bluePercent)
         {
-            _postProcessor.LoadEffect("ColorFilter", _content.Load<Effect>("Effects/ColorFilter_PP"));
+            _postProcessor.LoadEffect("ColorFilter", GetEffect("ColorFilter_PP"));
             _postProcessor.cfColors = new float[3] { redPercent, greenPercent, bluePercent };
         }
 
-        public void UnderwaterEffect()
+        public void UnderwaterEffect(bool toggle)
         {
-            this.gaussianBlurEffect(2f, true, "WaterEffect_PP");
+            if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
+            {
+                _postProcessor.removeEffect("GaussianBlur");
+                return;
+            }
+            else if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
+                return;
+
+            this._gbBlurAmount = 2f;
+
+            _postProcessor.LoadEffect("GaussianBlur", GetEffect("WaterEffect_PP"));
+
+            // Calculate weights/offsets for horizontal pass
+            gaussianCalcSettings(1.0f / (float)_graphicsDevice.Viewport.Width, 0,
+                out gbWeightsH, out gboffsetsH);
+
+            // Calculate weights/offsets for vertical pass
+            gaussianCalcSettings(0, 1.0f / (float)_graphicsDevice.Viewport.Height,
+                out gbweightsV, out gboffsetsV);
+
+            gbRenderCapture = new CRenderCapture(_graphicsDevice);
+
+            _postProcessor.gbweightsH = gbWeightsH;
+            _postProcessor.gboffsetsH = gboffsetsH;
+            _postProcessor.gbweightsV = gbweightsV;
+            _postProcessor.gboffsetsV = gboffsetsV;
+            _postProcessor.gbCapture = gbRenderCapture;
         }
 
         /// <summary>
@@ -136,7 +166,7 @@ namespace Editor.Display2D
 
             this._gbBlurAmount = blurAmount;
 
-            _postProcessor.LoadEffect("GaussianBlur", _content.Load<Effect>("Effects/"+effectFileName));
+            _postProcessor.LoadEffect("GaussianBlur", GetEffect(effectFileName));
 
             // Calculate weights/offsets for horizontal pass
             gaussianCalcSettings(1.0f / (float)_graphicsDevice.Viewport.Width, 0,
@@ -229,6 +259,23 @@ namespace Editor.Display2D
                 _spriteBatch.Begin();
                 _spriteBatch.Draw(_fadeTexture, _fadePositionRect, null, new Color(_fadeToColor.R, _fadeToColor.G, _fadeToColor.B, _fadeOpacity/255), 0f, Vector2.Zero, _fadeSizeRect, SpriteEffects.None, 0);
                 _spriteBatch.End();
+            }
+        }
+
+        /// <summary>
+        /// Gets an effect without reloading it everytime
+        /// </summary>
+        /// <param name="effectName"></param>
+        /// <returns></returns>
+        private Effect GetEffect(string effectName)
+        {
+            if (loadedEffects.ContainsKey(effectName))
+                return loadedEffects[effectName];
+            else
+            {
+                Effect eff = _content.Load<Effect>("Effects/" + effectName);
+                loadedEffects.Add(effectName, eff);
+                return eff;
             }
         }
 
