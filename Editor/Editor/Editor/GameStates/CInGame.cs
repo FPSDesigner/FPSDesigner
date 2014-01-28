@@ -107,7 +107,7 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machet") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete") };
             object[][] testInfos = new object[][] {
                 new object[] {
                 2,
@@ -167,10 +167,10 @@ namespace Editor.GameStates
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            //Update camera - _charac.Run is a functions allows player to run, loook at the param
+            // Update camera - _charac.Run is a functions allows player to run, loook at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
-            //Update all chara actions
+            // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam);
 
             _oldKeyState = kbState;

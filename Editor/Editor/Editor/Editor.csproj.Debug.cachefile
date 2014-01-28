@@ -12,7 +12,6 @@ Content\Effects\PPDepthNormal.xnb
 Content\Models\building001.xnb
 Content\3D\Skysphere.xnb
 Content\3D\PPLightMesh.xnb
-Content\Models\Machet.xnb
 Content\Models\Arm_Animation.xnb
 Content\2D\Menu\MENU_Bckground.xnb
 Content\2D\Menu\MENU_TitleGame.xnb
@@ -47,3 +46,6 @@ Content\MACHET_ATTACK.xnb
 Content\3D\plane.xnb
 Content\3D\Ground.xnb
 Content\3D\Checker_0.xnb
+Content\Effects\ColorFilter_PP.xnb
+Content\Effects\WaterEffect_PP.xnb
+Content\Models\Machete.xnb

@@ -73,6 +73,7 @@ namespace Editor.Game
             // Models
             public Model _wepModel;
 
+
             //Anim
             public String[] _weapAnim;
             // Sounds

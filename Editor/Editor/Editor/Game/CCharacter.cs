@@ -28,6 +28,8 @@ namespace Editor.Game
         private float _velocity = 0.3f;
 
 
+        private Texture2D testWeaponText;
+
         private bool _isWalkAnimPlaying = false;
         private bool _isWaitAnimPlaying = false;
         private bool _isShoting = false;
@@ -42,12 +44,30 @@ namespace Editor.Game
         public void LoadContent(ContentManager content, GraphicsDevice graphics, CWeapon weap)
         {
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
+
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
-            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
+            
             _handAnimation.LoadContent(content);
+
             _handAnimation.ChangeAnimSpeed(0.7f);
             _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
+
+            testWeaponText = content.Load<Texture2D>("Textures\\Machete");
+            //Initialize the weapon attributes
+            foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.TextureEnabled = true;
+                    effect.Texture = testWeaponText;
+
+                    effect.SpecularColor = new Vector3(0.25f);
+                    effect.SpecularPower = 16;
+                }
+            }
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
@@ -71,7 +91,9 @@ namespace Editor.Game
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
         {
+            //Draw the animation mesh
             _handAnimation.Draw(gametime, spriteBatch, view, projection);
+            //Draw the weapon attached to the mesh
             WeaponDrawing(weap, spriteBatch, view, projection);
         }
 
@@ -156,15 +178,17 @@ namespace Editor.Game
             _handAnimation.GetModel().Model.CopyAbsoluteBoneTransformsTo(bonesMatrix);
 
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
-            {  
+            {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    Matrix model2Transform = Matrix.CreateScale(3.0f);
-                    effect.World = model2Transform * bonesMatrix[1];
+                    Matrix model2Transform = Matrix.CreateScale(0.1f);
+                    effect.World = model2Transform * bonesMatrix[49];
+                    //effect.World = model2Transform * Matrix.CreateTranslation(new Vector3(10, 70f, 0));
 
-                    effect.View = view;    
+                    effect.View = view;
                     effect.Projection = projection;
                 }
+                mesh.Draw();
             }
         }
 
