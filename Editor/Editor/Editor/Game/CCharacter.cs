@@ -34,6 +34,7 @@ namespace Editor.Game
         private bool _isWaitAnimPlaying = false;
         private bool _isShoting = false;
         private bool _isRunning = false;
+        private bool _isUnderWater = false;
 
         public void Initialize()
         {
@@ -70,10 +71,11 @@ namespace Editor.Game
             }
         }
 
-        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam)
+        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
+            bool isUnderWater)
         {
             _cam = cam;
-
+            this._isUnderWater = isUnderWater;
             //We place the hand like we want
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
@@ -127,7 +129,7 @@ namespace Editor.Game
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
             //If He is doing nothing, we stop him
-            if ((!cam._isMoving && !_isWaitAnimPlaying) && !_isShoting)
+            if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
                 _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
@@ -146,7 +148,7 @@ namespace Editor.Game
             }
 
             //If player move, we play the walk anim
-            if ((cam._isMoving && !_isWalkAnimPlaying) && !_isShoting)
+            if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
                 _handAnimation.ChangeAnimSpeed(1.6f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
@@ -154,11 +156,20 @@ namespace Editor.Game
                 _isWalkAnimPlaying = true;
             }
 
+            if (_isUnderWater)
+            {
+                _handAnimation.ChangeAnimSpeed(1.0f);
+                _handAnimation.ChangeAnimation("Swim", true);
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = true;
+                _isShoting = false;
+            }
+
 
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
                 (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot) && _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPShot)))
             {
-                if (!_isShoting)
+                if (!_isShoting && !_isUnderWater)
                 {
                     weapon.Shot(true, gameTime);
                     _handAnimation.ChangeAnimSpeed(3.0f);
@@ -181,9 +192,9 @@ namespace Editor.Game
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    Matrix model2Transform = Matrix.CreateScale(0.1f);
-                    effect.World = model2Transform * bonesMatrix[49];
-                    //effect.World = model2Transform * Matrix.CreateTranslation(new Vector3(10, 70f, 0));
+                    Matrix model2Transform = Matrix.CreateScale(0.3f);
+                    //effect.World = model2Transform * bonesMatrix[25];
+                    effect.World = model2Transform * Matrix.CreateTranslation(new Vector3(10, 70f, 0));
 
                     effect.View = view;
                     effect.Projection = projection;
