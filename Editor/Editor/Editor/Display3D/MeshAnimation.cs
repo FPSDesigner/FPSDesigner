@@ -114,7 +114,7 @@ namespace Editor.Display3D
         {
             //Change animation smoothly
             animationController.LoopEnabled = looping;
-            animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.05f));
+            animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.4f));
         }
 
         public bool isPlaying()

@@ -35,6 +35,7 @@ namespace Editor.Game
         private bool _isShoting = false;
         private bool _isRunning = false;
         private bool _isUnderWater = false;
+        private bool _isSwimAnimationPlaying = false;
 
         public void Initialize()
         {
@@ -134,6 +135,7 @@ namespace Editor.Game
                 _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
                 _isWalkAnimPlaying = false;
+                _isSwimAnimationPlaying = false;
                 _isWaitAnimPlaying = true;
             }
 
@@ -144,6 +146,7 @@ namespace Editor.Game
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
                 _isWalkAnimPlaying = false;
                 _isWaitAnimPlaying = true;
+                _isSwimAnimationPlaying = false;
                 _isShoting = false;
             }
 
@@ -153,18 +156,19 @@ namespace Editor.Game
                 _handAnimation.ChangeAnimSpeed(1.6f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
                 _isWaitAnimPlaying = false;
+                _isSwimAnimationPlaying = false;
                 _isWalkAnimPlaying = true;
             }
 
-            if (_isUnderWater)
+            if (_isUnderWater && !_isSwimAnimationPlaying)
             {
-                _handAnimation.ChangeAnimSpeed(1.0f);
+                _handAnimation.ChangeAnimSpeed(1.1f);
                 _handAnimation.ChangeAnimation("Swim", true);
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = true;
                 _isShoting = false;
+                _isSwimAnimationPlaying = true;
             }
-
 
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
                 (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot) && _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPShot)))

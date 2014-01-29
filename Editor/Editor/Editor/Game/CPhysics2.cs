@@ -40,6 +40,7 @@ namespace Editor.Game
 
         }
 
+        
         public Vector3 GetNewPosition(GameTime gameTime, Vector3 entityPos, Vector3 translation)
         {
 
