@@ -134,6 +134,8 @@ namespace Editor.Game
             {
                 _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+
+                //Just the wait animation is playing
                 _isWalkAnimPlaying = false;
                 _isSwimAnimationPlaying = false;
                 _isWaitAnimPlaying = true;
@@ -144,10 +146,12 @@ namespace Editor.Game
             {
                 _handAnimation.ChangeAnimSpeed(0.8f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+
+                //just the wait animation is playing
                 _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = true;
                 _isSwimAnimationPlaying = false;
                 _isShoting = false;
+                _isWaitAnimPlaying = true;
             }
 
             //If player move, we play the walk anim
@@ -155,6 +159,8 @@ namespace Editor.Game
             {
                 _handAnimation.ChangeAnimSpeed(1.6f);
                 _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
+
+                //just the walk animation is playing
                 _isWaitAnimPlaying = false;
                 _isSwimAnimationPlaying = false;
                 _isWalkAnimPlaying = true;
@@ -164,8 +170,10 @@ namespace Editor.Game
             {
                 _handAnimation.ChangeAnimSpeed(1.1f);
                 _handAnimation.ChangeAnimation("Swim", true);
+
+                // Just the swim animation is playing
                 _isWaitAnimPlaying = false;
-                _isWalkAnimPlaying = true;
+                _isWalkAnimPlaying = false;
                 _isShoting = false;
                 _isSwimAnimationPlaying = true;
             }
