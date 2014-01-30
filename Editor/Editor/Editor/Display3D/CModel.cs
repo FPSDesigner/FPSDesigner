@@ -117,7 +117,7 @@ namespace Editor.Display3D
                         Material.SetEffectParameters(effect);
                     }
                 }
-                /*if (mesh.Name != collisionShapeName)*/
+                if (mesh.Name != collisionShapeName)
                     mesh.Draw();
             }
         }
