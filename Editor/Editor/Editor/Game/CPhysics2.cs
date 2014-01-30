@@ -27,8 +27,9 @@ namespace Editor.Game
         public Vector3 _velocity;
         public float _gravityConstant = -9.81f / 600f;
         public float _gravityConstantWater = -9.81f / 5000f;
-        public float maxFallingVelocity = -3.5f; // The maximum velocity of an entity during its fall
-        public float maxFallingVelocityWater = -0.02f;
+        public float _maxFallingVelocity = -3.5f; // The maximum velocity of an entity during its fall
+        public float _maxFallingVelocityWater = -0.05f;
+        public Display3D.CWater _water;
 
         public CPhysics2()
         {
@@ -87,14 +88,14 @@ namespace Editor.Game
                 isVerticalIntersecting = false;
                 float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
                 if (_isUnderwater)
-                    _velocity.Y -= _gravityConstantWater * dt;
+                    _velocity.Y += _gravityConstantWater * dt;
                 else
                     _velocity.Y += _gravityConstant * dt;
 
-                if (_isUnderwater && _velocity.Y < maxFallingVelocityWater)
-                    _velocity.Y = maxFallingVelocity;
-                else if (_velocity.Y < maxFallingVelocity)
-                    _velocity.Y = maxFallingVelocity;
+                if (_isUnderwater && _velocity.Y < _maxFallingVelocityWater)
+                    _velocity.Y = _maxFallingVelocityWater;
+                else if (_velocity.Y < _maxFallingVelocity)
+                    _velocity.Y = _maxFallingVelocity;
             }
 
             Ray newPosTranslationRay = new Ray(assumedNewPosition + _velocity, (_velocity.Y > 0) ? Vector3.Up : Vector3.Down);
@@ -128,7 +129,6 @@ namespace Editor.Game
                 }
                 _velocity.Y = 0;
             }
-
 
 
             if (isVerticalIntersecting)

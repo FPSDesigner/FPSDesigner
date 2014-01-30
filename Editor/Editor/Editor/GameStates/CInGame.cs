@@ -96,10 +96,11 @@ namespace Editor.GameStates
 
             cam._physicsMap._triangleList = models[0]._trianglesPositions;
             cam._physicsMap._triangleNormalsList = models[0]._trianglesNormal;
+            cam._physicsMap._water = water;
 
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.5f, terrain, _2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);

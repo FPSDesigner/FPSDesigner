@@ -103,7 +103,7 @@ namespace Editor.Display3D
             reflectedCameraTarget.Y = -reflectedCameraTarget.Y + waterMesh._modelPosition.Y * 2;
 
             // Create a temporary camera to render the reflected scene
-            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f,true,_map, default(Display2D.C2DEffect));
+            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f, true, _map, default(Display2D.C2DEffect));
 
             reflectionCamera.Update(gameTime);
 
@@ -121,7 +121,7 @@ namespace Editor.Display3D
             foreach (IRenderable renderable in Objects)
             {
                 renderable.SetClipPlane(clipPlane);
-                
+
                 renderable.Draw(reflectionCamera._view, reflectionCamera._projection, reflectedCameraPosition);
 
                 renderable.SetClipPlane(null);
@@ -165,14 +165,14 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="Position">Vector3 to check</param>
         /// <returns>True if the position is underwater, false otherwise</returns>
-        public bool isPositionUnderWater(Vector3 Position)
+        public bool isPositionUnderWater(Vector3 Position, bool checkY = true)
         {
-            if (Position.Y <= waterPosition.Y)
-            {
-                if ((Position.X >= waterPosition.X - waterSize.X && Position.X <= waterPosition.X + waterSize.X) && 
-                    (Position.Z >= waterPosition.Z - waterSize.Y && Position.Z <= waterPosition.Z + waterSize.Y))
-                        return true;
-            }
+            if (checkY && Position.Y > waterPosition.Y)
+                return false;
+
+            if ((Position.X >= waterPosition.X - waterSize.X && Position.X <= waterPosition.X + waterSize.X) &&
+                (Position.Z >= waterPosition.Z - waterSize.Y && Position.Z <= waterPosition.Z + waterSize.Y))
+                return true;
             return false;
         }
     }
