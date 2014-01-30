@@ -20,7 +20,6 @@ namespace Editor.Game
         private float _intersectionDistanceH = 4f; // Horizontal distance collision with models
         private double _lastFreeFall;
         private bool _isUnderwater;
-        private bool _isUnderwaterOld;
 
         // Public
         public List<Display3D.Triangle> _triangleList;
@@ -98,7 +97,7 @@ namespace Editor.Game
                     _velocity.Y = maxFallingVelocity;
             }
 
-            Ray newPosTranslationRay = new Ray(assumedNewPosition + _velocity, Vector3.Down);
+            Ray newPosTranslationRay = new Ray(assumedNewPosition + _velocity, (_velocity.Y > 0) ? Vector3.Up : Vector3.Down);
 
             /* Vertical check - models */
             float closestTriangleBelowDistance = 999f;
@@ -117,12 +116,16 @@ namespace Editor.Game
                 }
             }
 
-            if (closestTriangle != -1 && closestTriangleBelowDistance <= _entityHeight)
+            if (closestTriangle != -1 && closestTriangleBelowDistance <= (_velocity.Y <= 0 ? _entityHeight : _entityHeight/3))
             {
-                isVerticalIntersecting = true;
-                assumedNewPosition += _velocity;
-                Display3D.Triangle closestTriangleT = _triangleList[closestTriangle];
-                assumedNewPosition.Y = assumedNewPosition.Y - closestTriangleBelowDistance + _entityHeight;
+                // If the player is falling, and not jumping
+                if (_velocity.Y <= 0)
+                {
+                    isVerticalIntersecting = true;
+                    assumedNewPosition += _velocity;
+                    Display3D.Triangle closestTriangleT = _triangleList[closestTriangle];
+                    assumedNewPosition.Y = assumedNewPosition.Y - closestTriangleBelowDistance + _entityHeight;
+                }
                 _velocity.Y = 0;
             }
 
