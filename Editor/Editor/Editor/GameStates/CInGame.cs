@@ -169,7 +169,7 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, loook at the param
-            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity.Y), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, isPlayerUnderwater);

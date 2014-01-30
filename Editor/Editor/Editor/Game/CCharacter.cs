@@ -101,13 +101,17 @@ namespace Editor.Game
         }
 
 
-        //This function allows the player to Run
-            //the fallVelocity argument is used to prevent the player from speed in the air
-        public float Run(KeyboardState state, Vector3 fallVelocity)
+        /// <summary>
+        /// Get the speed of the player walks
+        /// </summary>
+        /// <param name="kbState">Keyboard State</param>
+        /// <param name="fallVelocity">Vertical velocity</param>
+        /// <returns>The camera velocity</returns>
+        public float Run(KeyboardState kbState, float fallVelocity)
         {
-            if ((_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPRun)) || state.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
+            if ((_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
             {
-                if ((_velocity < _initSpeed + 0.25f) && fallVelocity.Y <= 0.0f)
+                if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
                 {
                     _velocity += .008f;
                 }

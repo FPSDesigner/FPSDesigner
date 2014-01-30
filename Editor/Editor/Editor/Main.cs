@@ -44,6 +44,7 @@ namespace Editor
                 ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon("Icon.ico");
 
         }
+
         protected override void Initialize()
         {
             GameManagement = new Game.CGameManagement();

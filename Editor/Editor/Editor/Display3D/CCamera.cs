@@ -160,8 +160,8 @@ namespace Editor.Display3D
                 Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
                 _translation += new Vector3(direction.X, 0, -direction.Y);
 
-                /*if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
-                    _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));*/
+                if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
+                    _physicsMap.Jump();
             }
             else
             {
@@ -177,8 +177,8 @@ namespace Editor.Display3D
                 if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                     _translation += Vector3.Right;
 
-                /*if (keyState.IsKeyDown(Keys.Space))
-                    _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));*/
+                if (keyState.IsKeyDown(Keys.Space))
+                    _physicsMap.Jump();
             }
 
             //_physicsMap.Swin(isUnderWater);

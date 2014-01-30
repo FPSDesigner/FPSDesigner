@@ -13,17 +13,16 @@ namespace Editor.Game
 {
     class CPhysics2
     {
-        public float _gravityConstant = -9.81f / 5000f;
-        public float maxFallingVelocity; // The maximum velocity of an entity during its fall
-
-        public List<Display3D.Triangle> _triangleList;
-        public List<Vector3> _triangleNormalsList;
+        public float _gravityConstant = -9.81f / 500f;
+        public float maxFallingVelocity = -5f; // The maximum velocity of an entity during its fall
 
         private Display3D.CTerrain _terrain;
         private float _entityHeight;
-        private float _weight;
         private float _intersectionDistanceH = 4f; // Horizontal distance collision with models
         private double _lastFreeFall;
+
+        public List<Display3D.Triangle> _triangleList;
+        public List<Vector3> _triangleNormalsList;
 
         public Vector3 _velocity;
 
@@ -32,14 +31,10 @@ namespace Editor.Game
 
         }
 
-        public void LoadContent(Display3D.CTerrain terrain, float entityHeight/*, List<Display3D.Triangle> triangleList, List<Vector3> triangleNormalsList*/)
+        public void LoadContent(Display3D.CTerrain terrain, float entityHeight)
         {
             this._terrain = terrain;
             this._entityHeight = entityHeight;
-
-            /*this._triangleList = triangleList;
-            this._triangleNormalsList = triangleNormalsList;*/
-
         }
 
         
@@ -74,7 +69,11 @@ namespace Editor.Game
             float Steepness;
             float terrainHeight = _terrain.GetHeightAtPosition(assumedNewPosition.X, assumedNewPosition.Z, out Steepness);
 
-            if (assumedNewPosition.Y <= terrainHeight + _entityHeight)
+            float jumpVelocity = 0f;
+            if (_velocity.Y > 0)
+                jumpVelocity = _velocity.Y;
+
+            if (assumedNewPosition.Y + jumpVelocity <= terrainHeight + _entityHeight)
             {
                 isVerticalIntersecting = true;
                 assumedNewPosition.Y = terrainHeight + _entityHeight;
@@ -85,6 +84,8 @@ namespace Editor.Game
                 isVerticalIntersecting = false;
                 float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
                 _velocity.Y += _gravityConstant * dt;
+                if (_velocity.Y < maxFallingVelocity)
+                    _velocity.Y = maxFallingVelocity;
             }
 
             Ray newPosTranslationRay = new Ray(assumedNewPosition + _velocity, Vector3.Down);
@@ -123,22 +124,12 @@ namespace Editor.Game
             return assumedNewPosition + _velocity;
         }
 
-        /*private Vector3 GetNewPositionFromFalling(GameTime gameTime, Vector3 entityPos, Vector3 translation, bool isIntersecting)
+        public void Jump()
         {
-            if (isIntersecting)
+            if (_velocity.Y == 0)
             {
-
-                return entityPos;
-            }
-            else
-            {
-                float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
-                _velocity.Y += _gravityConstant * dt;
+                _velocity.Y = 0.4f;
             }
         }
-
-        private float GetDistanceFromIntersection(Vector3 point1, Vector3 point2, Display3D.Triangle triangle, out bool isIntersecting)
-        {
-        }*/
     }
 }
