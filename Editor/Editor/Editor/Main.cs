@@ -66,6 +66,15 @@ namespace Editor
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
             C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
+
+            Display3D.Triangle triangle = new Display3D.Triangle(new Vector3(-1, 2f, 0), new Vector3(1, 1.5f, 0), new Vector3(0, 1.5f, 1));
+            Ray ray = new Ray(new Vector3(0, 0, 0.1f), Vector3.Up);
+            float? bitch = Display3D.TriangleTest.Intersects(ref ray, ref triangle.V0, ref triangle.V1, ref triangle.V2);
+
+            Vector3 zero = Vector3.Forward;
+            Vector3 caca = Display3D.TriangleTest.NearestPointOnTriangle(ref zero, ref triangle.V0, ref triangle.V1, ref triangle.V2);
+            Console.WriteLine("cul - " + bitch);
+            Console.WriteLine("cul - " + bitch);
         }
 
 

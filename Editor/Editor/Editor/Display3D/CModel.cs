@@ -31,8 +31,8 @@ namespace Editor.Display3D
 
         public Materials.Material Material { get; set; }
 
-        private List<Triangle> _trianglesPositions = new List<Triangle>();
-        private List<Vector3> _trianglesNormal = new List<Vector3>();
+        public List<Triangle> _trianglesPositions = new List<Triangle>();
+        public List<Vector3> _trianglesNormal = new List<Vector3>();
 
         private string collisionShapeName = "collision_shape";
 

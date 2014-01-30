@@ -93,8 +93,9 @@ namespace Editor.GameStates
 
             //Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
-            cam._physicsMap._modelsList = models;
 
+            cam._physicsMap._triangleList = models[0]._trianglesPositions;
+            cam._physicsMap._triangleNormalsList = models[0]._trianglesNormal;
 
             model._lightDirection = lensFlare.LightDirection;
 

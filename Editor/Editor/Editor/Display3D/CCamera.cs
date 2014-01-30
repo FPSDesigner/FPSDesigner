@@ -59,7 +59,7 @@ namespace Editor.Display3D
 
         public BoundingFrustum _Frustum { get; private set; }
 
-        public Game.CPhysics _physicsMap { get; private set; }
+        public Game.CPhysics2 _physicsMap { get; private set; }
 
         /// <summary>
         /// Initialize the class
@@ -91,7 +91,9 @@ namespace Editor.Display3D
             this._map = map;
             this._2DEffect = C2DEffect;
 
-            this._physicsMap = new Game.CPhysics(9.81f / 500, _map, _playerHeight);
+            //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
+            this._physicsMap = new Game.CPhysics2();
+            _physicsMap.LoadContent(_map, _playerHeight);
 
             this._up = Vector3.Up;
             this._right = Vector3.Cross(Vector3.Forward, _up);
@@ -148,7 +150,8 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, 0, 0));
 
-            _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
+           // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
+            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity/2);
 
             _translation = Vector3.Zero;
 
@@ -157,8 +160,8 @@ namespace Editor.Display3D
                 Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
                 _translation += new Vector3(direction.X, 0, -direction.Y);
 
-                if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
-                    _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));
+                /*if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
+                    _physicsMap.Jump(_cameraPos, isUnderWater, _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPJump));*/
             }
             else
             {
@@ -174,11 +177,11 @@ namespace Editor.Display3D
                 if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                     _translation += Vector3.Right;
 
-                if (keyState.IsKeyDown(Keys.Space))
-                    _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));
+                /*if (keyState.IsKeyDown(Keys.Space))
+                    _physicsMap.Jump(_cameraPos, isUnderWater, oldKeySate.IsKeyUp(Keys.Space));*/
             }
 
-            _physicsMap.Swin(isUnderWater);
+            //_physicsMap.Swin(isUnderWater);
 
             if (hasPlayerBlurEffect != isUnderWater)
             {
