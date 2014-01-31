@@ -21,6 +21,7 @@ namespace Editor.Game
         private Display3D.MeshAnimation _handAnimation; //The 3Dmodel + all animation
         private Texture2D[] _handTexture; //ALl the texture storaged in an array
         private Matrix _handRotation;
+        private Matrix[] _boneTransform; //Stock all modification to draw the weapon clearly
 
         private Display3D.CCamera _cam; //Will back up all camera's attributes
 
@@ -89,7 +90,6 @@ namespace Editor.Game
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
-            
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -172,7 +172,7 @@ namespace Editor.Game
 
             if (_isUnderWater && !_isSwimAnimationPlaying)
             {
-                _handAnimation.ChangeAnimSpeed(1.1f);
+                _handAnimation.ChangeAnimSpeed(1.25f);
                 _handAnimation.ChangeAnimation("Swim", true);
 
                 // Just the swim animation is playing
@@ -187,7 +187,7 @@ namespace Editor.Game
             {
                 if (!_isShoting && !_isUnderWater)
                 {
-                    weapon.Shot(true, gameTime);
+                    weapon.Shot(true,_isShoting,gameTime);
                     _handAnimation.ChangeAnimSpeed(3.0f);
                     _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
                     _isWalkAnimPlaying = false;
@@ -196,21 +196,16 @@ namespace Editor.Game
                 }
             }
             else if (mouseState.LeftButton == ButtonState.Pressed || (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot)))
-                weapon.Shot(false, gameTime);
+                weapon.Shot(false, _isShoting, gameTime);
         }
 
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
-            Matrix[] bonesMatrix = new Matrix[_handAnimation.GetModel().Model.Bones.Count];
-            _handAnimation.GetModel().Model.CopyAbsoluteBoneTransformsTo(bonesMatrix);
-
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    Matrix model2Transform = Matrix.CreateScale(0.3f);
-                    //effect.World = model2Transform * bonesMatrix[25];
-                    effect.World = model2Transform * Matrix.CreateTranslation(new Vector3(10, 70f, 0));
+                    effect.World = Matrix.CreateScale(new Vector3(0.1f)) * _handAnimation.GetBoneMatrix("hand_R") * _handRotation;
 
                     effect.View = view;
                     effect.Projection = projection;

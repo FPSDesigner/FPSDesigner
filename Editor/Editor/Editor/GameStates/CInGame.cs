@@ -84,7 +84,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 10, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 90, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -164,7 +164,7 @@ namespace Editor.GameStates
 
         public override void UnloadContent(ContentManager content)
         {
-
+           
         }
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
@@ -206,6 +206,7 @@ namespace Editor.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            // We draw all the things associated to the Character
             _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos,weapon);
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);

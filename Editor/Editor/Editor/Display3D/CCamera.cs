@@ -177,6 +177,9 @@ namespace Editor.Display3D
                 if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                     _translation += Vector3.Right;
 
+                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
+                    
+
                 if (keyState.IsKeyDown(Keys.Space))
                     _physicsMap.Jump();
             }

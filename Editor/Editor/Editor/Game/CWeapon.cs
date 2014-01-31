@@ -86,6 +86,7 @@ namespace Editor.Game
 
         public CWeapon()
         {
+
         }
 
         public void LoadContent(ContentManager content, Model[] modelsList, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
@@ -119,7 +120,7 @@ namespace Editor.Game
             _selectedWeapon = newWeapon;
         }
 
-        public void Shot(bool firstShot, GameTime gameTime)
+        public void Shot(bool firstShot, bool isCutAnimPlaying,GameTime gameTime)
         {
             if (_weaponsArray[_selectedWeapon]._wepType != 2)
             {
@@ -140,6 +141,7 @@ namespace Editor.Game
             }
             else
             {
+                if(!isCutAnimPlaying)
                 _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
         }
@@ -148,8 +150,8 @@ namespace Editor.Game
         {
             if (_weaponsArray[_selectedWeapon]._actualClip > 0)
             {
-                _weaponsArray[_selectedWeapon]._actualClip--;
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                    _weaponsArray[_selectedWeapon]._actualClip--;
+                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
             else
             {

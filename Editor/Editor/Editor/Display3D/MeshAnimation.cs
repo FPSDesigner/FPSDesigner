@@ -41,6 +41,7 @@ namespace Editor.Display3D
             this._isLooped = isLooped;
             this._position = pos;
             this._rotation = rot;
+
         }
 
         public void LoadContent(ContentManager content)
@@ -101,6 +102,7 @@ namespace Editor.Display3D
         {
             _animationSpeed = newSpeed;
             animationController.Speed = _animationSpeed;
+
         }
 
         public void BeginAnimation(string name, bool looping)
@@ -130,6 +132,15 @@ namespace Editor.Display3D
         public  SkinnedModel GetModel()
         {
             return skinnedModel;
+        }
+
+        public Matrix GetBoneMatrix(string boneName)
+        {
+            int index = skinnedModel.Model.Bones[boneName].Index;
+
+            Matrix boneLocal = animationController.SkinnedBoneTransforms[index];
+
+            return boneLocal;
         }
     }
 }

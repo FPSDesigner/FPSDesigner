@@ -80,6 +80,7 @@ namespace Editor.Game.Settings
                     MRight = Keys.D,
                     MBackward = Keys.S,
                     MJump = Keys.Space,
+                    MCrouch = Keys.C,
                     MSprint = Keys.LeftShift,
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
                     MouseSensibility = 0.001f,
@@ -88,6 +89,7 @@ namespace Editor.Game.Settings
                     GPJump = Buttons.A,
                     GPShot = Buttons.RightTrigger,
                     GPRun = Buttons.LeftShoulder,
+                    GPCrouch = Buttons.B,
                 },
                 Video = new Video
                 {
@@ -125,11 +127,13 @@ namespace Editor.Game.Settings
         public Keys MLeft { get; set; }
         public Keys MBackward { get; set; }
         public Keys MJump { get; set; }
+        public Keys MCrouch { get; set; }
         public Keys MSprint { get; set; }
         public Keys Console { get; set; }
         public Buttons GPJump { get; set; }
         public Buttons GPShot { get; set; }
         public Buttons GPRun { get; set; }
+        public Buttons GPCrouch { get; set; }
         public float MouseSensibility { get; set; }
         public float GPSensibility { get; set; }
     }
