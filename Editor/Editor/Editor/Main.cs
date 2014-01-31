@@ -114,7 +114,7 @@ namespace Editor
 
             // Draw the render via post processing
             postProcessor.Input = renderCapture.GetTexture();
-            postProcessor.Draw();
+            postProcessor.Draw(gameTime);
 
             base.Draw(gameTime);
         }

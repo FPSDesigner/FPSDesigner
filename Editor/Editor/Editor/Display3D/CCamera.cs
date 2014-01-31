@@ -37,7 +37,7 @@ namespace Editor.Display3D
         private Game.Settings.CGameSettings _gameSettings;
 
         private bool isCamFrozen = false;
-        private bool hasPlayerBlurEffect = false;
+        private bool hasPlayerUwEffect = false;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
@@ -177,7 +177,7 @@ namespace Editor.Display3D
                 if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
                     _translation += Vector3.Right;
 
-                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
+                //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
                     
 
                 if (keyState.IsKeyDown(Keys.Space))
@@ -186,10 +186,10 @@ namespace Editor.Display3D
 
             //_physicsMap.Swin(isUnderWater);
 
-            if (hasPlayerBlurEffect != isUnderWater)
+            if (hasPlayerUwEffect != isUnderWater)
             {
                 _2DEffect.UnderwaterEffect(isUnderWater);
-                hasPlayerBlurEffect = isUnderWater;
+                hasPlayerUwEffect = isUnderWater;
             }
             if (isUnderWater)
             {

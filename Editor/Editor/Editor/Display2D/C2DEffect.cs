@@ -49,6 +49,9 @@ namespace Editor.Display2D
         private Vector2[] gboffsetsH, gboffsetsV;
         private CRenderCapture gbRenderCapture;
 
+        // Underwater effect
+        private Texture2D uwWaterfallTexture;
+
         // Private
         private Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
 
@@ -67,6 +70,8 @@ namespace Editor.Display2D
             this._content = content;
             this._postProcessor = postProcessor;
             this._renderCapture = renderCapture;
+
+            this.uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
         }
 
         /// <summary>
@@ -118,6 +123,26 @@ namespace Editor.Display2D
             _postProcessor.cfColors = new float[3] { redPercent, greenPercent, bluePercent };
         }
 
+        /// <summary>
+        /// Creates an underwater effect, distortion
+        /// </summary>
+        /// <param name="toggle">Toggles the effect</param>
+        public void UnderwaterEffect(bool toggle)
+        {
+            bool isEffectLoaded = _postProcessor.isEffectLoaded("UWEffect");
+
+            if (!toggle && isEffectLoaded)
+                _postProcessor.removeEffect("UWEffect");
+            else if (toggle && !isEffectLoaded)
+            {
+                _postProcessor.LoadEffect("UWEffect", GetEffect("WaterEffect_PP"));
+                _postProcessor.uwWaterfallTexture = uwWaterfallTexture;
+            }
+        }
+
+        /*
+         * Old under water effect: blue filter + blur
+         * 
         public void UnderwaterEffect(bool toggle)
         {
             if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
@@ -147,7 +172,7 @@ namespace Editor.Display2D
             _postProcessor.gbweightsV = gbweightsV;
             _postProcessor.gboffsetsV = gboffsetsV;
             _postProcessor.gbCapture = gbRenderCapture;
-        }
+        }*/
 
         /// <summary>
         /// Creates a new Gaussian Blur Effect

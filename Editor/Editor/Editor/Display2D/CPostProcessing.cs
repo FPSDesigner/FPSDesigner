@@ -50,7 +50,7 @@ namespace Editor.Display2D
         public void LoadEffect(string effectName, Effect effect)
         {
             if (!effectList.ContainsKey(effectName))
-                effectList.Add(effectName, effect); 
+                effectList.Add(effectName, effect);
         }
 
         /// <summary>
@@ -73,6 +73,19 @@ namespace Editor.Display2D
         }
 
         /// <summary>
+        /// Helper for moving a value around in a circle.
+        /// </summary>
+        static Vector2 MoveInCircle(GameTime gameTime, float speed)
+        {
+            double time = gameTime.TotalGameTime.TotalSeconds * speed;
+
+            float x = (float)Math.Cos(time);
+            float y = (float)Math.Sin(time);
+
+            return new Vector2(x, y);
+        }
+
+        /// <summary>
         /// Check if at least one effect is loaded
         /// </summary>
         /// <returns>True if at least one effect is loaded, false otherwise</returns>
@@ -90,13 +103,17 @@ namespace Editor.Display2D
 
         // Color Filter vars
         public float[] cfColors { get; set; }
+        
+        // Underwater vars
+        public Texture2D uwWaterfallTexture { get; set; }
 
         /// <summary>
         /// Draws the input textures using the pixel shade post processor
         /// </summary>
         /// <param name="gaussianBlurStop">Only used internal, so the blur can be drawn twice (horizontally & vertically)</param>
-        public virtual void Draw(bool gaussianBlurStop = false)
+        public virtual void Draw(GameTime gameTime, bool gaussianBlurStop = false)
         {
+            // Gaussian passes
             if (!gaussianBlurStop && effectList.ContainsKey("GaussianBlur"))
             {
                 gbCapture.Begin();
@@ -105,6 +122,7 @@ namespace Editor.Display2D
                 effectList["GaussianBlur"].Parameters["Weights"].SetValue(gbweightsH);
             }
 
+            // Colored filters passes
             if (effectList.ContainsKey("ColorFilter"))
             {
                 effectList["ColorFilter"].Parameters["redPercent"].SetValue(cfColors[0]);
@@ -112,7 +130,16 @@ namespace Editor.Display2D
                 effectList["ColorFilter"].Parameters["bluePercent"].SetValue(cfColors[2]);
             }
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+            // Underwater effect
+            if (effectList.ContainsKey("UWEffect"))
+            {
+                effectList["UWEffect"].Parameters["DisplacementScroll"].SetValue(MoveInCircle(gameTime, 0.02f));
+                graphicsDevice.Textures[1] = uwWaterfallTexture;
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, effectList["UWEffect"]);
+            }
+            else
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
 
             foreach (KeyValuePair<string, Effect> effectPair in effectList)
             {
@@ -149,7 +176,7 @@ namespace Editor.Display2D
                 effectList["GaussianBlur"].Parameters["Weights"].SetValue(gbweightsV);
 
                 // Render the final pass
-                this.Draw(true);
+                this.Draw(gameTime, true);
             }
         }
     }
