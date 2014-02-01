@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
-    class CPhysics2
+    class CPhysics
     {
         
         // Private
@@ -34,7 +34,7 @@ namespace Editor.Game
         public bool _isOnWaterSurface = false;
         public float _fallingVelocity { get { return _velocity.Y; } }
 
-        public CPhysics2()
+        public CPhysics()
         {
 
         }
@@ -64,7 +64,6 @@ namespace Editor.Game
             Vector3 horizontalNormalReaction = Vector3.Zero;
 
             // Water surface check
-            Console.WriteLine(translation.Y);
             if (_isGameUsing[1] && (_isUnderwater || _isOnWaterSurface) && entityPos.Y + translation.Y > _waterHeight)
             {
                 _isOnWaterSurface = true;
@@ -109,10 +108,7 @@ namespace Editor.Game
                 isVerticalIntersecting = false;
                 float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
                 if (_isUnderwater && translation == Vector3.Zero)
-                {
-                    Console.WriteLine("test " + dt);
                     _velocity.Y += _gravityConstantWater * dt;
-                }
                 else
                     _velocity.Y += _gravityConstant * dt;
 

@@ -59,7 +59,7 @@ namespace Editor.Display3D
 
         public BoundingFrustum _Frustum { get; private set; }
 
-        public Game.CPhysics2 _physicsMap { get; private set; }
+        public Game.CPhysics _physicsMap { get; private set; }
 
         /// <summary>
         /// Initialize the class
@@ -92,7 +92,7 @@ namespace Editor.Display3D
             this._2DEffect = C2DEffect;
 
             //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
-            this._physicsMap = new Game.CPhysics2();
+            this._physicsMap = new Game.CPhysics();
 
             _physicsMap.LoadContent(_playerHeight, new bool[]{true, true});
             _physicsMap._terrain = _map;
