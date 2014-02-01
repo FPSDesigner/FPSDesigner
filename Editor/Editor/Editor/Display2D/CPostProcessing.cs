@@ -103,7 +103,7 @@ namespace Editor.Display2D
 
         // Color Filter vars
         public float[] cfColors { get; set; }
-        
+
         // Underwater vars
         public Texture2D uwWaterfallTexture { get; set; }
 
@@ -144,26 +144,39 @@ namespace Editor.Display2D
             foreach (KeyValuePair<string, Effect> effectPair in effectList)
             {
                 Effect effect = effectPair.Value;
+
                 // Set effect parameters if necessary
                 if (effect.Parameters["ScreenWidth"] != null)
-                    effect.Parameters["ScreenWidth"].
-                    SetValue(graphicsDevice.Viewport.Width);
+                    effect.Parameters["ScreenWidth"].SetValue(graphicsDevice.Viewport.Width);
                 if (effect.Parameters["ScreenHeight"] != null)
-                    effect.Parameters["ScreenHeight"].
-                    SetValue(graphicsDevice.Viewport.Height);
+                    effect.Parameters["ScreenHeight"].SetValue(graphicsDevice.Viewport.Height);
 
                 effect.CurrentTechnique.Passes[0].Apply();
             }
 
-            // Draw the input texture
+
             graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
-            spriteBatch.Draw(Input, Vector2.Zero, Color.White);
+
+
+            /* Draw the input texture */
+            // We resize it for the underwater effect
+            if (effectList.ContainsKey("UWEffect"))
+            {
+                Rectangle croppedTexture = new Rectangle(32, 32, Input.Width - 64, Input.Height - 64);
+
+                spriteBatch.Draw(Input, graphicsDevice.Viewport.Bounds, croppedTexture, Color.White);
+            }
+            else
+                spriteBatch.Draw(Input, Vector2.Zero, Color.White);
+
             spriteBatch.End();
+
 
             // Clean up render states changed by the spritebatch
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
             graphicsDevice.BlendState = BlendState.AlphaBlend;
 
+            // Second Gaussian Blur pass
             if (!gaussianBlurStop && effectList.ContainsKey("GaussianBlur"))
             {
                 gbCapture.End();

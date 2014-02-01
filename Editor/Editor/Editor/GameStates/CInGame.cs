@@ -94,16 +94,16 @@ namespace Editor.GameStates
             //Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
 
-            cam._physicsMap._triangleList = models[0]._trianglesPositions;
-            cam._physicsMap._triangleNormalsList = models[0]._trianglesNormal;
-            cam._physicsMap._water = water;
-
             model._lightDirection = lensFlare.LightDirection;
 
             water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
+
+            cam._physicsMap._triangleList = models[0]._trianglesPositions;
+            cam._physicsMap._triangleNormalsList = models[0]._trianglesNormal;
+            cam._physicsMap._waterHeight = water.waterPosition.Y;
 
             _graphics = graphics;
 
@@ -170,10 +170,10 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, loook at the param
-            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._velocity.Y), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
-            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, isPlayerUnderwater);
+            _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
 
             _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);

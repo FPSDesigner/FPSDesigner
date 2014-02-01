@@ -118,7 +118,6 @@
     <Compile Include="Game\CGUIManager.cs" />
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
-    <Compile Include="Game\CPhysics.cs" />
     <Compile Include="Game\CPhysics2.cs" />
     <Compile Include="Game\CWeapon.cs" />
     <Compile Include="Game\CXMLManager.cs" />

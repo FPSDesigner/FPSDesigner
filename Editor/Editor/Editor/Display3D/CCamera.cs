@@ -93,7 +93,9 @@ namespace Editor.Display3D
 
             //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
             this._physicsMap = new Game.CPhysics2();
-            _physicsMap.LoadContent(_map, _playerHeight);
+
+            _physicsMap.LoadContent(_playerHeight, new bool[]{true, true});
+            _physicsMap._terrain = _map;
 
             this._up = Vector3.Up;
             this._right = Vector3.Cross(Vector3.Forward, _up);
@@ -148,10 +150,10 @@ namespace Editor.Display3D
                 _translation.Normalize();
             }
 
-            _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater) ? _pitch : 0, 0));
+            _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
 
            // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
-            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity / 2, (isUnderWater && _cameraPos.Y - _playerHeight < waterLevel));
+            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity / 2, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
 
             _translation = Vector3.Zero;
 

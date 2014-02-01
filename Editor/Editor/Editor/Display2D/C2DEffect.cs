@@ -140,40 +140,6 @@ namespace Editor.Display2D
             }
         }
 
-        /*
-         * Old under water effect: blue filter + blur
-         * 
-        public void UnderwaterEffect(bool toggle)
-        {
-            if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
-            {
-                _postProcessor.removeEffect("GaussianBlur");
-                return;
-            }
-            else if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
-                return;
-
-            this._gbBlurAmount = 2f;
-
-            _postProcessor.LoadEffect("GaussianBlur", GetEffect("WaterEffect_PP"));
-
-            // Calculate weights/offsets for horizontal pass
-            gaussianCalcSettings(1.0f / (float)_graphicsDevice.Viewport.Width, 0,
-                out gbWeightsH, out gboffsetsH);
-
-            // Calculate weights/offsets for vertical pass
-            gaussianCalcSettings(0, 1.0f / (float)_graphicsDevice.Viewport.Height,
-                out gbweightsV, out gboffsetsV);
-
-            gbRenderCapture = new CRenderCapture(_graphicsDevice);
-
-            _postProcessor.gbweightsH = gbWeightsH;
-            _postProcessor.gboffsetsH = gboffsetsH;
-            _postProcessor.gbweightsV = gbweightsV;
-            _postProcessor.gboffsetsV = gboffsetsV;
-            _postProcessor.gbCapture = gbRenderCapture;
-        }*/
-
         /// <summary>
         /// Creates a new Gaussian Blur Effect
         /// </summary>

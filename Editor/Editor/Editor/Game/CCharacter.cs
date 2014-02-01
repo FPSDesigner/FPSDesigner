@@ -58,6 +58,7 @@ namespace Editor.Game
             _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
 
             testWeaponText = content.Load<Texture2D>("Textures\\Machete");
+
             //Initialize the weapon attributes
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes)
             {
