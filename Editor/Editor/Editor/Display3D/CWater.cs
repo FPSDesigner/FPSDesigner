@@ -32,6 +32,8 @@ namespace Editor.Display3D
 
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
 
+        private CCamera reflectionCamera;
+
         public bool _isUnderWater = false;
         public float _waveSpeed = 0.04f;
 
@@ -86,6 +88,9 @@ namespace Editor.Display3D
             this.WaterAlpha = alpha;
 
             reflectionTarg = new RenderTarget2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
+
+            reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 1000000.0f, true, _map, default(Display2D.C2DEffect));
+
         }
 
         /// <summary>
@@ -103,8 +108,8 @@ namespace Editor.Display3D
             reflectedCameraTarget.Y = -reflectedCameraTarget.Y + waterMesh._modelPosition.Y * 2;
 
             // Create a temporary camera to render the reflected scene
-            CCamera reflectionCamera = new CCamera(graphics, reflectedCameraPosition, reflectedCameraTarget, 0.1f, 1000000.0f, true, _map, default(Display2D.C2DEffect));
-
+            reflectionCamera._cameraPos = reflectedCameraPosition;
+            reflectionCamera._cameraTarget = reflectedCameraTarget;
             reflectionCamera.Update(gameTime);
 
             // Set the reflection camera's view matrix to the water effect

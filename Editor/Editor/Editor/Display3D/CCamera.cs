@@ -20,8 +20,8 @@ namespace Editor.Display3D
         public Matrix _view { get; private set; }
         public Matrix _projection { get; private set; }
 
-        public Vector3 _cameraPos { get; private set; }
-        public Vector3 _cameraTarget { get; private set; }
+        public Vector3 _cameraPos { get; set; }
+        public Vector3 _cameraTarget { get; set; }
 
         // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
         private Vector3 _translation;
@@ -94,7 +94,7 @@ namespace Editor.Display3D
             //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
             this._physicsMap = new Game.CPhysics();
 
-            _physicsMap.LoadContent(_playerHeight, new bool[]{true, true});
+            _physicsMap.LoadContent(_playerHeight, new bool[] { true, true });
             _physicsMap._terrain = _map;
 
             this._up = Vector3.Up;
@@ -123,13 +123,16 @@ namespace Editor.Display3D
             KeyboardState oldKeyState = default(KeyboardState))
         {
             if (!isCamFrozen)
+            {
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
+                _gameSettings.reloadGamepadState();
+                _oldKeyState = keyState;
+            }
 
-            _gameSettings.reloadGamepadState();
-
-            _oldKeyState = keyState;
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
-            generateFrustum();
+
+            if (!isCamFrozen)
+                generateFrustum();
         }
 
         /// <summary>
@@ -152,7 +155,7 @@ namespace Editor.Display3D
 
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
 
-           // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
+            // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
             _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity / 2, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
 
             _translation = Vector3.Zero;
@@ -180,7 +183,7 @@ namespace Editor.Display3D
                     _translation += Vector3.Right;
 
                 //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
-                    
+
 
                 if (keyState.IsKeyDown(Keys.Space))
                     _physicsMap.Jump();
@@ -211,7 +214,7 @@ namespace Editor.Display3D
             if (_translation != Vector3.Zero)
             {
                 _isMoving = true;
-                
+
             }
 
         }
