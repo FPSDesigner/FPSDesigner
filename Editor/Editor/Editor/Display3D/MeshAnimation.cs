@@ -134,7 +134,7 @@ namespace Editor.Display3D
             return skinnedModel;
         }
 
-        public Matrix GetBoneMatrix(string boneName)
+        public Matrix GetBoneMatrix(string boneName, float scale)
         {
             int index = skinnedModel.Model.Bones[boneName].Index;
 
@@ -142,8 +142,8 @@ namespace Editor.Display3D
 
             boneLocal = Matrix.Invert(skinnedModel.SkeletonBones[index].InverseBindPoseTransform)
                             * animationController.SkinnedBoneTransforms[index]
-                            * Matrix.CreateScale(0.2f)
-                            * Matrix.CreateRotationY(0.0f) * Matrix.CreateTranslation(_position);
+                            * Matrix.CreateScale(scale)
+                            * _rotation * Matrix.CreateTranslation(_position);
 
             return boneLocal;
         }

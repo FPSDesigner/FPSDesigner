@@ -200,14 +200,17 @@ namespace Editor.Game
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
+        float i = 0.005f;
+
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
+            i -= 0.00001f;
+            Console.WriteLine(i);
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    effect.World = Matrix.CreateScale(new Vector3(0.1f)) * _handAnimation.GetBoneMatrix("hand_R");
-                    //effect.World = Matrix.CreateScale(new Vector3(0.6f)) * Matrix.CreateTranslation(new Vector3(0f, 70, 0));
+                    effect.World = _handAnimation.GetBoneMatrix("index2_R", i);
 
                     effect.View = view;
                     effect.Projection = projection;
