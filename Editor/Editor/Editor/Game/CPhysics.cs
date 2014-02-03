@@ -154,7 +154,10 @@ namespace Editor.Game
                 _velocity.Y = 0;
 
             if (isVerticalIntersecting)
+            {
                 _lastFreeFall = gameTime.TotalGameTime.TotalSeconds;
+                _isOnWaterSurface = false;
+            }
 
             return assumedNewPosition + _velocity;
         }

@@ -174,7 +174,7 @@ namespace Editor.GameStates
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
-
+            Console.WriteLine(cam._physicsMap._isOnWaterSurface);
             _oldKeyState = kbState;
             devConsole.Update(kbState, gameTime);
         }

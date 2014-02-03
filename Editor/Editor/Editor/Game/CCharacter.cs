@@ -95,9 +95,9 @@ namespace Editor.Game
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
         {
-            //Draw the animation mesh
+            // Draw the animation mesh
             _handAnimation.Draw(gametime, spriteBatch, view, projection);
-            //Draw the weapon attached to the mesh
+            // Draw the weapon attached to the mesh
             WeaponDrawing(weap, spriteBatch, view, projection);
         }
 
