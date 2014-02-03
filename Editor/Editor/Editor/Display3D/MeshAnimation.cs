@@ -140,6 +140,11 @@ namespace Editor.Display3D
 
             Matrix boneLocal = animationController.SkinnedBoneTransforms[index];
 
+            boneLocal = Matrix.Invert(skinnedModel.SkeletonBones[index].InverseBindPoseTransform)
+                            * animationController.SkinnedBoneTransforms[index]
+                            * Matrix.CreateScale(0.2f)
+                            * Matrix.CreateRotationY(0.0f) * Matrix.CreateTranslation(_position);
+
             return boneLocal;
         }
     }

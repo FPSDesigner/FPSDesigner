@@ -206,7 +206,8 @@ namespace Editor.Game
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    effect.World = Matrix.CreateScale(new Vector3(0.1f)) * _handAnimation.GetBoneMatrix("hand_R") * _handRotation;
+                    effect.World = Matrix.CreateScale(new Vector3(0.1f)) * _handAnimation.GetBoneMatrix("hand_R");
+                    //effect.World = Matrix.CreateScale(new Vector3(0.6f)) * Matrix.CreateTranslation(new Vector3(0f, 70, 0));
 
                     effect.View = view;
                     effect.Projection = projection;
