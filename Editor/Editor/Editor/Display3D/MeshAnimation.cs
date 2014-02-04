@@ -21,6 +21,10 @@ namespace Editor.Display3D
         private int _meshNumber;
         private float _animationSpeed;
         private float _scale;
+
+        private int _specPower;
+        private float _specColor;
+
         private bool _isLooped;
         private Texture2D[] _textures;
 
@@ -30,7 +34,7 @@ namespace Editor.Display3D
         private SkinnedModel skinnedModel;
         private AnimationController animationController;
 
-        public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, Matrix rot,float scale,Texture2D[] text, bool isLooped)
+        public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, Matrix rot,float scale,Texture2D[] text, int specPower, float specColor,bool isLooped)
         {
             this._modelName = model;
             this._animationNumber = animNbr;
@@ -41,6 +45,9 @@ namespace Editor.Display3D
             this._isLooped = isLooped;
             this._position = pos;
             this._rotation = rot;
+
+            this._specPower = specPower;
+            this._specColor = specColor;
 
         }
 
@@ -55,8 +62,8 @@ namespace Editor.Display3D
                     effect.Texture = _textures[0];
                     effect.EnableDefaultLighting();
 
-                    effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 8;
+                    effect.SpecularColor = new Vector3(_specColor);
+                    effect.SpecularPower = _specPower;
                 }
             }
 
