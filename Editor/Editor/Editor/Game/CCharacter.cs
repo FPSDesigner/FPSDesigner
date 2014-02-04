@@ -46,7 +46,7 @@ namespace Editor.Game
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics, CWeapon weap)
         {
-            _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
+            _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture,8,0.05f,true);
 
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
@@ -68,8 +68,8 @@ namespace Editor.Game
                     effect.TextureEnabled = true;
                     effect.Texture = testWeaponText;
 
-                    effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 16;
+                    effect.SpecularColor = new Vector3(0.5f);
+                    effect.SpecularPower = 32;
                 }
             }
         }
@@ -206,7 +206,8 @@ namespace Editor.Game
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    effect.World = _handAnimation.GetBoneMatrix("hand_R", 0.15f);
+                    // Draw the weapon thanks to bones position
+                    effect.World = _handAnimation.GetBoneMatrix("hand_R", 0.115f);
 
                     effect.View = view;
                     effect.Projection = projection;

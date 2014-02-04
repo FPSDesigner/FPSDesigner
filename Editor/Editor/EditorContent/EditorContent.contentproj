@@ -284,13 +284,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Uvw_Hand.png">
-      <Name>Uvw_Hand</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\grass.tga">
       <Name>grass</Name>
       <Importer>TextureImporter</Importer>
@@ -309,7 +302,7 @@
     <Folder Include="Textures\Model textures\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
+    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
     </ProjectReference>
@@ -350,13 +343,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Machete.fbx">
-      <Name>Machete</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Models\Arm_Animation.fbx">
       <Name>Arm_Animation</Name>
       <Importer>FbxImporter</Importer>
@@ -382,6 +368,20 @@
       <Name>Arm_Animation%28Smoothed%29</Name>
       <Importer>FbxImporter</Importer>
       <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Uv_Hand.png">
+      <Name>Uv_Hand</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Machete.fbx">
+      <Name>Machete</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

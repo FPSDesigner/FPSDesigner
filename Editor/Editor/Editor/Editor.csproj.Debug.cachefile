@@ -34,7 +34,6 @@ Content\Textures\Terrain\weightMap.xnb
 Content\Textures\terrain_grass.xnb
 Content\Textures\water_normal.xnb
 Content\3D\Checker.xnb
-Content\Textures\Uvw_Hand.xnb
 Content\Textures\grass.xnb
 Content\Textures\Terrain\grassMap.xnb
 Content\2D\ErrorSmiley.xnb
@@ -51,3 +50,4 @@ Content\Effects\WaterEffect_PP.xnb
 Content\Models\Machete.xnb
 Content\Textures\uw_effect.xnb
 Content\Models\Arm_Animation(Smoothed).xnb
+Content\Textures\Uv_Hand.xnb
