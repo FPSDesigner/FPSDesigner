@@ -48,6 +48,7 @@ namespace Editor.Display3D
         int nVertices, nIndices;
 
         public bool _isUnderWater = false;
+        public bool _enableUnderWaterFog = true;
 
         public bool isUnderWater
         {
@@ -78,6 +79,9 @@ namespace Editor.Display3D
         public Texture2D DetailTexture;
         public float DetailDistance = 2500;
         public float DetailTextureTiling = 100;
+
+        private bool areDefaultParamsLoaded = false;
+        private int usedTechniqueIndex = 3;
 
 
         /// <summary>
@@ -135,7 +139,7 @@ namespace Editor.Display3D
             vertexBuffer.SetData<VertexPositionNormalTexture>(vertices);
             indexBuffer.SetData<int>(indices);
 
-            terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);            
+            terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);    
         }
 
         /// <summary>
@@ -260,13 +264,46 @@ namespace Editor.Display3D
         /// <param name="cameraPos">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
-            // TODO: SetValue() is pretty slow from MSDN doc
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
 
-
             effect.Parameters["View"].SetValue(View);
             effect.Parameters["Projection"].SetValue(Projection);
+
+            if (!areDefaultParamsLoaded)
+            {
+                SendEffectDefaultParameters();
+                areDefaultParamsLoaded = true;
+            }
+
+            /* Techniques:
+             * 0: !fog && !underwater
+             * 1: fog && !underwater
+             * 2: !fog && underwater
+             * 3: fog && underwater
+            */
+
+            int index = 3;
+            if (!_enableUnderWaterFog)
+                index = (_isUnderWater) ? 2 : 0;
+            else
+                if (!_isUnderWater)
+                    index = 1;
+
+            if (usedTechniqueIndex != index)
+            {
+                effect.CurrentTechnique = effect.Techniques[index];
+                usedTechniqueIndex = index;
+            }
+            
+            effect.Techniques[index].Passes[0].Apply();
+
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
+
+        }
+
+        public void SendEffectDefaultParameters()
+        {
             effect.Parameters["BaseTexture"].SetValue(baseTexture);
             effect.Parameters["TextureTiling"].SetValue(textureTiling);
             effect.Parameters["LightDirection"].SetValue(lightDirection);
@@ -279,11 +316,6 @@ namespace Editor.Display3D
             effect.Parameters["DetailTexture"].SetValue(DetailTexture);
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
-
-            effect.Techniques[0].Passes[0].Apply();
-
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
-
         }
 
         /// <summary>

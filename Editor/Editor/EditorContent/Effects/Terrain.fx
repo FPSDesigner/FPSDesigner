@@ -104,7 +104,8 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 }
 
 
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+// !fog && !underwater
+float4 PixelShaderFunctionTechnique1(VertexShaderOutput input) : COLOR0
 {
 	if (ClipPlaneEnabled)
 		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
@@ -119,10 +120,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 
-	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1);
-	output *= base;
-
-	output += weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
+	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
+					* base
+					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
 
 	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
 	float detailAmt = input.Depth / DetailDistance;
@@ -130,31 +130,164 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
 	float shore = 0;
-	if(!IsUnderWater && input.WorldPosition.y > FogWaterHeight)
+	if(input.WorldPosition.y > FogWaterHeight)
 		shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
 
+	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+	return float4(lerp(lerp( output * light, FogColor, fog), ShoreColor, shore), 1);
+}
 
-	if(FogWaterActivated && input.WorldPosition.y-0.1 < FogWaterHeight)
+
+// fog && !underwater
+float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
+{
+	if (ClipPlaneEnabled)
+		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
+
+	float light = dot(normalize(input.Normal), normalize(LightDirection)) * LightIntensity;
+	light = clamp(light + 0.4f, 0, 1);
+
+	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
+	float3 gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
+	float3 bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
+	float3 base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
+
+	float3 weightMap = tex2D(WeightMapSampler, input.UV);
+
+	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
+					* base
+					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
+
+	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
+	float detailAmt = input.Depth / DetailDistance;
+
+	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
+
+	float shore = 0;
+	if(input.WorldPosition.y > FogWaterHeight)
+		shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
+
+	if(input.WorldPosition.y-0.1 < FogWaterHeight)
 	{
 		float fog = clamp(input.Depth*0.005*(FogWaterHeight - input.WorldPosition.y), 0, 1);
-		if(IsUnderWater)
-			fog = clamp(input.Depth*0.02, 0, 1);
-
-		return float4(lerp(lerp(detail * output * light, FogColorWater, fog), ShoreColor, shore), 1);
+		return float4(lerp(lerp( output * light, FogColorWater, fog), ShoreColor, shore), 1);
 	}
 	else
 	{
 		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
-		return float4(lerp(lerp(detail * output * light, FogColor, fog), ShoreColor, shore), 1);
+		return float4(lerp(lerp( output * light, FogColor, fog), ShoreColor, shore), 1);
 	}
 	
 }
 
+// !fog && underwater
+float4 PixelShaderFunctionTechnique3(VertexShaderOutput input) : COLOR0
+{
+	if (ClipPlaneEnabled)
+		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
+
+	float light = dot(normalize(input.Normal), normalize(LightDirection)) * LightIntensity;
+	light = clamp(light + 0.4f, 0, 1);
+
+	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
+	float3 gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
+	float3 bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
+	float3 base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
+
+	float3 weightMap = tex2D(WeightMapSampler, input.UV);
+
+	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
+					* base
+					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
+
+	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
+	float detailAmt = input.Depth / DetailDistance;
+
+	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
+
+	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+	
+	return float4(lerp( output * light, FogColor, fog), 1);
+	
+}
+
+
+// fog && underwater
+float4 PixelShaderFunctionTechnique4(VertexShaderOutput input) : COLOR0
+{
+	if (ClipPlaneEnabled)
+		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
+
+	float light = dot(normalize(input.Normal), normalize(LightDirection)) * LightIntensity;
+	light = clamp(light + 0.4f, 0, 1);
+
+	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
+	float3 gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
+	float3 bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
+	float3 base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
+
+	float3 weightMap = tex2D(WeightMapSampler, input.UV);
+
+	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
+					* base
+					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
+
+	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
+	float detailAmt = input.Depth / DetailDistance;
+
+	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
+
+	if(input.WorldPosition.y-0.1 < FogWaterHeight)
+	{
+		float fog = clamp(input.Depth*0.02, 0, 1);
+		return float4(lerp( output * light, FogColorWater, fog), 1);
+	}
+	else
+	{
+		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+		return float4(lerp( output * light, FogColor, fog), 1);
+	}
+}
+
+/********************** We create 4 techniques: ***********************/
+// fog && underwater, fog && !underwater, !fog && underwater, !fog && !underwater
+
+// !fog && !underwater
 technique Technique1
 {
     pass Pass1
     {
         VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        PixelShader = compile ps_2_0 PixelShaderFunctionTechnique1();
+    }
+}
+
+// fog && !underwater
+technique Technique2
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_2_0 VertexShaderFunction();
+        PixelShader = compile ps_2_0 PixelShaderFunctionTechnique2();
+    }
+}
+
+// !fog && underwater
+technique Technique3
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_2_0 VertexShaderFunction();
+        PixelShader = compile ps_2_0 PixelShaderFunctionTechnique3();
+    }
+}
+
+// fog && underwater
+technique Technique4
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_2_0 VertexShaderFunction();
+        PixelShader = compile ps_2_0 PixelShaderFunctionTechnique4();
     }
 }
