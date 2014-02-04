@@ -277,10 +277,10 @@ namespace Editor.Display3D
             }
 
             /* Techniques:
-             * 0: !fog && !underwater
-             * 1: fog && !underwater
-             * 2: !fog && underwater
-             * 3: fog && underwater
+             * 0: !fog && !underwater (T1)
+             * 1: fog && !underwater (T2)
+             * 2: !fog && underwater (T3)
+             * 3: fog && underwater (T4)
             */
 
             int index = 3;

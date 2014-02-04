@@ -74,12 +74,18 @@ float DetailDistance = 2500;
 
 float FogStart = 1.5;
 float FogEnd = 5.5;
+float FogDistance = 4; // FogEnd - FogStart
+
 bool FogWaterActivated = true;
 bool IsUnderWater = false;
 float FogWaterHeight = 44.5;
+float FogWaterHeightMore = 44.6; // = FogWaterHeight + 0.1
+
 float3 FogColor = float3(1,1,1);
 float3 FogColorWater = float3(0.0588,0.156,0.1607);
 float3 ShoreColor = float3(1,1,1);
+
+
 
 texture DetailTexture;
 sampler DetailSampler = sampler_state {
@@ -133,12 +139,12 @@ float4 PixelShaderFunctionTechnique1(VertexShaderOutput input) : COLOR0
 	if(input.WorldPosition.y > FogWaterHeight)
 		shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
 
-	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+	float fog = clamp((input.Depth*0.01 - FogStart) / FogDistance, 0, 0.8);
 	return float4(lerp(lerp( output * light, FogColor, fog), ShoreColor, shore), 1);
 }
 
 
-// fog && !underwater
+// fog && !underwater - Most used one
 float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 {
 	if (ClipPlaneEnabled)
@@ -163,18 +169,15 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	float shore = 0;
-	if(input.WorldPosition.y > FogWaterHeight)
-		shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
-
-	if(input.WorldPosition.y-0.1 < FogWaterHeight)
+	if(input.WorldPosition.y < FogWaterHeight)
 	{
-		float fog = clamp(input.Depth*0.005*(FogWaterHeight - input.WorldPosition.y), 0, 1);
-		return float4(lerp(lerp( output * light, FogColorWater, fog), ShoreColor, shore), 1);
+		float fog = clamp(input.Depth*0.005*(FogWaterHeightMore - input.WorldPosition.y), 0, 1);
+		return float4(lerp( output * light, FogColorWater, fog), 1);
 	}
 	else
 	{
-		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+		float shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
+		float fog = clamp((input.Depth*0.01 - FogStart) / FogDistance, 0, 0.8);
 		return float4(lerp(lerp( output * light, FogColor, fog), ShoreColor, shore), 1);
 	}
 	
@@ -205,7 +208,7 @@ float4 PixelShaderFunctionTechnique3(VertexShaderOutput input) : COLOR0
 
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+	float fog = clamp((input.Depth*0.01 - FogStart) / FogDistance, 0, 0.8);
 	
 	return float4(lerp( output * light, FogColor, fog), 1);
 	
@@ -237,14 +240,14 @@ float4 PixelShaderFunctionTechnique4(VertexShaderOutput input) : COLOR0
 
 	detail = lerp(detail, 1, clamp(detailAmt, 0, 1));
 
-	if(input.WorldPosition.y-0.1 < FogWaterHeight)
+	if(input.WorldPosition.y < FogWaterHeightMore)
 	{
 		float fog = clamp(input.Depth*0.02, 0, 1);
 		return float4(lerp( output * light, FogColorWater, fog), 1);
 	}
 	else
 	{
-		float fog = clamp((input.Depth*0.01 - FogStart) / (FogEnd - FogStart), 0, 0.8);
+		float fog = clamp((input.Depth*0.01 - FogStart) / FogDistance, 0, 0.8);
 		return float4(lerp( output * light, FogColor, fog), 1);
 	}
 }
