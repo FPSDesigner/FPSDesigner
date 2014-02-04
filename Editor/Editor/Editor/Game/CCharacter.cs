@@ -47,7 +47,7 @@ namespace Editor.Game
         public void LoadContent(ContentManager content, GraphicsDevice graphics, CWeapon weap)
         {
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uvw_Hand");
-            _handAnimation = new Display3D.MeshAnimation("Arm_Animation", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture, true);
 
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
