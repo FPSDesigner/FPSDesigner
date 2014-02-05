@@ -147,15 +147,15 @@ namespace Editor.Display3D
 
             Matrix boneLocal = animationController.SkinnedBoneTransforms[index];
 
-            boneLocal = Matrix.CreateTranslation(new Vector3(0f))
+            boneLocal = Matrix.CreateTranslation(new Vector3(-1.614999f, 1.159999f, 5.480078f))
                             * Matrix.CreateScale(scale)
                             * Matrix.Invert(skinnedModel.SkeletonBones[index].InverseBindPoseTransform)
                             * animationController.SkinnedBoneTransforms[index]
-                            * CreateWorldMatrix(_position, _rotation, new Vector3(0.03f));
-
+                            * CreateWorldMatrix(_position, _rotation, _scale);
             return boneLocal;
         }
-        public Matrix CreateWorldMatrix(Vector3 Translation, Matrix Rotation, Vector3 Scale)
+
+        public Matrix CreateWorldMatrix(Vector3 Translation, Matrix Rotation, float Scale)
         {
             return Matrix.CreateScale(Scale) * Rotation * Matrix.CreateTranslation(Translation);
         }

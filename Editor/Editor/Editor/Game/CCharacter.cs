@@ -202,13 +202,14 @@ namespace Editor.Game
 
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
+            // Get the hand position attached to the bone
+            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 0.125f);
+
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {
-                    // Draw the weapon thanks to bones position
-                    effect.World = _handAnimation.GetBoneMatrix("hand_R", 0.115f);
-
+                    effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
                 }
