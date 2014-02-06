@@ -45,7 +45,6 @@ namespace Editor.GameStates
 
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
-        Display3D.Terrain terrain2;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
         Display2D.C2DEffect _2DEffect;
@@ -84,33 +83,23 @@ namespace Editor.GameStates
 
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
-            /*terrain = new Display3D.CTerrain();
+            terrain = new Display3D.CTerrain();
             terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 1, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
             terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
-            */
-
-            terrain2 = new Display3D.Terrain(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 10000.8f, 100,
-                content.Load<Texture2D>("Textures/Terrain/sand"), 1, new Vector3(1, -1, 0),
-                graphics, content);
-
-            terrain2.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
-            terrain2.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
-            terrain2.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
-            terrain2.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
 
 
-            //Load one cam : Main camera (for the moment)
+            // Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
 
             model._lightDirection = lensFlare.LightDirection;
 
             water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
-            //water.Objects.Add(terrain);
+            water.Objects.Add(terrain);
             water.Objects.Add(model);
 
             cam._physicsMap._triangleList = models[0]._trianglesPositions;
@@ -200,7 +189,7 @@ namespace Editor.GameStates
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
                 water.isUnderWater = isPlayerUnderwater;
-                //terrain.isUnderWater = isPlayerUnderwater;
+                terrain.isUnderWater = isPlayerUnderwater;
             }
 
             skybox.ColorIntensity = 0.5f;
@@ -209,8 +198,8 @@ namespace Editor.GameStates
             
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            //terrain.Draw(cam._view, cam._projection, cam._cameraPos);
-            terrain2.Draw(cam._view, cam._projection);
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
