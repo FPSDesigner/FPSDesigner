@@ -298,6 +298,7 @@ namespace Editor.Display3D
             
             effect.Techniques[index].Passes[0].Apply();
 
+
             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
 
         }
