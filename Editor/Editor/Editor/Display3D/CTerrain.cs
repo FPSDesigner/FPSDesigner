@@ -26,6 +26,9 @@ namespace Editor.Display3D
         int[] indices;
         IndexBuffer indexBuffer;
 
+        // BoundingBox
+        BoundingBox[] boundingBoxChunks;
+
         // Array of all vertexes heights
         float[][,] heights;
 
@@ -71,6 +74,7 @@ namespace Editor.Display3D
         public Vector3 lightDirection;
         Texture2D heightMap;
         Texture2D baseTexture;
+        public CCamera camera;
 
         // World matrix contains scale, position, rotation...
         Matrix World;
@@ -136,6 +140,7 @@ namespace Editor.Display3D
             nIndices = (width - 1) * (length - 1) * 6;
 
             vertexBuffer = new VertexBuffer[chunkAmounts];
+            boundingBoxChunks = new BoundingBox[chunkAmounts];
 
             for (int i = 0; i < chunkAmounts; i++)
                 vertexBuffer[i] = new VertexBuffer(GraphicsDevice, typeof(VertexPositionNormalTexture),
@@ -156,11 +161,6 @@ namespace Editor.Display3D
             indexBuffer.SetData<int>(indices);
 
             terrainMiddle = new Point((oWidth - 1) / 2, (oLength - 1) / 2);
-        }
-
-
-        private void genBoundingBox()
-        {
         }
 
         /// <summary>
@@ -208,12 +208,16 @@ namespace Editor.Display3D
             vertices = new VertexPositionNormalTexture[chunkAmounts][];
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
             {
+                List<Vector3> BBPoints = new List<Vector3>();
                 vertices[chunk] = new VertexPositionNormalTexture[nVertices];
 
                 int offsetY = chunksSize * (chunk % (chunkAmounts / 2));
                 int offsetX = chunksSize * (chunk / 2);
 
                 Vector3 offsetToCenter = new Vector3((-(chunkAmountsSide / 2.0f) + (chunk / chunkAmountsSide)) * chunksSize * cellSize, 0, (-(chunkAmountsSide / 2.0f) + (chunk % chunkAmountsSide)) * chunksSize * cellSize);
+
+                Vector3 lowestHeight = Vector3.Zero;
+                Vector3 highestHeight = Vector3.Zero;
 
                 // For each pixel in the image
                 for (int z = 0; z < length; z++)
@@ -222,6 +226,14 @@ namespace Editor.Display3D
                         // Find position based on grid coordinates and height in heightmap
                         Vector3 position = new Vector3(x * cellSize, heights[chunk][x, z], z * cellSize) + offsetToCenter;
 
+                        if((z == 0 || z == length-1) && (x == 0 || x == width-1))
+                            BBPoints.Add(position);
+
+                        if (highestHeight == Vector3.Zero || highestHeight.Y < position.Y)
+                            highestHeight = position;
+                        if (lowestHeight == Vector3.Zero || lowestHeight.Y > position.Y)
+                            lowestHeight = position;
+
                         // UV coordinates range from (0, 0) at grid location (0, 0) to 
                         // (1, 1) at grid location (width, length)
                         Vector2 uv = new Vector2((float)x / width, (float)z / length);
@@ -229,6 +241,10 @@ namespace Editor.Display3D
                         // Create the vertex
                         vertices[chunk][z * width + x] = new VertexPositionNormalTexture(position, Vector3.Zero, uv);
                     }
+
+                BBPoints.Add(lowestHeight);
+                BBPoints.Add(highestHeight);
+                boundingBoxChunks[chunk] = BoundingBox.CreateFromPoints(BBPoints);
             }
         }
 
@@ -304,44 +320,50 @@ namespace Editor.Display3D
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
             GraphicsDevice.Indices = indexBuffer;
+            int i = 0;
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
             {
-                GraphicsDevice.SetVertexBuffer(vertexBuffer[chunk]);
-
-                effect.Parameters["View"].SetValue(View);
-                effect.Parameters["Projection"].SetValue(Projection);
-
-                if (!areDefaultParamsLoaded)
+                if (camera.BoundingVolumeIsInView(boundingBoxChunks[chunk]))
                 {
-                    SendEffectDefaultParameters();
-                    areDefaultParamsLoaded = true;
+                    i++;
+                    GraphicsDevice.SetVertexBuffer(vertexBuffer[chunk]);
+
+                    effect.Parameters["View"].SetValue(View);
+                    effect.Parameters["Projection"].SetValue(Projection);
+
+                    if (!areDefaultParamsLoaded)
+                    {
+                        SendEffectDefaultParameters();
+                        areDefaultParamsLoaded = true;
+                    }
+
+                    /* Techniques:
+                     * 0: !fog && !underwater (T1)
+                     * 1: fog && !underwater (T2)
+                     * 2: !fog && underwater (T3)
+                     * 3: fog && underwater (T4)
+                    */
+
+                    int index = 3;
+                    if (!_enableUnderWaterFog)
+                        index = (_isUnderWater) ? 2 : 0;
+                    else
+                        if (!_isUnderWater)
+                            index = 1;
+
+                    if (usedTechniqueIndex != index)
+                    {
+                        effect.CurrentTechnique = effect.Techniques[index];
+                        usedTechniqueIndex = index;
+                    }
+
+                    effect.Techniques[index].Passes[0].Apply();
+
+
+                    GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
                 }
-
-                /* Techniques:
-                 * 0: !fog && !underwater (T1)
-                 * 1: fog && !underwater (T2)
-                 * 2: !fog && underwater (T3)
-                 * 3: fog && underwater (T4)
-                */
-
-                int index = 3;
-                if (!_enableUnderWaterFog)
-                    index = (_isUnderWater) ? 2 : 0;
-                else
-                    if (!_isUnderWater)
-                        index = 1;
-
-                if (usedTechniqueIndex != index)
-                {
-                    effect.CurrentTechnique = effect.Techniques[index];
-                    usedTechniqueIndex = index;
-                }
-
-                effect.Techniques[index].Passes[0].Apply();
-
-
-                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
             }
+            Console.WriteLine(i + " chunksdrawn");
         }
 
         public void SendEffectDefaultParameters()

@@ -95,6 +95,8 @@ namespace Editor.GameStates
             // Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
 
+            terrain.camera = cam;
+
             model._lightDirection = lensFlare.LightDirection;
 
             water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);

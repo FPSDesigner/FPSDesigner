@@ -290,7 +290,7 @@ namespace Editor.Display3D
                             Vector3 v2 = indices[triangles[x].C];
 
                             _trianglesPositions.Add(new Triangle(v0, v1, v2));
-                            Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
+                            //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
 
                             // Calculate normal
                             Vector3 Vector = Vector3.Cross(v0 - v1, v0 - v2);
