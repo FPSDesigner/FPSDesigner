@@ -215,7 +215,14 @@ namespace Editor.GameStates
             lensFlare.Draw(gameTime);
 
             devConsole.Draw(gameTime);
+            /*spritebatch.Begin();
+            for (int i = 0; i < terrain.WeightMapChunks.Length; i++)
+            {
+                spritebatch.Draw(terrain.WeightMapChunks[i], new Vector2(64*(i%8),64*(i/8)), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            }
+            spritebatch.End();*/
 
+            Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
         }

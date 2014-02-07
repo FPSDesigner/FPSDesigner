@@ -79,14 +79,29 @@ namespace Editor.Display3D
         // World matrix contains scale, position, rotation...
         Matrix World;
 
-        public Texture2D RTexture, BTexture, GTexture, WeightMap;
+        private Texture2D _WeightMap;
+        public Texture2D WeightMap
+        {
+            set
+            {
+                _WeightMap = value;
+                WeightMapChunks = genWeightmaps(_WeightMap, chunksSize, chunksSize);
+            }
+            get
+            {
+                return _WeightMap;
+            }
+        }
+
+        public Texture2D RTexture, BTexture, GTexture;
         public Texture2D DetailTexture;
+        public Texture2D[] WeightMapChunks;
         public float DetailDistance = 2500;
         public float DetailTextureTiling = 100;
 
         private bool areDefaultParamsLoaded = false;
         private int usedTechniqueIndex = 3;
-        private int chunksSize = 256 / 8;
+        private int chunksSize = 256 / 4;
         private int chunkAmounts;
         private int chunkAmountsSide;
 
@@ -141,6 +156,7 @@ namespace Editor.Display3D
 
             vertexBuffer = new VertexBuffer[chunkAmounts];
             boundingBoxChunks = new BoundingBox[chunkAmounts];
+            WeightMapChunks = new Texture2D[chunkAmounts];
 
             for (int i = 0; i < chunkAmounts; i++)
                 vertexBuffer[i] = new VertexBuffer(GraphicsDevice, typeof(VertexPositionNormalTexture),
@@ -153,7 +169,7 @@ namespace Editor.Display3D
             createVertices();
             createIndices();
             genNormals();
-           
+
 
             for (int i = 0; i < chunkAmounts; i++)
                 vertexBuffer[i].SetData<VertexPositionNormalTexture>(vertices[i]);
@@ -226,7 +242,7 @@ namespace Editor.Display3D
                         // Find position based on grid coordinates and height in heightmap
                         Vector3 position = new Vector3(x * cellSize, heights[chunk][x, z], z * cellSize) + offsetToCenter;
 
-                        if((z == 0 || z == length-1) && (x == 0 || x == width-1))
+                        if ((z == 0 || z == length - 1) && (x == 0 || x == width - 1))
                             BBPoints.Add(position);
 
                         if (highestHeight == Vector3.Zero || highestHeight.Y < position.Y)
@@ -312,17 +328,82 @@ namespace Editor.Display3D
         }
 
         /// <summary>
+        /// Create the weightmaps portions for the chunks
+        /// </summary>
+        public Texture2D[] genWeightmaps(Texture2D original, int partWidth, int partHeight)
+        {
+            int yCount = original.Width / partWidth;//The number of textures in each horizontal row
+            int xCount = original.Height / partHeight;//The number of textures in each vertical column
+            Texture2D[] r = new Texture2D[xCount * yCount];//Number of parts = (area of original) / (area of each part).
+            int dataPerPart = partWidth * partHeight;//Number of pixels in each of the split parts
+
+            //Get the pixel data from the original texture:
+            Color[] originalData = new Color[original.Width * original.Height];
+            original.GetData<Color>(originalData);
+
+            int index = 0;
+            for (int y = 0; y < yCount * partHeight; y += partHeight)
+                for (int x = 0; x < xCount * partWidth; x += partWidth)
+                {
+                    //The texture at coordinate {x, y} from the top-left of the original texture
+                    Texture2D part = new Texture2D(original.GraphicsDevice, partWidth, partHeight);
+                    //The data for part
+                    Color[] partData = new Color[dataPerPart];
+
+                    //Fill the part data with colors from the original texture
+                    for (int py = 0; py < partHeight; py++)
+                        for (int px = 0; px < partWidth; px++)
+                        {
+                            int partIndex = px + py * partWidth;
+                            //If a part goes outside of the source texture, then fill the overlapping part with Color.Transparent
+                            if (y + py >= original.Height || x + px >= original.Width)
+                                partData[partIndex] = Color.Transparent;
+                            else
+                                partData[partIndex] = originalData[(x + px) + (y + py) * original.Width];
+                        }
+
+                    //Fill the part with the extracted data
+                    part.SetData<Color>(partData);
+                    //Stick the part in the return array:                    
+                    r[index++] = part;
+                }
+            //Return the array of parts.
+            return r;
+        }
+
+        /// <summary>
         /// Draw the terrain
         /// </summary>
         /// <param name="View">The camera View matrix</param>
         /// <param name="Projection">The camera Projection matrix</param>
         /// <param name="cameraPos">The camera position</param>
+        /// 
+        int u2 = 0;
+        int f = 0;
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
             GraphicsDevice.Indices = indexBuffer;
+
+            if (!areDefaultParamsLoaded)
+            {
+                areDefaultParamsLoaded = true;
+                SendEffectDefaultParameters();
+            }
+
             int i = 0;
+
+            u2++;
+            if (u2 > 100)
+            {
+                f++;
+                u2 = 0;
+            }
+            CSimpleShapes.AddBoundingBox(boundingBoxChunks[f], Color.Red);
+            CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(500, 0, 500), 30.0f), Color.Green);
+            CSimpleShapes.AddBoundingSphere(new BoundingSphere(Vector3.Zero, 40.0f), Color.Blue);
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
             {
+
                 if (camera.BoundingVolumeIsInView(boundingBoxChunks[chunk]))
                 {
                     i++;
@@ -330,12 +411,8 @@ namespace Editor.Display3D
 
                     effect.Parameters["View"].SetValue(View);
                     effect.Parameters["Projection"].SetValue(Projection);
+                    effect.Parameters["WeightMap"].SetValue(WeightMapChunks[8 * (chunk % 8) + chunk / 8]);
 
-                    if (!areDefaultParamsLoaded)
-                    {
-                        SendEffectDefaultParameters();
-                        areDefaultParamsLoaded = true;
-                    }
 
                     /* Techniques:
                      * 0: !fog && !underwater (T1)
@@ -351,6 +428,7 @@ namespace Editor.Display3D
                         if (!_isUnderWater)
                             index = 1;
 
+
                     if (usedTechniqueIndex != index)
                     {
                         effect.CurrentTechnique = effect.Techniques[index];
@@ -361,6 +439,8 @@ namespace Editor.Display3D
 
 
                     GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
+
+
                 }
             }
             Console.WriteLine(i + " chunksdrawn");
@@ -368,6 +448,7 @@ namespace Editor.Display3D
 
         public void SendEffectDefaultParameters()
         {
+
             effect.Parameters["BaseTexture"].SetValue(baseTexture);
             effect.Parameters["TextureTiling"].SetValue(textureTiling);
             effect.Parameters["LightDirection"].SetValue(lightDirection);
@@ -375,11 +456,11 @@ namespace Editor.Display3D
             effect.Parameters["RTexture"].SetValue(RTexture);
             effect.Parameters["GTexture"].SetValue(GTexture);
             effect.Parameters["BTexture"].SetValue(BTexture);
-            effect.Parameters["WeightMap"].SetValue(WeightMap);
 
             effect.Parameters["DetailTexture"].SetValue(DetailTexture);
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
+
         }
 
         /// <summary>
@@ -409,7 +490,6 @@ namespace Editor.Display3D
             Vector3 nearSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MinDepth), projection, view, World);
             Vector3 farSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MaxDepth), projection, view, World);
             Vector3 direction = farSource - nearSource;
-
 
             float t = 0f;
 
