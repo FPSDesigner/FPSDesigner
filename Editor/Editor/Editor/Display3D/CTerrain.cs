@@ -23,8 +23,8 @@ namespace Editor.Display3D
         VertexBuffer[] vertexBuffer;
 
         // Indexes
-        int[][] indices;
-        IndexBuffer[] indexBuffer;
+        int[] indices;
+        IndexBuffer indexBuffer;
 
         // Array of all vertexes heights
         float[][,] heights;
@@ -136,16 +136,13 @@ namespace Editor.Display3D
             nIndices = (width - 1) * (length - 1) * 6;
 
             vertexBuffer = new VertexBuffer[chunkAmounts];
-            indexBuffer = new IndexBuffer[chunkAmounts];
 
             for (int i = 0; i < chunkAmounts; i++)
-            {
                 vertexBuffer[i] = new VertexBuffer(GraphicsDevice, typeof(VertexPositionNormalTexture),
                     nVertices, BufferUsage.WriteOnly);
 
-                indexBuffer[i] = new IndexBuffer(GraphicsDevice, IndexElementSize.ThirtyTwoBits,
+            indexBuffer = new IndexBuffer(GraphicsDevice, IndexElementSize.ThirtyTwoBits,
                     nIndices, BufferUsage.WriteOnly);
-            }
 
             getHeights();
             createVertices();
@@ -153,10 +150,9 @@ namespace Editor.Display3D
             genNormals();
 
             for (int i = 0; i < chunkAmounts; i++)
-            {
                 vertexBuffer[i].SetData<VertexPositionNormalTexture>(vertices[i]);
-                indexBuffer[i].SetData<int>(indices[i]);
-            }
+
+            indexBuffer.SetData<int>(indices);
 
             terrainMiddle = new Point((oWidth - 1) / 2, (oLength - 1) / 2);
         }
@@ -179,28 +175,21 @@ namespace Editor.Display3D
 
             // For each pixel
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
-                for (int y = 0; y < length - 1; y++)
+                for (int y = 0; y < length; y++)
                 {
-                    for (int x = 0; x < width - 1; x++)
+                    for (int x = 0; x < width; x++)
                     {
                         int offsetX = (chunksSize) * (chunk % chunkAmountsSide);
                         int offsetY = (chunksSize) * (chunk / chunkAmountsSide);
 
-                        if (x == width - 1)
-                        {
-                            heights[chunk][x, y] = heights[chunk][x-1, y];
-                        }
-                        else
-                        {
-                            // Get color value (0 - 255)
-                            float amt = heightMapData[(y + offsetX) * oWidth + x + offsetY].R;
+                        // Get color value (0 - 255)
+                        float amt = heightMapData[Math.Min(y + offsetX, oLength - 1) * oWidth + Math.Min(x + offsetY, oWidth - 1)].R;
 
-                            // Scale to (0 - 1)
-                            amt /= 255.0f;
+                        // Scale to (0 - 1)
+                        amt /= 255.0f;
 
-                            // Multiply by max height to get final height
-                            heights[chunk][x, y] = amt * height;
-                        }
+                        // Multiply by max height to get final height
+                        heights[chunk][x, y] = amt * height;
                     }
                 }
         }
@@ -242,34 +231,30 @@ namespace Editor.Display3D
         /// </summary>
         private void createIndices()
         {
-            indices = new int[chunkAmounts][];
-            for (int chunk = 0; chunk < chunkAmounts; chunk++)
-            {
-                indices[chunk] = new int[nIndices];
+            indices = new int[nIndices];
 
-                int i = 0;
+            int i = 0;
 
-                // For each cell
-                for (int x = 0; x < width - 1; x++)
-                    for (int z = 0; z < length - 1; z++)
-                    {
-                        // Find the indices of the corners
-                        int upperLeft = z * width + x;
-                        int upperRight = upperLeft + 1;
-                        int lowerLeft = upperLeft + width;
-                        int lowerRight = lowerLeft + 1;
+            // For each cell
+            for (int x = 0; x < width - 1; x++)
+                for (int z = 0; z < length - 1; z++)
+                {
+                    // Find the indices of the corners
+                    int upperLeft = z * width + x;
+                    int upperRight = upperLeft + 1;
+                    int lowerLeft = upperLeft + width;
+                    int lowerRight = lowerLeft + 1;
 
-                        // Specify upper triangle
-                        indices[chunk][i++] = upperLeft;
-                        indices[chunk][i++] = upperRight;
-                        indices[chunk][i++] = lowerLeft;
+                    // Specify upper triangle
+                    indices[i++] = upperLeft;
+                    indices[i++] = upperRight;
+                    indices[i++] = lowerLeft;
 
-                        // Specify lower triangle
-                        indices[chunk][i++] = lowerLeft;
-                        indices[chunk][i++] = upperRight;
-                        indices[chunk][i++] = lowerRight;
-                    }
-            }
+                    // Specify lower triangle
+                    indices[i++] = lowerLeft;
+                    indices[i++] = upperRight;
+                    indices[i++] = lowerRight;
+                }
         }
 
         /// <summary>
@@ -283,9 +268,9 @@ namespace Editor.Display3D
                 for (int i = 0; i < nIndices; i += 3)
                 {
                     // Find the position of each corner of the triangle
-                    Vector3 v1 = vertices[chunk][indices[chunk][i]].Position;
-                    Vector3 v2 = vertices[chunk][indices[chunk][i + 1]].Position;
-                    Vector3 v3 = vertices[chunk][indices[chunk][i + 2]].Position;
+                    Vector3 v1 = vertices[chunk][indices[i]].Position;
+                    Vector3 v2 = vertices[chunk][indices[i + 1]].Position;
+                    Vector3 v3 = vertices[chunk][indices[i + 2]].Position;
 
                     // Cross the vectors between the corners to get the normal
                     Vector3 normal = Vector3.Cross(v1 - v2, v1 - v3);
@@ -293,9 +278,9 @@ namespace Editor.Display3D
 
                     // Add the influence of the normal to each vertex in the
                     // triangle
-                    vertices[chunk][indices[chunk][i]].Normal += normal;
-                    vertices[chunk][indices[chunk][i + 1]].Normal += normal;
-                    vertices[chunk][indices[chunk][i + 2]].Normal += normal;
+                    vertices[chunk][indices[i]].Normal += normal;
+                    vertices[chunk][indices[i + 1]].Normal += normal;
+                    vertices[chunk][indices[i + 2]].Normal += normal;
                 }
 
                 // Average the influences of the triangles touching each vertex
@@ -312,10 +297,10 @@ namespace Editor.Display3D
         /// <param name="cameraPos">The camera position</param>
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
+            GraphicsDevice.Indices = indexBuffer;
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
             {
                 GraphicsDevice.SetVertexBuffer(vertexBuffer[chunk]);
-                GraphicsDevice.Indices = indexBuffer[chunk];
 
                 effect.Parameters["View"].SetValue(View);
                 effect.Parameters["Projection"].SetValue(Projection);
@@ -349,7 +334,7 @@ namespace Editor.Display3D
                 effect.Techniques[index].Passes[0].Apply();
 
 
-                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices/3);
+                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
             }
         }
 
@@ -427,6 +412,7 @@ namespace Editor.Display3D
 
         public int GetChunkFromIndices(int x, int z)
         {
+            Console.WriteLine(x + " -- " + z);
             return 0;
         }
 
@@ -439,15 +425,15 @@ namespace Editor.Display3D
         public float GetHeightAtPosition(float X, float Z, out float Steepness)
         {
             // Clamp coordinates to locations on terrain
-            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
-                (width / 2) * cellSize);
-            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
-                (length / 2) * cellSize);
+            X = MathHelper.Clamp(X, (-oWidth / 2) * cellSize,
+                (oWidth / 2) * cellSize);
+            Z = MathHelper.Clamp(Z, (-oLength / 2) * cellSize,
+                (oLength / 2) * cellSize);
 
             // Map from (-Width/2->Width/2,-Length/2->Length/2) 
             // to (0->Width, 0->Length)
-            X += (width / 2f) * cellSize;
-            Z += (length / 2f) * cellSize;
+            X += (oWidth / 2f) * cellSize;
+            Z += (oLength / 2f) * cellSize;
 
             // Map to cell coordinates
             X /= cellSize;
@@ -481,10 +467,10 @@ namespace Editor.Display3D
         public Vector2 positionToTerrain(float X, float Z)
         {
             // Clamp coordinates to locations on terrain
-            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
-                (width / 2) * cellSize);
-            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
-                (length / 2) * cellSize);
+            X = MathHelper.Clamp(X, (-oWidth / 2) * cellSize,
+                (oWidth / 2) * cellSize);
+            Z = MathHelper.Clamp(Z, (-oLength / 2) * cellSize,
+                (oLength / 2) * cellSize);
 
             // Map from (-Width/2->Width/2,-Length/2->Length/2) 
             // to (0->Width, 0->Length)
