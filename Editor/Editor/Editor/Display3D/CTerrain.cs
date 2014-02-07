@@ -148,6 +148,7 @@ namespace Editor.Display3D
             createVertices();
             createIndices();
             genNormals();
+           
 
             for (int i = 0; i < chunkAmounts; i++)
                 vertexBuffer[i].SetData<VertexPositionNormalTexture>(vertices[i]);
@@ -155,6 +156,11 @@ namespace Editor.Display3D
             indexBuffer.SetData<int>(indices);
 
             terrainMiddle = new Point((oWidth - 1) / 2, (oLength - 1) / 2);
+        }
+
+
+        private void genBoundingBox()
+        {
         }
 
         /// <summary>
@@ -438,7 +444,8 @@ namespace Editor.Display3D
             // Map to cell coordinates
             X /= cellSize;
             Z /= cellSize;
-
+            X = 0;
+            Z = 0;
             int x = (int)X;
             int z = (int)Z;
             float fTX = X - x;
