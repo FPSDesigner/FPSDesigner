@@ -126,8 +126,8 @@ namespace Editor.Display3D
 
             chunkAmountsSide = (width / chunksSize);
             chunkAmounts = chunkAmountsSide * chunkAmountsSide;
-            width = chunksSize;
-            length = chunksSize;
+            width = chunksSize + 1;
+            length = chunksSize + 1;
 
             // 1 vertex per pixel
             nVertices = width * length;
@@ -179,21 +179,30 @@ namespace Editor.Display3D
 
             // For each pixel
             for (int chunk = 0; chunk < chunkAmounts; chunk++)
-                for (int y = 0; y < length; y++)
-                    for (int x = 0; x < width; x++)
+                for (int y = 0; y < length - 1; y++)
+                {
+                    for (int x = 0; x < width - 1; x++)
                     {
                         int offsetX = (chunksSize) * (chunk % chunkAmountsSide);
                         int offsetY = (chunksSize) * (chunk / chunkAmountsSide);
 
-                        // Get color value (0 - 255)
-                        float amt = heightMapData[(y + offsetX) * oWidth + x + offsetY].R;
+                        if (x == width - 1)
+                        {
+                            heights[chunk][x, y] = heights[chunk][x-1, y];
+                        }
+                        else
+                        {
+                            // Get color value (0 - 255)
+                            float amt = heightMapData[(y + offsetX) * oWidth + x + offsetY].R;
 
-                        // Scale to (0 - 1)
-                        amt /= 255.0f;
+                            // Scale to (0 - 1)
+                            amt /= 255.0f;
 
-                        // Multiply by max height to get final height
-                        heights[chunk][x, y] = amt * height;
+                            // Multiply by max height to get final height
+                            heights[chunk][x, y] = amt * height;
+                        }
                     }
+                }
         }
 
         /// <summary>
@@ -340,7 +349,7 @@ namespace Editor.Display3D
                 effect.Techniques[index].Passes[0].Apply();
 
 
-                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices / 3);
+                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, 0, nIndices/3);
             }
         }
 
