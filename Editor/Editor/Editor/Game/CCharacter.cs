@@ -21,7 +21,6 @@ namespace Editor.Game
         private Display3D.MeshAnimation _handAnimation; //The 3Dmodel + all animation
         private Texture2D[] _handTexture; //ALl the texture storaged in an array
         private Matrix _handRotation;
-        private Matrix[] _boneTransform; //Stock all modification to draw the weapon clearly
 
         private Display3D.CCamera _cam; //Will back up all camera's attributes
 
@@ -203,7 +202,7 @@ namespace Editor.Game
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
-            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 0.125f);
+            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 0.125f, new Vector3(-0.3f, -0.2f, 5.280078f));
 
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {
