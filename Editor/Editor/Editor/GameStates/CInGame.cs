@@ -84,7 +84,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 1, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 1.8f, 100, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 50, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -95,8 +95,7 @@ namespace Editor.GameStates
             // Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
 
-            terrain.camera = cam;
-
+           
             model._lightDirection = lensFlare.LightDirection;
 
             water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);
@@ -193,13 +192,14 @@ namespace Editor.GameStates
                 water.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
-
+            terrain.frustum = cam._Frustum;
             skybox.ColorIntensity = 0.5f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;
             
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
+           
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             for (int i = 0; i < models.Count; i++)
