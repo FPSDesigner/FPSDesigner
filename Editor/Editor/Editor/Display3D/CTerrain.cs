@@ -314,8 +314,11 @@ namespace Editor.Display3D
         /// <param name="View">The camera View matrix</param>
         /// <param name="Projection">The camera Projection matrix</param>
         /// <param name="cameraPos">The camera position</param>
+        /// 
+        int u = 0;
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
+            u += 3*6*6;
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
 
@@ -328,6 +331,7 @@ namespace Editor.Display3D
                 areDefaultParamsLoaded = true;
             }
 
+            /* Determine techniques */
             /* Techniques:
              * 0: !fog && !underwater (T1)
              * 1: fog && !underwater (T2)
@@ -350,25 +354,14 @@ namespace Editor.Display3D
 
             effect.Techniques[index].Passes[0].Apply();
 
-            int startChunk = -1;
-            int endChunk = chunkAmounts;
-            for (int i = 0; i < chunkAmounts; i++)
-            {
-                bool contains = frustum.Contains(boundingChunks[i]) == ContainmentType.Disjoint;
-                if (!contains && startChunk == -1)
-                    startChunk = i;
-                if (!contains)
-                    endChunk = i;
-            }
-            if (startChunk == -1)
-                startChunk = 0;
+            int startPrimitive = 0, endPrimitive = 0;
+            GetFirstAndLastPrimitives(ref startPrimitive, ref endPrimitive);
+            startPrimitive *= 5;
+            endPrimitive *= 5;
+            // Draw terrain
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, startPrimitive, nIndices / 3 - startPrimitive / 3 - endPrimitive / 3);
 
-            int startPrimitive = startChunk * chunkSizeVertices;
-            if (startPrimitive % 3 != 0)
-                startPrimitive -= startPrimitive % 3;
-
-            int endPrimitive = (chunkAmounts - endChunk) * chunkSizeVertices;
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, startPrimitive, nIndices / 3 - endPrimitive);
+            Console.WriteLine(u);
         }
 
         public void SendEffectDefaultParameters()
@@ -385,6 +378,33 @@ namespace Editor.Display3D
             effect.Parameters["DetailTexture"].SetValue(DetailTexture);
             effect.Parameters["DetailDistance"].SetValue(DetailDistance);
             effect.Parameters["DetailTextureTiling"].SetValue(DetailTextureTiling);
+        }
+
+        /// <summary>
+        /// Determine the first and last chunks of vertices to draw
+        /// </summary>
+        /// <param name="startPrimitive">The first index of vertice visible</param>
+        /// <param name="endPrimitive">The last index of vertice visible</param>
+        public void GetFirstAndLastPrimitives(ref int startPrimitive, ref int endPrimitive)
+        {
+            int startChunk = -1;
+            int endChunk = chunkAmounts;
+            for (int i = 0; i < chunkAmounts; i++)
+            {
+                bool contains = frustum.Contains(boundingChunks[i]) == ContainmentType.Disjoint;
+                if (!contains && startChunk == -1)
+                    startChunk = i;
+                if (!contains)
+                    endChunk = i;
+            }
+            if (startChunk == -1)
+                startChunk = 0;
+
+            startPrimitive = startChunk * chunkSizeVertices;
+            endPrimitive = (chunkAmounts - endChunk) * chunkSizeVertices;
+
+            if (startPrimitive % 3 != 0)
+                startPrimitive -= startPrimitive % 3;
         }
 
         /// <summary>
