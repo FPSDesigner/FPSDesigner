@@ -68,10 +68,10 @@ namespace Editor.GameStates
         public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             //Display 1 model : Building
-            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 58.2f, 0), new Vector3(0.0f,90.0f,0.0f), new Vector3(0.8f), graphics);
+            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 58.2f, 0), new Vector3(45.0f,90.0f,0.0f), new Vector3(0.8f), graphics);
             models.Add(model);
 
-            models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(20, 80.2f, 40), new Vector3(0.0f, 90.0f, 0.0f), new Vector3(10.8f), graphics));
+            models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(20, 55.0f, 40), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(10.8f), graphics));
 
             _2DEffect = Display2D.C2DEffect.getInstance();
 

@@ -33,6 +33,7 @@ namespace Editor.Game
         public float _waterHeight = 0f;
         public bool _isOnWaterSurface = false;
         public float _fallingVelocity { get { return _velocity.Y; } }
+        public float _slippingResistance = -0.8f;
 
         public CPhysics()
         {
@@ -101,7 +102,14 @@ namespace Editor.Game
             {
                 isVerticalIntersecting = true;
                 assumedNewPosition.Y = terrainHeight + _entityHeight;
-                _velocity.Y = 0;
+
+                _velocity = Vector3.Zero;
+                Vector3 normal = _terrain.getNormalAtPoint(assumedNewPosition.X, assumedNewPosition.Z);
+                if (normal.Y > _slippingResistance)
+                {
+                    _velocity = -0.1f * normal;
+                    _velocity.Y = -0.1f;
+                }
             }
             else
             {
@@ -146,6 +154,14 @@ namespace Editor.Game
                     assumedNewPosition += _velocity;
                     Display3D.Triangle closestTriangleT = _triangleList[closestTriangle];
                     assumedNewPosition.Y = assumedNewPosition.Y - closestTriangleBelowDistance + _entityHeight;
+
+                    Vector3 normal = _triangleNormalsList[closestTriangle];
+                    Console.WriteLine(normal.Y);
+                    if (normal.Y > _slippingResistance)
+                    {
+                        _velocity = -0.1f * normal;
+                        _velocity.Y = -0.1f;
+                    }
                 }
                 _velocity.Y = 0;
             }
