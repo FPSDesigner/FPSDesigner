@@ -71,6 +71,8 @@ namespace Editor.GameStates
             model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 58.2f, 0), new Vector3(0.0f,90.0f,0.0f), new Vector3(0.8f), graphics);
             models.Add(model);
 
+            models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(20, 80.2f, 40), new Vector3(0.0f, 90.0f, 0.0f), new Vector3(10.8f), graphics));
+
             _2DEffect = Display2D.C2DEffect.getInstance();
 
             gameSettings.loadDatas(graphics);
@@ -99,12 +101,16 @@ namespace Editor.GameStates
             model._lightDirection = lensFlare.LightDirection;
 
             water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(20 * 30), 0.0f, terrain, _2DEffect._renderCapture.renderTarget);
-            //water.Objects.Add(skybox);
+            water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
 
-            cam._physicsMap._triangleList = models[0]._trianglesPositions;
-            cam._physicsMap._triangleNormalsList = models[0]._trianglesNormal;
+            for (int i = 0; i < models.Count; i++)
+            {
+                cam._physicsMap._triangleList.AddRange(models[i]._trianglesPositions);
+                cam._physicsMap._triangleNormalsList.AddRange(models[i]._trianglesNormal);
+            }
+
             cam._physicsMap._waterHeight = water.waterPosition.Y;
 
             _graphics = graphics;
@@ -193,6 +199,7 @@ namespace Editor.GameStates
                 terrain.isUnderWater = isPlayerUnderwater;
             }
             terrain.frustum = cam._Frustum;
+
             skybox.ColorIntensity = 0.5f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;

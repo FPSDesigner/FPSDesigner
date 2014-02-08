@@ -314,11 +314,8 @@ namespace Editor.Display3D
         /// <param name="View">The camera View matrix</param>
         /// <param name="Projection">The camera Projection matrix</param>
         /// <param name="cameraPos">The camera position</param>
-        /// 
-        int u = 0;
         public void Draw(Matrix View, Matrix Projection, Vector3 cameraPos)
         {
-            u += 3*6*6;
             GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
 
@@ -356,12 +353,9 @@ namespace Editor.Display3D
 
             int startPrimitive = 0, endPrimitive = 0;
             GetFirstAndLastPrimitives(ref startPrimitive, ref endPrimitive);
-            startPrimitive *= 5;
-            endPrimitive *= 5;
+
             // Draw terrain
             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, startPrimitive, nIndices / 3 - startPrimitive / 3 - endPrimitive / 3);
-
-            Console.WriteLine(u);
         }
 
         public void SendEffectDefaultParameters()
@@ -400,8 +394,8 @@ namespace Editor.Display3D
             if (startChunk == -1)
                 startChunk = 0;
 
-            startPrimitive = startChunk * chunkSizeVertices;
-            endPrimitive = (chunkAmounts - endChunk) * chunkSizeVertices;
+            startPrimitive = startChunk * chunkSizeVertices * 5;
+            endPrimitive = (chunkAmounts - endChunk) * chunkSizeVertices * 5;
 
             if (startPrimitive % 3 != 0)
                 startPrimitive -= startPrimitive % 3;

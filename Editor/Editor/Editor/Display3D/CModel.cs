@@ -120,6 +120,7 @@ namespace Editor.Display3D
                 if (mesh.Name != collisionShapeName)
                     mesh.Draw();
             }
+
         }
 
         /// <summary>
@@ -132,10 +133,12 @@ namespace Editor.Display3D
             // Merge all the model's built in bounding spheres
             foreach (ModelMesh mesh in _model.Meshes)
             {
-                BoundingSphere transformed = mesh.BoundingSphere.Transform(
-                    _modelTransforms[mesh.ParentBone.Index]);
-
-                sphere = BoundingSphere.CreateMerged(sphere, transformed);
+                if (mesh.Name != collisionShapeName)
+                {
+                    BoundingSphere transformed = mesh.BoundingSphere.Transform(
+                        _modelTransforms[mesh.ParentBone.Index]);
+                    sphere = BoundingSphere.CreateMerged(sphere, transformed);
+                }
             }
 
             this._boundingSphere = sphere;

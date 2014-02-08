@@ -23,8 +23,8 @@ namespace Editor.Game
         private Vector3 _velocity;
 
         // Public
-        public List<Display3D.Triangle> _triangleList;
-        public List<Vector3> _triangleNormalsList;
+        public List<Display3D.Triangle> _triangleList = new List<Display3D.Triangle>();
+        public List<Vector3> _triangleNormalsList = new List<Vector3>();
         public Display3D.CTerrain _terrain;
         public float _gravityConstant = -9.81f / 600f;
         public float _gravityConstantWater = -9.81f / 5000f;
