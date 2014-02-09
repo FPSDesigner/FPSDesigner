@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -20,6 +21,7 @@ namespace Editor.Game
     {
         private static bool _isConsoleActivated = false;
         private static bool _isConsoleEnabled = false;
+        private static bool _isConsoleFileLoaded = false;
         private static bool _drawGameStuff = true;
         private static bool _drawFPS = true;
         private static bool _drawGyzmo = false;
@@ -39,13 +41,12 @@ namespace Editor.Game
 
         private static Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
 
-
+        private static StreamWriter _logsFile;
         private static GraphicsDevice _graphicsDevice;
         private static SpriteBatch _spriteBatch;
         private static KeyboardState _oldKeyBoardState;
         private static ContentManager _Content;
         private static CInput _inputManager = new CInput();
-        private static Display3D.CCamera _Camera;
 
         private static Texture2D _backgroundTexture;
         private static Vector2 _backgroundPosition;
@@ -55,6 +56,7 @@ namespace Editor.Game
         private static Vector2 _inputLinePos;
 
         public static Keys _activationKeys = Keys.OemTilde;
+        public static Display3D.CCamera _Camera;
 
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace Editor.Game
         public static void enterNewCommand(string command, GameTime gameTime)
         {
             _commandsList.Add(command);
-            addMessage(_inputLinePre + command);
+            addMessage(_inputLinePre + command, false, command);
             string[] cmd = command.Split(' ');
             switch (cmd[0])
             {
@@ -123,18 +125,6 @@ namespace Editor.Game
         }
 
         /// <summary>
-        /// Add a new message to the console
-        /// </summary>
-        /// <param name="msg">The message</param>
-        /// <param name="isGameMessage">Whether or not it's an internal message</param>
-        public static void addMessage(string msg, bool isGameMessage = false)
-        {
-            if (isGameMessage && !_drawGameStuff)
-                return;
-            _consoleLines.Add(msg);
-        }
-
-        /// <summary>
         /// Load content & initialize 2D drawable content
         /// </summary>
         /// <param name="contentManager">ContentManager class</param>
@@ -143,13 +133,12 @@ namespace Editor.Game
         /// <param name="Camera">Display3D.CCamera class</param>
         /// <param name="isConsoleActivated">True if we want the player to toggle the console</param>
         /// <param name="drawGameStuff">True if we want to display internal messages</param>
-        public static void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera, bool isConsoleActivated = true, bool drawGameStuff = false)
+        public static void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, bool isConsoleActivated = true, bool drawGameStuff = false)
         {
             // Instantiate classes
             _graphicsDevice = graphicsDevice;
             _spriteBatch = spriteBatch;
             _Content = contentManager;
-            _Camera = Camera;
             _isConsoleActivated = isConsoleActivated;
             _drawGameStuff = drawGameStuff;
 
@@ -177,6 +166,54 @@ namespace Editor.Game
 
             _maxLines = (int)(_inputLinePos.Y / fontSizeY);
 
+            try
+            {
+                FileInfo fi = new FileInfo(@"ConsoleLog.log");
+                _logsFile = new StreamWriter(fi.Open(FileMode.Create));
+                _isConsoleFileLoaded = true;
+
+                WriteLogs("======================");
+                WriteLogs("Loaded " + fi.Name + " - Console logs");
+                WriteLogs("======================");
+            }
+            catch (Exception e)
+            {
+                addMessage("Cannot open console logs: " + e, true);
+                _isConsoleFileLoaded = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Add a new message to the console
+        /// </summary>
+        /// <param name="msg">The message to display</param>
+        /// <param name="isGameMessage">Whether or not it's an internal message</param>
+        public static void addMessage(string msg, bool isGameMessage = false, string msgNoFormat = "")
+        {
+            if (isGameMessage && !_drawGameStuff)
+                return;
+
+            _consoleLines.Add(msg);
+
+            if (msgNoFormat != "")
+                WriteLogs(msgNoFormat);
+            else
+                WriteLogs(msg);
+        }
+
+        /// <summary>
+        /// Writes a message at the end of the console log file.
+        /// </summary>
+        /// <param name="message">The message to write</param>
+        public static void WriteLogs(string message, bool addDate = true, bool flush = true)
+        {
+            if (_isConsoleFileLoaded)
+            {
+                _logsFile.WriteLine(((addDate) ? "["+DateTime.Now.ToString() + "] " : "") + message);
+                if (flush)
+                    _logsFile.Flush();
+            }
         }
 
         /// <summary>

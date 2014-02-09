@@ -18,6 +18,7 @@ namespace Editor.Game.Script
 
         public virtual void Initialize()
         {
+            LoadDefaultFunctions();
         }
 
         public virtual void internal_AddEvent(string eventName, string functionVMName)

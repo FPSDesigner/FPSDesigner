@@ -66,7 +66,7 @@ namespace Editor.GameStates
         public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             //Display 1 model : Building
-            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 58.2f, 0), new Vector3(45.0f,90.0f,0.0f), new Vector3(0.8f), graphics);
+            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(0, 58.2f, 0), new Vector3(0f,90.0f,0f), new Vector3(0.8f), graphics);
             models.Add(model);
 
             models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(20, 55.0f, 40), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(10.8f), graphics));
@@ -75,7 +75,6 @@ namespace Editor.GameStates
 
             gameSettings.loadDatas(graphics);
 
-            Game.CConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
             Game.CConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
             lensFlare = new Display3D.CLensFlare();
@@ -94,7 +93,7 @@ namespace Editor.GameStates
 
             // Load one cam : Main camera (for the moment)
             cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
-
+            Game.CConsole._Camera = cam;
            
             model._lightDirection = lensFlare.LightDirection;
 
@@ -164,7 +163,6 @@ namespace Editor.GameStates
 
             Game.Script.CLuaVM lua = new Game.Script.CLuaVM();
             lua.Initialize();
-            lua.LoadDefaultFunctions();
             lua.LoadScript("test.lua");
         }
 

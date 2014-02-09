@@ -14,8 +14,6 @@ namespace Editor.Game.Script
 
         public override void Initialize()
         {
-            base.Initialize();
-
             VMHandler = new Lua();
             scriptFunctions = new CLuaScriptFunctions();
             scriptFunctions.LuaVM = this;
@@ -23,6 +21,8 @@ namespace Editor.Game.Script
 
             // Initialize Events
             RegisterFunction("addEvent", this, this.GetType().GetMethod("internal_AddEvent"));
+
+            base.Initialize();
         }
 
         public override void internal_AddEvent(string eventName, string functionVMName)
@@ -40,10 +40,11 @@ namespace Editor.Game.Script
             try
             {
                 VMHandler.DoFile(scriptName);
+                CallEvent("scriptInit");
             }
             catch (Exception e)
             {
-                Game.CConsole.addMessage("Script loading exception: " + e, true);
+                Game.CConsole.addMessage("LUA Script Exception: " + e, true);
             }
         }
 
@@ -60,6 +61,8 @@ namespace Editor.Game.Script
         public override void LoadDefaultFunctions()
         {
             RegisterFunction("setTimer", scriptFunctions, scriptFunctions.GetType().GetMethod("SetTimer"));
+            RegisterFunction("print", scriptFunctions, scriptFunctions.GetType().GetMethod("Print"));
+            RegisterFunction("log", scriptFunctions, scriptFunctions.GetType().GetMethod("Print"));
         }
     }
 }

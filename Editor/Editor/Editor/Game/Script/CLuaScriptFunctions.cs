@@ -17,7 +17,7 @@ namespace Editor.Game.Script
         {
             if (LuaVM.VMHandler.GetFunction(func) == null)
             {
-                LuaVM.CallEvent("errorEncountered", new object[] { "Function " + func + " is not defined." });
+                LuaVM.CallEvent("errorEncountered", new object[] { "SetTimer: Function " + func + " is not defined." });
                 return;
             }
 
@@ -29,6 +29,11 @@ namespace Editor.Game.Script
                 fnc.Call();
                 sttime.Stop();
             };
+        }
+
+        public void Print(string msg)
+        {
+            CConsole.addMessage(msg);
         }
     }
 }
