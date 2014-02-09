@@ -36,7 +36,6 @@ namespace Editor.GameStates
 
         private Game.CCharacter _character; //Character : can shoot, etc..
 
-        private Game.CConsole devConsole;
         private Game.Settings.CGameSettings gameSettings;
 
         private KeyboardState _oldKeyState;
@@ -55,7 +54,6 @@ namespace Editor.GameStates
 
         public override void Initialize()
         {
-            devConsole = Game.CConsole.getInstance();
             gameSettings = Game.Settings.CGameSettings.getInstance();
 
             _character = new Game.CCharacter();
@@ -77,8 +75,8 @@ namespace Editor.GameStates
 
             gameSettings.loadDatas(graphics);
 
-            devConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
-            devConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
+            Game.CConsole.LoadContent(content, graphics, spriteBatch, cam, true, false);
+            Game.CConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -183,7 +181,7 @@ namespace Editor.GameStates
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
-            devConsole.Update(kbState, gameTime);
+            Game.CConsole.Update(kbState, gameTime);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
@@ -221,13 +219,7 @@ namespace Editor.GameStates
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);
 
-            devConsole.Draw(gameTime);
-            /*spritebatch.Begin();
-            for (int i = 0; i < terrain.WeightMapChunks.Length; i++)
-            {
-                spritebatch.Draw(terrain.WeightMapChunks[i], new Vector2(64*(i%8),64*(i/8)), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-            }
-            spritebatch.End();*/
+            Game.CConsole.Draw(gameTime);
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

@@ -18,43 +18,43 @@ namespace Editor.Game
     /// </summary>
     class CConsole
     {
-        private bool _isConsoleActivated = false;
-        private bool _isConsoleEnabled = false;
-        private bool _drawGameStuff = true;
-        private bool _drawFPS = true;
-        private bool _drawGyzmo = false;
+        private static bool _isConsoleActivated = false;
+        private static bool _isConsoleEnabled = false;
+        private static bool _drawGameStuff = true;
+        private static bool _drawFPS = true;
+        private static bool _drawGyzmo = false;
 
-        private float _elapsedTimeFPS = 0.0f;
-        private int _totalFrames = 0;
-        private int _totalFPS = 0;
-        private int _maxLines = 15;
+        private static float _elapsedTimeFPS = 0.0f;
+        private static int _totalFrames = 0;
+        private static int _totalFPS = 0;
+        private static int _maxLines = 15;
 
-        private string _inputLinePre = "[color:#FF0000]> [/color]";
-        private string _inputLine_preLine = "";
-        private string _inputLine_postLine = "";
-        private string _inputLineCursor = "_";
+        private static string _inputLinePre = "[color:#FF0000]> [/color]";
+        private static string _inputLine_preLine = "";
+        private static string _inputLine_postLine = "";
+        private static string _inputLineCursor = "_";
 
-        private List<string> _consoleLines = new List<string>();
-        private List<string> _commandsList = new List<string>();
+        private static List<string> _consoleLines = new List<string>();
+        private static List<string> _commandsList = new List<string>();
 
-        private Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
-
-
-        private GraphicsDevice _graphicsDevice;
-        private SpriteBatch _spriteBatch;
-        private KeyboardState _oldKeyBoardState;
-        private ContentManager _Content;
-        private CInput _inputManager = new CInput();
-        private Display3D.CCamera _Camera;
-        public Keys _activationKeys = Keys.OemTilde;
+        private static Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
 
 
-        private Texture2D _backgroundTexture;
-        private Vector2 _backgroundPosition;
-        private Vector2 _backgroundSize;
-        private Color _backgroundColor;
-        private SpriteFont _consoleFont;
-        private Vector2 _inputLinePos;
+        private static GraphicsDevice _graphicsDevice;
+        private static SpriteBatch _spriteBatch;
+        private static KeyboardState _oldKeyBoardState;
+        private static ContentManager _Content;
+        private static CInput _inputManager = new CInput();
+        private static Display3D.CCamera _Camera;
+
+        private static Texture2D _backgroundTexture;
+        private static Vector2 _backgroundPosition;
+        private static Vector2 _backgroundSize;
+        private static Color _backgroundColor;
+        private static SpriteFont _consoleFont;
+        private static Vector2 _inputLinePos;
+
+        public static Keys _activationKeys = Keys.OemTilde;
 
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="command">The command typed</param>
         /// <param name="gameTime">GameTime snaphot</param>
-        public void enterNewCommand(string command, GameTime gameTime)
+        public static void enterNewCommand(string command, GameTime gameTime)
         {
             _commandsList.Add(command);
             addMessage(_inputLinePre + command);
@@ -127,7 +127,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="msg">The message</param>
         /// <param name="isGameMessage">Whether or not it's an internal message</param>
-        public void addMessage(string msg, bool isGameMessage = false)
+        public static void addMessage(string msg, bool isGameMessage = false)
         {
             if (isGameMessage && !_drawGameStuff)
                 return;
@@ -143,15 +143,15 @@ namespace Editor.Game
         /// <param name="Camera">Display3D.CCamera class</param>
         /// <param name="isConsoleActivated">True if we want the player to toggle the console</param>
         /// <param name="drawGameStuff">True if we want to display internal messages</param>
-        public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera, bool isConsoleActivated = true, bool drawGameStuff = false)
+        public static void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Display3D.CCamera Camera, bool isConsoleActivated = true, bool drawGameStuff = false)
         {
             // Instantiate classes
-            this._graphicsDevice = graphicsDevice;
-            this._spriteBatch = spriteBatch;
-            this._Content = contentManager;
-            this._Camera = Camera;
-            this._isConsoleActivated = isConsoleActivated;
-            this._drawGameStuff = drawGameStuff;
+            _graphicsDevice = graphicsDevice;
+            _spriteBatch = spriteBatch;
+            _Content = contentManager;
+            _Camera = Camera;
+            _isConsoleActivated = isConsoleActivated;
+            _drawGameStuff = drawGameStuff;
 
             Display3D.CSimpleShapes.Initialize(_graphicsDevice);
 
@@ -175,7 +175,7 @@ namespace Editor.Game
             int fontSizeY = (int)_consoleFont.MeasureString("A").Y;
             _inputLinePos = new Vector2(10, WindowSize.Y / 4 - fontSizeY * 2);
 
-            _maxLines = (int)(_inputLinePos.Y / fontSizeY) - 2;
+            _maxLines = (int)(_inputLinePos.Y / fontSizeY);
 
         }
 
@@ -184,7 +184,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="keyboardState">KeyboardState class</param>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void Update(KeyboardState keyboardState, GameTime gameTime)
+        public static void Update(KeyboardState keyboardState, GameTime gameTime)
         {
             // Draw FPS
             if (_drawFPS)
@@ -209,7 +209,7 @@ namespace Editor.Game
             {
                 if (keyboardState.IsKeyUp(_activationKeys))
                     _isConsoleEnabled = !_isConsoleEnabled;
-                this._oldKeyBoardState = keyboardState;
+                _oldKeyBoardState = keyboardState;
                 return;
             }
 
@@ -225,7 +225,7 @@ namespace Editor.Game
                         _inputLine_preLine = "";
                         _inputLine_postLine = "";
                     }
-                    this._oldKeyBoardState = keyboardState;
+                    _oldKeyBoardState = keyboardState;
                     return;
                 }
 
@@ -236,7 +236,7 @@ namespace Editor.Game
                     {
                         _inputLine_preLine += _inputManager.GetClipboardText();
                     }
-                    this._oldKeyBoardState = keyboardState;
+                    _oldKeyBoardState = keyboardState;
                     return;
                 }
 
@@ -249,7 +249,7 @@ namespace Editor.Game
                         _inputLine_postLine = _inputLine_preLine[preLength - 1] + _inputLine_postLine;
                         _inputLine_preLine = _inputLine_preLine.Substring(0, preLength - 1);
                     }
-                    this._oldKeyBoardState = keyboardState;
+                    _oldKeyBoardState = keyboardState;
                     return;
                 }
 
@@ -262,7 +262,7 @@ namespace Editor.Game
                         _inputLine_preLine += _inputLine_postLine[0];
                         _inputLine_postLine = _inputLine_postLine.Substring(1);
                     }
-                    this._oldKeyBoardState = keyboardState;
+                    _oldKeyBoardState = keyboardState;
                     return;
                 }
 
@@ -293,14 +293,14 @@ namespace Editor.Game
                 }
             }
 
-            this._oldKeyBoardState = keyboardState;
+            _oldKeyBoardState = keyboardState;
         }
 
         /// <summary>
         /// Draw the console each frames
         /// </summary>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void Draw(GameTime gameTime)
+        public static void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
 
@@ -350,7 +350,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="text">The text to draw</param>
         /// <param name="pos">The position to draw the text</param>
-        private void drawFormattedText(string text, Vector2 pos)
+        private static void drawFormattedText(string text, Vector2 pos)
         {
             Color defaultColor = Color.LightGreen;
 
@@ -396,7 +396,7 @@ namespace Editor.Game
         /// </summary>
         /// <param name="hexString">The RGB string</param>
         /// <returns>A Color instance</returns>
-        private Color RGBToColor(string hexString)
+        private static Color RGBToColor(string hexString)
         {
             if (hexString.StartsWith("#"))
                 hexString = hexString.Substring(1);
@@ -421,22 +421,5 @@ namespace Editor.Game
             }
             return color;
         }
-
-        /// <summary>
-        /// Singleton Code
-        /// </summary>
-        private static CConsole instance = null;
-        private static readonly object myLock = new object();
-
-        private CConsole() { }
-        public static CConsole getInstance()
-        {
-            lock (myLock)
-            {
-                if (instance == null) instance = new CConsole();
-                return instance;
-            }
-        }
-
     }
 }
