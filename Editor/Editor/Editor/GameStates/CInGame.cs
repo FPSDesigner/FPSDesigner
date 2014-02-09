@@ -36,8 +36,6 @@ namespace Editor.GameStates
 
         private Game.CCharacter _character; //Character : can shoot, etc..
 
-        private Game.Settings.CGameSettings gameSettings;
-
         private KeyboardState _oldKeyState;
 
         private bool isPlayerUnderwater = false;
@@ -54,7 +52,6 @@ namespace Editor.GameStates
 
         public override void Initialize()
         {
-            gameSettings = Game.Settings.CGameSettings.getInstance();
 
             _character = new Game.CCharacter();
             _character.Initialize();
@@ -72,10 +69,6 @@ namespace Editor.GameStates
             models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(20, 55.0f, 40), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(10.8f), graphics));
 
             _2DEffect = Display2D.C2DEffect.getInstance();
-
-            gameSettings.loadDatas(graphics);
-
-            Game.CConsole._activationKeys = gameSettings._gameSettings.KeyMapping.Console;
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -179,7 +172,6 @@ namespace Editor.GameStates
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
-            Game.CConsole.Update(kbState, gameTime);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
@@ -216,8 +208,6 @@ namespace Editor.GameStates
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);
-
-            Game.CConsole.Draw(gameTime);
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

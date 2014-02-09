@@ -16,32 +16,16 @@ namespace Editor.Game.Settings
 {
     public class CGameSettings
     {
-        public GameSettingsInfos _gameSettings { get; set; }
-        string _xmlFile;
-        CXMLManager _xmlManager;
-        GraphicsDevice _graphicsDevice;
+        private static string _xmlFile;
+        private static CXMLManager _xmlManager;
+        private static GraphicsDevice _graphicsDevice;
 
-        public GamePadState gamepadState;
-        public GamePadState oldGamepadState;
-        public bool useGamepad = false;
+        public static GamePadState gamepadState;
+        public static GamePadState oldGamepadState;
+        public static GameSettingsInfos _gameSettings { get; set; }
+        public static bool useGamepad = false;
 
-
-        // Singleton Code
-        private static CGameSettings instance = null;
-        private static readonly object myLock = new object();
-
-        // Singelton Methods
-        private CGameSettings() { }
-        public static CGameSettings getInstance()
-        {
-            lock (myLock)
-            {
-                if (instance == null) instance = new CGameSettings();
-                return instance;
-            }
-        }
-
-        public GameSettingsInfos loadDatas(GraphicsDevice graphicsDevice, string xmlFile = "gameSettings.xml")
+        public static GameSettingsInfos LoadDatas(GraphicsDevice graphicsDevice, string xmlFile = "gameSettings.xml")
         {
             _xmlManager = new CXMLManager();
             _xmlFile = xmlFile;
@@ -58,7 +42,7 @@ namespace Editor.Game.Settings
             return _gameSettings;
         }
 
-        public void reloadGamepadState()
+        public static void reloadGamepadState()
         {
             oldGamepadState = gamepadState;
 
@@ -67,7 +51,7 @@ namespace Editor.Game.Settings
         }
 
 
-        public void generateDefaultSettings()
+        public static void generateDefaultSettings()
         {
             CInput CInput = new CInput();
             bool isKeyboardQwerty = (CInput.getKeyboardType() == "QWERTY"); 
@@ -101,7 +85,7 @@ namespace Editor.Game.Settings
             saveDatas();
         }
 
-        public void saveDatas()
+        public static void saveDatas()
         {
             XmlSerializer xs = new XmlSerializer(typeof(GameSettingsInfos));
 

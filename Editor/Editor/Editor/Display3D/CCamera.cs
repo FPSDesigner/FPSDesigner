@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using Editor.Game.Settings;
+
 namespace Editor.Display3D
 {
 
@@ -33,8 +35,6 @@ namespace Editor.Display3D
         private Point _middleScreen;
 
         private Display3D.CTerrain _map;
-
-        private Game.Settings.CGameSettings _gameSettings;
 
         private bool isCamFrozen = false;
         private bool hasPlayerUwEffect = false;
@@ -103,8 +103,6 @@ namespace Editor.Display3D
 
             this._middleScreen = new Point(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
 
-            this._gameSettings = Game.Settings.CGameSettings.getInstance();
-
             _isMoving = false;
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
@@ -125,7 +123,7 @@ namespace Editor.Display3D
             if (!isCamFrozen)
             {
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
-                _gameSettings.reloadGamepadState();
+                CGameSettings.reloadGamepadState();
                 _oldKeyState = keyState;
             }
 
@@ -160,33 +158,36 @@ namespace Editor.Display3D
 
             _translation = Vector3.Zero;
 
-            if (_gameSettings.useGamepad)
+            if (!Game.CConsole._isConsoleEnabled)
             {
-                Vector2 direction = _gameSettings.gamepadState.ThumbSticks.Left;
-                _translation += new Vector3(direction.X, 0, -direction.Y);
+                if (CGameSettings.useGamepad)
+                {
+                    Vector2 direction = CGameSettings.gamepadState.ThumbSticks.Left;
+                    _translation += new Vector3(direction.X, 0, -direction.Y);
 
-                if (_gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPJump))
-                    _physicsMap.Jump();
-            }
-            else
-            {
-                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MForward))
-                    _translation += Vector3.Forward;
+                    if (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPJump))
+                        _physicsMap.Jump();
+                }
+                else
+                {
+                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MForward))
+                        _translation += Vector3.Forward;
 
-                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MBackward))
-                    _translation += Vector3.Backward;
+                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MBackward))
+                        _translation += Vector3.Backward;
 
-                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MLeft))
-                    _translation += Vector3.Left;
+                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MLeft))
+                        _translation += Vector3.Left;
 
-                if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MRight))
-                    _translation += Vector3.Right;
+                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MRight))
+                        _translation += Vector3.Right;
 
-                //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
+                    //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
 
 
-                if (keyState.IsKeyDown(Keys.Space))
-                    _physicsMap.Jump();
+                    if (keyState.IsKeyDown(Keys.Space))
+                        _physicsMap.Jump();
+                }
             }
 
             //_physicsMap.Swin(isUnderWater);
@@ -226,15 +227,15 @@ namespace Editor.Display3D
         /// <param name="gametime">GameTime snapshot</param>
         private void Rotation(MouseState mouseState, GameTime gametime)
         {
-            if (_gameSettings.useGamepad)
+            if (CGameSettings.useGamepad)
             {
-                this._yaw -= _gameSettings._gameSettings.KeyMapping.GPSensibility * _gameSettings.gamepadState.ThumbSticks.Right.X;
-                this._pitch -= _gameSettings._gameSettings.KeyMapping.GPSensibility * -_gameSettings.gamepadState.ThumbSticks.Right.Y;
+                this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * CGameSettings.gamepadState.ThumbSticks.Right.X;
+                this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * -CGameSettings.gamepadState.ThumbSticks.Right.Y;
             }
             else
             {
-                this._yaw -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
-                this._pitch -= _gameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
+                this._yaw -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
+                this._pitch -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
             }
 
             if (this._pitch < lowestPitchAngle)

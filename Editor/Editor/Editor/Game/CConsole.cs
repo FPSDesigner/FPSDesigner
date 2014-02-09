@@ -20,7 +20,7 @@ namespace Editor.Game
     class CConsole
     {
         private static bool _isConsoleActivated = false;
-        private static bool _isConsoleEnabled = false;
+        public static bool _isConsoleEnabled = false;
         private static bool _isConsoleFileLoaded = false;
         private static bool _drawGameStuff = true;
         private static bool _drawFPS = true;

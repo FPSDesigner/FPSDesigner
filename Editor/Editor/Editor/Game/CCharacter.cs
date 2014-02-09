@@ -12,12 +12,12 @@ using Microsoft.Xna.Framework.Media;
 using XNAnimation;
 using XNAnimation.Controllers;
 
+using Editor.Game.Settings;
+
 namespace Editor.Game
 {
     class CCharacter
     {
-        private Game.Settings.CGameSettings _gameSettings;
-
         private Display3D.MeshAnimation _handAnimation; //The 3Dmodel + all animation
         private Texture2D[] _handTexture; //ALl the texture storaged in an array
         private Matrix _handRotation;
@@ -39,7 +39,6 @@ namespace Editor.Game
 
         public void Initialize()
         {
-            this._gameSettings = Game.Settings.CGameSettings.getInstance();
             _handTexture = new Texture2D[1];
         }
 
@@ -109,7 +108,7 @@ namespace Editor.Game
         /// <returns>The camera velocity</returns>
         public float Run(KeyboardState kbState, float fallVelocity)
         {
-            if ((_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MSprint))
+            if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
             {
                 if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
                 {
@@ -183,7 +182,7 @@ namespace Editor.Game
             }
 
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
-                (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot) && _gameSettings.oldGamepadState.IsButtonUp(_gameSettings._gameSettings.KeyMapping.GPShot)))
+                (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPShot)))
             {
                 if (!_isShoting && !_isUnderWater)
                 {
@@ -195,7 +194,7 @@ namespace Editor.Game
                     _isShoting = true;
                 }
             }
-            else if (mouseState.LeftButton == ButtonState.Pressed || (_gameSettings.useGamepad && _gameSettings.gamepadState.IsButtonDown(_gameSettings._gameSettings.KeyMapping.GPShot)))
+            else if (mouseState.LeftButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
