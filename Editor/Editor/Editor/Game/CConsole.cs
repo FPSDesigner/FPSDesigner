@@ -391,6 +391,9 @@ namespace Editor.Game
         {
             Color defaultColor = Color.LightGreen;
 
+            if (text == null)
+                return;
+
             if (text.Contains("[color:"))
             {
                 int offset = 0;

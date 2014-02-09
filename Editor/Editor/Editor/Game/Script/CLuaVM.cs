@@ -60,9 +60,17 @@ namespace Editor.Game.Script
 
         public override void LoadDefaultFunctions()
         {
-            RegisterFunction("setTimer", scriptFunctions, scriptFunctions.GetType().GetMethod("SetTimer"));
+            // Script related
             RegisterFunction("print", scriptFunctions, scriptFunctions.GetType().GetMethod("Print"));
             RegisterFunction("log", scriptFunctions, scriptFunctions.GetType().GetMethod("Print"));
+            RegisterFunction("setTimer", scriptFunctions, scriptFunctions.GetType().GetMethod("SetTimer"));
+            RegisterFunction("getDate", scriptFunctions, scriptFunctions.GetType().GetMethod("GetDate"));
+
+            // Settings
+            RegisterFunction("getKeyMappings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetKeyMappings"));
+            RegisterFunction("getVideoSettings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetVideoSettings"));
+
+            RegisterFunction("getEnum", scriptFunctions, scriptFunctions.GetType().GetMethod("GetEnum"));
         }
     }
 }

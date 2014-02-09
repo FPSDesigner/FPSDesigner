@@ -156,7 +156,7 @@ namespace Editor.Game
                     assumedNewPosition.Y = assumedNewPosition.Y - closestTriangleBelowDistance + _entityHeight;
 
                     Vector3 normal = _triangleNormalsList[closestTriangle];
-                    Console.WriteLine(normal.Y);
+
                     if (normal.Y > _slippingResistance)
                     {
                         _velocity = -0.1f * normal;

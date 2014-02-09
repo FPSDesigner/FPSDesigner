@@ -5,6 +5,14 @@ using System.Text;
 
 using System.Timers;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
 using NLua;
 
 namespace Editor.Game.Script
@@ -31,9 +39,59 @@ namespace Editor.Game.Script
             };
         }
 
+        // Script related
         public void Print(string msg)
         {
             CConsole.addMessage(msg);
+        }
+
+        public DateTime GetDate()
+        {
+            return DateTime.Now;
+        }
+
+        // Enums
+        public void GetEnum(string enumType)
+        {
+            Type type = null;
+            switch (enumType)
+            {
+                case "Keys":
+                    type = typeof(Keys);
+                    break;
+                case "Buttons":
+                    type = typeof(Buttons);
+                    break;
+            }
+
+            if (type != null)
+            {
+
+                string[] names = Enum.GetNames(type);
+
+                LuaVM.VMHandler.NewTable(type.Name);
+
+                int i = 0;
+                foreach (int name in Enum.GetValues(type))
+                {
+                    string path = type.Name + "." + names[i++];
+                    LuaVM.VMHandler[path] = name;
+                }
+            }
+            else
+                CConsole.addMessage("Invalid enum: " + enumType);
+
+        }
+
+        // Settings
+        public Settings.KeyMapping GetKeyMappings()
+        {
+            return Settings.CGameSettings._gameSettings.KeyMapping;
+        }
+
+        public Settings.Video GetVideoSettings()
+        {
+            return Settings.CGameSettings._gameSettings.Video;
         }
     }
 }
