@@ -51,10 +51,18 @@ namespace Editor.Game.Script
         public override void CallEvent(string eventName, object[] parameters = default(object[]))
         {
             if (EventsListVM.ContainsKey(eventName))
+                CallFunction(EventsListVM[eventName], parameters);
+        }
+
+        public override void CallFunction(string functionName, object[] parameters = default(object[]))
+        {
+            LuaFunction func = (LuaFunction)VMHandler[functionName];
+            if (func != null)
             {
-                LuaFunction eventFunc = (LuaFunction)VMHandler[EventsListVM[eventName]];
-                if(eventFunc != null)
-                    eventFunc.Call(parameters);
+                if (parameters == null)
+                    func.Call();
+                else
+                    func.Call(parameters);
             }
         }
 
@@ -71,6 +79,9 @@ namespace Editor.Game.Script
             RegisterFunction("getVideoSettings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetVideoSettings"));
 
             RegisterFunction("getEnum", scriptFunctions, scriptFunctions.GetType().GetMethod("GetEnum"));
+
+            // GUI
+            RegisterFunction("fadeScreen", scriptFunctions, scriptFunctions.GetType().GetMethod("FadeScreen"));
         }
     }
 }

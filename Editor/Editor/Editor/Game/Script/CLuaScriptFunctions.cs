@@ -80,7 +80,6 @@ namespace Editor.Game.Script
             }
             else
                 CConsole.addMessage("Invalid enum: " + enumType);
-
         }
 
         // Settings
@@ -92,6 +91,13 @@ namespace Editor.Game.Script
         public Settings.Video GetVideoSettings()
         {
             return Settings.CGameSettings._gameSettings.Video;
+        }
+
+        // 2D Effects
+        public void FadeScreen(int fadeOpacity, int timeMilliSecs, int sizeX, int sizeY, int posX, int posY, int red, int green, int blue, string callBack)
+        {
+            Display2D.C2DEffect.MethodDelegate testDelC = () => { LuaVM.CallFunction(callBack); };
+            Display2D.C2DEffect.fadeEffect(fadeOpacity, timeMilliSecs, new Vector2(sizeX, sizeY), new Vector2(posX, posY), new Color(red, green, blue), testDelC);
         }
     }
 }

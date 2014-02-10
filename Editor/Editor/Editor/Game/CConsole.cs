@@ -106,7 +106,7 @@ namespace Editor.Game
                                 int fadeToOpacity;
                                 int duration;
                                 if (cmd.Length >= 4 && int.TryParse(cmd[2], out fadeToOpacity) && int.TryParse(cmd[3], out duration))
-                                    Display2D.C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0, 0), new Color(0, 0, 0), Display2D.C2DEffect.nullFunction);
+                                    Display2D.C2DEffect.fadeEffect(fadeToOpacity, duration, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0, 0), new Color(0, 0, 0), Display2D.C2DEffect.nullFunction);
                                 else
                                     addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <opacity (0-255)> <duration (ms)>");
                             }

@@ -28,6 +28,7 @@ namespace Editor.Display2D
         private static GraphicsDevice _graphicsDevice;
         private static ContentManager _content;
         private static CPostProcessor _postProcessor;
+        private static GameTime _actualGameTime;
 
         public static CRenderCapture _renderCapture;
 
@@ -84,7 +85,7 @@ namespace Editor.Display2D
         /// <param name="positionRect">Position of the fade rectangle</param>
         /// <param name="fadeToColor">Color to fade to</param>
         /// <param name="callback">Function to be called once the effect is done</param>
-        public static void fadeEffect(int fadeTo, int timeMilliSecs, GameTime gameTime, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
+        public static void fadeEffect(int fadeTo, int timeMilliSecs, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
         {
             _fadeSizeRect = sizeRect;
             _fadePositionRect = positionRect;
@@ -92,7 +93,7 @@ namespace Editor.Display2D
             _fadeCallback = callback;
 
             _isFading = true;
-            _fadeTimeStart = gameTime.TotalGameTime.TotalMilliseconds;
+            _fadeTimeStart = _actualGameTime.TotalGameTime.TotalMilliseconds;
             _opacityPerMilliSecond = 255f / timeMilliSecs;
             _fadeTo = fadeTo;
             _fadeOpacity = 255 - _fadeTo;
@@ -221,6 +222,7 @@ namespace Editor.Display2D
         /// <param name="gameTime">GameTime snapshot</param>
         public static void Update(GameTime gameTime)
         {
+            _actualGameTime = gameTime;
             if (_isFading)
             {
                 double elapsedMilliSeconds = gameTime.TotalGameTime.TotalMilliseconds - _fadeTimeStart;
