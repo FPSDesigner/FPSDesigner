@@ -154,7 +154,7 @@ namespace Editor.Display3D
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
 
             // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
-            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity / 2, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
+            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, 5 * _translation * camVelocity / 2, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
 
             _translation = Vector3.Zero;
 

@@ -36,7 +36,7 @@ float WaveSpeed = 0.04f;
 float Alpha = 0;
 
 float FogStart = 1.5;
-float FogEnd = 5.5;
+float FogEnd = 500.5;
 float3 FogColor = float3(1, 1, 1);
 float FogScale = 1.2;
 
@@ -99,8 +99,6 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 	float3 reflectionVector = -reflect(LightDirection, normal.rgb);
 	float specular = dot(normalize(reflectionVector), viewDirection);
 	specular = pow(specular, 256);
-
-	
 
 	if(IsUnderWater)
 	{

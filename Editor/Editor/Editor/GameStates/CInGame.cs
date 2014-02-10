@@ -88,7 +88,7 @@ namespace Editor.GameStates
            
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 44.5f, 0), new Vector2(100*20 * 30), 0.0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(5*20 * 30), 0.0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -186,13 +186,12 @@ namespace Editor.GameStates
             }
             terrain.frustum = cam._Frustum;
 
-            skybox.ColorIntensity = 0.5f;
+            skybox.ColorIntensity = 0.8f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;
             
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-           
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             for (int i = 0; i < models.Count; i++)

@@ -131,7 +131,7 @@ namespace Editor.Display3D
 
                 renderable.SetClipPlane(null);
             }
-
+            
             graphics.SetRenderTarget(defaultRenderTarg);
 
             // Set the reflected scene to its effect parameter in

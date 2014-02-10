@@ -72,14 +72,14 @@ struct VertexShaderOutput
 float DetailTextureTiling;
 float DetailDistance = 2500;
 
-float FogStart = 1.5;
-float FogEnd = 5.5;
+float FogStart = 20.5;
+float FogEnd = 35.5;
 float FogDistance = 4; // FogEnd - FogStart
 
 bool FogWaterActivated = true;
 bool IsUnderWater = false;
-float FogWaterHeight = 44.5;
-float FogWaterHeightMore = 44.6; // = FogWaterHeight + 0.1
+float FogWaterHeight = 440;
+float FogWaterHeightMore = 440.1; // = FogWaterHeight + 0.1
 
 float3 FogColor = float3(1,1,1);
 float3 FogColorWater = float3(0.0588,0.156,0.1607);

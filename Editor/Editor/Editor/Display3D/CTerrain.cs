@@ -88,7 +88,7 @@ namespace Editor.Display3D
         public float DetailTextureTiling = 100;
 
         private bool areDefaultParamsLoaded = false;
-        private int usedTechniqueIndex = 3;
+        private int usedTechniqueIndex = -1;
 
 
         /// <summary>
