@@ -25,7 +25,6 @@ namespace Editor
 
         Game.LevelInfo.CLevelInfo levelInfo;
 
-        Display2D.C2DEffect C2DEffect;
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
 
@@ -52,8 +51,6 @@ namespace Editor
 
             levelInfo = new Game.LevelInfo.CLevelInfo();
 
-            C2DEffect = Display2D.C2DEffect.getInstance();
-
             base.Initialize();
         }
 
@@ -66,7 +63,7 @@ namespace Editor
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
-            C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
+            Display2D.C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
@@ -91,7 +88,7 @@ namespace Editor
 
                 GameManagement.Update(gameTime, kbState, mouseState);
 
-                C2DEffect.Update(gameTime);
+                Display2D.C2DEffect.Update(gameTime);
                 Game.CConsole.Update(kbState, gameTime);
 
                 oldKeyboardState = kbState;
@@ -111,7 +108,7 @@ namespace Editor
             GameManagement.Draw(spriteBatch, gameTime);
 
             // Draw the Console effect
-            C2DEffect.Draw(gameTime);
+            Display2D.C2DEffect.Draw(gameTime);
             Game.CConsole.Draw(gameTime);
 
             // End capturing

@@ -194,7 +194,7 @@ namespace Editor.Display3D
 
             if (hasPlayerUwEffect != isUnderWater)
             {
-                _2DEffect.UnderwaterEffect(isUnderWater);
+                Display2D.C2DEffect.UnderwaterEffect(isUnderWater);
                 hasPlayerUwEffect = isUnderWater;
             }
             if (isUnderWater)

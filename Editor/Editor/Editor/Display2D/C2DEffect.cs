@@ -24,36 +24,36 @@ namespace Editor.Display2D
     class C2DEffect
     {
 
-        private SpriteBatch _spriteBatch;
-        private GraphicsDevice _graphicsDevice;
-        private ContentManager _content;
-        private CPostProcessor _postProcessor;
+        private static SpriteBatch _spriteBatch;
+        private static GraphicsDevice _graphicsDevice;
+        private static ContentManager _content;
+        private static CPostProcessor _postProcessor;
 
-        public CRenderCapture _renderCapture;
+        public static CRenderCapture _renderCapture;
 
         // fadeEffect
-        private bool _isFading = false;
-        private double _opacityPerMilliSecond;
-        private double _fadeTimeStart;
-        private float _fadeOpacity = 0;
-        private float _fadeTo = 0f;
-        private Color _fadeToColor;
-        private Vector2 _fadeSizeRect;
-        private Vector2 _fadePositionRect;
-        private Texture2D _fadeTexture;
-        private MethodDelegate _fadeCallback;
+        private static bool _isFading = false;
+        private static double _opacityPerMilliSecond;
+        private static double _fadeTimeStart;
+        private static float _fadeOpacity = 0;
+        private static float _fadeTo = 0f;
+        private static Color _fadeToColor;
+        private static Vector2 _fadeSizeRect;
+        private static Vector2 _fadePositionRect;
+        private static Texture2D _fadeTexture;
+        private static MethodDelegate _fadeCallback;
 
         // Gaussian Blur Effect
-        private float _gbBlurAmount;
-        private float[] gbWeightsH, gbweightsV;
-        private Vector2[] gboffsetsH, gboffsetsV;
-        private CRenderCapture gbRenderCapture;
+        private static float _gbBlurAmount;
+        private static float[] gbWeightsH, gbweightsV;
+        private static Vector2[] gboffsetsH, gboffsetsV;
+        private static CRenderCapture gbRenderCapture;
 
         // Underwater effect
-        private Texture2D uwWaterfallTexture;
+        private static Texture2D uwWaterfallTexture;
 
         // Private
-        private Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
+        private static Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
 
 
         /// <summary>
@@ -63,15 +63,15 @@ namespace Editor.Display2D
         /// <param name="graphicsDevice">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
         /// <param name="postProcessor">CPostProcessor class</param>
-        public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, CPostProcessor postProcessor, CRenderCapture renderCapture)
+        public static void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, CPostProcessor postProcessor, CRenderCapture renderCapture)
         {
-            this._spriteBatch = spriteBatch;
-            this._graphicsDevice = graphicsDevice;
-            this._content = content;
-            this._postProcessor = postProcessor;
-            this._renderCapture = renderCapture;
+            _spriteBatch = spriteBatch;
+            _graphicsDevice = graphicsDevice;
+            _content = content;
+            _postProcessor = postProcessor;
+            _renderCapture = renderCapture;
 
-            this.uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
+            uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
         }
 
         /// <summary>
@@ -84,18 +84,18 @@ namespace Editor.Display2D
         /// <param name="positionRect">Position of the fade rectangle</param>
         /// <param name="fadeToColor">Color to fade to</param>
         /// <param name="callback">Function to be called once the effect is done</param>
-        public void fadeEffect(int fadeTo, int timeMilliSecs, GameTime gameTime, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
+        public static void fadeEffect(int fadeTo, int timeMilliSecs, GameTime gameTime, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
         {
-            this._fadeSizeRect = sizeRect;
-            this._fadePositionRect = positionRect;
-            this._fadeToColor = fadeToColor;
-            this._fadeCallback = callback;
+            _fadeSizeRect = sizeRect;
+            _fadePositionRect = positionRect;
+            _fadeToColor = fadeToColor;
+            _fadeCallback = callback;
 
-            this._isFading = true;
-            this._fadeTimeStart = gameTime.TotalGameTime.TotalMilliseconds;
-            this._opacityPerMilliSecond = 255f / timeMilliSecs;
-            this._fadeTo = fadeTo;
-            this._fadeOpacity = 255 - _fadeTo;
+            _isFading = true;
+            _fadeTimeStart = gameTime.TotalGameTime.TotalMilliseconds;
+            _opacityPerMilliSecond = 255f / timeMilliSecs;
+            _fadeTo = fadeTo;
+            _fadeOpacity = 255 - _fadeTo;
 
             _fadeTexture = new Texture2D(_graphicsDevice, 1, 1);
 
@@ -106,7 +106,7 @@ namespace Editor.Display2D
         /// <summary>
         /// Creates a new Black and White effect.
         /// </summary>
-        public void BlackAndWhiteEffect()
+        public static void BlackAndWhiteEffect()
         {
             _postProcessor.LoadEffect("BlackWhite", GetEffect("BlackWhite_PP"));
         }
@@ -117,7 +117,7 @@ namespace Editor.Display2D
         /// <param name="redPercent">Percentage of red color</param>
         /// <param name="greenPercent">Percentage of green color</param>
         /// <param name="bluePercent">Percentage of blue color</param>
-        public void ColorFilterEffect(float redPercent, float greenPercent, float bluePercent)
+        public static void ColorFilterEffect(float redPercent, float greenPercent, float bluePercent)
         {
             _postProcessor.LoadEffect("ColorFilter", GetEffect("ColorFilter_PP"));
             _postProcessor.cfColors = new float[3] { redPercent, greenPercent, bluePercent };
@@ -127,7 +127,7 @@ namespace Editor.Display2D
         /// Creates an underwater effect, distortion
         /// </summary>
         /// <param name="toggle">Toggles the effect</param>
-        public void UnderwaterEffect(bool toggle)
+        public static void UnderwaterEffect(bool toggle)
         {
             bool isEffectLoaded = _postProcessor.isEffectLoaded("UWEffect");
 
@@ -145,7 +145,7 @@ namespace Editor.Display2D
         /// </summary>
         /// <param name="blurAmount">Intensity of the blur</param>
         /// <param name="toggle">If true, then deactivate it if already activated</param>
-        public void gaussianBlurEffect(float blurAmount, bool toggle = false, string effectFileName = "GaussianBlur_PP")
+        public static void gaussianBlurEffect(float blurAmount, bool toggle = false, string effectFileName = "GaussianBlur_PP")
         {
             if (!toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
             {
@@ -155,7 +155,7 @@ namespace Editor.Display2D
             else if (toggle && _postProcessor.isEffectLoaded("GaussianBlur"))
                 return;
 
-            this._gbBlurAmount = blurAmount;
+            _gbBlurAmount = blurAmount;
 
             _postProcessor.LoadEffect("GaussianBlur", GetEffect(effectFileName));
 
@@ -176,7 +176,7 @@ namespace Editor.Display2D
             _postProcessor.gbCapture = gbRenderCapture;
         }
 
-        private void gaussianCalcSettings(float w, float h, out float[] weights, out Vector2[] offsets)
+        private static void gaussianCalcSettings(float w, float h, out float[] weights, out Vector2[] offsets)
         {
             // 15 Samples
             weights = new float[15];
@@ -210,7 +210,7 @@ namespace Editor.Display2D
                 weights[i] /= total;
         }
 
-        private float gaussianFn(float x)
+        private static float gaussianFn(float x)
         {
             return (float)((1.0f / Math.Sqrt(2 * Math.PI * _gbBlurAmount * _gbBlurAmount)) * Math.Exp(-(x * x) / (2 * _gbBlurAmount * _gbBlurAmount)));
         }
@@ -219,7 +219,7 @@ namespace Editor.Display2D
         /// Called at each frame to process code frame-per-frame
         /// </summary>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
             if (_isFading)
             {
@@ -243,7 +243,7 @@ namespace Editor.Display2D
         /// Draw the different effects, frame-per-frame
         /// </summary>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void Draw(GameTime gameTime)
+        public static void Draw(GameTime gameTime)
         {
             if (_isFading)
             {
@@ -258,7 +258,7 @@ namespace Editor.Display2D
         /// </summary>
         /// <param name="effectName"></param>
         /// <returns></returns>
-        private Effect GetEffect(string effectName)
+        private static Effect GetEffect(string effectName)
         {
             if (loadedEffects.ContainsKey(effectName))
                 return loadedEffects[effectName];
@@ -275,22 +275,7 @@ namespace Editor.Display2D
         // Example: fade effect
         public delegate void MethodDelegate();
 
-        public void nullFunction() { }
-
-
-        // Singelton Code
-        private static C2DEffect instance = null;
-        private static readonly object myLock = new object();
-
-        private C2DEffect() { }
-        public static C2DEffect getInstance()
-        {
-            lock (myLock)
-            {
-                if (instance == null) instance = new C2DEffect();
-                return instance;
-            }
-        }
+        public static void nullFunction() { }
 
     }
 }

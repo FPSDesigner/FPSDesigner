@@ -39,8 +39,6 @@ namespace Editor.Game
         private static List<string> _consoleLines = new List<string>();
         private static List<string> _commandsList = new List<string>();
 
-        private static Display2D.C2DEffect C2DEffect = Display2D.C2DEffect.getInstance();
-
         private static StreamWriter _logsFile;
         private static GraphicsDevice _graphicsDevice;
         private static SpriteBatch _spriteBatch;
@@ -93,13 +91,13 @@ namespace Editor.Game
                         {
                             float blurAmount;
                             if (cmd.Length > 2 && float.TryParse(cmd[2], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out blurAmount))
-                                C2DEffect.gaussianBlurEffect(blurAmount, true);
+                                Display2D.C2DEffect.gaussianBlurEffect(blurAmount, true);
                             else
                                 addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <blur intensity (float)>");
                         }
                         else if (effectName == "blackwhite" || effectName == "blackandwhite")
                         {
-                            C2DEffect.BlackAndWhiteEffect();
+                            Display2D.C2DEffect.BlackAndWhiteEffect();
                         }
                         else if (effectName == "fade")
                         {
@@ -108,7 +106,7 @@ namespace Editor.Game
                                 int fadeToOpacity;
                                 int duration;
                                 if (cmd.Length >= 4 && int.TryParse(cmd[2], out fadeToOpacity) && int.TryParse(cmd[3], out duration))
-                                    C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0, 0), new Color(0, 0, 0), C2DEffect.nullFunction);
+                                    Display2D.C2DEffect.fadeEffect(fadeToOpacity, duration, gameTime, new Vector2(_graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), new Vector2(0, 0), new Color(0, 0, 0), Display2D.C2DEffect.nullFunction);
                                 else
                                     addMessage("USAGE: " + cmd[0] + " " + cmd[1] + " <opacity (0-255)> <duration (ms)>");
                             }
