@@ -362,7 +362,7 @@ namespace Editor.Game
 
             if (_isConsoleEnabled)
             {
-                _spriteBatch.Draw(_backgroundTexture, _backgroundPosition, Color.Black);
+                _spriteBatch.Draw(_backgroundTexture, _backgroundPosition, Color.Red);
                 if (_consoleLines.Any())
                 {
                     int listCount = _consoleLines.Count;

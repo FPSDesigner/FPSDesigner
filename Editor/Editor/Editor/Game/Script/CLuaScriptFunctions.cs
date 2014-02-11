@@ -99,5 +99,24 @@ namespace Editor.Game.Script
             Display2D.C2DEffect.MethodDelegate testDelC = () => { LuaVM.CallFunction(callBack); };
             Display2D.C2DEffect.fadeEffect(fadeOpacity, timeMilliSecs, new Vector2(sizeX, sizeY), new Vector2(posX, posY), new Color(red, green, blue), testDelC);
         }
+
+        public Embedded.C2DScriptRectangle GUIRectangle(Rectangle rect, Color color, bool active = true, int order = 1)
+        {
+            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, color, active, order);
+            Display2D.C2DEffect.ScriptableRectangle.Add(elt);
+            Display2D.C2DEffect.ScriptableRectangle = Display2D.C2DEffect.ScriptableRectangle.OrderBy(ord => ord.drawOrder).ToList();
+            return elt;
+        }
+
+        // 2D Effects - Basic usage functions
+        public Rectangle GetRectangle(int startX, int startY, int width, int height)
+        {
+            return new Rectangle(startX, startY, width, height);
+        }
+
+        public Color GetColor(int r, int g, int b, int a)
+        {
+            return new Color(r, g, b, a);
+        }
     }
 }

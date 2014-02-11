@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using Editor.Game.Script.Embedded;
 namespace Editor.Display2D
 {
     /// <summary>
@@ -25,12 +26,12 @@ namespace Editor.Display2D
     {
 
         private static SpriteBatch _spriteBatch;
-        private static GraphicsDevice _graphicsDevice;
         private static ContentManager _content;
         private static CPostProcessor _postProcessor;
         private static GameTime _actualGameTime;
 
         public static CRenderCapture _renderCapture;
+        public static GraphicsDevice _graphicsDevice;
 
         // fadeEffect
         private static bool _isFading = false;
@@ -55,6 +56,10 @@ namespace Editor.Display2D
 
         // Private
         private static Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
+
+
+        // Scripts:
+        public static List<C2DScriptRectangle> ScriptableRectangle = new List<C2DScriptRectangle>();
 
 
         /// <summary>
@@ -247,12 +252,20 @@ namespace Editor.Display2D
         /// <param name="gameTime">GameTime snapshot</param>
         public static void Draw(GameTime gameTime)
         {
+            _spriteBatch.Begin();
+            if (ScriptableRectangle.Any())
+            {
+                for (int i = 0; i < ScriptableRectangle.Count; i++)
+                {
+                    if (ScriptableRectangle[i].isActive)
+                        _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].Color);
+                }
+            }
             if (_isFading)
             {
-                _spriteBatch.Begin();
                 _spriteBatch.Draw(_fadeTexture, _fadePositionRect, null, new Color(_fadeToColor.R, _fadeToColor.G, _fadeToColor.B, _fadeOpacity/255), 0f, Vector2.Zero, _fadeSizeRect, SpriteEffects.None, 0);
-                _spriteBatch.End();
             }
+            _spriteBatch.End();
         }
 
         /// <summary>
