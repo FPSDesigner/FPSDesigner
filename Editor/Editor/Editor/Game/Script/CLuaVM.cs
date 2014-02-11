@@ -76,6 +76,12 @@ namespace Editor.Game.Script
             RegisterFunction("getEnum", scriptFunctions, scriptFunctions.GetType().GetMethod("GetEnum"));
             //RegisterFunction("getScreenSize", scriptFunctions, scriptFunctions.GetType().GetMethod("GetScreenSize"));
 
+            RegisterFunction("getMD5", scriptFunctions, scriptFunctions.GetType().GetMethod("GetMD5"));
+            RegisterFunction("getFileMD5", scriptFunctions, scriptFunctions.GetType().GetMethod("GetFileMD5"));
+
+            RegisterFunction("xmlReader", scriptFunctions, scriptFunctions.GetType().GetMethod("XMLReader"));
+            RegisterFunction("xmlWriter", scriptFunctions, scriptFunctions.GetType().GetMethod("XMLWriter"));
+
             // Settings
             RegisterFunction("getKeyMappings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetKeyMappings"));
             RegisterFunction("getVideoSettings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetVideoSettings"));

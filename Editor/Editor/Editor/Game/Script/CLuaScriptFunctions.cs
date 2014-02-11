@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using System.Timers;
+using System.Security.Cryptography;
+using System.Xml;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -48,6 +50,43 @@ namespace Editor.Game.Script
         public DateTime GetDate()
         {
             return DateTime.Now;
+        }
+
+        public string GetMD5(string str)
+        {
+            // Calculate MD5 from input
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(str);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // Convert byte to array string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        public string GetFileMD5(string file)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = System.IO.File.OpenRead(file))
+                {
+                    return System.Text.Encoding.UTF8.GetString(md5.ComputeHash(stream));
+                }
+            }
+        }
+
+        public XmlReader XMLReader(string file)
+        {
+            return XmlReader.Create(file);
+        }
+
+        public XmlWriter XMLWriter(string file)
+        {
+            return XmlWriter.Create(file);
         }
 
         // Enums
