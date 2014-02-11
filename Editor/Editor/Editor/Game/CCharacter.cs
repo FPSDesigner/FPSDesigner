@@ -27,9 +27,6 @@ namespace Editor.Game
         private float _initSpeed = 0.2f;
         private float _velocity = 0.3f;
 
-
-        private Texture2D testWeaponText;
-
         private bool _isWalkAnimPlaying = false;
         private bool _isWaitAnimPlaying = false;
         private bool _isShoting = false;
@@ -53,18 +50,16 @@ namespace Editor.Game
             _handAnimation.LoadContent(content);
 
             _handAnimation.ChangeAnimSpeed(0.7f);
-            _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
-
-            testWeaponText = weap.GetTexture(weap._selectedWeapon);
+            _handAnimation.BeginAnimation(weap._weaponsArray[weap._selectedWeapon]._weapAnim[2], true);
 
             //Initialize the weapon attributes
-            foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes)
+            foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
-                    //effect.Texture = testWeaponText;
+                    effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
                     effect.SpecularColor = new Vector3(0.5f);
                     effect.SpecularPower = 32;
@@ -139,8 +134,8 @@ namespace Editor.Game
             //If He is doing nothing, we stop him
             if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
-                _handAnimation.ChangeAnimSpeed(0.8f);
-                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
 
                 //Just the wait animation is playing
                 _isWalkAnimPlaying = false;
@@ -151,8 +146,8 @@ namespace Editor.Game
             //We wanted to know if the shoting animation is finished
             if (_isShoting && _handAnimation.HasFinished())
             {
-                _handAnimation.ChangeAnimSpeed(0.8f);
-                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 2), true);
+                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
 
                 //just the wait animation is playing
                 _isWalkAnimPlaying = false;
@@ -165,7 +160,7 @@ namespace Editor.Game
             if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
                 _handAnimation.ChangeAnimSpeed(1.6f);
-                _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 0),true);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
 
                 //just the walk animation is playing
                 _isWaitAnimPlaying = false;
@@ -191,8 +186,8 @@ namespace Editor.Game
                 if (!_isShoting && !_isUnderWater)
                 {
                     weapon.Shot(true,_isShoting,gameTime);
-                    _handAnimation.ChangeAnimSpeed(3.0f);
-                    _handAnimation.ChangeAnimation(weapon.GetAnims(weapon._selectedWeapon, 1), false);
+                    _handAnimation.ChangeAnimSpeed(2.7f);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = false;
                     _isShoting = true;
@@ -205,9 +200,10 @@ namespace Editor.Game
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
-            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 1.0f, new Vector3(-0.3f, -0.2f, 5.280078f));
+            Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset);
 
-            foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
+            foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes) 
             {
                 foreach (BasicEffect effect in mesh.Effects)  
                 {

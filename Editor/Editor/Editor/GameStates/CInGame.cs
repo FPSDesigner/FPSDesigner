@@ -107,12 +107,12 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//M1911")};
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete")};
 
             Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete")};
 
             object[][] testInfos = new object[][] {
-                new object[] {2,1,1,1,1,false,2.0f,1}
+                new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f}
             };
             string[][] testSounds = new string[][] {
                 new string[] {

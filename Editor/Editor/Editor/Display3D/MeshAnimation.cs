@@ -141,14 +141,14 @@ namespace Editor.Display3D
             return skinnedModel;
         }
 
-        public Matrix GetBoneMatrix(string boneName, float scale, Vector3 offset)
+        public Matrix GetBoneMatrix(string boneName, Matrix rotation,float scale, Vector3 offset)
         {
             int index = skinnedModel.Model.Bones[boneName].Index;
 
             Matrix boneLocal = animationController.SkinnedBoneTransforms[index];
 
             boneLocal = Matrix.CreateTranslation(offset)
-                            * Matrix.CreateRotationZ(1.25f)
+                            * rotation
                             * Matrix.CreateScale(scale)
                             * Matrix.Invert(skinnedModel.SkeletonBones[index].InverseBindPoseTransform)
                             * animationController.SkinnedBoneTransforms[index]

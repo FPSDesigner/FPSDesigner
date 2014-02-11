@@ -18,11 +18,11 @@ namespace Editor.Game
         public int _selectedWeapon;
         private bool _dryFirePlayed;
 
-        private WeaponData[] _weaponsArray;
+        public WeaponData[] _weaponsArray;
         private Dictionary<string, SoundEffect> _weaponsSounds;
 
         #region "WeaponData Class"
-        class WeaponData
+        public class WeaponData
         {
             #region "Constructor"
             public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim, Texture2D weapTexture)
@@ -112,7 +112,7 @@ namespace Editor.Game
             _weaponsAmount = modelsList.Length;
             _weaponsArray = new WeaponData[_weaponsAmount];
 
-
+            
 
             // Initializing sounds
             _weaponsSounds = new Dictionary<string, SoundEffect>();
@@ -158,7 +158,7 @@ namespace Editor.Game
             else
             {
                 if (!isCutAnimPlaying)
-                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
         }
 
@@ -166,8 +166,8 @@ namespace Editor.Game
         {
             if (_weaponsArray[_selectedWeapon]._actualClip > 0)
             {
-                _weaponsArray[_selectedWeapon]._actualClip--;
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                    _weaponsArray[_selectedWeapon]._actualClip--;
+                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
             else
             {
@@ -179,20 +179,6 @@ namespace Editor.Game
             }
         }
 
-        public string GetAnims(int weaponSelected, int animNumber)
-        {
-            return _weaponsArray[weaponSelected]._weapAnim[animNumber];
-        }
-
-        public Model GetModel(int modelNumber)
-        {
-            return _weaponsArray[modelNumber]._wepModel;
-        }
-
-        public Texture2D GetTexture(int modelNumber)
-        {
-            return _weaponsArray[modelNumber]._weapTexture;
-        }
-
+        
     }
 }
