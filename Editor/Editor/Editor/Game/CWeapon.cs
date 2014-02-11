@@ -40,6 +40,10 @@ namespace Editor.Game
                 this._shotPerSeconds = (int)(1000.0f / (float)weaponInfo[6]);
                 this._range = (int)weaponInfo[7];
 
+                this._rotation = (Matrix)weaponInfo[8];
+                this._offset = (Vector3)weaponInfo[9];
+                this._scale = (float)weaponInfo[10];
+
                 this._weapTexture = weapTexture;
 
                 // SoundEffect Assignement
@@ -78,12 +82,18 @@ namespace Editor.Game
             // The baked texture
             public Texture2D _weapTexture;
 
-            //Anim
+            // Anim
             public String[] _weapAnim;
+
             // Sounds
             public string _shotSound;
             public string _dryShotSound;
             public string _reloadSound;
+
+            // Display
+            public Matrix _rotation;
+            public Vector3 _offset;
+            public float _scale;
 
         }
         #endregion
@@ -93,16 +103,16 @@ namespace Editor.Game
 
         }
 
-        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture,object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
+        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
         {
             if ((modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length
-                )&& weapAnim.Length != modelsList.Length)
+                ) && weapAnim.Length != modelsList.Length)
                 throw new Exception("Weapons Loading Error - Arrays of different lengths");
 
             _weaponsAmount = modelsList.Length;
             _weaponsArray = new WeaponData[_weaponsAmount];
 
-            
+
 
             // Initializing sounds
             _weaponsSounds = new Dictionary<string, SoundEffect>();
@@ -126,7 +136,7 @@ namespace Editor.Game
             _selectedWeapon = newWeapon;
         }
 
-        public void Shot(bool firstShot, bool isCutAnimPlaying,GameTime gameTime)
+        public void Shot(bool firstShot, bool isCutAnimPlaying, GameTime gameTime)
         {
             if (_weaponsArray[_selectedWeapon]._wepType != 2)
             {
@@ -147,8 +157,8 @@ namespace Editor.Game
             }
             else
             {
-                if(!isCutAnimPlaying)
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                if (!isCutAnimPlaying)
+                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
         }
 
@@ -156,8 +166,8 @@ namespace Editor.Game
         {
             if (_weaponsArray[_selectedWeapon]._actualClip > 0)
             {
-                    _weaponsArray[_selectedWeapon]._actualClip--;
-                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                _weaponsArray[_selectedWeapon]._actualClip--;
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
             }
             else
             {
@@ -183,6 +193,6 @@ namespace Editor.Game
         {
             return _weaponsArray[modelNumber]._weapTexture;
         }
-        
+
     }
 }

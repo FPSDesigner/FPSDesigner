@@ -92,6 +92,9 @@ namespace Editor.Display2D
         /// <param name="callback">Function to be called once the effect is done</param>
         public static void fadeEffect(int fadeTo, int timeMilliSecs, Vector2 sizeRect, Vector2 positionRect, Color fadeToColor, MethodDelegate callback)
         {
+            if (_actualGameTime == null)
+                return;
+
             _fadeSizeRect = sizeRect;
             _fadePositionRect = positionRect;
             _fadeToColor = fadeToColor;

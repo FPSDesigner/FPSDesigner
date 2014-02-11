@@ -65,7 +65,7 @@ namespace Editor.Game.Script
             {
                 sb.Append(hash[i].ToString("X2"));
             }
-            return sb.ToString();
+            return sb.ToString().ToLower();
         }
 
         public string GetFileMD5(string file)
@@ -74,7 +74,7 @@ namespace Editor.Game.Script
             {
                 using (var stream = System.IO.File.OpenRead(file))
                 {
-                    return System.Text.Encoding.UTF8.GetString(md5.ComputeHash(stream));
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-","").ToLower();
                 }
             }
         }

@@ -138,7 +138,6 @@ namespace Editor.Game
             dynamic GUIData = GUIXmlReader.GUIList.GUI[GuiId];
 
             // Load Background
-
             _Textures2D[GuiId] = new List<el_Texture2D>();
             foreach (dynamic order in (GUIData.Elements.Element as DynamicXmlStream).AsDynamicEnumerable().OrderBy(ord => ord.DrawOrder.Value))
             {
