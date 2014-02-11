@@ -25,7 +25,7 @@ namespace Editor.Game
         class WeaponData
         {
             #region "Constructor"
-            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim)
+            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim, Texture2D weapTexture)
             {
                 // Model Assignement
                 this._wepModel = weaponModel;
@@ -39,6 +39,8 @@ namespace Editor.Game
                 this._isAutomatic = (bool)weaponInfo[5];
                 this._shotPerSeconds = (int)(1000.0f / (float)weaponInfo[6]);
                 this._range = (int)weaponInfo[7];
+
+                this._weapTexture = weapTexture;
 
                 // SoundEffect Assignement
                 this._shotSound = weaponsSound[0];
@@ -73,6 +75,8 @@ namespace Editor.Game
             // Models
             public Model _wepModel;
 
+            // The baked texture
+            public Texture2D _weapTexture;
 
             //Anim
             public String[] _weapAnim;
@@ -89,7 +93,7 @@ namespace Editor.Game
 
         }
 
-        public void LoadContent(ContentManager content, Model[] modelsList, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
+        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture,object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
         {
             if ((modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length
                 )&& weapAnim.Length != modelsList.Length)
@@ -97,6 +101,8 @@ namespace Editor.Game
 
             _weaponsAmount = modelsList.Length;
             _weaponsArray = new WeaponData[_weaponsAmount];
+
+            
 
             // Initializing sounds
             _weaponsSounds = new Dictionary<string, SoundEffect>();
@@ -111,7 +117,7 @@ namespace Editor.Game
 
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i]);
+                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], weapTexture[i]);
             }
         }
 
@@ -171,6 +177,11 @@ namespace Editor.Game
         public Model GetModel(int modelNumber)
         {
             return _weaponsArray[modelNumber]._wepModel;
+        }
+
+        public Texture2D GetTexture(int modelNumber)
+        {
+            return _weaponsArray[modelNumber]._weapTexture;
         }
         
     }

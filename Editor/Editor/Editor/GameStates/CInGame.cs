@@ -103,20 +103,16 @@ namespace Editor.GameStates
 
             _graphics = graphics;
 
+            // We create array containing all informations about weapons.
+
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//M1911")};
+
+            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete")};
+
             object[][] testInfos = new object[][] {
-                new object[] {
-                2,
-                1,
-                1,
-                1,
-                1,
-                false,
-                2.0f,
-                1
-                }
+                new object[] {2,1,1,1,1,false,2.0f,1}
             };
             string[][] testSounds = new string[][] {
                 new string[] {
@@ -130,7 +126,7 @@ namespace Editor.GameStates
                 }
             };
 
-            weapon.LoadContent(content, testmodel, testInfos, testSounds, anims);
+            weapon.LoadContent(content, testmodel, weaponsTexture , testInfos, testSounds, anims);
 
             //Load content for Chara class
             _character.LoadContent(content, graphics, weapon);

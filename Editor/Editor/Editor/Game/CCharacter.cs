@@ -42,7 +42,7 @@ namespace Editor.Game
             _handTexture = new Texture2D[1];
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice graphics, CWeapon weap)
+        public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap)
         {
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture,8,0.05f,true);
@@ -55,7 +55,7 @@ namespace Editor.Game
             _handAnimation.ChangeAnimSpeed(0.7f);
             _handAnimation.BeginAnimation(weap.GetAnims(weap._selectedWeapon, 2), true);
 
-            testWeaponText = content.Load<Texture2D>("Textures\\Machete");
+            testWeaponText = weap.GetTexture(weap._selectedWeapon);
 
             //Initialize the weapon attributes
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes)
@@ -64,7 +64,7 @@ namespace Editor.Game
                 {
                     effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
-                    effect.Texture = testWeaponText;
+                    //effect.Texture = testWeaponText;
 
                     effect.SpecularColor = new Vector3(0.5f);
                     effect.SpecularPower = 32;
@@ -96,7 +96,11 @@ namespace Editor.Game
             // Draw the animation mesh
             _handAnimation.Draw(gametime, spriteBatch, view, projection);
             // Draw the weapon attached to the mesh
-            WeaponDrawing(weap, spriteBatch, view, projection);
+
+            if (!_isSwimAnimationPlaying)
+            {
+                WeaponDrawing(weap, spriteBatch, view, projection);
+            }
         }
 
 
@@ -201,7 +205,7 @@ namespace Editor.Game
         public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
-            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 0.125f, new Vector3(-0.3f, -0.2f, 5.280078f));
+            Matrix world = _handAnimation.GetBoneMatrix("hand_R", 1.0f, new Vector3(-0.3f, -0.2f, 5.280078f));
 
             foreach (ModelMesh mesh in weap.GetModel(weap._selectedWeapon).Meshes) 
             {
