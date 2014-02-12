@@ -108,7 +108,7 @@ namespace Editor.Display3D
                         ((BasicEffect)effect).EnableDefaultLighting();
                     }
                     else
-                    {
+                    { 
                         setEffectParameter(effect, "World", localWorld);
                         setEffectParameter(effect, "View", view);
                         setEffectParameter(effect, "Projection", projection);

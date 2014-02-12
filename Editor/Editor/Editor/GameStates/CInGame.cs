@@ -74,9 +74,9 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 10f, 1000, content.Load<Texture2D>("Textures/Terrain/terrain_grass"), 50, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 5f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 50, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
-            terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/sand");
+            terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
             terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
             terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
@@ -88,7 +88,7 @@ namespace Editor.GameStates
            
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(5*20 * 30), 0.0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(2 * 20 * 30), 1f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -107,20 +107,27 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete")};
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911") };
 
-            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete")};
+            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete"), content.Load<Texture2D>("Textures//Machete") };
 
             object[][] testInfos = new object[][] {
-                new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f}
+                new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f},
+                new object[] {0,10,10,10,1,false,1.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f}
             };
             string[][] testSounds = new string[][] {
                 new string[] {
                     "MACHET_ATTACK"
+                },
+                new string[] {
+                    "M4A1_SHOT"
                 }
             };
 
             string[][] anims = new string[][] {
+                new string[] {
+                    "Machete_Walk", "Machete_Attack", "Machete_Wait"
+                },
                 new string[] {
                     "Machete_Walk", "Machete_Attack", "Machete_Wait"
                 }

@@ -178,6 +178,7 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	{
 		float shore = clamp(0.4*(1/(input.WorldPosition.y - FogWaterHeight)), 0, 0.5);
 		float fog = clamp((input.Depth*0.01 - FogStart) / FogDistance, 0, 0.8);
+		shore = 0;
 		return float4(lerp(lerp( output * light, FogColor, fog), ShoreColor, shore), 1);
 	}
 	

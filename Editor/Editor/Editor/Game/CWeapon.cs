@@ -60,7 +60,7 @@ namespace Editor.Game
             #endregion
 
             /* WepType:
-             * 0: Hands weapons
+             * 0: HandGun
              * 1: Static weapons (tripod, mortars, etc.)
              */
             public int _wepType;

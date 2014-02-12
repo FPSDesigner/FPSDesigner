@@ -371,15 +371,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Machete.fbx">
-      <Name>Machete</Name>
+    <Compile Include="Models\M1911.fbx">
+      <Name>M1911</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\M1911.fbx">
-      <Name>M1911</Name>
+    <Compile Include="Textures\Terrain\Grass005.tga">
+      <Name>Grass005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Terrain\Sand001.jpg">
+      <Name>Sand001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Machete.fbx">
+      <Name>Machete</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
