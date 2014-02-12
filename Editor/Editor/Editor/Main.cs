@@ -68,8 +68,8 @@ namespace Editor
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
 
-            Game.Script.CLuaVM lua = new Game.Script.CLuaVM();
-            lua.LoadScript("test.lua");
+            Game.Script.CLuaVM.Initialize();
+            Game.Script.CLuaVM.LoadScript("test.lua");
         }
 
 

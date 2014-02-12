@@ -2,40 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 using NLua;
 
 namespace Editor.Game.Script
 {
-    class CLuaVM : CScriptVM
+    class CLuaVM
     {
-        public Lua VMHandler;
-        private CLuaScriptFunctions scriptFunctions;
+        public static Lua VMHandler;
+        private static CLuaScriptFunctions scriptFunctions;
+        public static Dictionary<string, string> EventsListVM = new Dictionary<string, string>();
 
-        public override void Initialize()
+        public static void Initialize()
         {
             VMHandler = new Lua();
             scriptFunctions = new CLuaScriptFunctions();
-            scriptFunctions.LuaVM = this;
             //VMHandler.LoadCLRPackage();
 
             // Initialize Events
-            RegisterFunction("addEvent", this, this.GetType().GetMethod("internal_AddEvent"));
+            Type type = typeof(CLuaVM);
+            MethodInfo info = type.GetMethod("internal_AddEvent",  BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            RegisterFunction("addEvent", System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, info);
 
-            base.Initialize();
+            LoadDefaultFunctions();
         }
 
-        public override void internal_AddEvent(string eventName, string functionVMName)
+        public static void internal_AddEvent(string eventName, string functionVMName)
         {
-            base.internal_AddEvent(eventName, functionVMName);
+            if (!EventsListVM.ContainsKey(eventName))
+            {
+                EventsListVM.Add(eventName, functionVMName);
+            }
         }
 
-        public override void RegisterFunction(string functionName, object target, System.Reflection.MethodBase function)
+        public static void RegisterFunction(string functionName, object target, System.Reflection.MethodBase function)
         {
             VMHandler.RegisterFunction(functionName, target, function);
         }
 
-        public override void LoadScript(string scriptName)
+        public static void LoadScript(string scriptName)
         {
             try
             {
@@ -48,13 +54,13 @@ namespace Editor.Game.Script
             }
         }
 
-        public override void CallEvent(string eventName, object[] parameters = default(object[]))
+        public static void CallEvent(string eventName, object[] parameters = default(object[]))
         {
             if (EventsListVM.ContainsKey(eventName))
                 CallFunction(EventsListVM[eventName], parameters);
         }
 
-        public override void CallFunction(string functionName, object[] parameters = default(object[]))
+        public static void CallFunction(string functionName, object[] parameters = default(object[]))
         {
             LuaFunction func = (LuaFunction)VMHandler[functionName];
             if (func != null)
@@ -66,7 +72,7 @@ namespace Editor.Game.Script
             }
         }
 
-        public override void LoadDefaultFunctions()
+        public static void LoadDefaultFunctions()
         {
             // Script related
             RegisterFunction("print", scriptFunctions, scriptFunctions.GetType().GetMethod("Print"));
@@ -89,9 +95,11 @@ namespace Editor.Game.Script
             // GUI
             RegisterFunction("fadeScreen", scriptFunctions, scriptFunctions.GetType().GetMethod("FadeScreen"));
             RegisterFunction("guiRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GUIRectangle"));
+            RegisterFunction("guiImage", scriptFunctions, scriptFunctions.GetType().GetMethod("GUIImage"));
 
             // Basic GUI functions
             RegisterFunction("getRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GetRectangle"));
+            RegisterFunction("getTexture", scriptFunctions, scriptFunctions.GetType().GetMethod("GetTexture"));
             RegisterFunction("getColor", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColor"));
         }
     }

@@ -26,12 +26,12 @@ namespace Editor.Display2D
     {
 
         private static SpriteBatch _spriteBatch;
-        private static ContentManager _content;
         private static CPostProcessor _postProcessor;
         private static GameTime _actualGameTime;
 
         public static CRenderCapture _renderCapture;
         public static GraphicsDevice _graphicsDevice;
+        public static ContentManager _content;
 
         // fadeEffect
         private static bool _isFading = false;
@@ -109,7 +109,6 @@ namespace Editor.Display2D
             _fadeTexture = new Texture2D(_graphicsDevice, 1, 1);
 
             _fadeTexture.SetData<Color>(new Color[] { Color.White });
-            
         }
 
         /// <summary>

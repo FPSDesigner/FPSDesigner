@@ -15,7 +15,6 @@ namespace Editor.Game.Script.Embedded
 {
     // Convenction: C + type + Script + name. Ex: C2DScriptRectangle.
 
-
     // 2D Related
     class C2DScriptRectangle
     {
@@ -39,10 +38,15 @@ namespace Editor.Game.Script.Embedded
             }
         }
 
-        public C2DScriptRectangle(Rectangle rect, Color color, bool active = true, int order = 1)
+        public C2DScriptRectangle(Rectangle rect, Color color, bool active = true, int order = 1, Texture2D texture = null)
         {
-            Texture = new Texture2D(Display2D.C2DEffect._graphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            Texture.SetData<Color>(new Color[] { color });
+            if (texture != null)
+                Texture = texture;
+            else
+            {
+                Texture = new Texture2D(Display2D.C2DEffect._graphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                Texture.SetData<Color>(new Color[] { color });
+            }
 
             Rectangle = rect;
             Color = color;
@@ -50,4 +54,5 @@ namespace Editor.Game.Script.Embedded
             _drawOrder = order;
         }
     }
+
 }

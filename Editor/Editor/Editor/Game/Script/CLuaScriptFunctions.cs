@@ -21,13 +21,11 @@ namespace Editor.Game.Script
 {
     class CLuaScriptFunctions
     {
-        public CLuaVM LuaVM;
-
         public void SetTimer(string func, double ms)
         {
-            if (LuaVM.VMHandler.GetFunction(func) == null)
+            if (CLuaVM.VMHandler.GetFunction(func) == null)
             {
-                LuaVM.CallEvent("errorEncountered", new object[] { "SetTimer: Function " + func + " is not defined." });
+                CLuaVM.CallEvent("errorEncountered", new object[] { "SetTimer: Function " + func + " is not defined." });
                 return;
             }
 
@@ -35,7 +33,7 @@ namespace Editor.Game.Script
             sttime.Start();
             sttime.Elapsed += delegate(object sender, ElapsedEventArgs e)
             {
-                LuaFunction fnc = LuaVM.VMHandler.GetFunction(func);
+                LuaFunction fnc = CLuaVM.VMHandler.GetFunction(func);
                 fnc.Call();
                 sttime.Stop();
             };
@@ -108,13 +106,13 @@ namespace Editor.Game.Script
 
                 string[] names = Enum.GetNames(type);
 
-                LuaVM.VMHandler.NewTable(type.Name);
+                CLuaVM.VMHandler.NewTable(type.Name);
 
                 int i = 0;
                 foreach (int name in Enum.GetValues(type))
                 {
                     string path = type.Name + "." + names[i++];
-                    LuaVM.VMHandler[path] = name;
+                    CLuaVM.VMHandler[path] = name;
                 }
             }
             else
@@ -135,7 +133,7 @@ namespace Editor.Game.Script
         // 2D Effects
         public void FadeScreen(int fadeOpacity, int timeMilliSecs, int sizeX, int sizeY, int posX, int posY, int red, int green, int blue, string callBack)
         {
-            Display2D.C2DEffect.MethodDelegate testDelC = () => { LuaVM.CallFunction(callBack); };
+            Display2D.C2DEffect.MethodDelegate testDelC = () => { Script.CLuaVM.CallFunction(callBack); };
             Display2D.C2DEffect.fadeEffect(fadeOpacity, timeMilliSecs, new Vector2(sizeX, sizeY), new Vector2(posX, posY), new Color(red, green, blue), testDelC);
         }
 
@@ -147,13 +145,26 @@ namespace Editor.Game.Script
             return elt;
         }
 
+        public Embedded.C2DScriptRectangle GUIImage(Rectangle rect, Color color, Texture2D texture, bool active = true, int order = 1)
+        {
+            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, color, active, order, texture);
+            Display2D.C2DEffect.ScriptableRectangle.Add(elt);
+            Display2D.C2DEffect.ScriptableRectangle = Display2D.C2DEffect.ScriptableRectangle.OrderBy(ord => ord.drawOrder).ToList();
+            return elt;
+        }
+
+        public Texture2D GetTexture(string filename)
+        {
+            return Display2D.C2DEffect._content.Load<Texture2D>(filename);
+        }
+
         // 2D Effects - Basic usage functions
         public Rectangle GetRectangle(int startX, int startY, int width, int height)
         {
             return new Rectangle(startX, startY, width, height);
         }
 
-        public Color GetColor(int r, int g, int b, int a)
+        public Color GetColor(int r, int g, int b, int a = 255)
         {
             return new Color(r, g, b, a);
         }
