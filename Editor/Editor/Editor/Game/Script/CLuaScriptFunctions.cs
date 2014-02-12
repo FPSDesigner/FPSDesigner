@@ -168,5 +168,31 @@ namespace Editor.Game.Script
         {
             return new Color(r, g, b, a);
         }
+
+        public Vector3 Get3DTo2DCoordinates(float x, float y, float z)
+        {
+            if (CConsole._Camera != null)
+                return Display2D.C2DEffect._graphicsDevice.Viewport.Project(new Vector3(x, y, z), CConsole._Camera._projection, CConsole._Camera._view, Matrix.Identity);
+            else
+                return Vector3.Zero;
+        }
+
+        public float GetDistanceBetweenPoints3D(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
+            return Vector3.Distance(new Vector3(x1, y1, z1), new Vector3(x2, y2, z2));
+        }
+
+        public float GetDistanceBetweenPoints2D(float x1, float y1, float x2, float y2)
+        {
+            return Vector2.Distance(new Vector2(x1, y1), new Vector2(x2, y2));
+        }
+
+        public Vector3 GetCameraCoordinates()
+        {
+            if (CConsole._Camera != null)
+                return CConsole._Camera._cameraPos;
+            else
+                return Vector3.Zero;
+        }
     }
 }

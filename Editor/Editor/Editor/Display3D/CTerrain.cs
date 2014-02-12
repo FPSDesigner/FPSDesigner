@@ -542,7 +542,7 @@ namespace Editor.Display3D
         public Vector3 getNormalAtPoint(float X, float Z)
         {
             Vector2 translatedPosition = positionToTerrain(X, Z);
-            int verticeIndex = (int)(translatedPosition.Y * 512 + translatedPosition.X);
+            int verticeIndex = (int)(translatedPosition.Y * width + translatedPosition.X);
 
             return vertices[verticeIndex].Normal;
         }

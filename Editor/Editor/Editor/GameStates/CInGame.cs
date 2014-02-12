@@ -120,7 +120,7 @@ namespace Editor.GameStates
                     "MACHET_ATTACK"
                 },
                 new string[] {
-                    "M4A1_SHOT"
+                    "M4A1_SHOT", "M4A1_SHOT", "M4A1_SHOT"
                 }
             };
 

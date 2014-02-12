@@ -85,6 +85,9 @@ namespace Editor
                 KeyboardState kbState = Keyboard.GetState();
                 MouseState mouseState = Mouse.GetState();
 
+                if (Game.Script.CLuaVM._settingEnableHighFreqCalls)
+                    Game.Script.CLuaVM.CallEvent("framePulse");
+
                 // Quit program when 'Escape' key is pressed
                 if (kbState.IsKeyDown(Keys.Escape))
                     this.Exit();

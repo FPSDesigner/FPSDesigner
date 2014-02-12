@@ -14,6 +14,8 @@ namespace Editor.Game.Script
         private static CLuaScriptFunctions scriptFunctions;
         public static Dictionary<string, string> EventsListVM = new Dictionary<string, string>();
 
+        public static bool _settingEnableHighFreqCalls = true;
+
         public static void Initialize()
         {
             VMHandler = new Lua();
@@ -101,6 +103,15 @@ namespace Editor.Game.Script
             RegisterFunction("getRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GetRectangle"));
             RegisterFunction("getTexture", scriptFunctions, scriptFunctions.GetType().GetMethod("GetTexture"));
             RegisterFunction("getColor", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColor"));
+            RegisterFunction("get3DTo2DCoordinates", scriptFunctions, scriptFunctions.GetType().GetMethod("Get3DTo2DCoordinates"));
+
+            // Area functions
+            RegisterFunction("getDistanceBetweenPoints3D", scriptFunctions, scriptFunctions.GetType().GetMethod("GetDistanceBetweenPoints3D"));
+            RegisterFunction("getDistanceBetweenPoints2D", scriptFunctions, scriptFunctions.GetType().GetMethod("GetDistanceBetweenPoints2D"));
+
+            // Camera function
+            RegisterFunction("getCameraCoordinates", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCameraCoordinates"));
+
         }
     }
 }
