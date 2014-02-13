@@ -89,7 +89,7 @@ namespace Editor.Display3D
 
             reflectionTarg = new RenderTarget2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
-            reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 1000000.0f, true, _map, default(Display2D.C2DEffect));
+            reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true, _map, default(Display2D.C2DEffect));
 
         }
 

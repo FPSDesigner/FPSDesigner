@@ -107,7 +107,7 @@ namespace Editor
         {
             // Capture the render
             renderCapture.Begin();
-
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State

@@ -161,7 +161,7 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 
 	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
-					* base * 0.01*input.Depth
+					* base
 					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
 
 	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
