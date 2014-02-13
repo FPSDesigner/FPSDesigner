@@ -27,6 +27,8 @@ namespace Editor.Game
         private float _initSpeed = 0.2f;
         private float _velocity = 0.3f;
 
+        private int _previousScrollWheelValue; // Help us to determine if he is changing weapon
+
         private bool _isWalkAnimPlaying = false;
         private bool _isWaitAnimPlaying = false;
         private bool _isShoting = false;
@@ -37,6 +39,7 @@ namespace Editor.Game
         public void Initialize()
         {
             _handTexture = new Texture2D[1];
+            _previousScrollWheelValue = 0;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap)
@@ -197,7 +200,7 @@ namespace Editor.Game
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
-        public void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
+        private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
             Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
@@ -213,6 +216,21 @@ namespace Editor.Game
                 }
                 mesh.Draw();
             }
+        }
+
+        // Check the key entered to change the weapon
+        private void ChangeWeapon(MouseState mouseState, CWeapon weapon)
+        {
+            // If he scrolls down
+            if(mouseState.ScrollWheelValue >= _previousScrollWheelValue)
+            {
+                weapon.ChangeWeapon((weapon._selectedWeapon + 1) % weapon._weaponsArray.Length);
+            }
+            else
+            {
+                weapon.ChangeWeapon((weapon._selectedWeapon - 1) % weapon._weaponsArray.Length);
+            }
+            _previousScrollWheelValue = mouseState.ScrollWheelValue;
         }
 
     }
