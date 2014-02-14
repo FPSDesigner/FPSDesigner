@@ -154,14 +154,31 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	light = clamp(light + 0.4f, 0, 1);
 
 	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
+	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.1);
 	float3 gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
+	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.1);
 	float3 bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
+	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.1);
 	float3 base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
+	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.1);
+
+	rTex /= clamp(0.01f*input.Depth, 1, 20);
+	rTex2 *= clamp(0.01f*input.Depth, 0, 1);
+
+	gTex /= clamp(0.01f*input.Depth, 1, 20);
+	gTex2 *= clamp(0.01f*input.Depth, 0, 1);
+
+	bTex /= clamp(0.01f*input.Depth, 1, 20);
+	bTex2 *= clamp(0.01f*input.Depth, 0, 1);
+
+	base /= clamp(0.01f*input.Depth, 1, 20);
+	base2 *= clamp(0.01f*input.Depth, 0, 1);
 
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 
 	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
 					* base
+					+ base2 + weightMap.r * rTex2 + weightMap.g * gTex2 + weightMap.b * bTex2
 					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
 
 	float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);
@@ -187,6 +204,7 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 // !fog && underwater
 float4 PixelShaderFunctionTechnique3(VertexShaderOutput input) : COLOR0
 {
+	
 	if (ClipPlaneEnabled)
 		clip(dot(float4(input.WorldPosition, 1), ClipPlane));
 

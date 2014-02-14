@@ -38,6 +38,10 @@ namespace Editor
             graphics.PreferredBackBufferHeight = 800;
             Window.AllowUserResizing = true;
 
+            graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+
+
             // Icon
             if(System.IO.File.Exists("Icon.ico"))
                 ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon("Icon.ico");
@@ -107,7 +111,6 @@ namespace Editor
         {
             // Capture the render
             renderCapture.Begin();
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State

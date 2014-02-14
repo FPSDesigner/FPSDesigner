@@ -40,8 +40,6 @@ namespace Editor.GameStates
 
         private bool isPlayerUnderwater = false;
 
-        private DepthStencilState depthBufferState;
-
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
@@ -78,7 +76,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 15f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 50, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 15f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -159,9 +157,6 @@ namespace Editor.GameStates
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };*/
 
-            depthBufferState = new DepthStencilState();
-            depthBufferState.DepthBufferEnable = true;
-            _graphics.DepthStencilState = depthBufferState;
         }
 
         public override void UnloadContent(ContentManager content)
@@ -184,9 +179,6 @@ namespace Editor.GameStates
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
-            _graphics.BlendState = BlendState.Opaque;
-            _graphics.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             if (isPlayerUnderwater != water.isPositionUnderWater(playerPos))
             {
@@ -199,16 +191,16 @@ namespace Editor.GameStates
             skybox.ColorIntensity = 0.8f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;
-            
+
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
+
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
-            
-            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             // We draw all the things associated to the Character
             _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos,weapon);
