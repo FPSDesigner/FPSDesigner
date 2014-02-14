@@ -76,7 +76,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 15f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 50f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -186,7 +186,7 @@ namespace Editor.GameStates
             terrain.frustum = cam._Frustum;
 
             skybox.ColorIntensity = 0.8f;
-            water.PreDraw(cam, gameTime);
+            water.PreDraw(cam, gameTime, cam);
             skybox.ColorIntensity = 1;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);

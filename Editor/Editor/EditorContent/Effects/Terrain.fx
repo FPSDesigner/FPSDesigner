@@ -85,6 +85,9 @@ float3 FogColor = float3(1,1,1);
 float3 FogColorWater = float3(0.0588,0.156,0.1607);
 float3 ShoreColor = float3(1,1,1);
 
+float DetailDistanceShow = 0;
+float DetailDistanceShowBorder = 0;
+
 
 
 texture DetailTexture;
@@ -153,26 +156,26 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	float light = dot(normalize(input.Normal), normalize(LightDirection)) * LightIntensity;
 	light = clamp(light + 0.4f, 0, 1);
 
-	float3 rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
-	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.1);
-	float3 gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
-	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.1);
-	float3 bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
-	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.1);
-	float3 base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
-	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.1);
 
-	rTex /= clamp(0.01f*input.Depth, 1, 20);
-	rTex2 *= clamp(0.01f*input.Depth, 0, 1);
+	float3 rTex = 0;
+	float3 gTex = 0;
+	float3 bTex = 0;
+	float3 base = 0;
 
-	gTex /= clamp(0.01f*input.Depth, 1, 20);
-	gTex2 *= clamp(0.01f*input.Depth, 0, 1);
+	float div = clamp(0.2*clamp(0.7f*(input.Depth), 1, 400), 1, 400);
+	if(div < 10)
+	{
+		rTex = tex2D(RTextureSampler, input.UV * TextureTiling) / div;
+		gTex = tex2D(GTextureSampler, input.UV * TextureTiling) / div;
+		bTex = tex2D(BTextureSampler, input.UV * TextureTiling) / div;
+		base = tex2D(BaseTextureSampler, input.UV * TextureTiling) / div;
+	}
 
-	bTex /= clamp(0.01f*input.Depth, 1, 20);
-	bTex2 *= clamp(0.01f*input.Depth, 0, 1);
-
-	base /= clamp(0.01f*input.Depth, 1, 20);
-	base2 *= clamp(0.01f*input.Depth, 0, 1);
+	float clamp2 = clamp(0.01f*input.Depth, 0, 1);
+	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.5) * clamp2;
+	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.5) * clamp2;
+	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.5) * clamp2;
+	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.5) * clamp2;
 
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 

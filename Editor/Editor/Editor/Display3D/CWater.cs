@@ -34,6 +34,9 @@ namespace Editor.Display3D
 
         private CCamera reflectionCamera;
 
+        private BoundingBox BoundingBoxChunk;
+        private bool isInView = true;
+
         public bool _isUnderWater = false;
         public float _waveSpeed = 0.04f;
 
@@ -91,6 +94,12 @@ namespace Editor.Display3D
 
             reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true, _map, default(Display2D.C2DEffect));
 
+            List<Vector3> list = new List<Vector3>();
+            list.Add(new Vector3(position.X - size.X, position.Y, position.Z - size.Y));
+            list.Add(new Vector3(position.X + size.X, position.Y, position.Z - size.Y));
+            list.Add(new Vector3(position.X - size.X, position.Y, position.Z + size.Y));
+            list.Add(new Vector3(position.X + size.X, position.Y, position.Z + size.Y));
+            BoundingBoxChunk = BoundingBox.CreateFromPoints(list);
         }
 
         /// <summary>
@@ -144,10 +153,14 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="camera">The camera class</param>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void PreDraw(CCamera camera, GameTime gameTime)
+        public void PreDraw(CCamera camera, GameTime gameTime, CCamera cam)
         {
-            renderReflection(camera, gameTime);
-            waterEffect.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+            isInView = cam.BoundingVolumeIsInView(BoundingBoxChunk);
+            if (isInView)
+            {
+                renderReflection(camera, gameTime);
+                waterEffect.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+            }
         }
 
         /// <summary>
@@ -156,13 +169,16 @@ namespace Editor.Display3D
         /// <param name="View">The view matrix</param>
         /// <param name="Projection">The projection matrix</param>
         /// <param name="CameraPosition">The camera position</param>
-        public void Draw(Matrix View, Matrix Projection, Vector3 CameraPosition)
+        public void Draw(Matrix View, Matrix Projection, Vector3 camPos)
         {
-            if (_isUnderWater)
-                waterMesh._modelRotation = modelRotationUnderwater;
-            else
-                waterMesh._modelRotation = Vector3.Zero;
-            waterMesh.Draw(View, Projection, CameraPosition);
+            if (isInView)
+            {
+                if (_isUnderWater)
+                    waterMesh._modelRotation = modelRotationUnderwater;
+                else
+                    waterMesh._modelRotation = Vector3.Zero;
+                waterMesh.Draw(View, Projection, camPos);
+            }
         }
 
         /// <summary>
