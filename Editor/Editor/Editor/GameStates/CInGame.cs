@@ -76,7 +76,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 50f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -85,7 +85,7 @@ namespace Editor.GameStates
 
 
             // Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
             Game.CConsole._Camera = cam;
            
             model._lightDirection = lensFlare.LightDirection;
@@ -163,7 +163,7 @@ namespace Editor.GameStates
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            // Update camera - _charac.Run is a functions allows player to run, loook at the param
+            // Update camera - _charac.Run is a functions allows player to run, look at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
