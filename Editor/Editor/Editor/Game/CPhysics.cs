@@ -93,7 +93,7 @@ namespace Editor.Game
             // Terrain informations
             float Steepness;
             float terrainHeight = (_isGameUsing[0]) ? _terrain.GetHeightAtPosition(assumedNewPosition.X, assumedNewPosition.Z, out Steepness) : 0;
-
+            
             float jumpVelocity = 0f;
             if (_velocity.Y > 0)
                 jumpVelocity = _velocity.Y;

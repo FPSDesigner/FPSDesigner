@@ -85,7 +85,7 @@ namespace Editor.GameStates
 
 
             // Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 400f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain, _2DEffect);
             Game.CConsole._Camera = cam;
            
             model._lightDirection = lensFlare.LightDirection;
@@ -186,7 +186,7 @@ namespace Editor.GameStates
             terrain.frustum = cam._Frustum;
 
             skybox.ColorIntensity = 0.8f;
-            water.PreDraw(cam, gameTime, cam);
+            water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);

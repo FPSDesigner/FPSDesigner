@@ -153,9 +153,9 @@ namespace Editor.Display3D
         /// </summary>
         /// <param name="camera">The camera class</param>
         /// <param name="gameTime">GameTime snapshot</param>
-        public void PreDraw(CCamera camera, GameTime gameTime, CCamera cam)
+        public void PreDraw(CCamera camera, GameTime gameTime)
         {
-            isInView = cam.BoundingVolumeIsInView(BoundingBoxChunk);
+            isInView = camera.BoundingVolumeIsInView(BoundingBoxChunk);
             if (isInView)
             {
                 renderReflection(camera, gameTime);
