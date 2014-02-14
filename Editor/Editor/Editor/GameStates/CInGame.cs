@@ -109,30 +109,27 @@ namespace Editor.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete")};
 
-            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete"), content.Load<Texture2D>("Textures//Machete") };
+            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Machete")};
+
+            //Offset M1911 null
+            //rotation Matrix.CreateRotationZ(1.25f)
+            //scale 1.3
 
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f},
-                new object[] {0,10,10,10,1,false,1.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f}
             };
             string[][] testSounds = new string[][] {
                 new string[] {
                     "MACHET_ATTACK"
                 },
-                new string[] {
-                    "M4A1_SHOT", "M4A1_SHOT", "M4A1_SHOT"
-                }
             };
 
             string[][] anims = new string[][] {
                 new string[] {
                     "Machete_Walk", "Machete_Attack", "Machete_Wait"
                 },
-                new string[] {
-                    "Machete_Walk", "Machete_Attack", "Machete_Wait"
-                }
             };
 
             weapon.LoadContent(content, testmodel, weaponsTexture , testInfos, testSounds, anims);
