@@ -103,6 +103,7 @@ namespace Editor.Game.Script
             RegisterFunction("getRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GetRectangle"));
             RegisterFunction("getTexture", scriptFunctions, scriptFunctions.GetType().GetMethod("GetTexture"));
             RegisterFunction("getColor", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColor"));
+            RegisterFunction("getColorFromHex", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColorFromHex"));
             RegisterFunction("getCursorPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCursorPosition"));
             RegisterFunction("get3DTo2DPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("Get3DTo2DPosition"));
 

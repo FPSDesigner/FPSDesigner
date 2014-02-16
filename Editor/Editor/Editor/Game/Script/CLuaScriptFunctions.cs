@@ -139,15 +139,15 @@ namespace Editor.Game.Script
 
         public Embedded.C2DScriptRectangle GUIRectangle(Rectangle rect, Color color, bool active = true, int order = 1)
         {
-            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, color, active, order);
+            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, null, color, null, active, order);
             Display2D.C2DEffect.ScriptableRectangle.Add(elt);
             Display2D.C2DEffect.ScriptableRectangle = Display2D.C2DEffect.ScriptableRectangle.OrderBy(ord => ord.drawOrder).ToList();
             return elt;
         }
 
-        public Embedded.C2DScriptRectangle GUIImage(Rectangle rect, Color color, Texture2D texture, bool active = true, int order = 1)
+        public Embedded.C2DScriptRectangle GUIImage(Rectangle rect, Texture2D texture, Rectangle? sourceRect = null, Color? color = null, bool active = true, int order = 1)
         {
-            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, color, active, order, texture);
+            Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, sourceRect, color, texture, active, order);
             Display2D.C2DEffect.ScriptableRectangle.Add(elt);
             Display2D.C2DEffect.ScriptableRectangle = Display2D.C2DEffect.ScriptableRectangle.OrderBy(ord => ord.drawOrder).ToList();
             return elt;
@@ -167,6 +167,28 @@ namespace Editor.Game.Script
         public Color GetColor(int r, int g, int b, int a = 255)
         {
             return new Color(r, g, b, a);
+        }
+
+        public Color GetColorFromHex(string hexString)
+        {
+            if (hexString.StartsWith("#"))
+                hexString = hexString.Substring(1);
+            uint hex = uint.Parse(hexString, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+            Color color = Color.White;
+            if (hexString.Length == 8)
+            {
+                color.A = (byte)(hex >> 24);
+                color.R = (byte)(hex >> 16);
+                color.G = (byte)(hex >> 8);
+                color.B = (byte)(hex);
+            }
+            else if (hexString.Length == 6)
+            {
+                color.R = (byte)(hex >> 16);
+                color.G = (byte)(hex >> 8);
+                color.B = (byte)(hex);
+            }
+            return color;
         }
 
         public Vector2 GetCursorPosition()

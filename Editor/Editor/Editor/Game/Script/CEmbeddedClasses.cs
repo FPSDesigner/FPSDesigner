@@ -21,6 +21,7 @@ namespace Editor.Game.Script.Embedded
     class C2DScriptRectangle
     {
         public Rectangle Rectangle;
+        public Rectangle? SourceRectangle;
         public Texture2D Texture;
         public Color Color;
 
@@ -40,20 +41,21 @@ namespace Editor.Game.Script.Embedded
             }
         }
 
-        public C2DScriptRectangle(Rectangle rect, Color color, bool active = true, int order = 1, Texture2D texture = null)
+        public C2DScriptRectangle(Rectangle rect, Rectangle? sourceRect = null, Color? color = null, Texture2D texture = null, bool active = true, int order = 1)
         {
+            Rectangle = rect;
+            SourceRectangle = sourceRect;
+            Color = color ?? Color.White;
+            isActive = active;
+            drawOrder = order;
+
             if (texture != null)
                 Texture = texture;
             else
             {
                 Texture = new Texture2D(Display2D.C2DEffect._graphicsDevice, 1, 1, false, SurfaceFormat.Color);
-                Texture.SetData<Color>(new Color[] { color });
+                Texture.SetData<Color>(new Color[] { Color });
             }
-
-            Rectangle = rect;
-            Color = color;
-            isActive = active;
-            drawOrder = order;
         }
     }
 
