@@ -77,6 +77,12 @@ namespace Editor.Game.Script
             }
         }
 
+        public string GetGameState()
+        {
+            CGameStateManager stateManager = CGameStateManager.getInstance();
+            return stateManager.gameStateName;
+        }
+
         public Embedded.XMLManager XMLReader(string file)
         {
             return new Embedded.XMLManager(file);
@@ -147,6 +153,9 @@ namespace Editor.Game.Script
 
         public Embedded.C2DScriptRectangle GUIImage(Rectangle rect, Texture2D texture, Rectangle? sourceRect = null, Color? color = null, bool active = true, int order = 1)
         {
+            if (sourceRect == Rectangle.Empty)
+                sourceRect = null;
+
             Embedded.C2DScriptRectangle elt = new Embedded.C2DScriptRectangle(rect, sourceRect, color, texture, active, order);
             Display2D.C2DEffect.ScriptableRectangle.Add(elt);
             Display2D.C2DEffect.ScriptableRectangle = Display2D.C2DEffect.ScriptableRectangle.OrderBy(ord => ord.drawOrder).ToList();
@@ -159,7 +168,7 @@ namespace Editor.Game.Script
         }
 
         // 2D Effects - Basic usage functions
-        public Rectangle GetRectangle(int startX, int startY, int width, int height)
+        public Rectangle GetRectangle(int startX = 0, int startY = 0, int width = 0, int height = 0)
         {
             return new Rectangle(startX, startY, width, height);
         }
@@ -193,9 +202,9 @@ namespace Editor.Game.Script
             return color;
         }
 
-        public Vector2 GetCursorPosition()
+        public MouseState GetCursorInfo()
         {
-            return new Vector2(Display2D.C2DEffect._mouseState.X, Display2D.C2DEffect._mouseState.Y);
+            return Display2D.C2DEffect._mouseState;
         }
 
         public Vector3 Get3DTo2DPosition(float x, float y, float z)

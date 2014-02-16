@@ -32,6 +32,8 @@ namespace Editor.Game
 
         public Game.CGameState actualState;
 
+        public string gameStateName;
+
         public ContentManager content;
         public GraphicsDevice graphics;
         public SpriteBatch spriteBatch;
@@ -39,7 +41,8 @@ namespace Editor.Game
 
         public void ChangeState(Game.CGameState newState)
         {
-            Game.Script.CLuaVM.CallEvent("changeState", new object[] { (actualState == null) ? "null" : actualState.GetType().Name, (newState == null) ? "null" : newState.GetType().Name });
+            gameStateName = newState.GetType().Name;
+            Game.Script.CLuaVM.CallEvent("changeState", new object[] { (actualState == null) ? "null" : actualState.GetType().Name, (newState == null) ? "null" : gameStateName });
             actualState = newState;
         }
 

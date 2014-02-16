@@ -48,12 +48,12 @@ namespace Editor.Game.Script
             try
             {
                 VMHandler.DoFile(scriptName);
-                CallEvent("scriptInit");
             }
             catch (Exception e)
             {
                 Game.CConsole.addMessage("LUA Script Exception: " + e, true);
             }
+            CallEvent("scriptInit");
         }
 
         public static void CallEvent(string eventName, object[] parameters = default(object[]))
@@ -74,6 +74,11 @@ namespace Editor.Game.Script
             }
         }
 
+        public static void DefineConstants()
+        {
+            VMHandler["null"] = null;
+        }
+
         public static void LoadDefaultFunctions()
         {
             // Script related
@@ -82,6 +87,7 @@ namespace Editor.Game.Script
             RegisterFunction("setTimer", scriptFunctions, scriptFunctions.GetType().GetMethod("SetTimer"));
             RegisterFunction("getDate", scriptFunctions, scriptFunctions.GetType().GetMethod("GetDate"));
             RegisterFunction("getEnum", scriptFunctions, scriptFunctions.GetType().GetMethod("GetEnum"));
+            RegisterFunction("getGameState", scriptFunctions, scriptFunctions.GetType().GetMethod("GetGameState"));
             //RegisterFunction("getScreenSize", scriptFunctions, scriptFunctions.GetType().GetMethod("GetScreenSize"));
 
             RegisterFunction("getMD5", scriptFunctions, scriptFunctions.GetType().GetMethod("GetMD5"));
@@ -104,7 +110,7 @@ namespace Editor.Game.Script
             RegisterFunction("getTexture", scriptFunctions, scriptFunctions.GetType().GetMethod("GetTexture"));
             RegisterFunction("getColor", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColor"));
             RegisterFunction("getColorFromHex", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColorFromHex"));
-            RegisterFunction("getCursorPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCursorPosition"));
+            RegisterFunction("getCursorInfo", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCursorInfo"));
             RegisterFunction("get3DTo2DPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("Get3DTo2DPosition"));
 
             // Area functions
