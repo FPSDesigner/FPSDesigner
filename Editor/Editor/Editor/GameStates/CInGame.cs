@@ -44,7 +44,6 @@ namespace Editor.GameStates
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
-        Display2D.C2DEffect _2DEffect;
 
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
@@ -85,7 +84,7 @@ namespace Editor.GameStates
 
 
             // Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain);
             Game.CConsole._Camera = cam;
            
             model._lightDirection = lensFlare.LightDirection;
@@ -173,6 +172,7 @@ namespace Editor.GameStates
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
+            
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -199,8 +199,7 @@ namespace Editor.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            // We draw all the things associated to the Character
-            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos,weapon);
+            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos, weapon);
 
             lensFlare.UpdateOcclusion(cam._view, cam._projection);
             lensFlare.Draw(gameTime);

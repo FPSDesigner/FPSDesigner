@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -51,8 +53,80 @@ namespace Editor.Game.Script.Embedded
             Rectangle = rect;
             Color = color;
             isActive = active;
-            _drawOrder = order;
+            drawOrder = order;
         }
+    }
+
+    // XML Manager
+    class XMLManager
+    {
+        public string fileName;
+
+        private XDocument handler;
+
+
+        public XMLManager(string file)
+        {
+            fileName = file;
+            handler = XDocument.Load(file);
+        }
+
+        #region "Methods"
+        public int Count(string elementName)
+        {
+            return handler.XPathSelectElements(elementName).Count();
+        }
+
+        public int Count(XElement parent, string elementName = "")
+        {
+            if (elementName == "")
+                return parent.Elements().Count();
+            else
+                return parent.XPathSelectElements(elementName).Count();
+        }
+
+        public string GetAttribute(string elementName, string attribute, int elementId = 0)
+        {
+            XElement[] eltId = handler.XPathSelectElements(elementName).ToArray();
+            if (elementId < eltId.Length)
+                return eltId[elementId].Attribute(attribute).Value;
+            else
+                return "";
+        }
+
+        public XElement[] GetNodes(string elementName)
+        {
+             return handler.XPathSelectElements(elementName).ToArray();
+        }
+
+        public XElement GetNode(string child)
+        {
+            return handler.XPathSelectElement(child);
+        }
+
+        public XElement[] GetChildren(XElement parent)
+        {
+            return parent.Elements().ToArray();
+        }
+
+        public XElement GetChild(XElement parent, string child)
+        {
+            return parent.Element(child);
+        }
+
+        public bool HasNodeChilds(XElement node)
+        {
+            return node.HasElements;
+        }
+
+        public string GetElementValue(XElement element, string val = "Value")
+        {
+            if (val == "Value")
+                return element.Value;
+            else
+                return element.Name.ToString();
+        }
+        #endregion
     }
 
 }

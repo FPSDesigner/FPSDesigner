@@ -5,7 +5,7 @@ using System.Text;
 
 using System.Timers;
 using System.Security.Cryptography;
-using System.Xml;
+using System.Xml.Linq;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -77,15 +77,15 @@ namespace Editor.Game.Script
             }
         }
 
-        public XmlReader XMLReader(string file)
+        public Embedded.XMLManager XMLReader(string file)
         {
-            return XmlReader.Create(file);
+            return new Embedded.XMLManager(file);
         }
 
-        public XmlWriter XMLWriter(string file)
+        /*public System.Xml.XmlWriter XMLWriter(string file)
         {
-            return XmlWriter.Create(file);
-        }
+            return System.Xml.XmlWriter.Create(file);
+        }*/
 
         // Enums
         public void GetEnum(string enumType)
@@ -169,7 +169,12 @@ namespace Editor.Game.Script
             return new Color(r, g, b, a);
         }
 
-        public Vector3 Get3DTo2DCoordinates(float x, float y, float z)
+        public Vector2 GetCursorPosition()
+        {
+            return new Vector2(Display2D.C2DEffect._mouseState.X, Display2D.C2DEffect._mouseState.Y);
+        }
+
+        public Vector3 Get3DTo2DPosition(float x, float y, float z)
         {
             if (CConsole._Camera != null)
                 return Display2D.C2DEffect._graphicsDevice.Viewport.Project(new Vector3(x, y, z), CConsole._Camera._projection, CConsole._Camera._view, Matrix.Identity);
@@ -187,7 +192,7 @@ namespace Editor.Game.Script
             return Vector2.Distance(new Vector2(x1, y1), new Vector2(x2, y2));
         }
 
-        public Vector3 GetCameraCoordinates()
+        public Vector3 GetCameraPosition()
         {
             if (CConsole._Camera != null)
                 return CConsole._Camera._cameraPos;

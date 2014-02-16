@@ -39,6 +39,7 @@ namespace Editor.Game
 
         public void ChangeState(Game.CGameState newState)
         {
+            Game.Script.CLuaVM.CallEvent("changeState", new object[] { (actualState == null) ? "null" : actualState.GetType().Name, (newState == null) ? "null" : newState.GetType().Name });
             actualState = newState;
         }
 

@@ -206,6 +206,7 @@ namespace Editor.Game
         /// <param name="message">The message to write</param>
         public static void WriteLogs(string message, bool addDate = true, bool flush = true)
         {
+            addDate = false;
             if (_isConsoleFileLoaded)
             {
                 _logsFile.WriteLine(((addDate) ? "["+DateTime.Now.ToString() + "] " : "") + message);

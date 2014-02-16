@@ -21,6 +21,7 @@ namespace Editor.Display3D
     {
         public Matrix _view { get; private set; }
         public Matrix _projection { get; private set; }
+        public Matrix _nearProjection { get; private set; }
 
         public Vector3 _cameraPos { get; set; }
         public Vector3 _cameraTarget { get; set; }
@@ -103,7 +104,10 @@ namespace Editor.Display3D
             _isMoving = false;
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
-            _projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(40), _aspectRatio, _nearClip, _farClip);
+
+            float fieldOfView = MathHelper.ToRadians(40);
+            _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
+            _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 10000f);
 
             generateFrustum();
         }

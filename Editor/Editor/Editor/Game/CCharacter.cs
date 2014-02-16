@@ -75,7 +75,8 @@ namespace Editor.Game
         {
             _cam = cam;
             this._isUnderWater = isUnderWater;
-            //We place the hand like we want
+
+            // We place the hand like we want
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, 0);

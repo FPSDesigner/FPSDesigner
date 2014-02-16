@@ -33,6 +33,9 @@ namespace Editor.Display2D
         public static GraphicsDevice _graphicsDevice;
         public static ContentManager _content;
 
+        public static KeyboardState _kbState;
+        public static MouseState _mouseState;
+
         // fadeEffect
         private static bool _isFading = false;
         private static double _opacityPerMilliSecond;
@@ -227,9 +230,11 @@ namespace Editor.Display2D
         /// Called at each frame to process code frame-per-frame
         /// </summary>
         /// <param name="gameTime">GameTime snapshot</param>
-        public static void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
         {
             _actualGameTime = gameTime;
+            _kbState = kbState;
+            _mouseState = mouseState;
             if (_isFading)
             {
                 double elapsedMilliSeconds = gameTime.TotalGameTime.TotalMilliseconds - _fadeTimeStart;

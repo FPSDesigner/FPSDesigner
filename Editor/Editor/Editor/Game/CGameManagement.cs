@@ -21,7 +21,7 @@ namespace Editor.Game
         private GameStates.CInGame InGame;
 
         // Current State
-        Game.CGameStateManager _currentState;
+        public Game.CGameStateManager _currentState;
         Game.CGUIManager _GUIManager;
 
         private GraphicsDeviceManager _graphicsManager;
