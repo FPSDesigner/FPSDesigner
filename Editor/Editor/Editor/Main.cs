@@ -64,10 +64,6 @@ namespace Editor
 
             GameManagement.loadContent(Content, GraphicsDevice, spriteBatch, graphics);
 
-            Game.Script.CLuaVM.Initialize();
-            //Game.Script.CLuaVM.LoadScript("test.lua");
-            Game.Script.CLuaVM.LoadScript("GuiManager.lua");
-
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
@@ -75,6 +71,10 @@ namespace Editor
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
+
+            Game.Script.CLuaVM.Initialize();
+            //Game.Script.CLuaVM.LoadScript("test.lua");
+            Game.Script.CLuaVM.LoadScript("GuiManager.lua");
         }
 
 

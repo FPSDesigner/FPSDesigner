@@ -265,7 +265,7 @@ namespace Editor.Display2D
                 for (int i = 0; i < ScriptableRectangle.Count; i++)
                 {
                     if (ScriptableRectangle[i].isActive)
-                        _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].Color);
+                        _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].SourceRectangle, ScriptableRectangle[i].Color);
                 }
             }
             if (_isFading)

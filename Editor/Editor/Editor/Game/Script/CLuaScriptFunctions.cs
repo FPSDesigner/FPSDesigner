@@ -171,6 +171,8 @@ namespace Editor.Game.Script
 
         public Color GetColorFromHex(string hexString)
         {
+            if (hexString == null)
+                return Color.White;
             if (hexString.StartsWith("#"))
                 hexString = hexString.Substring(1);
             uint hex = uint.Parse(hexString, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
