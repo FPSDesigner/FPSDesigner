@@ -88,6 +88,9 @@ namespace Editor.Game
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
+            // If he changed weapon
+            ChangeWeapon(mouseState, weapon);
+
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -223,11 +226,11 @@ namespace Editor.Game
         private void ChangeWeapon(MouseState mouseState, CWeapon weapon)
         {
             // If he scrolls down
-            if(mouseState.ScrollWheelValue >= _previousScrollWheelValue)
+            if(mouseState.ScrollWheelValue > _previousScrollWheelValue)
             {
                 weapon.ChangeWeapon((weapon._selectedWeapon + 1) % weapon._weaponsArray.Length);
             }
-            else
+            else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
             {
                 weapon.ChangeWeapon((weapon._selectedWeapon - 1) % weapon._weaponsArray.Length);
             }
