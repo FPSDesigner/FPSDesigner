@@ -181,10 +181,10 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	}
 
 	float clamp2 = clamp(0.01f*input.Depth, 0, 1);
-	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.5) * clamp2;
-	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.5) * clamp2;
-	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.5) * clamp2;
-	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.5) * clamp2;
+	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.1) * clamp2;
+	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.1) * clamp2;
+	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.1) * clamp2;
+	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.1) * clamp2;
 
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 
