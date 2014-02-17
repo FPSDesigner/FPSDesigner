@@ -276,9 +276,13 @@ namespace Editor.Game
         }
 
         // Reloading function
-        private void Reloadig()
+        private void Reloadig(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState)
         {
+           
+            if(kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))
+            {
 
+            }
         }
 
     }

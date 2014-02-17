@@ -68,7 +68,7 @@ namespace Editor.Game
             public int _wepType;
 
             // Clips & Magazines
-            public int _actualClip;
+            public int _actualClip; // Bullets available in one magazine
             public int _maxClip;
             public int _bulletsAvailable; // Not including clip
             public int _magazinesAvailables;
@@ -182,6 +182,11 @@ namespace Editor.Game
                     _dryFirePlayed = true;
                 }
             }
+        }
+
+        public void Reloading()
+        {
+            _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
         }
 
         
