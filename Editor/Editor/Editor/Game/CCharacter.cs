@@ -70,7 +70,7 @@ namespace Editor.Game
             }
         }
 
-        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
+        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
             _cam = cam;
@@ -91,6 +91,8 @@ namespace Editor.Game
             // If he changed weapon
             ChangeWeapon(mouseState, weapon);
 
+            // The reloading method
+            Reloadig(weapon, kbState, oldKbState);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -193,11 +195,19 @@ namespace Editor.Game
                 if (!_isShoting && !_isUnderWater)
                 {
                     weapon.Shot(true, _isShoting, gameTime);
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
-                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
-                    _isWalkAnimPlaying = false;
-                    _isWaitAnimPlaying = false;
-                    _isShoting = true;
+                    // If he does not use a machete AND if he has bullet in a magazine
+                    if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
+                    {
+
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
+                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
+                        
+
+                        _isShoting = true;
+                        _isWalkAnimPlaying = false;
+                        _isWaitAnimPlaying = false;
+                    }
+
                 }
             }
             else if (mouseState.LeftButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
@@ -278,10 +288,10 @@ namespace Editor.Game
         // Reloading function
         private void Reloadig(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState)
         {
-           
-            if(kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))
-            {
 
+            if (kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))
+            {
+                weapon.Reloading();
             }
         }
 

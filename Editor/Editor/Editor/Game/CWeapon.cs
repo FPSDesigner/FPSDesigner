@@ -69,8 +69,8 @@ namespace Editor.Game
 
             // Clips & Magazines
             public int _actualClip; // Bullets available in one magazine
-            public int _maxClip;
-            public int _bulletsAvailable; // Not including clip
+            public int _maxClip; //Max bullets per magazine
+            public int _bulletsAvailable; // Bullets left
             public int _magazinesAvailables;
 
             // Other Weapons Infos
@@ -173,6 +173,7 @@ namespace Editor.Game
             {
                     _weaponsArray[_selectedWeapon]._actualClip--;
                     _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                    Console.WriteLine("ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip + "\n BulletAvailable :" + _weaponsArray[_selectedWeapon]._bulletsAvailable);
             }
             else
             {
@@ -186,7 +187,13 @@ namespace Editor.Game
 
         public void Reloading()
         {
-            _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+            // If he has bullets available
+            if (_weaponsArray[_selectedWeapon]._bulletsAvailable >= 
+                    (_weaponsArray[_selectedWeapon]._maxClip -_weaponsArray[_selectedWeapon]._actualClip))
+            {
+                _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
+                _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+            }
         }
 
         

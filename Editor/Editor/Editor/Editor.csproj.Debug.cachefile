@@ -40,7 +40,6 @@ Content\Textures\Machete.xnb
 Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
-Content\MACHET_ATTACK.xnb
 Content\3D\plane.xnb
 Content\3D\Ground.xnb
 Content\3D\Checker_0.xnb
@@ -57,3 +56,4 @@ Content\Sounds\Weapons\DryFireSound.xnb
 Content\Sounds\Weapons\M1911_SHOT.xnb
 Content\Sounds\Weapons\M1911_RELOAD.xnb
 Content\Textures\M1911.xnb
+Content\Sounds\Weapons\MACHET_ATTACK.xnb
