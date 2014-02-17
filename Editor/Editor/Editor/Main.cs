@@ -50,8 +50,8 @@ namespace Editor
 
         protected override void Initialize()
         {
-            GameManagement = new Game.CGameManagement();
-            GameManagement.Initialize();
+            Game.CGameManagement.currentState = "CMenu";
+            Game.CGameManagement.Initialize();
 
             levelInfo = new Game.LevelInfo.CLevelInfo();
 
@@ -62,8 +62,6 @@ namespace Editor
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
-
             renderCapture = new Display2D.CRenderCapture(GraphicsDevice);
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
@@ -72,7 +70,7 @@ namespace Editor
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
 
-            GameManagement.loadContent(Content, GraphicsDevice, spriteBatch, graphics);
+            Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
 
             Game.Script.CLuaVM.Initialize();
             //Game.Script.CLuaVM.LoadScript("test.lua");
@@ -82,7 +80,7 @@ namespace Editor
 
         protected override void UnloadContent()
         {
-            GameManagement.unloadContent(Content);
+            Game.CGameManagement.UnloadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,7 +97,7 @@ namespace Editor
                 if (kbState.IsKeyDown(Keys.Escape))
                     this.Exit();
 
-                GameManagement.Update(gameTime, kbState, mouseState);
+                Game.CGameManagement.Update(gameTime, kbState, mouseState);
 
                 Display2D.C2DEffect.Update(gameTime, kbState, mouseState);
                 Game.CConsole.Update(kbState, gameTime);
@@ -117,7 +115,7 @@ namespace Editor
             GraphicsDevice.Clear(Color.Black);
 
             // Draw "All" the State
-            GameManagement.Draw(spriteBatch, gameTime);
+            Game.CGameManagement.Draw(spriteBatch, gameTime);
 
             // Draw the Console effect
             Display2D.C2DEffect.Draw(gameTime);

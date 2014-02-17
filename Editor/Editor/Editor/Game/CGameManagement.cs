@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Reflection;
 
 namespace Editor.Game
 {
@@ -16,52 +17,41 @@ namespace Editor.Game
     /// </summary>
     class CGameManagement
     {
-        // All The States that exist
-        private GameStates.CMenu Menu;
-        private GameStates.CInGame InGame;
-
         // Current State
-        public Game.CGameStateManager _currentState;
-        Game.CGUIManager _GUIManager;
+        //public static Game.CGameStateManager _currentState;
+        public static string currentState;
 
-        private GraphicsDeviceManager _graphicsManager;
-        private GraphicsDevice _graphics;
-        private MouseState _oldMouseState;
+        private static GraphicsDeviceManager _graphicsManager;
+        private static GraphicsDevice _graphics;
+        private static SpriteBatch _spriteBatch;
+        private static MouseState _oldMouseState;
+        private static ContentManager _content;
+
+        private static Dictionary<string, dynamic> gameStateList;
+        
 
         /// <summary>
         /// Constructor, Initialize the class
         /// </summary>
-        public void Initialize()
+        public static void Initialize()
         {
-            _currentState = Game.CGameStateManager.getInstance();
+            //_currentState = Game.CGameStateManager.getInstance();
             //_GUIManager = new Game.CGUIManager(_currentState);
             //_GUIManager.LoadGUIFile("GUI.xml");
 
-            // Example Menu
-            /*Game.LevelInfo.GameMenu data = new Game.LevelInfo.GameMenu
-            {
-                Type = "Image",
-                BackgroundMusic = "Sounds/Menu/MENU_SoundSelction",
-                SelectionSound = "Sounds/Menu/MENU_SoundSelction",
-                BGImageFile = "2D/Menu/MENU_Bckground",
-                CursorFile = "2D/Menu/MENU_Sight",
-                CursorClickX = 17,
-                CursorClickY = 17,
-                ButtonsInfo = new Game.LevelInfo.ButtonsInfo
-                {
-                    ButtonsImages = "2D/Menu/MENU_Buttons",
-                    MenuButton = new Game.LevelInfo.MenuButton[]
-                    {
-                        new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 20, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 0 },
-                        new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 200, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 120 },
-                    }
-                }
-            };*/
-
             // First state = Menu
-            GameStates.CInGame instance = GameStates.CInGame.getInstance();
+            /*GameStates.CInGame instance = GameStates.CInGame.getInstance();
             _currentState.ChangeState(instance);
-            _currentState.Initialize();
+            _currentState.Initialize();*/
+
+            gameStateList = new Dictionary<string, dynamic>();
+
+            Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Editor.GameStates");
+            for (int i = 0; i < typelist.Length; i++)
+            {
+                gameStateList.Add(typelist[i].Name, (dynamic)Activator.CreateInstance(typelist[i]));
+            }
+
         }
 
         /// <summary>
@@ -70,44 +60,56 @@ namespace Editor.Game
         /// <param name="content">ContentManager class</param>
         /// <param name="graphics">GraphicsDevice class</param>
         /// <param name="spriteBatch">SpriteBatch class</param>
-        public void loadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice)
+        public static void LoadContent(ContentManager content, GraphicsDevice graphics, SpriteBatch spriteBatch, GraphicsDeviceManager graphicsDevice)
         {
             _graphicsManager = graphicsDevice;
             _graphics = graphics;
+            _content = content;
+            _spriteBatch = spriteBatch;
 
-            _currentState.content = content;
-            _currentState.graphics = graphics;
-            _currentState.spriteBatch = spriteBatch;
-            _currentState.graphicsDevice = graphicsDevice;
-
-            _currentState.loadContent();
-      
+            gameStateList[currentState].Initialize();
+            gameStateList[currentState].LoadContent(content, spriteBatch, graphics);
         }
 
-        public void unloadContent(ContentManager content)
+        public static void UnloadContent(ContentManager content)
         {
-            //Unload the State content
-            _currentState.actualState.UnloadContent(content);
+            gameStateList[currentState].UnloadContent(content);
         }
 
-        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
+        public static void ChangeState(string newState)
         {
-            //Update the current state
-            _currentState.actualState.Update(gameTime, kbState, mouseState, _oldMouseState);
+            if (IsValidGameState(newState))
+            {
+                Game.Script.CLuaVM.CallEvent("changeState", new object[] { currentState, newState });
+
+                UnloadContent(_content);
+                currentState = newState;
+                gameStateList[currentState].Initialize();
+                gameStateList[currentState].LoadContent(_content, _spriteBatch, _graphicsManager);
+            }
+        }
+
+        public static bool IsValidGameState(string gameState)
+        {
+            return gameStateList.ContainsKey(gameState);
+        }
+
+        public static void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
+        {
+            gameStateList[currentState].Update(gameTime, kbState, mouseState, _oldMouseState);
 
             _oldMouseState = mouseState;
         }
 
-        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        public static void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            _currentState.actualState.Draw(spritebatch, gameTime);
+            gameStateList[currentState].Draw(spritebatch, gameTime);
         }
 
-        public void SendParam(object param)
+        private static Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
         {
-            _currentState.actualState.SendParam(param);
+            return assembly.GetTypes().Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
         }
-
 
     }
 }

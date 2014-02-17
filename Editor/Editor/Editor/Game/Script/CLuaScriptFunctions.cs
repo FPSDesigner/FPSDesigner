@@ -72,15 +72,19 @@ namespace Editor.Game.Script
             {
                 using (var stream = System.IO.File.OpenRead(file))
                 {
-                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-","").ToLower();
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
                 }
             }
         }
 
         public string GetGameState()
         {
-            CGameStateManager stateManager = CGameStateManager.getInstance();
-            return stateManager.gameStateName;
+            return CGameManagement.currentState;
+        }
+
+        public void ChangeGameState(string gameState)
+        {
+            CGameManagement.ChangeState(gameState);
         }
 
         public Embedded.XMLManager XMLReader(string file)

@@ -11,45 +11,35 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.GameStates
 {
-    class CMenu : Game.CGameState
+    class CMenu
     {
-        #region "Singleton"
-        // Singleton Code
-        private static CMenu instance = null;
-        private static readonly object myLock = new object();
-
-        // Singelton Methods
-        private CMenu() { }
-        public static CMenu getInstance()
-        {
-            lock (myLock)
-            {
-                if (instance == null) instance = new CMenu();
-                return instance;
-            }
-        }
-        #endregion
-
-        
 
         //Game.CGUIManager GUIManager;
-        public CMenu(Game.CGUIManager guimanager)
+        public CMenu()
         {
             //GUIManager = guimanager;
         }
 
-        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public void Initialize()
+        {
+        }
+
+        public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             /*if(!GUIManager.IsGUILoaded("MainMenu"))
                 GUIManager.LoadGUI(GUIManager.GetGUIId("MainMenu"), content, graphics);*/
         }
 
-        public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        public void UnloadContent(ContentManager content)
+        {
+        }
+
+        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             //GUIManager.Update(gameTime, kbState, mouseState, oldMouseState);
         }
 
-        public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             //GUIManager.Draw(spritebatch, gameTime);
         }

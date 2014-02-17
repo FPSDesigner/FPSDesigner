@@ -11,26 +11,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.GameStates
 {
-    class CInGame : Game.CGameState
+    class CInGame
     {
-        #region "Singleton"
-
-        // Singleton Code
-        private static CInGame instance = null;
-        private static readonly object myLock = new object();
-
-        // Singelton Methods
-        private CInGame() { }
-        public static CInGame getInstance()
-        {
-            lock (myLock)
-            {
-                if (instance == null) instance = new CInGame();
-                return instance;
-            }
-        }
-        #endregion
-
         private Display3D.CModel model; // (TEST) One Model displayed
         private Display3D.CCamera cam; // (TEST) One camera instancied
 
@@ -49,18 +31,22 @@ namespace Editor.GameStates
         List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
 
-        public override void Initialize()
+        public void Initialize()
         {
 
+        }
+
+        public CInGame()
+        {
+        }
+
+        public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        {
             _character = new Game.CCharacter();
             _character.Initialize();
 
             lensFlare = new Display3D.CLensFlare();
 
-        }
-
-        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
-        {
             //Display 1 model : Building
             model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(200, 440, 0), new Vector3(0f,90.0f,0f), new Vector3(0.8f), graphics);
             models.Add(model);
@@ -172,12 +158,12 @@ namespace Editor.GameStates
 
         }
 
-        public override void UnloadContent(ContentManager content)
+        public void UnloadContent(ContentManager content)
         {
            
         }
 
-        public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity, weapon), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
@@ -187,7 +173,7 @@ namespace Editor.GameStates
             _oldKeyState = kbState;
         }
 
-        public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             
             //renderer.Draw();
