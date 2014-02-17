@@ -119,7 +119,6 @@ namespace Editor.Game
             _weaponsArray = new WeaponData[_weaponsAmount];
 
             
-
             // Initializing sounds
             _weaponsSounds = new Dictionary<string, SoundEffect>();
             for (int i = 0; i < weaponsSounds.Length; i++)

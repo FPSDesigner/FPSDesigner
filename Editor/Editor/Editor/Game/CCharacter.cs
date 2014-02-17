@@ -45,11 +45,11 @@ namespace Editor.Game
         public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap)
         {
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
-            _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0),_handRotation ,0.03f,_handTexture,8,0.05f,true);
+            _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
 
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
             _handRotation = Matrix.CreateFromYawPitchRoll(0, -90, 0);
-            
+
             _handAnimation.LoadContent(content);
 
             _handAnimation.ChangeAnimSpeed(0.7f);
@@ -70,7 +70,7 @@ namespace Editor.Game
             }
         }
 
-        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState,CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
+        public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
             _cam = cam;
@@ -192,7 +192,7 @@ namespace Editor.Game
             {
                 if (!_isShoting && !_isUnderWater)
                 {
-                    weapon.Shot(true,_isShoting,gameTime);
+                    weapon.Shot(true, _isShoting, gameTime);
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
                     _isWalkAnimPlaying = false;
@@ -210,9 +210,9 @@ namespace Editor.Game
             Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
                 weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset);
 
-            foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes) 
+            foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes)
             {
-                foreach (BasicEffect effect in mesh.Effects)  
+                foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.World = world;
                     effect.View = view;
@@ -226,9 +226,10 @@ namespace Editor.Game
         private void ChangeWeapon(MouseState mouseState, CWeapon weapon)
         {
             // If he scrolls down
-            if(mouseState.ScrollWheelValue > _previousScrollWheelValue)
+            if (mouseState.ScrollWheelValue > _previousScrollWheelValue)
             {
-                weapon.ChangeWeapon((weapon._selectedWeapon + 1) % weapon._weaponsArray.Length);
+                int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
+                weapon.ChangeWeapon(newWeap);
 
                 // Draw the weapon texture
                 foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
@@ -250,7 +251,8 @@ namespace Editor.Game
             }
             else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
             {
-                weapon.ChangeWeapon((weapon._selectedWeapon - 1) % weapon._weaponsArray.Length);
+                int newWeap = (weapon._selectedWeapon <= 0) ? weapon._weaponsArray.Length - 1 : weapon._selectedWeapon - 1;
+                weapon.ChangeWeapon(newWeap);
 
                 // Draw the weapon texture
                 foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
@@ -271,6 +273,12 @@ namespace Editor.Game
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
+        }
+
+        // Reloading function
+        private void Reloadig()
+        {
+
         }
 
     }

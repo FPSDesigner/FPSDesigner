@@ -140,7 +140,7 @@ namespace Editor.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.6f, 2.7f, 0.7f,
+                    1.6f, 3.0f, 0.7f,
                 },
                 new float[] {
                     2.0f, 10.0f, 0.8f,
