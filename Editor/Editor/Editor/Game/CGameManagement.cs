@@ -34,8 +34,8 @@ namespace Editor.Game
         public void Initialize()
         {
             _currentState = Game.CGameStateManager.getInstance();
-            _GUIManager = new Game.CGUIManager(_currentState);
-            _GUIManager.LoadGUIFile("GUI.xml");
+            //_GUIManager = new Game.CGUIManager(_currentState);
+            //_GUIManager.LoadGUIFile("GUI.xml");
 
             // Example Menu
             /*Game.LevelInfo.GameMenu data = new Game.LevelInfo.GameMenu
@@ -59,7 +59,8 @@ namespace Editor.Game
             };*/
 
             // First state = Menu
-            _currentState.ChangeState(new GameStates.CMenu(_GUIManager));
+            GameStates.CInGame instance = GameStates.CInGame.getInstance();
+            _currentState.ChangeState(instance);
             _currentState.Initialize();
         }
 

@@ -92,7 +92,7 @@ namespace Editor.Game
         }
 
 
-        public void LoadGUIFile(string guiFile)
+        /*public void LoadGUIFile(string guiFile)
         {
             GUIXmlReader = DynamicXmlStream.Load(new FileStream(guiFile, FileMode.Open));
 
@@ -106,9 +106,9 @@ namespace Editor.Game
 
             _Textures2D = new List<el_Texture2D>[GUIXmlReader.GUIList.GUI.Count];
             _Cursor = new el_Cursor[GUIXmlReader.GUIList.GUI.Count];
-        }
+        }*/
 
-        public bool DoesGuiExists(string guiName)
+        /*public bool DoesGuiExists(string guiName)
         {
             for (int i = 0; i < GUIList.Length; i++)
             {
@@ -131,9 +131,9 @@ namespace Editor.Game
         public bool IsGUILoaded(string guiName)
         {
             return _Textures2D[GetGUIId(guiName)] != null;
-        }
+        }*/
 
-        public void LoadGUI(int GuiId, ContentManager Content, GraphicsDevice Graphics)
+        /*public void LoadGUI(int GuiId, ContentManager Content, GraphicsDevice Graphics)
         {
             dynamic GUIData = GUIXmlReader.GUIList.GUI[GuiId];
 
@@ -191,9 +191,9 @@ namespace Editor.Game
             _drawGui = true;
             _drawGuiId = GuiId;
 
-        }
+        } */
 
-        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        /*public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             if (_drawGui)
             {
@@ -249,9 +249,9 @@ namespace Editor.Game
                     }
                 }
             }
-        }
+        }*/
 
-        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        /*public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             if (_drawGui)
             {
@@ -267,7 +267,7 @@ namespace Editor.Game
                 }
                 spritebatch.End();
             }
-        }
+        }*/
 
         #region "Conversion Methods"
         private int ParseInt(dynamic obj, int defaultValue = 0)

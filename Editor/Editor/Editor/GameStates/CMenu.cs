@@ -32,26 +32,26 @@ namespace Editor.GameStates
 
         
 
-        Game.CGUIManager GUIManager;
+        //Game.CGUIManager GUIManager;
         public CMenu(Game.CGUIManager guimanager)
         {
-            GUIManager = guimanager;
+            //GUIManager = guimanager;
         }
 
         public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            if(!GUIManager.IsGUILoaded("MainMenu"))
-                GUIManager.LoadGUI(GUIManager.GetGUIId("MainMenu"), content, graphics);
+            /*if(!GUIManager.IsGUILoaded("MainMenu"))
+                GUIManager.LoadGUI(GUIManager.GetGUIId("MainMenu"), content, graphics);*/
         }
 
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
-            GUIManager.Update(gameTime, kbState, mouseState, oldMouseState);
+            //GUIManager.Update(gameTime, kbState, mouseState, oldMouseState);
         }
 
         public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            GUIManager.Draw(spritebatch, gameTime);
+            //GUIManager.Draw(spritebatch, gameTime);
         }
 
     }
