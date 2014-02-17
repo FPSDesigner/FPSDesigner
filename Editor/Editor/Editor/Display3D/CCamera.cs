@@ -107,7 +107,7 @@ namespace Editor.Display3D
 
             float fieldOfView = MathHelper.ToRadians(40);
             _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
-            _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 10000f);
+            _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
 
             generateFrustum();
         }

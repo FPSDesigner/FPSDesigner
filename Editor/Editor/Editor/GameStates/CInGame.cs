@@ -84,7 +84,7 @@ namespace Editor.GameStates
 
 
             // Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 0.02f, 10000.0f, false, terrain);
+            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
             Game.CConsole._Camera = cam;
            
             model._lightDirection = lensFlare.LightDirection;
@@ -216,9 +216,12 @@ namespace Editor.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            _character.Draw(spritebatch, gameTime, cam._view, cam._projection, cam._cameraPos, weapon);
+            lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
+            
 
-            lensFlare.UpdateOcclusion(cam._view, cam._projection);
+            _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+            _character.Draw(spritebatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+
             lensFlare.Draw(gameTime);
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);

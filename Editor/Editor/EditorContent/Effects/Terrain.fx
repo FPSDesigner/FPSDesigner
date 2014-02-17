@@ -40,8 +40,8 @@ sampler BaseTextureSampler = sampler_state {
 	texture = <BaseTexture>;
 	AddressU = Wrap;
 	AddressV = Wrap;
-	MinFilter = Anisotropic;
-	MagFilter = Anisotropic;
+	MinFilter = Linear;
+	MagFilter = Linear;
 };
 
 texture WeightMap;
