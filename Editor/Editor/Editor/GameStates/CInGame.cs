@@ -118,11 +118,11 @@ namespace Editor.GameStates
 
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(-0.3f, -0.2f, 5.280078f), 0.125f},
-                new object[] {0,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(0.0f), 1f},
+                new object[] {0,1,1,1,1,false,2.0f,1,Matrix.CreateRotationZ(1.25f),new Vector3(.05f, 0.0f, 0.18f), 1f},
             };
             string[][] testSounds = new string[][] {
                 new string[] {
-                    "MACHET_ATTACK"
+                    "Sounds\\Weapons\\MACHET_ATTACK"
                 },
                 new string[] {
                     "Sounds\\Weapons\\M1911_SHOT","Sounds\\Weapons\\M1911_RELOAD","Sounds\\Weapons\\DryFireSound"
@@ -138,7 +138,17 @@ namespace Editor.GameStates
                 },
             };
 
-            weapon.LoadContent(content, testmodel, weaponsTexture , testInfos, testSounds, anims);
+            float[][] animVelocity = new float[][] {
+                new float[] {
+                    1.6f, 2.7f, 0.7f,
+                },
+                new float[] {
+                    2.0f, 10.0f, 0.8f,
+                },
+
+            };
+
+            weapon.LoadContent(content, testmodel, weaponsTexture , testInfos, testSounds, anims, animVelocity);
 
             //Load content for Chara class
             _character.LoadContent(content, graphics, weapon);
@@ -170,7 +180,7 @@ namespace Editor.GameStates
         public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
-            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity, weapon), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));

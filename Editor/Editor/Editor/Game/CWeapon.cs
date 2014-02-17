@@ -25,7 +25,7 @@ namespace Editor.Game
         public class WeaponData
         {
             #region "Constructor"
-            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim, Texture2D weapTexture)
+            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim,float[] animVelocity, Texture2D weapTexture)
             {
                 // Model Assignement
                 this._wepModel = weaponModel;
@@ -43,6 +43,8 @@ namespace Editor.Game
                 this._rotation = (Matrix)weaponInfo[8];
                 this._offset = (Vector3)weaponInfo[9];
                 this._scale = (float)weaponInfo[10];
+
+                this._animVelocity = animVelocity;
 
                 this._weapTexture = weapTexture;
 
@@ -85,6 +87,9 @@ namespace Editor.Game
             // Anim
             public String[] _weapAnim;
 
+            // Velocity Anim
+            public float[] _animVelocity;
+
             // Sounds
             public string _shotSound;
             public string _dryShotSound;
@@ -103,7 +108,8 @@ namespace Editor.Game
 
         }
 
-        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim)
+        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim,
+            float[][] animVelocity)
         {
             if ((modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length
                 ) && weapAnim.Length != modelsList.Length)
@@ -127,7 +133,7 @@ namespace Editor.Game
 
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], weapTexture[i]);
+                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i] ,weapTexture[i]);
             }
         }
 

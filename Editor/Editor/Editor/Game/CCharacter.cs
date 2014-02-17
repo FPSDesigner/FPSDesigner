@@ -112,7 +112,7 @@ namespace Editor.Game
         /// <param name="kbState">Keyboard State</param>
         /// <param name="fallVelocity">Vertical velocity</param>
         /// <returns>The camera velocity</returns>
-        public float Run(KeyboardState kbState, float fallVelocity)
+        public float Run(KeyboardState kbState, float fallVelocity, CWeapon weapon)
         {
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
             {
@@ -120,7 +120,7 @@ namespace Editor.Game
                 {
                     _velocity += .008f;
                 }
-                _handAnimation.ChangeAnimSpeed(2.3f);
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 _isRunning = true;
             }
             else
@@ -130,7 +130,7 @@ namespace Editor.Game
                     _velocity -= .012f;
                 }
 
-                if (_isRunning) _handAnimation.ChangeAnimSpeed(1.6f);
+                if (_isRunning) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 _isRunning = false;
             }
             return _velocity;
@@ -141,7 +141,7 @@ namespace Editor.Game
             //If He is doing nothing, we stop him
             if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
-                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
 
                 //Just the wait animation is playing
@@ -153,7 +153,7 @@ namespace Editor.Game
             //We wanted to know if the shoting animation is finished
             if (_isShoting && _handAnimation.HasFinished())
             {
-                _handAnimation.ChangeAnimSpeed(0.7f);
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
 
                 //just the wait animation is playing
@@ -166,7 +166,7 @@ namespace Editor.Game
             //If player move, we play the walk anim
             if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater))
             {
-                _handAnimation.ChangeAnimSpeed(1.6f);
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
 
                 //just the walk animation is playing
@@ -193,7 +193,7 @@ namespace Editor.Game
                 if (!_isShoting && !_isUnderWater)
                 {
                     weapon.Shot(true,_isShoting,gameTime);
-                    _handAnimation.ChangeAnimSpeed(2.7f);
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = false;
@@ -229,10 +229,46 @@ namespace Editor.Game
             if(mouseState.ScrollWheelValue > _previousScrollWheelValue)
             {
                 weapon.ChangeWeapon((weapon._selectedWeapon + 1) % weapon._weaponsArray.Length);
+
+                // Draw the weapon texture
+                foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+                        effect.TextureEnabled = true;
+                        effect.Texture = weapon._weaponsArray[weapon._selectedWeapon]._weapTexture;
+
+                        effect.SpecularColor = new Vector3(0.5f);
+                        effect.SpecularPower = 32;
+                    }
+                }
+
+                // Change the futur animation speed
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
             else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
             {
                 weapon.ChangeWeapon((weapon._selectedWeapon - 1) % weapon._weaponsArray.Length);
+
+                // Draw the weapon texture
+                foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+                        effect.TextureEnabled = true;
+                        effect.Texture = weapon._weaponsArray[weapon._selectedWeapon]._weapTexture;
+
+                        effect.SpecularColor = new Vector3(0.5f);
+                        effect.SpecularPower = 32;
+                    }
+                }
+
+                // Change the futur animation speed
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
         }
