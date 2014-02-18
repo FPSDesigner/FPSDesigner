@@ -171,26 +171,26 @@ float4 PixelShaderFunctionTechnique2(VertexShaderOutput input) : COLOR0
 	float3 bTex = 0;
 	float3 base = 0;
 
-	float div = clamp(0.2*clamp(0.7f*(input.Depth), 1, 400), 1, 400);
+	/*float div = clamp(0.2*clamp(0.7f*(input.Depth), 1, 400), 1, 400);
 	if(div < 10)
-	{
-		rTex = tex2D(RTextureSampler, input.UV * TextureTiling) / div;
-		gTex = tex2D(GTextureSampler, input.UV * TextureTiling) / div;
-		bTex = tex2D(BTextureSampler, input.UV * TextureTiling) / div;
-		base = tex2D(BaseTextureSampler, input.UV * TextureTiling) / div;
-	}
+	{*/
+		rTex = tex2D(RTextureSampler, input.UV * TextureTiling);
+		gTex = tex2D(GTextureSampler, input.UV * TextureTiling);
+		bTex = tex2D(BTextureSampler, input.UV * TextureTiling);
+		base = tex2D(BaseTextureSampler, input.UV * TextureTiling);
+	/*}
 
 	float clamp2 = clamp(0.01f*input.Depth, 0, 1);
 	float3 rTex2 = tex2D(RTextureSampler, input.UV * 0.1) * clamp2;
 	float3 gTex2 = tex2D(GTextureSampler, input.UV * 0.1) * clamp2;
 	float3 bTex2 = tex2D(BTextureSampler, input.UV * 0.1) * clamp2;
-	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.1) * clamp2;
+	float3 base2 = tex2D(BaseTextureSampler, input.UV * 0.1) * clamp2;*/
 
 	float3 weightMap = tex2D(WeightMapSampler, input.UV);
 
 	float3 output = clamp(1.0f - weightMap.r - weightMap.g - weightMap.b, 0, 1)
 					* base
-					+ base2 + weightMap.r * rTex2 + weightMap.g * gTex2 + weightMap.b * bTex2
+					//+ base2 + weightMap.r * rTex2 + weightMap.g * gTex2 + weightMap.b * bTex2
 					+ weightMap.r * rTex + weightMap.g * gTex + weightMap.b * bTex;
 
 	/*float3 detail = tex2D(DetailSampler, input.UV * DetailTextureTiling);

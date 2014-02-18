@@ -92,7 +92,7 @@ namespace Editor.Game
             ChangeWeapon(mouseState, weapon);
 
             // The reloading method
-            Reloadig(weapon, kbState, oldKbState);
+            Reloading(weapon, kbState, oldKbState);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -286,7 +286,7 @@ namespace Editor.Game
         }
 
         // Reloading function
-        private void Reloadig(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState)
+        private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState)
         {
 
             if (kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))

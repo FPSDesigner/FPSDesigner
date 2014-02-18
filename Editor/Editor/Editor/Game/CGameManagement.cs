@@ -78,14 +78,14 @@ namespace Editor.Game
 
         public static void ChangeState(string newState)
         {
-            if (IsValidGameState(newState))
+            if (newState != currentState && IsValidGameState(newState))
             {
                 Game.Script.CLuaVM.CallEvent("changeState", new object[] { currentState, newState });
 
                 UnloadContent(_content);
                 currentState = newState;
                 gameStateList[currentState].Initialize();
-                gameStateList[currentState].LoadContent(_content, _spriteBatch, _graphicsManager);
+                gameStateList[currentState].LoadContent(_content, _spriteBatch, _graphics);
             }
         }
 

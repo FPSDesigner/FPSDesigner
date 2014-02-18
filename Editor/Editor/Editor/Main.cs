@@ -55,6 +55,10 @@ namespace Editor
 
             levelInfo = new Game.LevelInfo.CLevelInfo();
 
+            SamplerState sState = new SamplerState();
+            sState.Filter = TextureFilter.Linear;
+            graphics.GraphicsDevice.SamplerStates[0] = sState;
+
             base.Initialize();
         }
 

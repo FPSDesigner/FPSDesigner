@@ -49,9 +49,9 @@ namespace Editor.GameStates
 
             //Display 1 model : Building
             model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(200, 440, 0), new Vector3(0f,90.0f,0f), new Vector3(0.8f), graphics);
-            models.Add(model);
+            //models.Add(model);
 
-            models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(0, 500, 0), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(200.8f), graphics));
+            //models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(0, 500, 0), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(200.8f), graphics));
 
             //models.Add(new Display3D.CModel(content.Load<Model>("3D/plane"), new Vector3(0, 440f, 0), Vector3.Zero, new Vector3(5 * 20 * 30, 1, 5 * 20 * 30), graphics));
 
@@ -61,7 +61,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 1000, content.Load<Texture2D>("Textures/Terrain/Grass005"), 250, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 500, content.Load<Texture2D>("Textures/Terrain/Grass005"), 350, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -89,7 +89,6 @@ namespace Editor.GameStates
             cam._physicsMap._waterHeight = water.waterPosition.Y;
 
             _graphics = graphics;
-
             // We create array containing all informations about weapons.
 
             weapon = new Game.CWeapon();
