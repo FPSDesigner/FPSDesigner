@@ -13,7 +13,9 @@ namespace Editor.GameStates
 {
     class CInGame
     {
-        private Display3D.CModel model; // (TEST) One Model displayed
+        private Display3D.CModel modelTree; // (TEST) One Model displayed
+        private Display3D.CModel modelTree2; // (TEST) One Model displayed
+        private Display3D.CModel modelTree3; // (TEST) One Model displayed
         private Display3D.CCamera cam; // (TEST) One camera instancied
 
         private Game.CCharacter _character; //Character : can shoot, etc..
@@ -47,10 +49,22 @@ namespace Editor.GameStates
 
             lensFlare = new Display3D.CLensFlare();
 
-            //Display 1 model : Building
-            model = new Display3D.CModel(content.Load<Model>("Models//building001"), new Vector3(200, 440, 0), new Vector3(0f,90.0f,0f), new Vector3(0.8f), graphics);
-            //models.Add(model);
+            Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
+            Dictionary<string, Texture2D> treeTextures2 = new Dictionary<string, Texture2D>();
+            Dictionary<string, Texture2D> treeTextures3 = new Dictionary<string, Texture2D>();
 
+            //Display 1 tree
+            treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\bark01"));
+            modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(23f, 523.2f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(2f),graphics,treeTextures, 0.4f);
+            treeTextures2.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\Tree002"));
+            treeTextures2.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\Tree002"));
+            modelTree2 = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(5f, 523.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.8f), graphics, treeTextures2);
+            treeTextures3.Add("Tree003", content.Load<Texture2D>("Textures\\Model Textures\\Tree003"));
+            modelTree3 = new Display3D.CModel(content.Load<Model>("Models//Tree003"), new Vector3(40f, 527.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.3f), graphics, treeTextures3);
+
+            models.Add(modelTree);
+            models.Add(modelTree2);
+            models.Add(modelTree3);
             //models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(0, 500, 0), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(200.8f), graphics));
 
             //models.Add(new Display3D.CModel(content.Load<Model>("3D/plane"), new Vector3(0, 440f, 0), Vector3.Zero, new Vector3(5 * 20 * 30, 1, 5 * 20 * 30), graphics));
@@ -73,12 +87,9 @@ namespace Editor.GameStates
             cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
             Game.CConsole._Camera = cam;
            
-            model._lightDirection = lensFlare.LightDirection;
-
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 40f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
-            water.Objects.Add(model);
 
             for (int i = 0; i < models.Count; i++)
             {
@@ -126,10 +137,10 @@ namespace Editor.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.6f, 3.0f, 0.7f,
+                    1.6f, 4.0f, 0.7f,
                 },
                 new float[] {
-                    1.6f, 10.0f, 0.8f,
+                    1.6f, 14.0f, 0.8f,
                 },
 
             };
@@ -167,6 +178,8 @@ namespace Editor.GameStates
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity, weapon), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+
+            Console.WriteLine(cam._cameraPos);
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));

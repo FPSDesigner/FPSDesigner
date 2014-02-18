@@ -187,13 +187,16 @@ namespace Editor.Game
 
         public void Reloading()
         {
-            // If he has bullets available
-            if (_weaponsArray[_selectedWeapon]._bulletsAvailable >= 
-                    (_weaponsArray[_selectedWeapon]._maxClip -_weaponsArray[_selectedWeapon]._actualClip))
+            if (_weaponsArray[_selectedWeapon]._wepType != 2)
             {
-                _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
-                _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._reloadSound].Play();
+                // If he has bullets available
+                if (_weaponsArray[_selectedWeapon]._bulletsAvailable >=
+                        (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip))
+                {
+                    _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
+                    _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+                    _weaponsSounds[_weaponsArray[_selectedWeapon]._reloadSound].Play();
+                }
             }
         }
 

@@ -18,17 +18,12 @@ Content\2D\Menu\MENU_Sight.xnb
 Content\2D\Menu\MENU_Buttons.xnb
 Content\Textures\clouds.xnb
 Content\Textures\Sunset.xnb
-Content\Textures\Terrain\terrain_grass.xnb
 Content\Textures\Heightmap.xnb
 Content\Textures\LensFlare\flare1.xnb
 Content\Textures\LensFlare\flare2.xnb
 Content\Textures\LensFlare\flare3.xnb
 Content\Textures\LensFlare\glow.xnb
-Content\Textures\Terrain\Heightmap.xnb
 Content\Textures\Terrain\noise_texture.xnb
-Content\Textures\Terrain\rock.xnb
-Content\Textures\Terrain\sand.xnb
-Content\Textures\Terrain\snow.xnb
 Content\Textures\Terrain\weightMap.xnb
 Content\Textures\terrain_grass.xnb
 Content\Textures\water_normal.xnb
@@ -50,10 +45,21 @@ Content\Textures\uw_effect.xnb
 Content\Textures\Uv_Hand.xnb
 Content\Models\M1911.xnb
 Content\Models\Arm_Animation(Smoothed).xnb
-Content\Textures\Terrain\Grass005.xnb
 Content\Textures\Terrain\Sand001.xnb
 Content\Sounds\Weapons\DryFireSound.xnb
 Content\Sounds\Weapons\M1911_SHOT.xnb
 Content\Sounds\Weapons\M1911_RELOAD.xnb
 Content\Textures\M1911.xnb
 Content\Sounds\Weapons\MACHET_ATTACK.xnb
+Content\Textures\Terrain\terrain_grass.xnb
+Content\Textures\Terrain\rock.xnb
+Content\Textures\Terrain\sand.xnb
+Content\Textures\Terrain\snow.xnb
+Content\Textures\Terrain\Grass005.xnb
+Content\Textures\Terrain\Heightmap.xnb
+Content\Textures\Model textures\bark01.xnb
+Content\Models\Tree001.xnb
+Content\Models\Tree002.xnb
+Content\Textures\Model textures\Tree002.xnb
+Content\Textures\Model textures\Tree003.xnb
+Content\Models\Tree003.xnb

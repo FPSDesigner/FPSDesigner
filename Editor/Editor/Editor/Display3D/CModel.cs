@@ -25,6 +25,8 @@ namespace Editor.Display3D
 
         public float Alpha = 1.0f;
 
+        private float _specularColor;
+
         private Matrix[] _modelTransforms;
         private GraphicsDevice _graphicsDevice;
         private BoundingSphere _boundingSphere;
@@ -33,6 +35,8 @@ namespace Editor.Display3D
 
         public List<Triangle> _trianglesPositions = new List<Triangle>();
         public List<Vector3> _trianglesNormal = new List<Vector3>();
+
+        private Dictionary<String, Texture2D> _textures;
 
         private string collisionShapeName = "collision_shape";
 
@@ -58,7 +62,7 @@ namespace Editor.Display3D
         /// <param name="modelRotation">Rotation of the model</param>
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
-        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, float alpha = 1.0f)
+        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String,Texture2D> textures = null, float specColor = 0.0f,float alpha = 1.0f)
         {
             this._model = model;
 
@@ -67,8 +71,39 @@ namespace Editor.Display3D
             this._modelScale = modelScale;
             this.Alpha = alpha;
 
+            this._specularColor = specColor;
+
+            this._textures = textures;
+
             _modelTransforms = new Matrix[model.Bones.Count];
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
+
+            // Init the model with textures
+
+            if (_textures != null)
+            {
+                foreach (ModelMesh mesh in model.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+
+                        effect.TextureEnabled = true;
+
+                        if (mesh.Name.Contains('*'))
+                        {
+                            string[] nameMultiple = mesh.Name.Split('*');
+                        }
+
+                        if (_textures.ContainsKey(mesh.Name))
+                        {
+                            effect.Texture = _textures[mesh.Name];
+                        }
+                        effect.SpecularColor = new Vector3(_specularColor);
+                        effect.SpecularPower = 32;
+                    }
+                }
+            }
 
             buildBoundingSphere();
             generateTags();
@@ -87,7 +122,6 @@ namespace Editor.Display3D
         /// <param name="cameraPosition">Vector representing the camera position</param>
         public void Draw(Matrix view, Matrix projection, Vector3 cameraPosition)
         {
-            // Matrix which display the model in the world
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(_modelPosition);
