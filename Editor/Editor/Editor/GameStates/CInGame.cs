@@ -61,7 +61,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 500, content.Load<Texture2D>("Textures/Terrain/Grass005"), 350, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 100, content.Load<Texture2D>("Textures/Terrain/Grass005"), 1000, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -75,7 +75,7 @@ namespace Editor.GameStates
            
             model._lightDirection = lensFlare.LightDirection;
 
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 40f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
             water.Objects.Add(model);
@@ -87,6 +87,7 @@ namespace Editor.GameStates
             }
 
             cam._physicsMap._waterHeight = water.waterPosition.Y;
+            terrain.waterHeight = water.waterPosition.Y;
 
             _graphics = graphics;
             // We create array containing all informations about weapons.

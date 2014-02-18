@@ -427,8 +427,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Terrain\heightmap.png">
-      <Name>heightmap</Name>
+    <Compile Include="Textures\Terrain\Heightmap.bmp">
+      <Name>Heightmap</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

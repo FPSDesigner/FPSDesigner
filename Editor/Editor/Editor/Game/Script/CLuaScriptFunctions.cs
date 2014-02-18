@@ -140,6 +140,15 @@ namespace Editor.Game.Script
             return Settings.CGameSettings._gameSettings.Video;
         }
 
+        public Vector2 GetScreenSize()
+        {
+            Vector2 size = new Vector2(
+                Display2D.C2DEffect._graphicsDevice.PresentationParameters.BackBufferWidth,
+                Display2D.C2DEffect._graphicsDevice.PresentationParameters.BackBufferHeight
+                );
+            return size;
+        }
+
         // 2D Effects
         public void FadeScreen(int fadeOpacity, int timeMilliSecs, int sizeX, int sizeY, int posX, int posY, int red, int green, int blue, string callBack)
         {

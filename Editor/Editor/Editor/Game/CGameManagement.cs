@@ -97,7 +97,6 @@ namespace Editor.Game
         public static void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState)
         {
             gameStateList[currentState].Update(gameTime, kbState, mouseState, _oldMouseState);
-
             _oldMouseState = mouseState;
         }
 

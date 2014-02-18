@@ -54,7 +54,8 @@ namespace Editor.Display3D
         // Number of vertices and indices
         int nVertices, nIndices;
 
-        public bool _isUnderWater = false;
+        private bool _isUnderWater = false;
+        private float _waterHeight = 0f;
         public bool _enableUnderWaterFog = true;
 
         public bool isUnderWater
@@ -68,6 +69,20 @@ namespace Editor.Display3D
             get
             {
                 return _isUnderWater;
+            }
+        }
+
+        public float waterHeight
+        {
+            set
+            {
+                effect.Parameters["FogWaterHeight"].SetValue(value);
+                effect.Parameters["FogWaterHeightMore"].SetValue(value+0.1f);
+                _waterHeight = value;
+            }
+            get
+            {
+                return _waterHeight;
             }
         }
 
