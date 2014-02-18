@@ -193,6 +193,7 @@ namespace Editor.Game
             {
                 _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
                 _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+                _weaponsSounds[_weaponsArray[_selectedWeapon]._reloadSound].Play();
             }
         }
 

@@ -50,7 +50,7 @@ namespace Editor
 
         protected override void Initialize()
         {
-            Game.CGameManagement.currentState = "CMenu";
+            Game.CGameManagement.currentState = "CInGame";
             Game.CGameManagement.Initialize();
 
             levelInfo = new Game.LevelInfo.CLevelInfo();
