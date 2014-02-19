@@ -36,6 +36,8 @@ namespace Editor.Game
         private bool _isUnderWater = false;
         private bool _isSwimAnimationPlaying = false;
 
+        private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
+
         public void Initialize()
         {
             _handTexture = new Texture2D[1];
@@ -300,9 +302,21 @@ namespace Editor.Game
 
         private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
         {
-            if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+            // If he presse the right mouse button
+            if (mstate.RightButton == ButtonState.Pressed && !_isAiming)
             {
-                cam._fieldOfView = MathHelper.Pi;
+
+                if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+                {
+                    cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40),MathHelper.ToRadians(30),0.5f));
+                    _isAiming = true;
+                }
+            }
+
+            else if(mstate.RightButton == ButtonState.Released && _isAiming)
+            {
+                cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30),MathHelper.ToRadians(40),0.8f));
+                _isAiming = false;
             }
         }
 
