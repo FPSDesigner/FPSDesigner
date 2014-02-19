@@ -93,6 +93,9 @@ namespace Editor.Game
 
             // The reloading method
             Reloading(weapon, kbState, oldKbState);
+
+            // Aim
+            Aim(weapon, mouseState, cam);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -292,6 +295,14 @@ namespace Editor.Game
             if (kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))
             {
                 weapon.Reloading();
+            }
+        }
+
+        private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
+        {
+            if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+            {
+                cam._fieldOfView = MathHelper.Pi;
             }
         }
 

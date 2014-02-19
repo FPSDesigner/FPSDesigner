@@ -15,7 +15,6 @@ namespace Editor.GameStates
     {
         private Display3D.CModel modelTree; // (TEST) One Model displayed
         private Display3D.CModel modelTree2; // (TEST) One Model displayed
-        private Display3D.CModel modelTree3; // (TEST) One Model displayed
         private Display3D.CCamera cam; // (TEST) One camera instancied
 
         private Game.CCharacter _character; //Character : can shoot, etc..
@@ -56,18 +55,12 @@ namespace Editor.GameStates
 
             //Display 1 tree
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\bark01"));
-            modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(23f, 523.2f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(2f),graphics,treeTextures, 0.4f);
+            modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 168.8f, 80.45f), new Vector3(- MathHelper.PiOver2, 0f, 0f), new Vector3(2f), graphics, treeTextures, 0.4f);
             treeTextures2.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\Tree002"));
-            modelTree2 = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(5f, 523.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.8f), graphics, treeTextures2);
-            treeTextures3.Add("Tree003", content.Load<Texture2D>("Textures\\Model Textures\\Tree003"));
-            modelTree3 = new Display3D.CModel(content.Load<Model>("Models//Tree003"), new Vector3(40f, 527.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.3f), graphics, treeTextures3);
-
+            modelTree2 = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(-185.2928f, 179.1f, 10.45f), new Vector3(- MathHelper.PiOver2, 0f, 0f), new Vector3(4f), graphics, treeTextures2);
+           
             models.Add(modelTree);
             models.Add(modelTree2);
-            models.Add(modelTree3);
-            //models.Add(new Display3D.CModel(content.Load<Model>("Models//Machete"), new Vector3(0, 500, 0), new Vector3(35.0f, 90.0f, 90.0f), new Vector3(200.8f), graphics));
-
-            //models.Add(new Display3D.CModel(content.Load<Model>("3D/plane"), new Vector3(0, 440f, 0), Vector3.Zero, new Vector3(5 * 20 * 30, 1, 5 * 20 * 30), graphics));
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));

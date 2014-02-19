@@ -26,6 +26,8 @@ namespace Editor.Display3D
         public Vector3 _cameraPos { get; set; }
         public Vector3 _cameraTarget { get; set; }
 
+        public float _fieldOfView;
+
         // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
         private Vector3 _translation;
         public Vector3 _up;
@@ -71,7 +73,7 @@ namespace Editor.Display3D
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="isCamFrozen">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map, float fieldOfView = MathHelper.PiOver2)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -105,9 +107,9 @@ namespace Editor.Display3D
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
 
-            float fieldOfView = MathHelper.ToRadians(40);
-            _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
-            _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
+            this._fieldOfView = fieldOfView;
+            _projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearClip, _farClip);
+            _nearProjection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, 0.02f, 1f);
 
             generateFrustum();
         }
@@ -132,6 +134,9 @@ namespace Editor.Display3D
 
             if (!isCamFrozen)
                 generateFrustum();
+
+            _projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, _nearClip, _farClip);
+            _nearProjection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, 0.02f, 1f);
         }
 
         /// <summary>

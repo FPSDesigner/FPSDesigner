@@ -90,14 +90,18 @@ namespace Editor.Display3D
 
                         effect.TextureEnabled = true;
 
+                        string[] nameMultiple; // Used to store all split string
+                        string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
+
                         if (mesh.Name.Contains('*'))
                         {
-                            string[] nameMultiple = mesh.Name.Split('*');
+                            nameMultiple = mesh.Name.Split('*');
+                            newName = nameMultiple[0];
                         }
 
-                        if (_textures.ContainsKey(mesh.Name))
+                        if (_textures.ContainsKey(newName))
                         {
-                            effect.Texture = _textures[mesh.Name];
+                            effect.Texture = _textures[newName];
                         }
                         effect.SpecularColor = new Vector3(_specularColor);
                         effect.SpecularPower = 32;
@@ -125,6 +129,10 @@ namespace Editor.Display3D
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(_modelPosition);
+
+            /*Matrix world = Matrix.CreateScale(_modelScale) *
+            Matrix.CreateRotationX( - MathHelper.PiOver2)*
+            Matrix.CreateTranslation(_modelPosition);*/
 
             foreach (ModelMesh mesh in _model.Meshes)
             {
