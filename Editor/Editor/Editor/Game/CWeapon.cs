@@ -19,7 +19,7 @@ namespace Editor.Game
         private bool _dryFirePlayed;
 
         public WeaponData[] _weaponsArray;
-        private Dictionary<string, SoundEffect> _weaponsSounds;
+        private Dictionary<string, CSound> _weaponsSounds;
 
         #region "WeaponData Class"
         public class WeaponData
@@ -120,13 +120,13 @@ namespace Editor.Game
 
             
             // Initializing sounds
-            _weaponsSounds = new Dictionary<string, SoundEffect>();
+            _weaponsSounds = new Dictionary<string, CSound>();
             for (int i = 0; i < weaponsSounds.Length; i++)
             {
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
                 {
                     if (!_weaponsSounds.ContainsKey(weaponsSounds[i][x]))
-                        _weaponsSounds.Add(weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]));
+                        _weaponsSounds.Add(weaponsSounds[i][x], new CSound(content.Load<SoundEffect>(weaponsSounds[i][x])));
                 }
             }
 
@@ -173,7 +173,6 @@ namespace Editor.Game
             {
                     _weaponsArray[_selectedWeapon]._actualClip--;
                     _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
-                    Console.WriteLine("ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip + "\n BulletAvailable :" + _weaponsArray[_selectedWeapon]._bulletsAvailable);
             }
             else
             {

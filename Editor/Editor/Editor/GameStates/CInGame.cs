@@ -57,7 +57,6 @@ namespace Editor.GameStates
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\bark01"));
             modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(23f, 523.2f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(2f),graphics,treeTextures, 0.4f);
             treeTextures2.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\Tree002"));
-            treeTextures2.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\Tree002"));
             modelTree2 = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(5f, 523.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.8f), graphics, treeTextures2);
             treeTextures3.Add("Tree003", content.Load<Texture2D>("Textures\\Model Textures\\Tree003"));
             modelTree3 = new Display3D.CModel(content.Load<Model>("Models//Tree003"), new Vector3(40f, 527.3f, 27f), new Vector3(-90f, 0f, 0f), new Vector3(1.3f), graphics, treeTextures3);
@@ -75,7 +74,7 @@ namespace Editor.GameStates
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 20f, 100, content.Load<Texture2D>("Textures/Terrain/Grass005"), 1000, lensFlare.LightDirection, graphics, content);
+            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 10f, 300, content.Load<Texture2D>("Textures/Terrain/Grass005"), 1000, lensFlare.LightDirection, graphics, content);
             terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
             terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
             terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
@@ -87,7 +86,7 @@ namespace Editor.GameStates
             cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
             Game.CConsole._Camera = cam;
            
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 440f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
+            water = new Display3D.CWater(content, graphics, new Vector3(0, 100f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
             water.Objects.Add(skybox);
             water.Objects.Add(terrain);
 
