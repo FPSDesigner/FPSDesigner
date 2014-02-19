@@ -27,7 +27,6 @@ namespace Editor.GameStates
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
-        Game.CSoundManager soundManager;
 
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
@@ -93,8 +92,7 @@ namespace Editor.GameStates
             cam._physicsMap._waterHeight = water.waterPosition.Y;
             terrain.waterHeight = water.waterPosition.Y;
 
-            soundManager = new Game.CSoundManager();
-            soundManager._water = water;
+            Game.CSoundManager.LoadContent(water);
 
             _graphics = graphics;
             // We create array containing all informations about weapons.
@@ -174,8 +172,6 @@ namespace Editor.GameStates
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
             cam.Update(gameTime, _character.Run(kbState, cam._physicsMap._fallingVelocity, weapon), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
-
-            Console.WriteLine(cam._cameraPos);
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));

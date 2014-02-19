@@ -120,7 +120,6 @@
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CPhysics.cs" />
-    <Compile Include="Game\CSound.cs" />
     <Compile Include="Game\CSoundManager.cs" />
     <Compile Include="Game\CWeapon.cs" />
     <Compile Include="Game\CXMLManager.cs" />
@@ -144,7 +143,7 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>

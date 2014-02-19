@@ -19,7 +19,6 @@ namespace Editor.Game
         private bool _dryFirePlayed;
 
         public WeaponData[] _weaponsArray;
-        private Dictionary<string, CSound> _weaponsSounds;
 
         #region "WeaponData Class"
         public class WeaponData
@@ -120,15 +119,9 @@ namespace Editor.Game
 
             
             // Initializing sounds
-            _weaponsSounds = new Dictionary<string, CSound>();
             for (int i = 0; i < weaponsSounds.Length; i++)
-            {
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
-                {
-                    if (!_weaponsSounds.ContainsKey(weaponsSounds[i][x]))
-                        _weaponsSounds.Add(weaponsSounds[i][x], new CSound(content.Load<SoundEffect>(weaponsSounds[i][x])));
-                }
-            }
+                    CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]));
 
             for (int i = 0; i < _weaponsAmount; i++)
             {
@@ -163,7 +156,7 @@ namespace Editor.Game
             else
             {
                 if (!isCutAnimPlaying)
-                _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
             }
         }
 
@@ -172,13 +165,13 @@ namespace Editor.Game
             if (_weaponsArray[_selectedWeapon]._actualClip > 0)
             {
                     _weaponsArray[_selectedWeapon]._actualClip--;
-                    _weaponsSounds[_weaponsArray[_selectedWeapon]._shotSound].Play();
+                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
             }
             else
             {
                 if (!_dryFirePlayed)
                 {
-                    _weaponsSounds[_weaponsArray[_selectedWeapon]._dryShotSound].Play();
+                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._dryShotSound);
                     _dryFirePlayed = true;
                 }
             }
@@ -194,7 +187,7 @@ namespace Editor.Game
                 {
                     _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
                     _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
-                    _weaponsSounds[_weaponsArray[_selectedWeapon]._reloadSound].Play();
+                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._reloadSound);
                 }
             }
         }
