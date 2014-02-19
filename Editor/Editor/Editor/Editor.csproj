@@ -121,6 +121,7 @@
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CPhysics.cs" />
     <Compile Include="Game\CSound.cs" />
+    <Compile Include="Game\CSoundManager.cs" />
     <Compile Include="Game\CWeapon.cs" />
     <Compile Include="Game\CXMLManager.cs" />
     <Compile Include="Game\CGameManagement.cs" />

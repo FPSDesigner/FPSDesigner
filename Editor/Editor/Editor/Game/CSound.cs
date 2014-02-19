@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.Game
 {
-    class CSound
+    class CSound : CSoundManager
     {
         private SoundEffect _instance;
 
@@ -29,14 +29,10 @@ namespace Editor.Game
             Pan = pan;
         }
 
-        public void Play()
+        public override void Play(float vol = 1f, float pitch = 0f, float pan = 0f)
         {
-            _instance.Play();
-        }
-
-        public void Play(Single x, Single y, Single z)
-        {
-            _instance.Play(Volume, Pitch, Pan);
+            base.Play(vol, pitch, pan);
+            _instance.Play((vol == 1f) ? Volume : vol, (pitch == 0f) ? Pitch : pitch, (pan == 0f) ? Pan : pan);
         }
     }
 }

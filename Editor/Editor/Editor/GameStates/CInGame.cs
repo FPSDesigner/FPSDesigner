@@ -28,6 +28,7 @@ namespace Editor.GameStates
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
+        Game.CSoundManager soundManager;
 
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
@@ -98,6 +99,9 @@ namespace Editor.GameStates
 
             cam._physicsMap._waterHeight = water.waterPosition.Y;
             terrain.waterHeight = water.waterPosition.Y;
+
+            soundManager = new Game.CSoundManager();
+            soundManager._water = water;
 
             _graphics = graphics;
             // We create array containing all informations about weapons.
