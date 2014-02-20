@@ -56,9 +56,10 @@ Content\Textures\Terrain\sand.xnb
 Content\Textures\Terrain\snow.xnb
 Content\Textures\Terrain\Grass005.xnb
 Content\Textures\Terrain\Heightmap.xnb
-Content\Textures\Model textures\bark01.xnb
+Content\Textures\Model textures\Tree001.xnb
 Content\Models\Tree001.xnb
-Content\Models\Tree002.xnb
-Content\Textures\Model textures\Tree002.xnb
-Content\Textures\Model textures\Tree003.xnb
-Content\Models\Tree003.xnb
+Content\Models\test.xnb
+Content\Textures\Model textures\Leaf002.xnb
+Content\Textures\Model textures\test.xnb
+Content\Effects\DepthEffect_PP.xnb
+Content\Effects\DepthOfField_PP.xnb

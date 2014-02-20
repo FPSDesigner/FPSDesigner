@@ -114,18 +114,18 @@ namespace Editor.Game
 
 
         /// <summary>
-        /// Get the speed of the player walks
+        /// Get the speed of the camera following what the player is doing
         /// </summary>
         /// <param name="kbState">Keyboard State</param>
         /// <param name="fallVelocity">Vertical velocity</param>
         /// <returns>The camera velocity</returns>
-        public float Run(KeyboardState kbState, float fallVelocity, CWeapon weapon)
+        public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon)
         {
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
             {
                 if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
                 {
-                    _velocity += .008f;
+                    _velocity += .012f;
                 }
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 _isRunning = true;
@@ -134,12 +134,24 @@ namespace Editor.Game
             {
                 if (_velocity > _initSpeed)
                 {
-                    _velocity -= .012f;
+                    _velocity -= .014f;
                 }
 
-                if (_isRunning) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
+                if (_isRunning) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 _isRunning = false;
             }
+
+            // If the player is Aiming
+            if (_isAiming)
+            {
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
+                _velocity = 0.04f;
+            }
+            else
+            {
+                _velocity = _initSpeed;
+            }
+
             return _velocity;
         }
 

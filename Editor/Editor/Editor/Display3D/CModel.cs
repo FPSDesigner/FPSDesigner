@@ -93,9 +93,9 @@ namespace Editor.Display3D
                         string[] nameMultiple; // Used to store all split string
                         string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
 
-                        if (mesh.Name.Contains('*'))
+                        if (mesh.Name.Contains('_'))
                         {
-                            nameMultiple = mesh.Name.Split('*');
+                            nameMultiple = mesh.Name.Split('_');
                             newName = nameMultiple[0];
                         }
 
