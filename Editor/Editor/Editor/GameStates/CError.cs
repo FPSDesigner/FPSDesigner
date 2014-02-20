@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Editor.GameStates
 {
-    class CError : Game.CGameState
+    class CError
     {
         // Background
         private Rectangle _backgroundRectangle;
@@ -34,7 +34,7 @@ namespace Editor.GameStates
         private GraphicsDevice graphics;
 
 
-        public override void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
+        public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             this.spriteBatch = spriteBatch;
             this.graphics = graphics;
@@ -53,18 +53,18 @@ namespace Editor.GameStates
             _errorColor = new Color(164, 0, 4, 80);
         }
 
-        public override void UnloadContent(ContentManager content)
+        public void UnloadContent(ContentManager content)
         {
 
         }
 
-        public override void SendParam(object error)
+        public void SendParam(object error)
         {
             _errorText = (string)error;
             _displayError = true;
         }
 
-        public override void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
+        public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             if (graphics.PresentationParameters.BackBufferWidth != _backgroundRectangle.Width || graphics.PresentationParameters.BackBufferHeight != _backgroundRectangle.Height)
             {
@@ -76,7 +76,7 @@ namespace Editor.GameStates
             }
         }
 
-        public override void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(_backgroundTexture, _backgroundRectangle, _backgroundColor);

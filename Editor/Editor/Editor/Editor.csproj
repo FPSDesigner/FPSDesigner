@@ -113,10 +113,7 @@
     <Compile Include="GameStates\CMenu.cs" />
     <Compile Include="Game\CConsole.cs" />
     <Compile Include="Game\CGameSettings.cs" />
-    <Compile Include="Game\CGameState.cs" />
     <Compile Include="Game\CCharacter.cs" />
-    <Compile Include="Game\CGameStateManager.cs" />
-    <Compile Include="Game\CGUIManager.cs" />
     <Compile Include="Game\CInput.cs" />
     <Compile Include="Game\CLevelInfo.cs" />
     <Compile Include="Game\CPhysics.cs" />
@@ -143,7 +140,7 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>

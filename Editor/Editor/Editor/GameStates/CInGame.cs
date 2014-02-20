@@ -162,7 +162,6 @@ namespace Editor.GameStates
                 new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };*/
-
         }
 
         public void UnloadContent(ContentManager content)

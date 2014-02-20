@@ -151,6 +151,20 @@ namespace Editor.Display2D
             }
         }
 
+        public static void DepthOfFieldEffect(float depth, bool toggle = true)
+        {
+            bool loaded = _postProcessor.isEffectLoaded("dof");
+            if (!toggle && loaded)
+            {
+                _postProcessor.removeEffect("GaussianBlur");
+            }
+            else if (toggle && !loaded)
+            {
+
+            }
+        }
+
+
         /// <summary>
         /// Creates a new Gaussian Blur Effect
         /// </summary>
