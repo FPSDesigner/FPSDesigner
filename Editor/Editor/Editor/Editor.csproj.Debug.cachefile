@@ -30,7 +30,6 @@ Content\3D\Checker.xnb
 Content\Textures\grass.xnb
 Content\Textures\Terrain\grassMap.xnb
 Content\2D\ErrorSmiley.xnb
-Content\Textures\Machete.xnb
 Content\Sounds\Menu\MENU_SoundSelction.xnb
 Content\GUN_SHOT.xnb
 Content\M4A1_SHOT.xnb
@@ -63,3 +62,4 @@ Content\Textures\Model textures\Leaf002.xnb
 Content\Textures\Model textures\test.xnb
 Content\Effects\DepthEffect_PP.xnb
 Content\Effects\DepthOfField_PP.xnb
+Content\Textures\Uvw_Machete.xnb

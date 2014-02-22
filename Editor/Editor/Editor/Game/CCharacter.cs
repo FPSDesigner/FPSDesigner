@@ -66,7 +66,7 @@ namespace Engine.Game
                     effect.TextureEnabled = true;
                     effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
-                    effect.SpecularColor = new Vector3(0.5f);
+                    effect.SpecularColor = new Vector3(0.3f);
                     effect.SpecularPower = 32;
                 }
             }
@@ -121,6 +121,7 @@ namespace Engine.Game
         /// <returns>The camera velocity</returns>
         public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon)
         {
+            // If he runs
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
             {
                 if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
@@ -144,7 +145,6 @@ namespace Engine.Game
             // If the player is Aiming
             if (_isAiming)
             {
-                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 _velocity = 0.04f;
             }
             else
