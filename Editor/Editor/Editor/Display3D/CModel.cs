@@ -44,8 +44,9 @@ namespace Engine.Display3D
         {
             get
             {
-                Matrix worldTransform = Matrix.CreateScale(_modelScale)
-                    * Matrix.CreateTranslation(_modelPosition);
+                Matrix worldTransform = Matrix.CreateScale(_modelScale) *
+                    Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
+                    Matrix.CreateTranslation(_modelPosition);
 
                 BoundingSphere transformed = _boundingSphere;
                 transformed = transformed.Transform(worldTransform);
@@ -62,7 +63,7 @@ namespace Engine.Display3D
         /// <param name="modelRotation">Rotation of the model</param>
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
-        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String,Texture2D> textures = null, float specColor = 0.0f,float alpha = 1.0f)
+        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null, float specColor = 0.0f, float alpha = 1.0f)
         {
             this._model = model;
 
@@ -150,7 +151,7 @@ namespace Engine.Display3D
                         ((BasicEffect)effect).EnableDefaultLighting();
                     }
                     else
-                    { 
+                    {
                         setEffectParameter(effect, "World", localWorld);
                         setEffectParameter(effect, "View", view);
                         setEffectParameter(effect, "Projection", projection);
@@ -171,7 +172,6 @@ namespace Engine.Display3D
         private void buildBoundingSphere()
         {
             BoundingSphere sphere = new BoundingSphere(Vector3.Zero, 0);
-
             // Merge all the model's built in bounding spheres
             foreach (ModelMesh mesh in _model.Meshes)
             {
