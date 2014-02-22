@@ -98,7 +98,7 @@ namespace Editor.Game
             if (_velocity.Y > 0)
                 jumpVelocity = _velocity.Y;
 
-            if (_isGameUsing[0] && assumedNewPosition.Y + jumpVelocity <= terrainHeight + _entityHeight)
+            if (_isGameUsing[0] && assumedNewPosition.Y + jumpVelocity <= terrainHeight + _entityHeight + 0.001f)
             {
                 isVerticalIntersecting = true;
                 assumedNewPosition.Y = terrainHeight + _entityHeight;
@@ -174,7 +174,6 @@ namespace Editor.Game
                 _lastFreeFall = gameTime.TotalGameTime.TotalSeconds;
                 _isOnWaterSurface = false;
             }
-
             return assumedNewPosition + _velocity;
         }
 

@@ -77,7 +77,6 @@ namespace Editor
             Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
 
             Game.Script.CLuaVM.Initialize();
-            //Game.Script.CLuaVM.LoadScript("test.lua");
             Game.Script.CLuaVM.LoadScript("GuiManager.lua");
         }
 
