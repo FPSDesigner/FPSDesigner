@@ -6,7 +6,7 @@ using System.Reflection;
 
 using NLua;
 
-namespace Editor.Game.Script
+namespace Engine.Game.Script
 {
     class CLuaVM
     {

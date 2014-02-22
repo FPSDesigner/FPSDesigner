@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 
-namespace Editor.Display3D.Materials
+namespace Engine.Display3D.Materials
 {
     class PrelightingRenderer
     {

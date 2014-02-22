@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Display3D.NotWorking
+namespace Engine.Display3D.NotWorking
 {
     class CTerrain : IRenderable
     {

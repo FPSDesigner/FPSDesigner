@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Game
+namespace Engine.Game
 {
     /// <summary>
     /// CInput manage the different inputs and controlers

@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Game.Script.Embedded
+namespace Engine.Game.Script.Embedded
 {
     // Convenction: C + type + Script + name. Ex: C2DScriptRectangle.
 

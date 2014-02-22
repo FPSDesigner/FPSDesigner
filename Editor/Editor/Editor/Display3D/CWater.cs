@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
 
-namespace Editor.Display3D
+namespace Engine.Display3D
 {
     public interface IRenderable
     {

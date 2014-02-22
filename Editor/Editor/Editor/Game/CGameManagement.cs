@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Reflection;
 
-namespace Editor.Game
+namespace Engine.Game
 {
     /// <summary>
     /// Used to manage the main class

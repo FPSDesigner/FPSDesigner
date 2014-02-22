@@ -5,7 +5,7 @@ using System.Text;
 
 using NLua;
 
-namespace Editor.Game.Script
+namespace Engine.Game.Script
 {
     abstract class CScriptVM
     {

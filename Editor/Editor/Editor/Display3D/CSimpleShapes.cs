@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Editor.Display3D
+namespace Engine.Display3D
 {
     /// <summary>
     /// A simple-shapes renderer

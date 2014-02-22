@@ -17,7 +17,7 @@ using Microsoft.Xna.Framework.Media;
 
 using NLua;
 
-namespace Editor.Game.Script
+namespace Engine.Game.Script
 {
     class CLuaScriptFunctions
     {

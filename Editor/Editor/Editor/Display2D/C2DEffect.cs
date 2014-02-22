@@ -10,8 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using Editor.Game.Script.Embedded;
-namespace Editor.Display2D
+using Engine.Game.Script.Embedded;
+
+namespace Engine.Display2D
 {
     /// <summary>
     /// A 2D Effects manager

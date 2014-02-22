@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Editor.Display3D.Materials
+namespace Engine.Display3D.Materials
 {
     public class ProjectedTextureMaterial : Material
     {

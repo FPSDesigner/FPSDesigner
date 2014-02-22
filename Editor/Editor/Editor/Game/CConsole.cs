@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace Editor.Game
+namespace Engine.Game
 {
     /// <summary>
     /// Basic console class to process several developer commands, display messages, etc.

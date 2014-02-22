@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Display3D
+namespace Engine.Display3D
 {
     /// <summary>
     /// Load a new model to draw on the world

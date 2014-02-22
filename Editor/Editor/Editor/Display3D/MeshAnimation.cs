@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 using XNAnimation;
 using XNAnimation.Controllers;
 
-namespace Editor.Display3D
+namespace Engine.Display3D
 {
     class MeshAnimation
     {

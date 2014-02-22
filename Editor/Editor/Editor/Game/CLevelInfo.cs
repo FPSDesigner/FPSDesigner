@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace Editor.Game.LevelInfo
+namespace Engine.Game.LevelInfo
 {
     class CLevelInfo
     {

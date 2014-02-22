@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using System.IO;
 
 
-namespace Editor.Game
+namespace Engine.Game
 {
     /// <summary>
     /// XML Serializer & Desierializer class

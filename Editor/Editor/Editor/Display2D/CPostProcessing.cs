@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Editor.Display2D
+namespace Engine.Display2D
 {
     /// <summary>
     /// The post processing technique allows the applications of different effects

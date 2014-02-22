@@ -1,6 +1,6 @@
 using System;
 
-namespace Editor
+namespace Engine
 {
 #if WINDOWS || XBOX
     static class Program

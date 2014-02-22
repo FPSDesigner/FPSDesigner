@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using Editor.Game.Settings;
+using Engine.Game.Settings;
 
-namespace Editor.Display3D
+namespace Engine.Display3D
 {
 
     /// <summary>

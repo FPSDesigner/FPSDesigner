@@ -12,9 +12,9 @@ using Microsoft.Xna.Framework.Media;
 using XNAnimation;
 using XNAnimation.Controllers;
 
-using Editor.Game.Settings;
+using Engine.Game.Settings;
 
-namespace Editor.Game
+namespace Engine.Game
 {
     class CCharacter
     {
