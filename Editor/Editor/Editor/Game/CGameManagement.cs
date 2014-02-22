@@ -46,7 +46,7 @@ namespace Engine.Game
 
             gameStateList = new Dictionary<string, dynamic>();
 
-            Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Editor.GameStates");
+            Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "Engine.GameStates");
             for (int i = 0; i < typelist.Length; i++)
             {
                 gameStateList.Add(typelist[i].Name, (dynamic)Activator.CreateInstance(typelist[i]));
