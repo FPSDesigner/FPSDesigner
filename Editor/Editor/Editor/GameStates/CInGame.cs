@@ -47,18 +47,18 @@ namespace Engine.GameStates
             _character = new Game.CCharacter();
             _character.Initialize();
 
-            /*Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
+            Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
             Dictionary<string, Texture2D> testTree = new Dictionary<string, Texture2D>();
 
             //Display 1 tree
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
-            //_modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(- MathHelper.PiOver2, 0f, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
+            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(- MathHelper.PiOver2, 0f, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
 
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
-            */_testTree = new Display3D.CModel(content.Load<Model>("Models//test"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), new Vector3(2f), graphics);
+            _testTree = new Display3D.CModel(content.Load<Model>("Models//test"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), new Vector3(2f), graphics, testTree);
            
-            //models.Add(_modelTree);
+            models.Add(_modelTree);
             models.Add(_testTree);
 
             lensFlare = new Display3D.CLensFlare();
@@ -134,7 +134,7 @@ namespace Engine.GameStates
                     1.6f, 4.0f, 0.7f,
                 },
                 new float[] {
-                    1.6f, 14.0f, 0.8f,
+                    1.6f, 16.0f, 0.8f,
                 },
 
             };
