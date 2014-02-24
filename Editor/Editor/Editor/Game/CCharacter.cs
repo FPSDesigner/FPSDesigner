@@ -24,6 +24,8 @@ namespace Engine.Game
 
         private Display3D.CCamera _cam; //Will back up all camera's attributes
 
+        private Model _muzzleFlash; // The plane containing the muzzle flash texture
+
         private float _initSpeed = 0.2f;
         private float _velocity = 0.3f;
 
@@ -67,6 +69,21 @@ namespace Engine.Game
                     effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
                     effect.SpecularColor = new Vector3(0.3f);
+                    effect.SpecularPower = 32;
+                }
+            }
+
+            // Load the muzzle flash
+            _muzzleFlash = content.Load<Model>("Models\\Plane");
+            foreach (ModelMesh mesh in _muzzleFlash.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.TextureEnabled = true;
+                    effect.Texture = content.Load<Texture2D>("Textures\\PistolFlash001");
+
+                    effect.SpecularColor = new Vector3(0.8f);
                     effect.SpecularPower = 32;
                 }
             }
@@ -128,7 +145,10 @@ namespace Engine.Game
                 {
                     _velocity += .012f;
                 }
-                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
+                if (!_isShoting)
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
+                }
                 _isRunning = true;
             }
             else
@@ -231,6 +251,8 @@ namespace Engine.Game
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
+        float i = 0;
+
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
@@ -246,6 +268,27 @@ namespace Engine.Game
                     effect.Projection = projection;
                 }
                 mesh.Draw();
+            }
+
+            // Draw the muzzle flash
+            Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                0.3f, new Vector3(-0.8f, -2f, -2.21f));
+
+            Console.WriteLine(i);
+
+            foreach (ModelMesh mesh in _muzzleFlash.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.World = muzzleDestination;
+                    effect.View = view;
+                    effect.Projection = projection;
+                }
+
+                if (_isShoting && weap._weaponsArray[weap._selectedWeapon]._wepType != 2)
+                {
+                    mesh.Draw();
+                }
             }
         }
 

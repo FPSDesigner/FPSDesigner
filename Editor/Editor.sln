@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "..\..\..\Dow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Software", "Software\Software.csproj", "{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://apockalipss.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -27,6 +29,9 @@ Global
 		SccProjectUniqueName4 = Editor\\EditorContent\\EngineContent.contentproj
 		SccProjectName4 = Editor/EditorContent
 		SccLocalPath4 = Editor\\EditorContent
+		SccProjectUniqueName5 = Software\\Software.csproj
+		SccProjectName5 = Software
+		SccLocalPath5 = Software
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +92,18 @@ Global
 		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|x86.Build.0 = Debug|x86
 		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|Xbox 360.ActiveCfg = Debug|x86
 		{863795EB-0753-4461-AF43-48F38828D8E0}.Release|Xbox 360.Build.0 = Debug|x86
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

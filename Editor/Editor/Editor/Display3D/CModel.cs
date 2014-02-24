@@ -55,6 +55,13 @@ namespace Engine.Display3D
             }
         }
 
+        // If we want to move the model
+        public void Update(Vector3 newPos, Vector3 newRotation)
+        {
+            _modelPosition = newPos;
+            _modelRotation = newRotation;
+        }
+
         /// <summary>
         /// Initialize the model class
         /// </summary>
@@ -160,6 +167,8 @@ namespace Engine.Display3D
                         Material.SetEffectParameters(effect);
                     }
                 }
+
+                // We draw the mesh only if it's not a collision shape and only if we need to draw it
                 if (mesh.Name != collisionShapeName)
                     mesh.Draw();
             }
