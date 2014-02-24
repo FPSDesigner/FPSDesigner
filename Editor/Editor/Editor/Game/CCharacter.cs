@@ -83,8 +83,8 @@ namespace Engine.Game
                     effect.TextureEnabled = true;
                     effect.Texture = content.Load<Texture2D>("Textures\\PistolFlash001");
 
-                    effect.SpecularColor = new Vector3(0.8f);
-                    effect.SpecularPower = 32;
+                    effect.SpecularColor = new Vector3(0.0f);
+                    effect.SpecularPower = 8;
                 }
             }
         }
@@ -272,7 +272,7 @@ namespace Engine.Game
 
             // Draw the muzzle flash
             Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                0.3f, new Vector3(-0.8f, -2f, -2.21f));
+                0.4f, new Vector3(-0.6f, -1.8f, -2.0f));
 
             Console.WriteLine(i);
 
