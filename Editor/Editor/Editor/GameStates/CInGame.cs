@@ -28,6 +28,7 @@ namespace Engine.GameStates
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
         Display3D.CWater water;
+        List<Display3D.Particles.ParticleSystem> particlesList = new List<Display3D.Particles.ParticleSystem>();
 
         Game.CWeapon weapon;
         List<Display3D.CModel> models = new List<Display3D.CModel>();
@@ -160,6 +161,14 @@ namespace Engine.GameStates
                 new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
                 new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
             };*/
+
+            particlesList.Add(new Display3D.Particles.Elements.FireParticleSystem(content));
+
+            for (int i = 0; i < particlesList.Count; i++)
+            {
+                particlesList[i].Initialize();
+                particlesList[i].LoadContent(graphics);
+            }
         }
 
         public void UnloadContent(ContentManager content)
@@ -175,6 +184,13 @@ namespace Engine.GameStates
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
+
+            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+
+            for (int i = 0; i < particlesList.Count; i++)
+            {
+                particlesList[i].Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
@@ -204,6 +220,9 @@ namespace Engine.GameStates
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
+            for (int i = 0; i < particlesList.Count; i++)
+                particlesList[i].Draw(gameTime, cam._view, cam._projection);
+
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
@@ -213,6 +232,7 @@ namespace Engine.GameStates
             _character.Draw(spritebatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
 
             lensFlare.Draw(gameTime);
+
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

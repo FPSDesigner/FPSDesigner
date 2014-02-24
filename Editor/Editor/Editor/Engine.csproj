@@ -107,6 +107,14 @@
     <Compile Include="Display3D\Materials\ProjectedTextureMaterial.cs" />
     <Compile Include="Display3D\Materials\SpotLightMaterial.cs" />
     <Compile Include="Display3D\MeshAnimation.cs" />
+    <Compile Include="Display3D\Particles\Elements\ExplosionParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\Elements\ExplosionSmokeParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\Elements\FireParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\Elements\ProjectileTrailParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\Elements\SmokePlumeParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\ParticleSettings.cs" />
+    <Compile Include="Display3D\Particles\ParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\ParticleVertex.cs" />
     <Compile Include="GameStates\CError.cs" />
     <Compile Include="GameStates\CInGame.cs" />
     <Compile Include="GameStates\CLoading.cs" />
@@ -140,7 +148,7 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>
