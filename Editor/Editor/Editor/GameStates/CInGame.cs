@@ -163,6 +163,7 @@ namespace Engine.GameStates
             };*/
 
             particlesList.Add(new Display3D.Particles.Elements.FireParticleSystem(content));
+            particlesList.Add(new Display3D.Particles.Elements.GSDirtParticleSystem(content));
 
             for (int i = 0; i < particlesList.Count; i++)
             {
@@ -176,6 +177,7 @@ namespace Engine.GameStates
            
         }
 
+        int u = 0;
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
@@ -185,7 +187,11 @@ namespace Engine.GameStates
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
 
-            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+            if ((u++) % 20 == 0)
+            {
+                particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+                particlesList[1].AddParticle(new Vector3(-185.2928f, 172f, 80.45f), Vector3.Zero);
+            }
 
             for (int i = 0; i < particlesList.Count; i++)
             {
@@ -220,15 +226,17 @@ namespace Engine.GameStates
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
 
-            for (int i = 0; i < particlesList.Count; i++)
-                particlesList[i].Draw(gameTime, cam._view, cam._projection);
+            
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-            
+
+            for (int i = 0; i < particlesList.Count; i++)
+                particlesList[i].Draw(gameTime, cam._view, cam._projection);
 
             _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+            
             _character.Draw(spritebatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
 
             lensFlare.Draw(gameTime);

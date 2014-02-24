@@ -18,7 +18,7 @@ namespace Engine.Display3D.Particles.Elements
 
         protected override void InitializeSettings(ParticleSettings settings)
         {
-            settings.TextureName = "smoke";
+            settings.TextureName = "Particles/smoke";
 
             settings.MaxParticles = 1000;
 

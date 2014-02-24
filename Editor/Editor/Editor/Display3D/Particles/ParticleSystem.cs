@@ -134,6 +134,7 @@ namespace Engine.Display3D.Particles
         static Random random = new Random();
 
         GraphicsDevice graphics;
+        BlendState defaultBS;
 
 
         
@@ -208,6 +209,8 @@ namespace Engine.Display3D.Particles
             indexBuffer = new IndexBuffer(graphics, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
 
             indexBuffer.SetData(indices);
+
+            defaultBS = graphics.BlendState;
         }
 
 
@@ -376,7 +379,7 @@ namespace Engine.Display3D.Particles
             // If there are any active particles, draw them now!
             if (firstActiveParticle != firstFreeParticle)
             {
-                BlendState defaultBS = graphics.BlendState;
+                
 
                 graphics.BlendState = settings.BlendState;
                 graphics.DepthStencilState = DepthStencilState.DepthRead;

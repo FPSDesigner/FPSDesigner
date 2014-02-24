@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,40 +9,40 @@ namespace Engine.Display3D.Particles.Elements
     /// <summary>
     /// Custom particle system for creating a flame effect.
     /// </summary>
-    class FireParticleSystem : ParticleSystem
+    class GSDirtParticleSystem : ParticleSystem
     {
-        public FireParticleSystem(ContentManager content)
+        public GSDirtParticleSystem(ContentManager content)
             : base(content)
         { }
 
 
         protected override void InitializeSettings(ParticleSettings settings)
         {
-            settings.TextureName = "Particles/fire";
+            settings.TextureName = "Particles/smoke";
 
-            settings.MaxParticles = 500;
+            settings.MaxParticles = 1000;
 
-            settings.Duration = TimeSpan.FromSeconds(2);
+            settings.Duration = TimeSpan.FromMilliseconds(200);
 
             settings.DurationRandomness = 1;
 
             settings.MinHorizontalVelocity = 0;
-            settings.MaxHorizontalVelocity = 6;
+            settings.MaxHorizontalVelocity = 0.2f;
 
-            settings.MinVerticalVelocity = -10;
-            settings.MaxVerticalVelocity = 10;
+            settings.MinVerticalVelocity = -1;
+            settings.MaxVerticalVelocity = 1;
 
             // Set gravity upside down, so the flames will 'fall' upward.
             settings.Gravity = new Vector3(0, 15, 0);
 
-            settings.MinColor = new Color(255, 255, 255, 100);
-            settings.MaxColor = new Color(255, 255, 255, 120);
+            settings.MinColor = new Color(0, 0, 0, 0);
+            settings.MaxColor = new Color(0, 0, 0, 0);
 
-            settings.MinStartSize = 5;
-            settings.MaxStartSize = 10;
+            settings.MinStartSize = 1;
+            settings.MaxStartSize = 2;
 
-            settings.MinEndSize = 10;
-            settings.MaxEndSize = 40;
+            settings.MinEndSize = 1;
+            settings.MaxEndSize = 2;
 
             // Use additive blending.
             settings.BlendState = BlendState.Additive;
