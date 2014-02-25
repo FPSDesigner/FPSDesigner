@@ -53,11 +53,11 @@ namespace Engine.GameStates
 
             //Display 1 tree
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
-            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(- MathHelper.PiOver2, 0f, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
+            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(MathHelper.PiOver2, 0f, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
 
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
-            _testTree = new Display3D.CModel(content.Load<Model>("Models//test"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), new Vector3(2f), graphics, testTree);
+            _testTree = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), new Vector3(2f), graphics, testTree);
            
             models.Add(_modelTree);
             models.Add(_testTree);
@@ -126,7 +126,7 @@ namespace Engine.GameStates
                     "Machete_Walk", "Machete_Attack", "Machete_Wait"
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M1911_Wait"
+                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading"
                 },
             };
 
@@ -135,7 +135,7 @@ namespace Engine.GameStates
                     1.6f, 4.0f, 0.7f,
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.8f,
+                    1.6f, 16.0f, 0.8f,4.5f
                 },
 
             };
@@ -181,7 +181,7 @@ namespace Engine.GameStates
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
-            cam.Update(gameTime, _character.SpeedModification(kbState, cam._physicsMap._fallingVelocity, weapon), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.SpeedModification(kbState, cam._physicsMap._fallingVelocity, weapon, cam), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
@@ -189,7 +189,7 @@ namespace Engine.GameStates
 
             if ((u++) % 20 == 0)
             {
-                particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
                 particlesList[1].AddParticle(new Vector3(-185.2928f, 172f, 80.45f), Vector3.Zero);
             }
 
@@ -222,25 +222,27 @@ namespace Engine.GameStates
 
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            // Draw all the models
+            _graphics.DepthStencilState = DepthStencilState.DepthRead; // This line allows us to display mesh with alpha channel
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
-
-            
+            _graphics.DepthStencilState = DepthStencilState.Default;
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-
+            
             for (int i = 0; i < particlesList.Count; i++)
                 particlesList[i].Draw(gameTime, cam._view, cam._projection);
 
+            BlendState defaultBS = _graphics.BlendState;
             _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
-            
+            _graphics.BlendState = BlendState.AlphaBlend;
             _character.Draw(spritebatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+            _graphics.BlendState = defaultBS;
 
             lensFlare.Draw(gameTime);
-
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

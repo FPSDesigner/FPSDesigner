@@ -79,7 +79,6 @@ namespace Engine.Game
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
                     effect.Texture = content.Load<Texture2D>("Textures\\PistolFlash001");
 
@@ -136,7 +135,7 @@ namespace Engine.Game
         /// <param name="kbState">Keyboard State</param>
         /// <param name="fallVelocity">Vertical velocity</param>
         /// <returns>The camera velocity</returns>
-        public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon)
+        public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon, Display3D.CCamera cam)
         {
             // If he runs
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
@@ -145,7 +144,7 @@ namespace Engine.Game
                 {
                     _velocity += .012f;
                 }
-                if (!_isShoting)
+                if (!_isShoting && cam._isMoving)
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 }
@@ -251,8 +250,6 @@ namespace Engine.Game
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
-        float i = 0;
-
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
         {
             // Get the hand position attached to the bone
@@ -271,10 +268,9 @@ namespace Engine.Game
             }
 
             // Draw the muzzle flash
-            Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                0.4f, new Vector3(-0.6f, -1.8f, -2.0f));
-
-            Console.WriteLine(i);
+            Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                0.33f, new Vector3(-1f, -2.4f, -2.85f));
 
             foreach (ModelMesh mesh in _muzzleFlash.Meshes)
             {
@@ -348,10 +344,10 @@ namespace Engine.Game
         // Reloading function
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState)
         {
-
-            if (kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R))
+            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) && weapon.Reloading())
             {
-                weapon.Reloading();
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[3]);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false);
             }
         }
 

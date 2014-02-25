@@ -177,19 +177,28 @@ namespace Engine.Game
             }
         }
 
-        public void Reloading()
+        public bool Reloading()
         {
+            bool isRealoadingDone = false;
             if (_weaponsArray[_selectedWeapon]._wepType != 2)
             {
-                // If he has bullets available
-                if (_weaponsArray[_selectedWeapon]._bulletsAvailable >=
-                        (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip))
+                if (_weaponsArray[_selectedWeapon]._actualClip != _weaponsArray[_selectedWeapon]._maxClip)
                 {
-                    _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
-                    _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
-                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._reloadSound);
+                    // If he has bullets available
+                    if (_weaponsArray[_selectedWeapon]._bulletsAvailable >=
+                            (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip))
+                    {
+                        _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
+                        _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+                        CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._reloadSound);
+                        isRealoadingDone = true;
+                    }
                 }
+
+                //Console.WriteLine(" Bullet avaible : " + _weaponsArray[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
             }
+
+            return isRealoadingDone;
         }
 
         
