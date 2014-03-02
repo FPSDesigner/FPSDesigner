@@ -37,6 +37,7 @@ namespace Engine.Game
         private bool _isRunning = false;
         private bool _isUnderWater = false;
         private bool _isSwimAnimationPlaying = false;
+        private bool _isSwitchingWeapon = false;
 
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
 
@@ -144,7 +145,7 @@ namespace Engine.Game
                 {
                     _velocity += .012f;
                 }
-                if (!_isShoting && cam._isMoving)
+                if (!_isShoting && cam._isMoving && !_isAiming)
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 }
@@ -312,6 +313,8 @@ namespace Engine.Game
                 }
 
                 // Change the futur animation speed
+                _isSwitchingWeapon = true;
+
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
@@ -335,9 +338,19 @@ namespace Engine.Game
                 }
 
                 // Change the futur animation speed
+                _isSwitchingWeapon = true;
+
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
+
+            /*if (_isSwitchingWeapon = true && _handAnimation.HasFinished())
+            {
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                _isSwitchingWeapon = false;
+            }*/
+
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
         }
 

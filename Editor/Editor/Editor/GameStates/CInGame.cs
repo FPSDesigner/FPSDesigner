@@ -53,7 +53,7 @@ namespace Engine.GameStates
 
             //Display 1 tree
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
-            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(MathHelper.PiOver2, 0f, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
+            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(0f, MathHelper.PiOver2, 0f), new Vector3(1.5f), graphics, treeTextures, 0.4f);
 
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
@@ -123,19 +123,19 @@ namespace Engine.GameStates
 
             string[][] anims = new string[][] {
                 new string[] {
-                    "Machete_Walk", "Machete_Attack", "Machete_Wait"
+                    "Machete_Walk", "Machete_Attack", "Machete_Wait","","Machete_Switch"
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading"
+                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch"
                 },
             };
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.6f, 4.0f, 0.7f,
+                    1.6f, 4.0f, 0.7f,0.0f,2.5f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.8f,4.5f
+                    1.6f, 16.0f, 0.8f,2.0f,2.5f
                 },
 
             };
