@@ -76,6 +76,9 @@ namespace Engine
             }
             catch (Exception e)
             {
+                Game.CGameManagement.ChangeState("CError");
+                Game.CGameManagement.SendParam("Error encountered\n\nCheck logs for more information");
+                Game.CConsole.WriteLogs(e.ToString());
             }
 
             Game.Script.CLuaVM.Initialize();

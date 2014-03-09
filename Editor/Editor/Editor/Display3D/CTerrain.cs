@@ -131,9 +131,7 @@ namespace Engine.Display3D
             }
             catch (Exception e)
             {
-                Game.CGameManagement.ChangeState("CError");
-                Game.CGameManagement.SendParam("Error while loading terrain textures\n\nCheck logs for more information");
-                Game.CConsole.WriteLogs(e.ToString());
+                Game.CConsole.WriteLogs("Terrain's textures initilizations failed");
                 throw e;
             }
         }
