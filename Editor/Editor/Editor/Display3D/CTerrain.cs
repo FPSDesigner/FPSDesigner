@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -114,6 +115,30 @@ namespace Engine.Display3D
         }
 
         /// <summary>
+        /// Initializes the textures from LevelInfo
+        /// </summary>
+        /// <param name="textureDatas">Textures Datas from the XML file</param>
+        public void InitializeTextures(Game.LevelInfo.TerrainTextures textureDatas, ContentManager Content)
+        {
+            try
+            {
+                heightMap = Content.Load<Texture2D>(textureDatas.HeightmapFile);
+                WeightMap = Content.Load<Texture2D>(textureDatas.TextureFile);
+                RTexture = Content.Load<Texture2D>(textureDatas.RTexture);
+                GTexture = Content.Load<Texture2D>(textureDatas.GTexture);
+                BTexture = Content.Load<Texture2D>(textureDatas.BTexture);
+                baseTexture = Content.Load<Texture2D>(textureDatas.BaseTexture);
+            }
+            catch (Exception e)
+            {
+                Game.CGameManagement.ChangeState("CError");
+                Game.CGameManagement.SendParam("Error while loading terrain textures\n\nCheck logs for more information");
+                Game.CConsole.WriteLogs(e.ToString());
+                throw e;
+            }
+        }
+
+        /// <summary>
         /// Initialize the Terrain Class
         /// </summary>
         /// <param name="HeightMap">The Heightmap texture</param>
@@ -124,14 +149,12 @@ namespace Engine.Display3D
         /// <param name="LightDirection">Light Direction</param>
         /// <param name="GraphicsDevice">The graphics Device</param>
         /// <param name="Content">The ContentManager</param>
-        public void LoadContent(Texture2D HeightMap, float CellSize, float Height, Texture2D BaseTexture, float TextureTiling, Vector3 LightDirection, GraphicsDevice GraphicsDevice, ContentManager Content)
+        public void LoadContent(float CellSize, float Height, float TextureTiling, Vector3 LightDirection, GraphicsDevice GraphicsDevice, ContentManager Content)
         {
-            this.baseTexture = BaseTexture;
             this.textureTiling = TextureTiling;
             this.lightDirection = LightDirection;
-            this.heightMap = HeightMap;
-            this.width = HeightMap.Width;
-            this.length = HeightMap.Height;
+            this.width = heightMap.Width;
+            this.length = heightMap.Height;
             this.cellSize = CellSize;
             this.height = Height;
             this.World = Matrix.CreateTranslation(new Vector3(0, 0, 0));

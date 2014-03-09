@@ -26,8 +26,7 @@ namespace Engine.Game
 
         private Model _muzzleFlash; // The plane containing the muzzle flash texture
 
-        private float _initSpeed = 0.2f;
-        private float _velocity = 0.3f;
+        private Random _muzzleRandom; // Randomize muzzle flashes
 
         private int _previousScrollWheelValue; // Help us to determine if he is changing weapon
 
@@ -40,6 +39,10 @@ namespace Engine.Game
         private bool _isSwitchingWeapon = false;
 
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
+
+        private float _velocity = 0.3f;
+        public float _initSpeed = 0.2f;
+
 
         public void Initialize()
         {
@@ -87,6 +90,8 @@ namespace Engine.Game
                     effect.SpecularPower = 8;
                 }
             }
+
+            _muzzleRandom = new Random();
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
@@ -121,8 +126,8 @@ namespace Engine.Game
         {
             // Draw the animation mesh
             _handAnimation.Draw(gametime, spriteBatch, view, projection);
-            // Draw the weapon attached to the mesh
 
+            // Draw the weapon attached to the mesh
             if (!_isSwimAnimationPlaying)
             {
                 WeaponDrawing(weap, spriteBatch, view, projection);
@@ -231,20 +236,19 @@ namespace Engine.Game
             {
                 if (!_isShoting && !_isUnderWater)
                 {
-                    weapon.Shot(true, _isShoting, gameTime);
                     // If he does not use a machete AND if he has bullet in a magazine
                     if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
                     {
 
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
                         _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false);
-                        
+
 
                         _isShoting = true;
                         _isWalkAnimPlaying = false;
                         _isWaitAnimPlaying = false;
                     }
-
+                    weapon.Shot(true, _isShoting, gameTime);
                 }
             }
             else if (mouseState.LeftButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
@@ -269,21 +273,21 @@ namespace Engine.Game
             }
 
             // Draw the muzzle flash
-            Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                0.33f, new Vector3(-1f, -2.4f, -2.85f));
-
-            foreach (ModelMesh mesh in _muzzleFlash.Meshes)
+            if (_isShoting && weap._weaponsArray[weap._selectedWeapon]._wepType != 2)
             {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.World = muzzleDestination;
-                    effect.View = view;
-                    effect.Projection = projection;
-                }
+                float randomScale = (float)_muzzleRandom.NextDouble() / 4f;
+                Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                    0.33f + randomScale, new Vector3(-1f, -2.0f + randomScale, -2.85f));
 
-                if (_isShoting && weap._weaponsArray[weap._selectedWeapon]._wepType != 2)
+                foreach (ModelMesh mesh in _muzzleFlash.Meshes)
                 {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.World = muzzleDestination;
+                        effect.View = view;
+                        effect.Projection = projection;
+                    }
                     mesh.Draw();
                 }
             }
@@ -372,14 +376,14 @@ namespace Engine.Game
 
                 if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                 {
-                    cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40),MathHelper.ToRadians(30),0.5f));
+                    cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
                     _isAiming = true;
                 }
             }
 
-            else if(mstate.RightButton == ButtonState.Released && _isAiming)
+            else if (mstate.RightButton == ButtonState.Released && _isAiming)
             {
-                cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30),MathHelper.ToRadians(40),0.8f));
+                cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
                 _isAiming = false;
             }
         }

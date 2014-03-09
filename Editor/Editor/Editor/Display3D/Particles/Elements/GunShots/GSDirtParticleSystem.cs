@@ -35,8 +35,8 @@ namespace Engine.Display3D.Particles.Elements
             // Set gravity upside down, so the flames will 'fall' upward.
             settings.Gravity = new Vector3(0, 15, 0);
 
-            settings.MinColor = new Color(0, 0, 0, 0);
-            settings.MaxColor = new Color(0, 0, 0, 0);
+            settings.MinColor = Color.White;
+            settings.MaxColor = Color.White;
 
             settings.MinStartSize = 1;
             settings.MaxStartSize = 2;

@@ -32,12 +32,17 @@ namespace Engine.GameStates
         // Other
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphics;
+        private ContentManager content;
 
+        public void Initialize()
+        {
+        }
 
         public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             this.spriteBatch = spriteBatch;
             this.graphics = graphics;
+            this.content = content;
 
             _backgroundTexture = new Texture2D(graphics, 1, 1);
             _backgroundTexture.SetData(new Color[] { Color.White });
@@ -47,10 +52,6 @@ namespace Engine.GameStates
 
             _deadSmiley = content.Load<Texture2D>("2D/ErrorSmiley");
             _smileyPosition = new Vector2(graphics.PresentationParameters.BackBufferWidth / 2 - 57, graphics.PresentationParameters.BackBufferHeight / 2 - 57);
-
-            _errorFont = content.Load<SpriteFont>("2D/consoleFont");
-            _errorPos = new Vector2(graphics.PresentationParameters.BackBufferWidth / 2 - _errorFont.MeasureString(_errorText).X / 2, graphics.PresentationParameters.BackBufferHeight / 2 + 57 + 20);
-            _errorColor = new Color(164, 0, 4, 80);
         }
 
         public void UnloadContent(ContentManager content)
@@ -60,8 +61,15 @@ namespace Engine.GameStates
 
         public void SendParam(object error)
         {
-            _errorText = (string)error;
-            _displayError = true;
+            if ((string)error != "")
+            {
+                _errorText = (string)error;
+                _errorFont = content.Load<SpriteFont>("2D/consoleFont");
+                _errorPos = new Vector2(graphics.PresentationParameters.BackBufferWidth / 2 - _errorFont.MeasureString(_errorText).X / 2, graphics.PresentationParameters.BackBufferHeight / 2 + 57 + 20);
+                _errorColor = new Color(164, 0, 4, 80);
+
+                _displayError = true;
+            }
         }
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)

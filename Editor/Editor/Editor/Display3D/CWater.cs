@@ -24,22 +24,19 @@ namespace Engine.Display3D
         RenderTarget2D defaultRenderTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
-        //Used to pass as parameter to Cam
-        Display3D.CTerrain _map;
-
         public Vector3 waterPosition;
         public Vector2 waterSize;
+        public CCamera reflectionCamera;
 
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
-
-        private CCamera reflectionCamera;
 
         private BoundingBox BoundingBoxChunk;
         private bool isInView = true;
 
-        public bool _isUnderWater = false;
+        
         public float _waveSpeed = 0.04f;
 
+        private bool _isUnderWater = false;
         public bool isUnderWater
         {
             set
@@ -56,7 +53,7 @@ namespace Engine.Display3D
             }
         }
 
-        float Alpha;
+        private float Alpha;
         public float WaterAlpha
         {
             get { return Alpha; }
@@ -67,7 +64,7 @@ namespace Engine.Display3D
             }
         }
 
-        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, Display3D.CTerrain map, RenderTarget2D renderTarget)
+        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, RenderTarget2D renderTarget)
         {
             this.content = content;
             this.graphics = graphics;
@@ -76,8 +73,6 @@ namespace Engine.Display3D
             this.waterSize = size;
 
             this.defaultRenderTarg = renderTarget;
-
-            this._map = map;
 
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
@@ -92,7 +87,7 @@ namespace Engine.Display3D
 
             reflectionTarg = new RenderTarget2D(graphics, graphics.Viewport.Width, graphics.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
-            reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true, _map);
+            reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true);
 
             List<Vector3> list = new List<Vector3>();
             list.Add(new Vector3(position.X - size.X, position.Y, position.Z - size.Y));

@@ -23,8 +23,6 @@ namespace Engine
 
         Game.CGameManagement GameManagement; // Class Created to relieving main's Class
 
-        Game.LevelInfo.CLevelInfo levelInfo;
-
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
 
@@ -53,8 +51,6 @@ namespace Engine
             Game.CGameManagement.currentState = "CInGame";
             Game.CGameManagement.Initialize();
 
-            levelInfo = new Game.LevelInfo.CLevelInfo();
-
             SamplerState sState = new SamplerState();
             sState.Filter = TextureFilter.Linear;
             graphics.GraphicsDevice.SamplerStates[0] = sState;
@@ -74,7 +70,13 @@ namespace Engine
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
 
-            Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
+            try
+            {
+                Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
+            }
+            catch (Exception e)
+            {
+            }
 
             Game.Script.CLuaVM.Initialize();
             Game.Script.CLuaVM.LoadScript("GuiManager.lua");

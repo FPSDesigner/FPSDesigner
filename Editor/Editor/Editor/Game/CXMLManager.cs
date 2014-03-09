@@ -27,7 +27,17 @@ namespace Engine.Game
             XmlSerializer xs = new XmlSerializer(typeof(TypeClass));
             using (StreamReader rd = new StreamReader(xmlFile))
             {
-                returnClass = xs.Deserialize(rd) as TypeClass;
+                try
+                {
+                    returnClass = xs.Deserialize(rd) as TypeClass;
+                }
+                catch (Exception e)
+                {
+                    returnClass = default(TypeClass);
+                    CGameManagement.ChangeState("CError");
+                    CGameManagement.SendParam("Error while scanning " + xmlFile + "\n\nMessage:\n" + e.Message);
+                    CConsole.WriteLogs(e.ToString());
+                }
             }
             return returnClass;
         }

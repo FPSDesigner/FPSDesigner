@@ -19,6 +19,8 @@ namespace Engine.Game
         private float _intersectionDistanceH = 4f; // Horizontal distance collision with models
         private double _lastFreeFall;
         private bool _isUnderwater = false;
+
+        // Components usage  0: terrain, 1: water
         private bool[] _isGameUsing = new bool[2];
         private Vector3 _velocity;
 

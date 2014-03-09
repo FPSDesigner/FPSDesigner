@@ -33,8 +33,6 @@ namespace Engine.Display3D
 
         private Point _middleScreen;
 
-        private Display3D.CTerrain _map;
-
         private bool isCamFrozen = false;
         private bool hasPlayerUwEffect = false;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
@@ -46,7 +44,7 @@ namespace Engine.Display3D
         private float _nearClip;
         private float _farClip;
         private float _aspectRatio;
-
+        
         public float _playerHeight = 1.9f;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
@@ -73,7 +71,7 @@ namespace Engine.Display3D
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="isCamFrozen">Camera Frozen or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map = null, bool[] componentUsages = null)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -89,13 +87,14 @@ namespace Engine.Display3D
 
             this.isCamFrozen = isCamFrozen;
 
-            this._map = map;
-
             //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
             this._physicsMap = new Game.CPhysics();
 
-            _physicsMap.LoadContent(_playerHeight, new bool[] { true, true });
-            _physicsMap._terrain = _map;
+            if (map != null)
+            {
+                _physicsMap.LoadContent(_playerHeight, componentUsages);
+                _physicsMap._terrain = map;
+            }
 
             this._up = Vector3.Up;
             this._right = Vector3.Cross(Vector3.Forward, _up);
@@ -159,7 +158,7 @@ namespace Engine.Display3D
             _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
 
             // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
-            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, 5 * _translation * camVelocity / 2, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
+            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
 
             _translation = Vector3.Zero;
 

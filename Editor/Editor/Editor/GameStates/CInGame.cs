@@ -24,6 +24,8 @@ namespace Engine.GameStates
 
         private bool isPlayerUnderwater = false;
 
+        Game.LevelInfo.CLevelInfo levelInfo;
+        Game.LevelInfo.LevelData levelData;
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
@@ -36,7 +38,7 @@ namespace Engine.GameStates
 
         public void Initialize()
         {
-
+            levelInfo = new Game.LevelInfo.CLevelInfo();
         }
 
         public CInGame()
@@ -45,27 +47,37 @@ namespace Engine.GameStates
 
         public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
+            /**** Variables Initialization ***/
+            levelData = levelInfo.loadLevelData("GameLevel.xml");
+            _graphics = graphics;
+
+
+            /**** Character ****/
             _character = new Game.CCharacter();
             _character.Initialize();
 
+            _character._initSpeed = levelData.SpawnInfo.MoveSpeed;
+
+
+            /**** Models ****/
             Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
             Dictionary<string, Texture2D> testTree = new Dictionary<string, Texture2D>();
 
             // Display 1 tree
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
-            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(0f, MathHelper.PiOver2, 0f), 
+            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(0f, MathHelper.PiOver2, 0f),
                          new Vector3(1.5f), graphics, treeTextures, 0.4f);
 
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
-            _testTree = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), 
+            _testTree = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f),
                         new Vector3(2f), graphics, testTree);
-           
+
             // Create one container
-             Dictionary<string, Texture2D> containerTextures = new Dictionary<string, Texture2D>();
-            containerTextures.Add("RustyContainer",content.Load<Texture2D>("Textures\\Model Textures\\RustyContainer"));
+            Dictionary<string, Texture2D> containerTextures = new Dictionary<string, Texture2D>();
+            containerTextures.Add("RustyContainer", content.Load<Texture2D>("Textures\\Model Textures\\RustyContainer"));
             Display3D.CModel modelContainer = new Display3D.CModel(content.Load<Model>("Models//Container"), new Vector3(-135.2928f, 168f, 95.45f), new Vector3(0f, 0f, -MathHelper.PiOver2),
-                                              new Vector3(2f), graphics,containerTextures);
+                                              new Vector3(2f), graphics, containerTextures);
 
             // Create barrels
             Dictionary<string, Texture2D> barrelTextures = new Dictionary<string, Texture2D>();
@@ -94,22 +106,35 @@ namespace Engine.GameStates
 
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
-            terrain = new Display3D.CTerrain();
-            terrain.LoadContent(content.Load<Texture2D>("Textures/Terrain/Heightmap"), 10f, 300, content.Load<Texture2D>("Textures/Terrain/Grass005"), 1000, lensFlare.LightDirection, graphics, content);
-            terrain.WeightMap = content.Load<Texture2D>("Textures/Terrain/weightMap");
-            terrain.RTexture = content.Load<Texture2D>("Textures/Terrain/Sand001");
-            terrain.GTexture = content.Load<Texture2D>("Textures/Terrain/rock");
-            terrain.BTexture = content.Load<Texture2D>("Textures/Terrain/snow");
-            terrain.DetailTexture = content.Load<Texture2D>("Textures/Terrain/noise_texture");
+            /**** Terrain ****/
+            if (levelData.Terrain.UseTerrain)
+            {
+                terrain = new Display3D.CTerrain();
+                terrain.InitializeTextures(levelData.Terrain.TerrainTextures, content);
+                terrain.LoadContent(levelData.Terrain.CellSize, levelData.Terrain.Height, levelData.Terrain.TextureTiling, lensFlare.LightDirection, graphics, content);
+            }
 
+            /**** Water ****/
+            if (levelData.Water.UseWater)
+            {
+                water = new Display3D.CWater(
+                    content, graphics, new Vector3(levelData.Water.Coordinates.PosX, levelData.Water.Coordinates.PosY, levelData.Water.Coordinates.PosZ),
+                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect._renderCapture.renderTarget
+                );
 
-            // Load one cam : Main camera (for the moment)
-            cam = new Display3D.CCamera(graphics, new Vector3(0, 500f, 0), new Vector3(0f, 0f, 0f), 1f, 10000.0f, false, terrain);
+                water.Objects.Add(skybox);
+
+                if (levelData.Terrain.UseTerrain)
+                    water.Objects.Add(terrain);
+            }
+
+            if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
+                terrain.waterHeight = water.waterPosition.Y;
+
+            /**** Camera ****/
+            Game.LevelInfo.Coordinates camPosSp = levelData.SpawnInfo.SpawnCoordinates;
+            cam = new Display3D.CCamera(graphics, new Vector3(camPosSp.PosX, camPosSp.PosY, camPosSp.PosZ), new Vector3(camPosSp.RotX, camPosSp.RotY, camPosSp.RotZ), levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
             Game.CConsole._Camera = cam;
-           
-            water = new Display3D.CWater(content, graphics, new Vector3(0, 100f, 0), new Vector2(5 * 20 * 30), 0f, terrain, Display2D.C2DEffect._renderCapture.renderTarget);
-            water.Objects.Add(skybox);
-            water.Objects.Add(terrain);
 
             for (int i = 0; i < models.Count; i++)
             {
@@ -117,12 +142,13 @@ namespace Engine.GameStates
                 cam._physicsMap._triangleNormalsList.AddRange(models[i]._trianglesNormal);
             }
 
-            cam._physicsMap._waterHeight = water.waterPosition.Y;
-            terrain.waterHeight = water.waterPosition.Y;
+            if (levelData.Water.UseWater)
+                cam._physicsMap._waterHeight = water.waterPosition.Y;
+
+            /**** ****/
 
             Game.CSoundManager.LoadContent(water);
 
-            _graphics = graphics;
             // We create array containing all informations about weapons.
 
             weapon = new Game.CWeapon();
@@ -167,27 +193,10 @@ namespace Engine.GameStates
 
             };
 
-            weapon.LoadContent(content, testmodel, weaponsTexture , testInfos, testSounds, anims, animVelocity);
+            weapon.LoadContent(content, testmodel, weaponsTexture, testInfos, testSounds, anims, animVelocity);
 
             //Load content for Chara class
             _character.LoadContent(content, graphics, weapon);
-
-            /*Effect effect = content.Load<Effect>("Effects/ProjectedTexture");
-            model.SetModelEffect(effect, true);
-            Display3D.Materials.ProjectedTextureMaterial mat = new Display3D.Materials.ProjectedTextureMaterial(
-                content.Load<Texture2D>("projected texture"), graphics);
-            mat.ProjectorPosition = new Vector3(0, 105.5f, 0);
-            mat.ProjectorTarget = new Vector3(0, 0, 0);
-            mat.Scale = 2;
-            model.Material = mat;
-
-            renderer = new Display3D.Materials.PrelightingRenderer(graphics, content, terrain, true);
-            renderer.Models = models;
-            renderer.Camera = cam;
-            renderer.Lights = new List<Display3D.Materials.PPPointLight>() {
-                new Display3D.Materials.PPPointLight(new Vector3(10, 80f, 0), Color.Red * .85f, 100),
-                new Display3D.Materials.PPPointLight(new Vector3(0, 100f, 10), Color.Blue * .85f, 100),
-            };*/
 
             particlesList.Add(new Display3D.Particles.Elements.FireParticleSystem(content));
             particlesList.Add(new Display3D.Particles.Elements.GSDirtParticleSystem(content));
@@ -201,10 +210,10 @@ namespace Engine.GameStates
 
         public void UnloadContent(ContentManager content)
         {
-           
+
         }
 
-        int u = 0;
+        //int u = 0;
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
@@ -214,21 +223,21 @@ namespace Engine.GameStates
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
 
-            if ((u++) % 20 == 0)
+           /* if ((u++) % 20 == 0)
             {
-            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+                particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
                 particlesList[1].AddParticle(new Vector3(-185.2928f, 172f, 80.45f), Vector3.Zero);
             }
 
             for (int i = 0; i < particlesList.Count; i++)
             {
                 particlesList[i].Update(gameTime);
-            }
+            }*/
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            
+
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -249,17 +258,17 @@ namespace Engine.GameStates
 
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            water.Draw(cam._view, cam._projection, cam._cameraPos);
+
             // Draw all the models
-            _graphics.DepthStencilState = DepthStencilState.DepthRead; // This line allows us to display mesh with alpha channel
+            _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             for (int i = 0; i < models.Count; i++)
                 if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
                     models[i].Draw(cam._view, cam._projection, cam._cameraPos);
-            _graphics.DepthStencilState = DepthStencilState.Default;
 
-            water.Draw(cam._view, cam._projection, cam._cameraPos);
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-            
+
             for (int i = 0; i < particlesList.Count; i++)
                 particlesList[i].Draw(gameTime, cam._view, cam._projection);
 

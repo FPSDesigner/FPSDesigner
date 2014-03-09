@@ -34,12 +34,22 @@ namespace Engine.Game.LevelInfo
     public class LevelData
     {
         public Properties Properties { get; set; }
-        public MapTerrain MapTerrain { get; set; }
+        public SpawnInfo SpawnInfo { get; set; }
+        public Terrain Terrain { get; set; }
+        public Water Water { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
     }
 
-
+    #region "Node - SpawnInfo"
+    public class SpawnInfo
+    {
+        public float NearClip { get; set; }
+        public float FarClip { get; set; }
+        public float MoveSpeed { get; set; }
+        public Coordinates SpawnCoordinates { get; set; }
+    }
+    #endregion
 
     #region "Node - Properties"
 
@@ -47,25 +57,46 @@ namespace Engine.Game.LevelInfo
     public class Properties
     {
         public string Author { get; set; }
-        public string lastEditionDate { get; set; }
-        public string levelName { get; set; }
+        public string LastEditionDate { get; set; }
+        public string LevelName { get; set; }
     }
     #endregion
 
 
     #region "Node - MapTerrain"
-
-    // Terrain
-    public class MapTerrain
+    public class Terrain
     {
-        public string heightmapFile { get; set; }
-        public string textureFile { get; set; }
+        public bool UseTerrain { get; set; }
+        public float CellSize { get; set; }
+        public float Height { get; set; }
+        public float TextureTiling { get; set; }
+        public TerrainTextures TerrainTextures { get; set; }
+    }
+
+    public class TerrainTextures
+    {
+        public string HeightmapFile { get; set; }
+        public string TextureFile { get; set; }
+        public string RTexture { get; set; }
+        public string GTexture { get; set; }
+        public string BTexture { get; set; }
+        public string BaseTexture { get; set; }
+    }
+    #endregion
+
+    #region "Node - Water"
+    public class Water
+    {
+        public bool UseWater { get; set; }
+        public float SizeX { get; set; }
+        public float SizeY { get; set; }
+        public float Alpha { get; set; }
+        public Coordinates Coordinates { get; set; }
     }
     #endregion
 
 
     #region "Node - MapModels"
-
     // 3D Models
     public class MapModels
     {
@@ -75,22 +106,20 @@ namespace Engine.Game.LevelInfo
     // 3D Models - Model
     public class MapModels_Model
     {
-        public MapModels_Model_Info MapModels_Model_Info { get; set; }
-        public MapModels_Model_Position MapModels_Model_Position { get; set; }
+        public string ModelFile { get; set; }
+        public Coordinates Coordinates { get; set; }
     }
+    #endregion
 
-    // 3D Models - Model - Info
-    public class MapModels_Model_Info
+    #region "Node - Coordinates"
+    public class Coordinates
     {
-        public string ModelID { get; set; }
-    }
-
-    // 3D Models - Model - Position
-    public class MapModels_Model_Position
-    {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
+        public float RotX { get; set; }
+        public float RotY { get; set; }
+        public float RotZ { get; set; }
     }
     #endregion
 
@@ -108,44 +137,6 @@ namespace Engine.Game.LevelInfo
         public string[] Model { get; set; }
     }
     #endregion
-
-    #region "Node - Menu"
-
-    // 2D Menu
-   /* public class GameMenu
-    {
-        public string Type { get; set; }
-        public string BackgroundMusic { get; set; }
-        public string SelectionSound { get; set; }
-        public string BGImageFile { get; set; }
-        public string CursorFile { get; set; }
-        public int CursorClickX { get; set; }
-        public int CursorClickY { get; set; }
-
-        public ButtonsInfo ButtonsInfo { get; set; }
-    }*/
-
-
-    // 3D Models - Model - Info
-    public class ButtonsInfo
-    {
-        public string ButtonsImages { get; set; }
-        public MenuButton[] MenuButton { get; set; }
-    }
-
-    public class MenuButton
-    {
-        public int Action { get; set; }
-        public int PosX { get; set; }
-        public int PosY { get; set; }
-        public int ImgPosX { get; set; }
-        public int ImgPosY { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-    }
-
-    #endregion
-
 
     // TODO: Add all the nodes to the example
     #region Examples
@@ -184,25 +175,6 @@ namespace Engine.Game.LevelInfo
             Texture = new[] { "Content/Texture1.fbx", "Content/Texture2.fbx" },
             Texture2D = new[] { "Content/2D/Texture1.fbx", "Content/2D/Texture2.fbx" }
         },
-        GameMenu = new Game.LevelInfo.GameMenu
-        {
-            Type = "Image",
-            BackgroundMusic = "Sounds/Menu/MENU_SoundSelction",
-            SelectionSound = "Sounds/Menu/MENU_SoundSelction",
-            BGImageFile = "2D/Menu/MENU_Bckground",
-            CursorFile = "2D/Menu/MENU_Sight",
-            CursorClickX = 17,
-            CursorClickY = 17,
-            ButtonsInfo = new Game.LevelInfo.ButtonsInfo
-            {
-                ButtonsImages = "2D/Menu/MENU_Buttons",
-                MenuButton = new Game.LevelInfo.MenuButton[]
-                {
-                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 20, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 0 },
-                    new Game.LevelInfo.MenuButton {Action = 1, PosX = 50, PosY = 200, Height = 100, Width = 700, ImgPosX = 0, ImgPosY = 120 },
-                }
-            }
-        }
     };
     */
     #endregion
