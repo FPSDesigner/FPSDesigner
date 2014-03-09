@@ -63,36 +63,51 @@ namespace Engine.GameStates
             Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
             Dictionary<string, Texture2D> testTree = new Dictionary<string, Texture2D>();
 
-            // Display 1 tree
-            treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
-            _modelTree = new Display3D.CModel(content.Load<Model>("Models//Tree001"), new Vector3(-185.2928f, 169.4f, 80.45f), new Vector3(0f, MathHelper.PiOver2, 0f),
-                         new Vector3(1.5f), graphics, treeTextures, 0.4f);
+            // Local variable created to bypass the multiple content loading
+            Model loadingModel;
 
+            // Display 1 tree
+            loadingModel = content.Load<Model>("Models//Tree001");
+            treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
+            _modelTree = new Display3D.CModel(loadingModel, new Vector3(-143.2928f, 169f, 85.45f), new Vector3(MathHelper.Pi, MathHelper.PiOver2, 0f),
+                         new Vector3(2.2f), graphics, treeTextures);
+
+            loadingModel = null;
+            loadingModel = content.Load<Model>("Models//Tree002");
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
-            _testTree = new Display3D.CModel(content.Load<Model>("Models//Tree002"), new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f),
+            _testTree = new Display3D.CModel(loadingModel, new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), 
                         new Vector3(2f), graphics, testTree);
-
+           
             // Create one container
-            Dictionary<string, Texture2D> containerTextures = new Dictionary<string, Texture2D>();
-            containerTextures.Add("RustyContainer", content.Load<Texture2D>("Textures\\Model Textures\\RustyContainer"));
-            Display3D.CModel modelContainer = new Display3D.CModel(content.Load<Model>("Models//Container"), new Vector3(-135.2928f, 168f, 95.45f), new Vector3(0f, 0f, -MathHelper.PiOver2),
-                                              new Vector3(2f), graphics, containerTextures);
+            loadingModel = null;
+            loadingModel = content.Load<Model>("Models//Container");
+             Dictionary<string, Texture2D> containerTextures = new Dictionary<string, Texture2D>();
+            containerTextures.Add("RustyContainer",content.Load<Texture2D>("Textures\\Model Textures\\RustyContainer"));
+            Display3D.CModel modelContainer = new Display3D.CModel(loadingModel, new Vector3(-135.2928f, 168f, 95.45f), new Vector3(0f, 0f, -MathHelper.PiOver2),
+                                              new Vector3(2f), graphics,containerTextures);
 
             // Create barrels
+            loadingModel = null;
+            loadingModel = content.Load<Model>("Models//Barrel");
+
             Dictionary<string, Texture2D> barrelTextures = new Dictionary<string, Texture2D>();
             barrelTextures.Add("RustyBarrel", content.Load<Texture2D>("Textures\\Model Textures\\RustyMetal"));
-            Display3D.CModel modelBarrel = new Display3D.CModel(content.Load<Model>("Models//Barrel"), new Vector3(-128f, 169f, 82.45f), new Vector3(0f, 0f, 0f),
+            Display3D.CModel modelBarrel = new Display3D.CModel(loadingModel, new Vector3(-128f, 169.2f, 82.45f), new Vector3(0f, 0f, 0f),
                                               new Vector3(0.75f), graphics, barrelTextures);
-            Display3D.CModel modelBarrel2 = new Display3D.CModel(content.Load<Model>("Models//Barrel"), new Vector3(-120f, 169f, 88f), new Vector3(0f, 0f, 0f),
+            Display3D.CModel modelBarrel2 = new Display3D.CModel(loadingModel, new Vector3(-120f, 169.2f, 88f), new Vector3(0f, 0f, 0f),
                                   new Vector3(0.75f), graphics, barrelTextures);
 
             // Create Trash Bags
+            loadingModel = null;
+            loadingModel = content.Load<Model>("Models//TrashBag");
+
             Dictionary<string, Texture2D> trashbagTextures = new Dictionary<string, Texture2D>();
             trashbagTextures.Add("Garbage", content.Load<Texture2D>("Textures\\Model Textures\\garbageTexture"));
-            Display3D.CModel modelTrashbag = new Display3D.CModel(content.Load<Model>("Models//TrashBag"), new Vector3(-130f, 172f, 82.45f), new Vector3(0f, 0f, 0f),
-                                              new Vector3(1.0f), graphics, trashbagTextures);
-
+            Display3D.CModel modelTrashbag = new Display3D.CModel(loadingModel, new Vector3(-130f, 168.6f, 82.45f), new Vector3(0f, 0f, 0f),
+                                              new Vector3(0.6f), graphics, trashbagTextures);
+            Display3D.CModel modelTrashbag2 = new Display3D.CModel(loadingModel, new Vector3(-134f, 168.75f, 85.45f), new Vector3(0f, 0f, 0f),
+                                              new Vector3(0.6f), graphics, trashbagTextures);
             // We add all the models created to the model list
             models.Add(_modelTree);
             models.Add(_testTree);
@@ -100,6 +115,7 @@ namespace Engine.GameStates
             models.Add(modelBarrel);
             models.Add(modelBarrel2);
             models.Add(modelTrashbag);
+            models.Add(modelTrashbag2);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -109,7 +125,7 @@ namespace Engine.GameStates
             /**** Terrain ****/
             if (levelData.Terrain.UseTerrain)
             {
-                terrain = new Display3D.CTerrain();
+            terrain = new Display3D.CTerrain();
                 terrain.InitializeTextures(levelData.Terrain.TerrainTextures, content);
                 terrain.LoadContent(levelData.Terrain.CellSize, levelData.Terrain.Height, levelData.Terrain.TextureTiling, lensFlare.LightDirection, graphics, content);
             }
@@ -122,10 +138,10 @@ namespace Engine.GameStates
                     new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect._renderCapture.renderTarget
                 );
 
-                water.Objects.Add(skybox);
+            water.Objects.Add(skybox);
 
                 if (levelData.Terrain.UseTerrain)
-                    water.Objects.Add(terrain);
+            water.Objects.Add(terrain);
             }
 
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
@@ -143,7 +159,7 @@ namespace Engine.GameStates
             }
 
             if (levelData.Water.UseWater)
-                cam._physicsMap._waterHeight = water.waterPosition.Y;
+            cam._physicsMap._waterHeight = water.waterPosition.Y;
 
             /**** ****/
 
@@ -210,7 +226,7 @@ namespace Engine.GameStates
 
         public void UnloadContent(ContentManager content)
         {
-
+           
         }
 
         //int u = 0;
@@ -225,7 +241,7 @@ namespace Engine.GameStates
 
            /* if ((u++) % 20 == 0)
             {
-                particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
+            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
                 particlesList[1].AddParticle(new Vector3(-185.2928f, 172f, 80.45f), Vector3.Zero);
             }
 
@@ -237,7 +253,7 @@ namespace Engine.GameStates
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-
+            
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -268,7 +284,7 @@ namespace Engine.GameStates
 
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-
+            
             for (int i = 0; i < particlesList.Count; i++)
                 particlesList[i].Draw(gameTime, cam._view, cam._projection);
 

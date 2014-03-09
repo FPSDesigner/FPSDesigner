@@ -172,10 +172,12 @@ namespace Engine.Game
             {
                 _velocity = 0.04f;
             }
-            else
+            else if (!_isAiming && !_isRunning)
             {
                 _velocity = _initSpeed;
             }
+
+            Console.WriteLine(_velocity);
 
             return _velocity;
         }
