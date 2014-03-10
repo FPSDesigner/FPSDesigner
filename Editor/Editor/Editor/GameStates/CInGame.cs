@@ -108,6 +108,15 @@ namespace Engine.GameStates
                                               new Vector3(0.6f), graphics, trashbagTextures);
             Display3D.CModel modelTrashbag2 = new Display3D.CModel(loadingModel, new Vector3(-134f, 168.75f, 85.45f), new Vector3(0f, 0f, 0f),
                                               new Vector3(0.6f), graphics, trashbagTextures);
+
+            // Create Traffic Light
+            loadingModel = null;
+            loadingModel = content.Load<Model>("Models//TrafficLight");
+            Dictionary<string, Texture2D> trafficLightTextures = new Dictionary<string, Texture2D>();
+            trafficLightTextures.Add("TrafficLight", content.Load<Texture2D>("Textures\\Model Textures\\TrafficLightTexture"));
+            Display3D.CModel modelTrafficLight = new Display3D.CModel(loadingModel, new Vector3(-120f, 168.3f, 82.45f), new Vector3(0f, MathHelper.PiOver2, 0f),
+                                              new Vector3(1.2f), graphics, trafficLightTextures);
+
             // We add all the models created to the model list
             models.Add(_modelTree);
             models.Add(_testTree);
@@ -116,6 +125,7 @@ namespace Engine.GameStates
             models.Add(modelBarrel2);
             models.Add(modelTrashbag);
             models.Add(modelTrashbag2);
+            models.Add(modelTrafficLight);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -172,10 +182,6 @@ namespace Engine.GameStates
             Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911") };
 
             Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Uvw_Machete"), content.Load<Texture2D>("Textures//M1911") };
-
-            //Offset M1911 null
-            //rotation Matrix.CreateRotationZ(1.25f)
-            //scale 1.3
 
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.Pi),new Vector3(0.2f, 0.2f, 0.1f), 1f, 0f},

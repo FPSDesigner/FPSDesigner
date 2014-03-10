@@ -30,6 +30,7 @@ namespace Engine.Game
 
         private int _previousScrollWheelValue; // Help us to determine if he is changing weapon
 
+        // All booleans created to handle animations
         private bool _isWalkAnimPlaying = false;
         private bool _isWaitAnimPlaying = false;
         private bool _isShoting = false;
@@ -37,9 +38,11 @@ namespace Engine.Game
         private bool _isUnderWater = false;
         private bool _isSwimAnimationPlaying = false;
         private bool _isReloading = false;
-        private bool _isRealoadingSoundPlayed = true;
-
+        private bool _isSwitchingWeaponPlaying = false;
+        
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
+
+        private bool _isRealoadingSoundPlayed = true;
 
         private float _velocity = 0.3f;
         public float _initSpeed = 0.2f;
@@ -320,7 +323,8 @@ namespace Engine.Game
                 }
 
                 // Change the futur animation speed
-
+                _isShoting = false;
+                _isWaitAnimPlaying = true;
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
@@ -344,7 +348,8 @@ namespace Engine.Game
                 }
 
                 // Change the futur animation speed
-
+                _isShoting = false;
+                _isWaitAnimPlaying = true;
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
