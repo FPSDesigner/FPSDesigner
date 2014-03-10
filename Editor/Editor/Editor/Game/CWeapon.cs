@@ -20,11 +20,13 @@ namespace Engine.Game
 
         public WeaponData[] _weaponsArray;
 
+        private float elapsedTIme; // Used to delay sound for exemple
+
         #region "WeaponData Class"
         public class WeaponData
         {
             #region "Constructor"
-            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim,float[] animVelocity, Texture2D weapTexture)
+            public WeaponData(Model weaponModel, object[] weaponInfo, string[] weaponsSound, string[] weapAnim, float[] animVelocity, Texture2D weapTexture)
             {
                 // Model Assignement
                 this._wepModel = weaponModel;
@@ -42,6 +44,8 @@ namespace Engine.Game
                 this._rotation = (Matrix)weaponInfo[8];
                 this._offset = (Vector3)weaponInfo[9];
                 this._scale = (float)weaponInfo[10];
+
+                this._delay = (float)weaponInfo[11];
 
                 this._animVelocity = animVelocity;
 
@@ -76,6 +80,7 @@ namespace Engine.Game
             public bool _isAutomatic;
             public int _shotPerSeconds; // 0 if non automatic
             public int _range; // 0 if unlimited range
+            public float _delay; // the delay used to play the sound
 
             // Models
             public Model _wepModel;
@@ -117,15 +122,16 @@ namespace Engine.Game
             _weaponsAmount = modelsList.Length;
             _weaponsArray = new WeaponData[_weaponsAmount];
 
-            
+
+
             // Initializing sounds
             for (int i = 0; i < weaponsSounds.Length; i++)
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
-                    CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]));
+                    CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]), (bool)weaponsInfo[i][5], (float)weaponsInfo[i][11]);
 
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i] ,weapTexture[i]);
+                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[i]);
             }
         }
 
@@ -155,8 +161,7 @@ namespace Engine.Game
             }
             else
             {
-                if (!isCutAnimPlaying)
-                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+                CSoundManager.PlayInstance("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
             }
         }
 
@@ -164,14 +169,14 @@ namespace Engine.Game
         {
             if (_weaponsArray[_selectedWeapon]._actualClip > 0)
             {
-                    _weaponsArray[_selectedWeapon]._actualClip--;
-                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+                _weaponsArray[_selectedWeapon]._actualClip--;
+                CSoundManager.PlaySound("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
             }
             else
             {
                 if (!_dryFirePlayed)
                 {
-                    CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._dryShotSound);
+                    CSoundManager.PlaySound("WEP." + _weaponsArray[_selectedWeapon]._dryShotSound);
                     _dryFirePlayed = true;
                 }
             }
@@ -190,7 +195,6 @@ namespace Engine.Game
                     {
                         _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
                         _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
-                        CSoundManager.Play("WEP." + _weaponsArray[_selectedWeapon]._reloadSound);
                         isRealoadingDone = true;
                     }
                 }
@@ -201,6 +205,6 @@ namespace Engine.Game
             return isRealoadingDone;
         }
 
-        
+
     }
 }
