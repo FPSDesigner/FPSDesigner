@@ -44,6 +44,8 @@ namespace Engine.Display3D.Particles.Elements
             settings.MinEndSize = 10;
             settings.MaxEndSize = 40;
 
+            settings.DelayBetweenParticles = 20;
+
             // Use additive blending.
             settings.BlendState = BlendState.Additive;
         }

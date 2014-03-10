@@ -157,20 +157,6 @@ namespace Engine.GameStates
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
                 terrain.waterHeight = water.waterPosition.Y;
 
-            /**** Camera ****/
-            Game.LevelInfo.Coordinates camPosSp = levelData.SpawnInfo.SpawnCoordinates;
-            cam = new Display3D.CCamera(graphics, new Vector3(camPosSp.PosX, camPosSp.PosY, camPosSp.PosZ), new Vector3(camPosSp.RotX, camPosSp.RotY, camPosSp.RotZ), levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
-            Game.CConsole._Camera = cam;
-
-            for (int i = 0; i < models.Count; i++)
-            {
-                cam._physicsMap._triangleList.AddRange(models[i]._trianglesPositions);
-                cam._physicsMap._triangleNormalsList.AddRange(models[i]._trianglesNormal);
-            }
-
-            if (levelData.Water.UseWater)
-            cam._physicsMap._waterHeight = water.waterPosition.Y;
-
             /**** ****/
 
             Game.CSoundManager.LoadContent(water);
@@ -217,17 +203,26 @@ namespace Engine.GameStates
 
             weapon.LoadContent(content, testmodel, weaponsTexture, testInfos, testSounds, anims, animVelocity);
 
-            //Load content for Chara class
+            // Load content for Chara class
             _character.LoadContent(content, graphics, weapon);
 
-            particlesList.Add(new Display3D.Particles.Elements.FireParticleSystem(content));
-            particlesList.Add(new Display3D.Particles.Elements.GSDirtParticleSystem(content));
+            /**** Particles ****/
+            Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
+            Display3D.Particles.ParticlesManager.AddNewParticle("dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, new Vector3(-185.2928f, 172f, 80.45f), null, false);
 
-            for (int i = 0; i < particlesList.Count; i++)
+            /**** Camera ****/
+            Game.LevelInfo.Coordinates camPosSp = levelData.SpawnInfo.SpawnCoordinates;
+            cam = new Display3D.CCamera(graphics, new Vector3(camPosSp.PosX, camPosSp.PosY, camPosSp.PosZ), new Vector3(camPosSp.RotX, camPosSp.RotY, camPosSp.RotZ), levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            Game.CConsole._Camera = cam;
+
+            for (int i = 0; i < models.Count; i++)
             {
-                particlesList[i].Initialize();
-                particlesList[i].LoadContent(graphics);
+                cam._physicsMap._triangleList.AddRange(models[i]._trianglesPositions);
+                cam._physicsMap._triangleNormalsList.AddRange(models[i]._trianglesNormal);
             }
+
+            if (levelData.Water.UseWater)
+                cam._physicsMap._waterHeight = water.waterPosition.Y;
         }
 
         public void UnloadContent(ContentManager content)
@@ -235,7 +230,6 @@ namespace Engine.GameStates
            
         }
 
-        //int u = 0;
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
@@ -245,16 +239,7 @@ namespace Engine.GameStates
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
 
-           /* if ((u++) % 20 == 0)
-            {
-            particlesList[0].AddParticle(new Vector3(-165.2928f, 169f, 80.45f), Vector3.Zero);
-                particlesList[1].AddParticle(new Vector3(-185.2928f, 172f, 80.45f), Vector3.Zero);
-            }
-
-            for (int i = 0; i < particlesList.Count; i++)
-            {
-                particlesList[i].Update(gameTime);
-            }*/
+            Display3D.Particles.ParticlesManager.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
@@ -290,9 +275,8 @@ namespace Engine.GameStates
 
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-            
-            for (int i = 0; i < particlesList.Count; i++)
-                particlesList[i].Draw(gameTime, cam._view, cam._projection);
+
+            Display3D.Particles.ParticlesManager.Draw(gameTime, cam._view, cam._projection);
 
             BlendState defaultBS = _graphics.BlendState;
             _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
@@ -304,7 +288,6 @@ namespace Engine.GameStates
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
-
         }
 
     }

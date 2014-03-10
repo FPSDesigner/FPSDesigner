@@ -45,6 +45,8 @@ namespace Engine.Display3D.Particles.Elements
 
             settings.MinEndSize = 4;
             settings.MaxEndSize = 11;
+
+            settings.DelayBetweenParticles = 10;
         }
     }
 }

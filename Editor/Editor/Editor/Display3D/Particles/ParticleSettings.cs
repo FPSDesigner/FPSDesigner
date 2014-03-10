@@ -91,6 +91,9 @@ namespace Engine.Display3D.Particles
         public float MinEndSize = 100;
         public float MaxEndSize = 100;
 
+        // Frames delay between each new particles creation
+        public int DelayBetweenParticles = 1;
+
 
         // Alpha blending settings.
         public BlendState BlendState = BlendState.NonPremultiplied;

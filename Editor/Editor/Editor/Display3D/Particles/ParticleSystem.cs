@@ -9,10 +9,22 @@ using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Engine.Display3D.Particles
 {
-     public abstract class ParticleSystem
+    public abstract class ParticleSystem
     {
-    // Settings class controls the appearance and animation of this particle system.
-        ParticleSettings settings = new ParticleSettings();
+        // Settings class controls the appearance and animation of this particle system.
+        public ParticleSettings settings = new ParticleSettings();
+
+        // Determine if the particle should be drawn
+        public bool displayParticle = false;
+
+        // Determine whether a new particle should be created each frame
+        public bool constantRecreation = true;
+
+        // Particle Position & Velocity
+        public Vector3 particlePosition;
+        public Vector3 particleVelocity;
+
+        private int delayTmp = 0;
 
 
         // For loading the effect and particle texture.
@@ -169,7 +181,8 @@ namespace Engine.Display3D.Particles
                 particles[i * 4 + 3].Corner = new Short2(-1, 1);
             }
 
-            
+            particlePosition = Vector3.Zero;
+            particleVelocity = Vector3.Zero;
         }
 
 
@@ -271,6 +284,9 @@ namespace Engine.Display3D.Particles
         /// </summary>
         public void Update(GameTime gameTime)
         {
+            if (!displayParticle)
+                return;
+
             if (gameTime == null)
                 throw new ArgumentNullException("gameTime");
 
@@ -359,6 +375,8 @@ namespace Engine.Display3D.Particles
         /// </summary>
         public void Draw(GameTime gameTime, Matrix view, Matrix projection)
         {
+            if (!displayParticle)
+                return;
 
             effectViewParameter.SetValue(view);
             effectProjectionParameter.SetValue(projection);
@@ -375,12 +393,10 @@ namespace Engine.Display3D.Particles
             {
                 AddNewParticlesToVertexBuffer();
             }
-
+            
             // If there are any active particles, draw them now!
             if (firstActiveParticle != firstFreeParticle)
             {
-                
-
                 graphics.BlendState = settings.BlendState;
                 graphics.DepthStencilState = DepthStencilState.DepthRead;
 
@@ -482,9 +498,16 @@ namespace Engine.Display3D.Particles
 
         /// <summary>
         /// Adds a new particle to the system.
+        /// Called each frame
         /// </summary>
-        public void AddParticle(Vector3 position, Vector3 velocity)
+        public void AddParticle()
         {
+            if ((delayTmp++) >= settings.DelayBetweenParticles)
+                delayTmp = 0;
+            else
+                return;
+
+            Vector3 velocity = particleVelocity;
             // Figure out where in the circular queue to allocate the new particle.
             int nextFreeParticle = firstFreeParticle + 1;
 
@@ -524,7 +547,7 @@ namespace Engine.Display3D.Particles
             // Fill in the particle vertex structure.
             for (int i = 0; i < 4; i++)
             {
-                particles[firstFreeParticle * 4 + i].Position = position;
+                particles[firstFreeParticle * 4 + i].Position = particlePosition;
                 particles[firstFreeParticle * 4 + i].Velocity = velocity;
                 particles[firstFreeParticle * 4 + i].Random = randomValues;
                 particles[firstFreeParticle * 4 + i].Time = currentTime;
