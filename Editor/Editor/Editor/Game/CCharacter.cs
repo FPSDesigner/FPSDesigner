@@ -181,8 +181,6 @@ namespace Engine.Game
                 _velocity = _initSpeed;
             }
 
-            Console.WriteLine(_velocity);
-
             return _velocity;
         }
 
@@ -357,8 +355,7 @@ namespace Engine.Game
         // Reloading function
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState, GameTime gameTime)
         {
-            elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-
+          
             if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) && (weapon.Reloading() && !_isReloading))
             {
                 _isReloading = true;
@@ -372,7 +369,14 @@ namespace Engine.Game
                 CSoundManager.PlayInstance("WEP." + weapon._weaponsArray[weapon._selectedWeapon]._reloadSound);
                 elapsedTime = 0f;
                 _isRealoadingSoundPlayed = true;
+                Console.WriteLine("sound PLAYED !");
             }
+            else if (!_isRealoadingSoundPlayed)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
+
+            Console.WriteLine("Boolean : " + _isRealoadingSoundPlayed + " AND Time : " + elapsedTime);
         }
 
         private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
