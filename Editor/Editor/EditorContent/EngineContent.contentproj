@@ -297,7 +297,7 @@
     <Folder Include="3D\3DModels\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
+    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
     </ProjectReference>
@@ -520,13 +520,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Container.fbx">
-      <Name>Container</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Models\Barrel.fbx">
       <Name>Barrel</Name>
       <Importer>FbxImporter</Importer>
@@ -564,6 +557,13 @@
   <ItemGroup>
     <Compile Include="Models\TrafficLight.fbx">
       <Name>TrafficLight</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Container.fbx">
+      <Name>Container</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>

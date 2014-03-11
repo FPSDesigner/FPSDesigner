@@ -151,7 +151,7 @@ namespace Engine.GameStates
                     1.6f, 4.0f, 0.7f,0.0f,2.5f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.8f,2.0f,2.5f
+                    1.6f, 16.0f, 0.8f,2.5f,2.5f
                 },
 
             };

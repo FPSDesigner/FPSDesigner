@@ -165,7 +165,7 @@ namespace Engine.Game
             {
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
-                if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading)
+                if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
 
                 _isRunning = true;
@@ -189,7 +189,7 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _aimSpeed, _movementsLerp);
 
-                    if (!_isShoting)
+                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
                 }
             }
@@ -301,7 +301,9 @@ namespace Engine.Game
             {
                 // Inverse the sens of animation
                 _handAnimation.InverseMode("backward");
-                _handAnimation.BeginAnimation(weapon._weaponsArray[_futurSelectedWeapon]._weapAnim[4], false);
+                _handAnimation.BeginAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = true;
                 _isSwitchingAnimPlaying = false;
             }
@@ -311,8 +313,21 @@ namespace Engine.Game
             {
                 // Inverse the sens of animation
                 _handAnimation.InverseMode("forward");
-                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
-                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+                if (!_isRunning && !_cam._isMoving)
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                    _isWaitAnimPlaying = true;
+                }
+                else
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
+                    _isWalkAnimPlaying = true;
+                }
+                
                 _isSwitchingAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = false;
             }
@@ -408,7 +423,7 @@ namespace Engine.Game
         // Check the key entered to change the weapon
         private void ChangeWeapon(MouseState mouseState, CWeapon weapon)
         {
-            if (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isReloading)
+            if (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isReloading && !_isShoting && !_isSwimAnimationPlaying)
             {
                 // If he scrolls down
                 if (mouseState.ScrollWheelValue > _previousScrollWheelValue)
@@ -419,10 +434,11 @@ namespace Engine.Game
                     // Change the futur animation speed
                     _isShoting = false;
                     _isWaitAnimPlaying = false;
-                    _isSwitchingAnimPlaying = true;
                     _isReloading = false;
+
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
+                    _isSwitchingAnimPlaying = true;
                 }
                 else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
                 {
