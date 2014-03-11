@@ -16,7 +16,7 @@ namespace Engine.Game
         
         // Private
         private float _entityHeight;
-        private float _intersectionDistanceH = 15f; // Horizontal distance collision with models
+        private float _intersectionDistanceH = 5.5f; // Horizontal distance collision with models
         private double _lastFreeFall;
         private bool _isUnderwater = false;
 
@@ -61,6 +61,7 @@ namespace Engine.Game
             _isUnderwater = isUnderwater;
             bool isVerticalIntersecting = false;
 
+            Vector3 translationOriginal = translation;
             translation *= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector3 assumedNewPosition = entityPos + translation;
@@ -85,7 +86,7 @@ namespace Engine.Game
                 float? distance = Display3D.TriangleTest.Intersects(ref translationRay, ref triangleToTest);
                 if (distance != null && distance <= _intersectionDistanceH)
                 {
-                    horizontalNormalReaction = -_triangleNormalsList[i] * translation.Length() /** (_intersectionDistanceH - (float)distance)*/;
+                    horizontalNormalReaction = -_triangleNormalsList[i] * translation.Length() * (_intersectionDistanceH - (float)distance);
                     //horizontalNormalReaction = -translation;
                     break;
                 }

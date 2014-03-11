@@ -160,7 +160,7 @@ namespace Engine.Game
             {
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
-                if (_horizontalVelocity != _sprintSpeed && !_isShoting)
+                if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
 
                 _isRunning = true;
@@ -171,7 +171,7 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp);
 
-                    if (!_isShoting)
+                    if (!_isShoting && !_isReloading)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 }
 
@@ -190,6 +190,42 @@ namespace Engine.Game
             }
 
             return _horizontalVelocity;
+
+            /*if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
+            {
+                if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
+                {
+                    _velocity += .012f;
+                }
+
+                if ((!_isShoting && !_isAiming && !_isReloading) && cam._isMoving)
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
+                }
+                _isRunning = true;
+            }
+            else
+            {
+                if (_velocity > _initSpeed)
+                {
+                    _velocity -= .014f;
+                }
+
+                if (_isRunning && !_isReloading && !_isShoting) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
+                _isRunning = false;
+            }
+
+            // If the player is Aiming
+            if (_isAiming)
+            {
+                _velocity = 0.04f;
+            }
+            else if (!_isAiming && !_isRunning)
+            {
+                _velocity = _initSpeed;
+            }
+
+            return _velocity;*/
         }
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
