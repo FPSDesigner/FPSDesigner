@@ -13,9 +13,6 @@ namespace Engine.GameStates
 {
     class CInGame
     {
-        private Display3D.CModel _modelTree; // (TEST) One Model displayed
-        private Display3D.CModel _testTree; // (TEST) One Model displayed
-
         private Display3D.CCamera cam; // (TEST) One camera instancied
 
         private Game.CCharacter _character; //Character : can shoot, etc..
@@ -60,13 +57,32 @@ namespace Engine.GameStates
 
 
             /**** Models ****/
+
+            foreach (Game.LevelInfo.MapModels_Model modelInfo in levelData.MapModels.Models)
+            {
+                Dictionary<string, Texture2D> modelTextures = new Dictionary<string,Texture2D>();
+
+                foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
+                    modelTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
+
+                models.Add(new Display3D.CModel(
+                    content.Load<Model>(modelInfo.ModelFile),
+                    modelInfo.Position.Vector3,
+                    modelInfo.Rotation.Vector3,
+                    modelInfo.Scale.Vector3,
+                    graphics,
+                    modelTextures,
+                    modelInfo.SpecColor,
+                    modelInfo.Alpha));
+            }
+
             Dictionary<string, Texture2D> treeTextures = new Dictionary<string, Texture2D>();
             Dictionary<string, Texture2D> testTree = new Dictionary<string, Texture2D>();
 
             // Local variable created to bypass the multiple content loading
             Model loadingModel;
 
-            // Display 1 tree
+            /*// Display 1 tree
             loadingModel = content.Load<Model>("Models//Tree001");
             treeTextures.Add("Tree001", content.Load<Texture2D>("Textures\\Model Textures\\Tree001"));
             _modelTree = new Display3D.CModel(loadingModel, new Vector3(-143.2928f, 169f, 85.45f), new Vector3(MathHelper.Pi, MathHelper.PiOver2, 0f),
@@ -76,17 +92,10 @@ namespace Engine.GameStates
             loadingModel = content.Load<Model>("Models//Tree002");
             testTree.Add("Tree002", content.Load<Texture2D>("Textures\\Model Textures\\test"));
             testTree.Add("leaf", content.Load<Texture2D>("Textures\\Model Textures\\Leaf002"));
-            _testTree = new Display3D.CModel(loadingModel, new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f), 
-                        new Vector3(2f), graphics, testTree);
-           
-            // Create one container
-            loadingModel = null;
-            loadingModel = content.Load<Model>("Models//Container");
-             Dictionary<string, Texture2D> containerTextures = new Dictionary<string, Texture2D>();
-            containerTextures.Add("RustyContainer",content.Load<Texture2D>("Textures\\Model Textures\\RustyContainer"));
-            Display3D.CModel modelContainer = new Display3D.CModel(loadingModel, new Vector3(-135.2928f, 168f, 95.45f), new Vector3(0f, 0f, -MathHelper.PiOver2),
-                                              new Vector3(2f), graphics,containerTextures);
+            _testTree = new Display3D.CModel(loadingModel, new Vector3(-165.2928f, 169f, 80.45f), new Vector3(-MathHelper.PiOver2, 0f, 0f),
+                        new Vector3(2f), graphics, testTree);*/
 
+            
             // Create barrels
             loadingModel = null;
             loadingModel = content.Load<Model>("Models//Barrel");
@@ -118,9 +127,9 @@ namespace Engine.GameStates
                                               new Vector3(1.2f), graphics, trafficLightTextures);
 
             // We add all the models created to the model list
-            models.Add(_modelTree);
-            models.Add(_testTree);
-            models.Add(modelContainer);
+            //models.Add(_modelTree);
+            //models.Add(_testTree);
+            //models.Add(modelContainer);
             models.Add(modelBarrel);
             models.Add(modelBarrel2);
             models.Add(modelTrashbag);
@@ -135,7 +144,7 @@ namespace Engine.GameStates
             /**** Terrain ****/
             if (levelData.Terrain.UseTerrain)
             {
-            terrain = new Display3D.CTerrain();
+                terrain = new Display3D.CTerrain();
                 terrain.InitializeTextures(levelData.Terrain.TerrainTextures, content);
                 terrain.LoadContent(levelData.Terrain.CellSize, levelData.Terrain.Height, levelData.Terrain.TextureTiling, lensFlare.LightDirection, graphics, content);
             }
@@ -144,14 +153,14 @@ namespace Engine.GameStates
             if (levelData.Water.UseWater)
             {
                 water = new Display3D.CWater(
-                    content, graphics, new Vector3(levelData.Water.Coordinates.PosX, levelData.Water.Coordinates.PosY, levelData.Water.Coordinates.PosZ),
+                    content, graphics, new Vector3(levelData.Water.Coordinates.X, levelData.Water.Coordinates.Y, levelData.Water.Coordinates.Z),
                     new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect._renderCapture.renderTarget
                 );
 
-            water.Objects.Add(skybox);
+                water.Objects.Add(skybox);
 
                 if (levelData.Terrain.UseTerrain)
-            water.Objects.Add(terrain);
+                    water.Objects.Add(terrain);
             }
 
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
@@ -211,8 +220,9 @@ namespace Engine.GameStates
             Display3D.Particles.ParticlesManager.AddNewParticle("dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, new Vector3(-185.2928f, 172f, 80.45f), null, false);
 
             /**** Camera ****/
-            Game.LevelInfo.Coordinates camPosSp = levelData.SpawnInfo.SpawnCoordinates;
-            cam = new Display3D.CCamera(graphics, new Vector3(camPosSp.PosX, camPosSp.PosY, camPosSp.PosZ), new Vector3(camPosSp.RotX, camPosSp.RotY, camPosSp.RotZ), levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
+            Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
+            cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
             Game.CConsole._Camera = cam;
 
             for (int i = 0; i < models.Count; i++)
@@ -227,7 +237,7 @@ namespace Engine.GameStates
 
         public void UnloadContent(ContentManager content)
         {
-           
+
         }
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
@@ -244,7 +254,7 @@ namespace Engine.GameStates
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            
+
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;

@@ -47,7 +47,8 @@ namespace Engine.Game.LevelInfo
         public float NearClip { get; set; }
         public float FarClip { get; set; }
         public float MoveSpeed { get; set; }
-        public Coordinates SpawnCoordinates { get; set; }
+        public Coordinates SpawnPosition { get; set; }
+        public Coordinates SpawnRotation { get; set; }
     }
     #endregion
 
@@ -100,26 +101,49 @@ namespace Engine.Game.LevelInfo
     // 3D Models
     public class MapModels
     {
-        public MapModels_Model MapModels_Model { get; set; }
+        public MapModels() { Models = new List<MapModels_Model>(); }
+        [XmlElement("MapModels_Model")]
+        public List<MapModels_Model> Models { get; set; }
     }
 
     // 3D Models - Model
     public class MapModels_Model
     {
         public string ModelFile { get; set; }
-        public Coordinates Coordinates { get; set; }
+        public float Alpha { get; set; }
+        public float SpecColor { get; set; }
+        public Coordinates Position { get; set; }
+        public Coordinates Rotation { get; set; }
+        public Coordinates Scale { get; set; }
+        public MapModels_Textures Textures { get; set; }
+    }
+
+    // 3D Models - Textures node
+    [XmlRoot("Textures")]
+    public class MapModels_Textures
+    {
+        public MapModels_Textures() { Texture = new List<MapModels_Texture>(); }
+        [XmlElement("Texture")]
+        public List<MapModels_Texture> Texture { get; set; }
+    }
+
+    // 3D Models - Texture
+    public class MapModels_Texture
+    {
+        [XmlText]
+        public string Texture { get; set; }
+        [XmlAttribute]
+        public string Mesh { get; set; }
     }
     #endregion
 
     #region "Node - Coordinates"
     public class Coordinates
     {
-        public float PosX { get; set; }
-        public float PosY { get; set; }
-        public float PosZ { get; set; }
-        public float RotX { get; set; }
-        public float RotY { get; set; }
-        public float RotZ { get; set; }
+        public Vector3 Vector3 { get { return new Vector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
     }
     #endregion
 
