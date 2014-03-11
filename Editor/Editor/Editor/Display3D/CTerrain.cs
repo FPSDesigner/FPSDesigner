@@ -45,6 +45,10 @@ namespace Engine.Display3D
         // Middle of the terrain
         public Point terrainMiddle;
 
+        // Used to improve calculations
+        private float middleWidthRelative;
+        private float middleLengthRelative;
+
         // BoundingBoxes
         public BoundingBox[] boundingChunks;
         public BoundingFrustum frustum;
@@ -78,7 +82,7 @@ namespace Engine.Display3D
             set
             {
                 effect.Parameters["FogWaterHeight"].SetValue(value);
-                effect.Parameters["FogWaterHeightMore"].SetValue(value+0.1f);
+                effect.Parameters["FogWaterHeightMore"].SetValue(value + 0.1f);
                 _waterHeight = value;
             }
             get
@@ -189,6 +193,8 @@ namespace Engine.Display3D
             indexBuffer.SetData<int>(indices);
 
             terrainMiddle = new Point((width - 1) / 2, (length - 1) / 2);
+            middleWidthRelative = (width / 2) * cellSize;
+            middleLengthRelative = (length / 2) * cellSize;
         }
 
         /// <summary>
@@ -457,7 +463,7 @@ namespace Engine.Display3D
         /// <param name="X">The X screen position</param>
         /// <param name="Y">The Y screen position</param>
         /// <returns>The position on the terrain</returns>
-        public Vector3 Pick(Matrix view, Matrix projection, int X, int Y)
+        public Vector3 Pick(Matrix view, Matrix projection, int X, int Y, out bool IsValid)
         {
             Vector3 NearestPoint = Vector3.Zero;
 
@@ -472,26 +478,24 @@ namespace Engine.Display3D
             {
                 t += 0.0001f;
 
-                float XPos = nearSource.X + direction.X * t;
-                int IndWidth = terrainMiddle.X + (int)XPos;
+                Vector3 newPos = new Vector3(nearSource.X + direction.X * t, 0, nearSource.Z + direction.Z * t);
 
-
-                float ZPos = nearSource.Z + direction.Z * t;
-                int IndLength = terrainMiddle.Y + (int)ZPos;
-
-                if (IndWidth >= width || IndWidth < 0 || IndLength >= length || IndLength < 0)
+                if (newPos.X - cellSize < -middleWidthRelative || newPos.X + cellSize > middleWidthRelative || newPos.Z - cellSize < -middleLengthRelative || newPos.Z + cellSize > middleLengthRelative)
                     break;
 
-                float YPos = nearSource.Y + direction.Y * t;
-                float IndHeight = heights[IndWidth, IndLength];
+                newPos.Y = nearSource.Y + direction.Y * t;
 
-                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(XPos, YPos, ZPos), 1.0f), Color.Blue, 255f);
+                float steepness;
+                float IndHeight = GetHeightAtPosition(newPos.X, newPos.Z, out steepness, false);
 
-
-                if (IndHeight >= YPos)
-                    return new Vector3(XPos, YPos, ZPos);
+                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(XPos, YPos, ZPos), 1.0f), Color.Blue, 255f);
+                if (IndHeight >= newPos.Y)
+                {
+                    IsValid = true;
+                    return newPos;
+                }
             }
-
+            IsValid = false;
             return Vector3.Zero;
         }
 
@@ -501,18 +505,17 @@ namespace Engine.Display3D
         /// <param name="X">Position X</param>
         /// <param name="Z">Position Y</param>
         /// <returns>The height & steepness at position X Y</returns>
-        public float GetHeightAtPosition(float X, float Z, out float Steepness)
+        public float GetHeightAtPosition(float X, float Z, out float Steepness, bool calcSteepness = true)
         {
+
             // Clamp coordinates to locations on terrain
-            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
-                (width / 2) * cellSize);
-            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
-                (length / 2) * cellSize);
+            X = MathHelper.Clamp(X, -middleWidthRelative, middleWidthRelative);
+            Z = MathHelper.Clamp(Z, -middleLengthRelative, middleLengthRelative);
 
             // Map from (-Width/2->Width/2,-Length/2->Length/2) 
             // to (0->Width, 0->Length)
-            X += (width / 2f) * cellSize;
-            Z += (length / 2f) * cellSize;
+            X += middleWidthRelative;
+            Z += middleLengthRelative;
 
             // Map to cell coordinates
             X /= cellSize;
@@ -528,7 +531,10 @@ namespace Engine.Display3D
             float fSampleH3 = heights[x, z + 1];
             float fSampleH4 = heights[x + 1, z + 1];
 
-            Steepness = (float)Math.Atan(Math.Abs((fSampleH1 - fSampleH4)) / (cellSize * Math.Sqrt(2)));
+            if (calcSteepness)
+                Steepness = (float)Math.Atan(Math.Abs((fSampleH1 - fSampleH4)) / (cellSize * Math.Sqrt(2)));
+            else
+                Steepness = 1;
 
             return (fSampleH1 * (1.0f - fTX) + fSampleH2 * fTX) * (1.0f - fTY) + (fSampleH3 * (1.0f - fTX) + fSampleH4 * fTX) * (fTY);
 
@@ -546,10 +552,8 @@ namespace Engine.Display3D
         public Vector2 positionToTerrain(float X, float Z)
         {
             // Clamp coordinates to locations on terrain
-            X = MathHelper.Clamp(X, (-width / 2) * cellSize,
-                (width / 2) * cellSize);
-            Z = MathHelper.Clamp(Z, (-length / 2) * cellSize,
-                (length / 2) * cellSize);
+            X = MathHelper.Clamp(X, -middleWidthRelative, middleWidthRelative);
+            Z = MathHelper.Clamp(Z, -middleLengthRelative, middleLengthRelative);
 
             // Map from (-Width/2->Width/2,-Length/2->Length/2) 
             // to (0->Width, 0->Length)

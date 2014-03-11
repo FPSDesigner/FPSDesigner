@@ -65,6 +65,7 @@ namespace Engine.Game
             /* WepType:
              * 0: HandGun
              * 1: Static weapons (tripod, mortars, etc.)
+             * 2: Knife
              */
             public int _wepType;
 

@@ -58,6 +58,7 @@ namespace Engine.Game
         public float _movementsLerp = 0.01f;
 
         public Display3D.CTerrain _terrain;
+        public Display3D.CWater _water;
 
         public void Initialize()
         {
@@ -347,12 +348,22 @@ namespace Engine.Game
                         _isWalkAnimPlaying = false;
                         _isWaitAnimPlaying = false;
 
-                        if (_terrain != null)
+                        if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                         {
-                            Vector3 pos = _terrain.Pick(_cam._view, cam._projection, _graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
-                            Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(pos, 0.5f), Color.Red, 255f);
+                            if (_terrain != null)
+                            {
+                                bool IsTerrainShot = false;
+                                bool IsWaterShot = false;
+                                Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+                                Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                                Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
+
+                                Display3D.Particles.ParticlesManager.AddParticle("gunshot", terrainPos);
+                            }
                         }
-                        
                     }
                     weapon.Shot(true, _isShoting, gameTime);
                 }

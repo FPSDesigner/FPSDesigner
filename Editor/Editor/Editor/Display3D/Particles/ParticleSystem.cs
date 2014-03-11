@@ -502,7 +502,8 @@ namespace Engine.Display3D.Particles
         /// </summary>
         public void AddParticle()
         {
-            if ((delayTmp++) >= settings.DelayBetweenParticles)
+            delayTmp++;
+            if ( delayTmp >= settings.DelayBetweenParticles)
                 delayTmp = 0;
             else
                 return;

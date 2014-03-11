@@ -18,7 +18,7 @@ namespace Engine.Display3D.Particles.Elements
 
         protected override void InitializeSettings(ParticleSettings settings)
         {
-            settings.TextureName = "Particles/smoke";
+            settings.TextureName = "Particles/fire";
 
             settings.MaxParticles = 1000;
 
@@ -35,8 +35,8 @@ namespace Engine.Display3D.Particles.Elements
             // Set gravity upside down, so the flames will 'fall' upward.
             settings.Gravity = new Vector3(0, 15, 0);
 
-            settings.MinColor = Color.White;
-            settings.MaxColor = Color.White;
+            settings.MinColor = Color.Brown;
+            settings.MaxColor = Color.Brown;
 
             settings.MinStartSize = 1;
             settings.MaxStartSize = 2;

@@ -83,10 +83,13 @@ namespace Engine.Display3D.Particles
             }
         }
 
-        public static void AddParticle(string particleName)
+        public static void AddParticle(string particleName, Vector3? position = null)
         {
             if (particlesList.ContainsKey(particleName))
             {
+                if (position != null)
+                    SetParticlePosition(particleName, (Vector3)position);
+
                 particlesList[particleName].AddParticle();
             }
         }

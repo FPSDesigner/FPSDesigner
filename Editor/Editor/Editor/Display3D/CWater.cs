@@ -33,6 +33,8 @@ namespace Engine.Display3D
         private BoundingBox BoundingBoxChunk;
         private bool isInView = true;
 
+        private Matrix pickWorld;
+
         
         public float _waveSpeed = 0.04f;
 
@@ -95,6 +97,8 @@ namespace Engine.Display3D
             list.Add(new Vector3(position.X - size.X, position.Y, position.Z + size.Y));
             list.Add(new Vector3(position.X + size.X, position.Y, position.Z + size.Y));
             BoundingBoxChunk = BoundingBox.CreateFromPoints(list);
+
+            pickWorld = Matrix.CreateTranslation(Vector3.Zero);
         }
 
         /// <summary>
@@ -190,6 +194,38 @@ namespace Engine.Display3D
                 (Position.Z >= waterPosition.Z - waterSize.Y && Position.Z <= waterPosition.Z + waterSize.Y))
                 return true;
             return false;
+        }
+
+        public Vector3 Pick(Matrix view, Matrix projection, int X, int Y, out bool isValid)
+        {
+            Vector3 NearestPoint = Vector3.Zero;
+
+            Vector3 nearSource = graphics.Viewport.Unproject(new Vector3(X, Y, graphics.Viewport.MinDepth), projection, view, pickWorld);
+            Vector3 farSource = graphics.Viewport.Unproject(new Vector3(X, Y, graphics.Viewport.MaxDepth), projection, view, pickWorld);
+            Vector3 direction = farSource - nearSource;
+
+            float t = 0f;
+            while (true)
+            {
+                t += 0.0001f;
+
+                Vector3 newPos = new Vector3(nearSource.X + direction.X * t, 0, nearSource.Z + direction.Z * t);
+
+                if (newPos.X < waterPosition.X - waterSize.X || newPos.X > waterPosition.X + waterSize.X || newPos.Y < waterPosition.Y - waterSize.Y || newPos.Y > waterPosition.Y + waterSize.Y)
+                    break;
+
+                newPos.Y = nearSource.Y + direction.Y * t;
+
+                if (newPos.Y <= waterPosition.Y)
+                {
+                    isValid = true;
+                    return newPos;
+                }
+
+                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(XPos, YPos, ZPos), 1.0f), Color.Blue, 255f);
+            }
+            isValid = false;
+            return Vector3.Zero;
         }
     }
 }
