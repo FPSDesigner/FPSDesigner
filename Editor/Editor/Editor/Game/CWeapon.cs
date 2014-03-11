@@ -20,8 +20,6 @@ namespace Engine.Game
 
         public WeaponData[] _weaponsArray;
 
-        private float elapsedTIme; // Used to delay sound for exemple
-
         #region "WeaponData Class"
         public class WeaponData
         {

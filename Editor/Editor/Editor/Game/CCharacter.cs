@@ -50,7 +50,7 @@ namespace Engine.Game
         public float _initSpeed = 0.2f;
 
         private float elapsedTime; // We get the time to know when play a sound
-
+        private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
 
         public void Initialize()
         {
@@ -138,7 +138,7 @@ namespace Engine.Game
             // Draw the weapon attached to the mesh
             if (!_isSwimAnimationPlaying)
             {
-                WeaponDrawing(weap, spriteBatch, view, projection);
+                WeaponDrawing(weap, spriteBatch, view, projection, gametime);
             }
         }
 
@@ -263,7 +263,7 @@ namespace Engine.Game
             }
 
             // The hands finished to go up after the switching
-            if ((!_isSwitchingAnimPlaying && _isSwitchingAnim2ndPartPlaying) && _handAnimation.HasFinished())
+            if ((_isSwitchingAnim2ndPartPlaying && !_isSwitchingAnimPlaying) && _handAnimation.HasFinished())
             {
                 // Inverse the sens of animation
                 _handAnimation.InverseMode("forward");
@@ -295,7 +295,7 @@ namespace Engine.Game
                 weapon.Shot(false, _isShoting, gameTime);
         }
 
-        private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection)
+        private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
         {
             // Get the hand position attached to the bone
             Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
@@ -322,7 +322,8 @@ namespace Engine.Game
             }
 
             // Draw the muzzle flash
-            if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && (_isShoting && !_isReloading))
+            if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && !_isReloading  &&
+                (_isShoting  && _elapsedTimeMuzzle <= 15))
             {
                 float randomScale = (float)_muzzleRandom.NextDouble() / 4f;
                 Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
@@ -339,6 +340,17 @@ namespace Engine.Game
                     }
                     mesh.Draw();
                 }
+
+            }
+
+            // We increment the muzzleTime or we reinit it
+            if (_isShoting)
+            {
+                _elapsedTimeMuzzle += gameTime.ElapsedGameTime.Milliseconds;
+            }
+            else
+            {
+                _elapsedTimeMuzzle = 0;
             }
         }
 
@@ -357,6 +369,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = false;
                     _isSwitchingAnimPlaying = true;
+                    _isReloading = false;
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
                 }
@@ -369,6 +382,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = true;
                     _isSwitchingAnimPlaying = true;
+                    _isReloading = false;
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
                 }
@@ -381,7 +395,8 @@ namespace Engine.Game
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState, GameTime gameTime)
         {
           
-            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) && (weapon.Reloading() && !_isReloading))
+            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) && 
+                (weapon.Reloading() && !_isReloading) && !_isShoting)
             {
                 _isReloading = true;
                 _isRealoadingSoundPlayed = false;
@@ -389,6 +404,7 @@ namespace Engine.Game
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false);
             }
 
+            // We play the sound after a delay
             if (!_isRealoadingSoundPlayed && (elapsedTime >= weapon._weaponsArray[weapon._selectedWeapon]._delay))
             {
                 CSoundManager.PlayInstance("WEP." + weapon._weaponsArray[weapon._selectedWeapon]._reloadSound);
