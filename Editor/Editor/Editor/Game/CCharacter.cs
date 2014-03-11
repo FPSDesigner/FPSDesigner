@@ -177,7 +177,7 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp);
 
-                    if (!_isShoting && !_isReloading)
+                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 }
 
@@ -471,10 +471,12 @@ namespace Engine.Game
                     // Change the futur animation speed
                     _isShoting = false;
                     _isWaitAnimPlaying = true;
-                    _isSwitchingAnimPlaying = true;
+                    _isReloading = false;
+
                     _isReloading = false;
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
+                    _isSwitchingAnimPlaying = true;
                 }
             }
 
