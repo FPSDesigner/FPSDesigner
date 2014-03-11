@@ -46,11 +46,15 @@ namespace Engine.Game
 
         private bool _isRealoadingSoundPlayed = true;
 
-        private float _velocity = 0.3f;
-        public float _initSpeed = 0.2f;
+        private float _horizontalVelocity;
 
         private float elapsedTime; // We get the time to know when play a sound
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
+
+        public float _sprintSpeed = 12f;
+        public float _walkSpeed = 8f;
+        public float _aimSpeed = 4f;
+        public float _movementsLerp = 0.01f;
 
         public void Initialize()
         {
@@ -71,7 +75,7 @@ namespace Engine.Game
             _handAnimation.ChangeAnimSpeed(0.7f);
             _handAnimation.BeginAnimation(weap._weaponsArray[weap._selectedWeapon]._weapAnim[2], true);
 
-            //Initialize the weapon attributes
+            // Initialize the weapon attributes
             foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
@@ -100,6 +104,7 @@ namespace Engine.Game
             }
 
             _muzzleRandom = new Random();
+            _horizontalVelocity = _walkSpeed;
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
@@ -151,48 +156,46 @@ namespace Engine.Game
         /// <returns>The camera velocity</returns>
         public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon, Display3D.CCamera cam)
         {
-            // If he runs
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
             {
-                if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
-                {
-                    _velocity += .012f;
-                }
+                _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
-                if ((!_isShoting && !_isAiming && !_isReloading) && cam._isMoving)
-                {
+                if (_horizontalVelocity != _sprintSpeed && !_isShoting)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
-                }
+
                 _isRunning = true;
             }
             else
             {
-                if (_velocity > _initSpeed)
+                if (_horizontalVelocity != _walkSpeed)
                 {
-                    _velocity -= .014f;
+                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp);
+
+                    if (!_isShoting)
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 }
 
-                if (_isRunning && !_isReloading && !_isShoting) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 _isRunning = false;
             }
 
-            // If the player is Aiming
             if (_isAiming)
             {
-                _velocity = 0.04f;
-            }
-            else if (!_isAiming && !_isRunning)
-            {
-                _velocity = _initSpeed;
+                if (_horizontalVelocity != _aimSpeed)
+                {
+                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _aimSpeed, _movementsLerp);
+
+                    if (!_isShoting)
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
+                }
             }
 
-            return _velocity;
+            return _horizontalVelocity;
         }
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
             // If He is doing nothing, we stop him
-            if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading && 
+            if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading &&
                 (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
@@ -223,7 +226,7 @@ namespace Engine.Game
             }
 
             // If player move, we play the walk anim
-            if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading && 
+            if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading &&
                 (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
@@ -322,8 +325,8 @@ namespace Engine.Game
             }
 
             // Draw the muzzle flash
-            if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && !_isReloading  &&
-                (_isShoting  && _elapsedTimeMuzzle <= 15))
+            if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && !_isReloading &&
+                (_isShoting && _elapsedTimeMuzzle <= 15))
             {
                 float randomScale = (float)_muzzleRandom.NextDouble() / 4f;
                 Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
@@ -364,7 +367,7 @@ namespace Engine.Game
                 {
                     int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
                     _futurSelectedWeapon = newWeap;
-                    
+
                     // Change the futur animation speed
                     _isShoting = false;
                     _isWaitAnimPlaying = false;
@@ -394,8 +397,8 @@ namespace Engine.Game
         // Reloading function
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState, GameTime gameTime)
         {
-          
-            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) && 
+
+            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) &&
                 (weapon.Reloading() && !_isReloading) && !_isShoting)
             {
                 _isReloading = true;

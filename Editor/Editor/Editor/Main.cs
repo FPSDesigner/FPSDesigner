@@ -21,8 +21,6 @@ namespace Engine
         KeyboardState oldKeyboardState; //--| These 2 variables avec used to compare new state and old state (ex : Key pressed and released)
         MouseState oldMouseState;
 
-        Game.CGameManagement GameManagement; // Class Created to relieving main's Class
-
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
 

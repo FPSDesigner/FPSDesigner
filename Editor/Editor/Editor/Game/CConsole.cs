@@ -55,6 +55,7 @@ namespace Engine.Game
 
         public static Keys _activationKeys = Keys.OemTilde;
         public static Display3D.CCamera _Camera;
+        public static Game.CCharacter _Character;
 
 
         /// <summary>
@@ -115,9 +116,22 @@ namespace Engine.Game
                     else
                         addMessage("USAGE: " + cmd[0] + " <GaussianBlur/BlackWhite/Fade>");
                     break;
+                case "getposition":
+                    addMessage(_Camera._cameraPos.ToString());
+                    break;
+                case "setrunspeed":
+                    float runSpeed;
+                    if (cmd.Length > 1 && float.TryParse(cmd[1], out runSpeed))
+                    {
+                        _Character._sprintSpeed = runSpeed;
+                        addMessage("Run speed set to " + runSpeed);
+                    }
+                    else
+                        addMessage("USAGE: " + cmd[0] + " <Speed>");
+                    break;
                 case "help":
                     addMessage("Command List:");
-                    addMessage("togglefps - effect");
+                    addMessage("togglefps - effect - getposition - setrunspeed");
                     break;
             }
         }
@@ -209,7 +223,7 @@ namespace Engine.Game
             addDate = false;
             if (_isConsoleFileLoaded)
             {
-                _logsFile.WriteLine(((addDate) ? "["+DateTime.Now.ToString() + "] " : "") + message);
+                _logsFile.WriteLine(((addDate) ? "[" + DateTime.Now.ToString() + "] " : "") + message);
                 if (flush)
                     _logsFile.Flush();
             }

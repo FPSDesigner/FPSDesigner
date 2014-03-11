@@ -48,12 +48,18 @@ namespace Engine.GameStates
             levelData = levelInfo.loadLevelData("GameLevel.xml");
             _graphics = graphics;
 
+            Game.CSoundManager.LoadContent();
+
 
             /**** Character ****/
             _character = new Game.CCharacter();
             _character.Initialize();
 
-            _character._initSpeed = levelData.SpawnInfo.MoveSpeed;
+            _character._walkSpeed = levelData.SpawnInfo.WalkSpeed;
+            _character._aimSpeed = levelData.SpawnInfo.AimSpeed;
+            _character._sprintSpeed = levelData.SpawnInfo.SprintSpeed;
+
+            Game.CConsole._Character = _character;
 
 
             /**** Models ****/
@@ -101,10 +107,13 @@ namespace Engine.GameStates
 
                 if (levelData.Terrain.UseTerrain)
                     water.Objects.Add(terrain);
+
+                Game.CSoundManager.Water = water;
             }
 
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
                 terrain.waterHeight = water.waterPosition.Y;
+                
 
             // We create array containing all informations about weapons.
 
@@ -154,11 +163,6 @@ namespace Engine.GameStates
             /**** Particles ****/
             Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
             Display3D.Particles.ParticlesManager.AddNewParticle("dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, new Vector3(-185.2928f, 172f, 80.45f), null, false);
-
-            /*** Other ***/
-            Game.CSoundManager.LoadContent();
-            if (levelData.Water.UseWater)
-                Game.CSoundManager.Water = water;
 
             /**** Camera ****/
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);

@@ -16,7 +16,7 @@ namespace Engine.Game
         
         // Private
         private float _entityHeight;
-        private float _intersectionDistanceH = 5.5f; // Horizontal distance collision with models
+        private float _intersectionDistanceH = 15f; // Horizontal distance collision with models
         private double _lastFreeFall;
         private bool _isUnderwater = false;
 
@@ -28,8 +28,8 @@ namespace Engine.Game
         public List<Display3D.Triangle> _triangleList = new List<Display3D.Triangle>();
         public List<Vector3> _triangleNormalsList = new List<Vector3>();
         public Display3D.CTerrain _terrain;
-        public float _gravityConstant = -9.81f / 600f;
-        public float _gravityConstantWater = -9.81f / 5000f;
+        public float _gravityConstant = -9.81f / 10f;
+        public float _gravityConstantWater = -9.81f / 80f;
         public float _maxFallingVelocity = -3.5f; // The maximum velocity of an entity during its fall
         public float _maxFallingVelocityWater = -0.05f;
         public float _waterHeight = 0f;
@@ -61,6 +61,8 @@ namespace Engine.Game
             _isUnderwater = isUnderwater;
             bool isVerticalIntersecting = false;
 
+            translation *= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             Vector3 assumedNewPosition = entityPos + translation;
             Ray translationRay = new Ray(entityPos, translation);
 
@@ -83,7 +85,7 @@ namespace Engine.Game
                 float? distance = Display3D.TriangleTest.Intersects(ref translationRay, ref triangleToTest);
                 if (distance != null && distance <= _intersectionDistanceH)
                 {
-                    horizontalNormalReaction = -_triangleNormalsList[i] * translation.Length() * (_intersectionDistanceH - (float)distance);
+                    horizontalNormalReaction = -_triangleNormalsList[i] * translation.Length() /** (_intersectionDistanceH - (float)distance)*/;
                     //horizontalNormalReaction = -translation;
                     break;
                 }
@@ -116,7 +118,7 @@ namespace Engine.Game
             else
             {
                 isVerticalIntersecting = false;
-                float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall);
+                float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall) * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_isUnderwater && translation == Vector3.Zero)
                     _velocity.Y += _gravityConstantWater * dt;
                 else
@@ -186,7 +188,7 @@ namespace Engine.Game
         {
             if (_velocity.Y == 0)
             {
-                _velocity.Y = 0.125f;
+                _velocity.Y = 0.025f;
             }
         }
     }

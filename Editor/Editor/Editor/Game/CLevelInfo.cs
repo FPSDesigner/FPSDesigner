@@ -46,7 +46,9 @@ namespace Engine.Game.LevelInfo
     {
         public float NearClip { get; set; }
         public float FarClip { get; set; }
-        public float MoveSpeed { get; set; }
+        public float WalkSpeed { get; set; }
+        public float SprintSpeed { get; set; }
+        public float AimSpeed { get; set; }
         public Coordinates SpawnPosition { get; set; }
         public Coordinates SpawnRotation { get; set; }
     }

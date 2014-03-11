@@ -109,7 +109,11 @@ namespace Engine.Display3D
         {
             _animationSpeed = newSpeed;
             animationController.Speed = _animationSpeed;
+        }
 
+        public float GetAnimSpeed()
+        {
+            return _animationSpeed;
         }
 
         public void BeginAnimation(string name, bool looping)
