@@ -380,6 +380,18 @@ namespace Engine.Game
                     effect.TextureEnabled = true;
                     effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
+                    // If the mesh is the slide, we anim it
+                    if (mesh.Name == "Slide" && _isShoting)
+                    {
+                        world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                            weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.3f * Vector3.Up);
+                    }
+                    else
+                    {
+                        world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                            weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset);
+                    }
+
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
