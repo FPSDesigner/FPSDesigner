@@ -160,5 +160,23 @@ namespace Engine.Display3D
         {
             return Matrix.CreateScale(Scale) * Rotation * Matrix.CreateTranslation(Translation);
         }
+
+        // The animation will be played in the other way
+        public void InverseMode(string mode)
+        {
+            mode.ToLower();
+            switch (mode)
+            {
+                case "backward":
+                    animationController.PlaybackMode = PlaybackMode.Backward;
+                    break;
+                case "forward":
+                    animationController.PlaybackMode = PlaybackMode.Forward;
+                    break;
+                default:
+                    animationController.PlaybackMode = PlaybackMode.Forward;
+                    break;
+            }
+        }
     }
 }

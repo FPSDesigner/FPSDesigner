@@ -29,6 +29,7 @@ namespace Engine.Game
         private Random _muzzleRandom; // Randomize muzzle flashes
 
         private int _previousScrollWheelValue; // Help us to determine if he is changing weapon
+        private int _futurSelectedWeapon = 0; // Used to change the weapon only after the animation
 
         // All booleans created to handle animations
         private bool _isWalkAnimPlaying = false;
@@ -38,8 +39,9 @@ namespace Engine.Game
         private bool _isUnderWater = false;
         private bool _isSwimAnimationPlaying = false;
         private bool _isReloading = false;
-        private bool _isSwitchingWeaponPlaying = false;
-        
+        private bool _isSwitchingAnimPlaying = false; // Hands go down
+        private bool _isSwitchingAnim2ndPartPlaying = false; // Hands go up
+
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
 
         private bool _isRealoadingSoundPlayed = true;
@@ -157,7 +159,7 @@ namespace Engine.Game
                     _velocity += .012f;
                 }
 
-                if ((!_isShoting && !_isAiming ) && cam._isMoving)
+                if ((!_isShoting && !_isAiming && !_isReloading) && cam._isMoving)
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
                 }
@@ -189,8 +191,9 @@ namespace Engine.Game
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
         {
-            //If He is doing nothing, we stop him
-            if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading)
+            // If He is doing nothing, we stop him
+            if ((!cam._isMoving && !_isWaitAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading && 
+                (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
@@ -198,10 +201,12 @@ namespace Engine.Game
                 //Just the wait animation is playing
                 _isWalkAnimPlaying = false;
                 _isSwimAnimationPlaying = false;
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
                 _isWaitAnimPlaying = true;
             }
 
-            //We wanted to know if the shoting animation is finished
+            // We wanted to know if the shoting animation is finished
             if ((_isShoting || _isReloading) && _handAnimation.HasFinished())
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
@@ -210,13 +215,16 @@ namespace Engine.Game
                 //just the wait animation is playing
                 _isWalkAnimPlaying = false;
                 _isSwimAnimationPlaying = false;
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
                 _isShoting = false;
                 _isReloading = false;
                 _isWaitAnimPlaying = true;
             }
 
-            //If player move, we play the walk anim
-            if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading)
+            // If player move, we play the walk anim
+            if ((cam._isMoving && !_isWalkAnimPlaying) && (!_isShoting && !_isUnderWater) && !_isReloading && 
+                (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
@@ -224,9 +232,12 @@ namespace Engine.Game
                 //just the walk animation is playing
                 _isWaitAnimPlaying = false;
                 _isSwimAnimationPlaying = false;
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
                 _isWalkAnimPlaying = true;
             }
 
+            // If he is underwater but not swimming
             if (_isUnderWater && !_isSwimAnimationPlaying)
             {
                 _handAnimation.ChangeAnimSpeed(1.25f);
@@ -236,13 +247,36 @@ namespace Engine.Game
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
                 _isShoting = false;
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
                 _isSwimAnimationPlaying = true;
+            }
+
+            // If he is switching weapon we play the other part of the switch
+            if (_isSwitchingAnimPlaying && _handAnimation.HasFinished())
+            {
+                // Inverse the sens of animation
+                _handAnimation.InverseMode("backward");
+                _handAnimation.BeginAnimation(weapon._weaponsArray[_futurSelectedWeapon]._weapAnim[4], false);
+                _isSwitchingAnim2ndPartPlaying = true;
+                _isSwitchingAnimPlaying = false;
+            }
+
+            // The hands finished to go up after the switching
+            if ((!_isSwitchingAnimPlaying && _isSwitchingAnim2ndPartPlaying) && _handAnimation.HasFinished())
+            {
+                // Inverse the sens of animation
+                _handAnimation.InverseMode("forward");
+                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
             }
 
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPShot)))
             {
-                if (!_isUnderWater && (!_isShoting && !_isReloading))
+                if (!_isUnderWater && (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying))
                 {
                     // If he does not use a machete AND if he has bullet in a magazine
                     if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
@@ -267,10 +301,19 @@ namespace Engine.Game
             Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
                 weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset);
 
+            if (_isSwitchingAnim2ndPartPlaying)
+            {
+                weap.ChangeWeapon(_futurSelectedWeapon);
+            }
+
             foreach (ModelMesh mesh in weap._weaponsArray[weap._selectedWeapon]._wepModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
+                    effect.EnableDefaultLighting();
+                    effect.TextureEnabled = true;
+                    effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
+
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = projection;
@@ -302,56 +345,33 @@ namespace Engine.Game
         // Check the key entered to change the weapon
         private void ChangeWeapon(MouseState mouseState, CWeapon weapon)
         {
-            // If he scrolls down
-            if (mouseState.ScrollWheelValue > _previousScrollWheelValue)
+            if (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isReloading)
             {
-                int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
-                weapon.ChangeWeapon(newWeap);
-
-                // Draw the weapon texture
-                foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
+                // If he scrolls down
+                if (mouseState.ScrollWheelValue > _previousScrollWheelValue)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        effect.EnableDefaultLighting();
-                        effect.TextureEnabled = true;
-                        effect.Texture = weapon._weaponsArray[weapon._selectedWeapon]._weapTexture;
-
-                        effect.SpecularColor = new Vector3(0.5f);
-                        effect.SpecularPower = 32;
-                    }
+                    int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
+                    _futurSelectedWeapon = newWeap;
+                    
+                    // Change the futur animation speed
+                    _isShoting = false;
+                    _isWaitAnimPlaying = false;
+                    _isSwitchingAnimPlaying = true;
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
                 }
-
-                // Change the futur animation speed
-                _isShoting = false;
-                _isWaitAnimPlaying = true;
-                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
-                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
-            }
-            else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
-            {
-                int newWeap = (weapon._selectedWeapon <= 0) ? weapon._weaponsArray.Length - 1 : weapon._selectedWeapon - 1;
-                weapon.ChangeWeapon(newWeap);
-
-                // Draw the weapon texture
-                foreach (ModelMesh mesh in weapon._weaponsArray[weapon._selectedWeapon]._wepModel.Meshes)
+                else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
                 {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        effect.EnableDefaultLighting();
-                        effect.TextureEnabled = true;
-                        effect.Texture = weapon._weaponsArray[weapon._selectedWeapon]._weapTexture;
+                    int newWeap = (weapon._selectedWeapon <= 0) ? weapon._weaponsArray.Length - 1 : weapon._selectedWeapon - 1;
+                    _futurSelectedWeapon = newWeap;
 
-                        effect.SpecularColor = new Vector3(0.5f);
-                        effect.SpecularPower = 32;
-                    }
+                    // Change the futur animation speed
+                    _isShoting = false;
+                    _isWaitAnimPlaying = true;
+                    _isSwitchingAnimPlaying = true;
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
                 }
-
-                // Change the futur animation speed
-                _isShoting = false;
-                _isWaitAnimPlaying = true;
-                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
-                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
             }
 
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
@@ -374,14 +394,11 @@ namespace Engine.Game
                 CSoundManager.PlayInstance("WEP." + weapon._weaponsArray[weapon._selectedWeapon]._reloadSound);
                 elapsedTime = 0f;
                 _isRealoadingSoundPlayed = true;
-                Console.WriteLine("sound PLAYED !");
             }
             else if (!_isRealoadingSoundPlayed)
             {
                 elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             }
-
-            Console.WriteLine("Boolean : " + _isRealoadingSoundPlayed + " AND Time : " + elapsedTime);
         }
 
         private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
