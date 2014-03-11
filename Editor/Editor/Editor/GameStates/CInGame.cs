@@ -96,7 +96,7 @@ namespace Engine.GameStates
                         new Vector3(2f), graphics, testTree);*/
 
             
-            // Create barrels
+            /*// Create barrels
             loadingModel = null;
             loadingModel = content.Load<Model>("Models//Barrel");
 
@@ -104,8 +104,8 @@ namespace Engine.GameStates
             barrelTextures.Add("RustyBarrel", content.Load<Texture2D>("Textures\\Model Textures\\RustyMetal"));
             Display3D.CModel modelBarrel = new Display3D.CModel(loadingModel, new Vector3(-128f, 169.2f, 82.45f), new Vector3(0f, 0f, 0f),
                                               new Vector3(0.75f), graphics, barrelTextures);
-            Display3D.CModel modelBarrel2 = new Display3D.CModel(loadingModel, new Vector3(-120f, 169.2f, 88f), new Vector3(0f, 0f, 0f),
-                                  new Vector3(0.75f), graphics, barrelTextures);
+            Display3D.CModel modelBarrel2 = new Display3D.CModel(loadingModel, new Vector3(-120f, 169.2f, 88f), new Vector3(0f, 0f, 0f),///////////
+                                                new Vector3(0.75f), graphics, barrelTextures);*/
 
             // Create Trash Bags
             loadingModel = null;
