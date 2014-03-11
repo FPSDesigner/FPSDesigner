@@ -23,6 +23,7 @@ namespace Engine.Game
         private Matrix _handRotation;
 
         private Display3D.CCamera _cam; //Will back up all camera's attributes
+        private GraphicsDevice _graphicsDevice;
 
         private Model _muzzleFlash; // The plane containing the muzzle flash texture
 
@@ -56,6 +57,8 @@ namespace Engine.Game
         public float _aimSpeed = 4f;
         public float _movementsLerp = 0.01f;
 
+        public Display3D.CTerrain _terrain;
+
         public void Initialize()
         {
             _handTexture = new Texture2D[1];
@@ -64,6 +67,8 @@ namespace Engine.Game
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap)
         {
+            _graphicsDevice = graphics;
+
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
 
@@ -326,6 +331,13 @@ namespace Engine.Game
                         _isShoting = true;
                         _isWalkAnimPlaying = false;
                         _isWaitAnimPlaying = false;
+
+                        if (_terrain != null)
+                        {
+                            Vector3 pos = _terrain.Pick(_cam._view, cam._projection, _graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+                            Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(pos, 0.5f), Color.Red, 255f);
+                        }
+                        
                     }
                     weapon.Shot(true, _isShoting, gameTime);
                 }

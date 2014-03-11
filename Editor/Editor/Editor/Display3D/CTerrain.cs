@@ -457,12 +457,12 @@ namespace Engine.Display3D
         /// <param name="X">The X screen position</param>
         /// <param name="Y">The Y screen position</param>
         /// <returns>The position on the terrain</returns>
-        public Vector3 Pick(GraphicsDevice device, Matrix view, Matrix projection, int X, int Y)
+        public Vector3 Pick(Matrix view, Matrix projection, int X, int Y)
         {
             Vector3 NearestPoint = Vector3.Zero;
 
-            Vector3 nearSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MinDepth), projection, view, World);
-            Vector3 farSource = device.Viewport.Unproject(new Vector3(X, Y, device.Viewport.MaxDepth), projection, view, World);
+            Vector3 nearSource = GraphicsDevice.Viewport.Unproject(new Vector3(X, Y, GraphicsDevice.Viewport.MinDepth), projection, view, World);
+            Vector3 farSource = GraphicsDevice.Viewport.Unproject(new Vector3(X, Y, GraphicsDevice.Viewport.MaxDepth), projection, view, World);
             Vector3 direction = farSource - nearSource;
 
 
@@ -484,6 +484,8 @@ namespace Engine.Display3D
 
                 float YPos = nearSource.Y + direction.Y * t;
                 float IndHeight = heights[IndWidth, IndLength];
+
+                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(XPos, YPos, ZPos), 1.0f), Color.Blue, 255f);
 
 
                 if (IndHeight >= YPos)

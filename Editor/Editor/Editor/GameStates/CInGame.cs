@@ -93,6 +93,7 @@ namespace Engine.GameStates
                 terrain = new Display3D.CTerrain();
                 terrain.InitializeTextures(levelData.Terrain.TerrainTextures, content);
                 terrain.LoadContent(levelData.Terrain.CellSize, levelData.Terrain.Height, levelData.Terrain.TextureTiling, lensFlare.LightDirection, graphics, content);
+                _character._terrain = terrain;
             }
 
             /**** Water ****/
