@@ -15,7 +15,7 @@ namespace Engine.Game
 {
     static class CSoundManager
     {
-        public static Display3D.CWater Water;
+        public static Display3D.CWater Water = null;
 
         public static Dictionary<string, CSound> soundList;
 
@@ -65,9 +65,8 @@ namespace Engine.Game
         }
         #endregion
 
-        public static void LoadContent(Display3D.CWater water)
+        public static void LoadContent()
         {
-            Water = water;
             soundList = new Dictionary<string, CSound>();
         }
 
@@ -82,7 +81,7 @@ namespace Engine.Game
         {
             if (soundList.ContainsKey(soundName))
             {
-                if (Water.isUnderWater)
+                if (Water != null && Water.isUnderWater)
                 {
                     pitch = -1f; // Underwater effect
                     pan = 1f;
@@ -98,7 +97,7 @@ namespace Engine.Game
         {
             if (soundList.ContainsKey(soundName))
             {
-                if (Water.isUnderWater)
+                if (Water != null &&  Water.isUnderWater)
                 {
                     pitch = -1f; // Underwater effect
                     pan = 1f;
