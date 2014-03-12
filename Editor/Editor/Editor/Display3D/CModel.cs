@@ -40,6 +40,7 @@ namespace Engine.Display3D
 
         private string collisionShapeName = "collision_shape";
 
+
         public BoundingSphere BoundingSphere
         {
             get

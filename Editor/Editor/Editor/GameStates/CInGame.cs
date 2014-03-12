@@ -30,7 +30,6 @@ namespace Engine.GameStates
         List<Display3D.Particles.ParticleSystem> particlesList = new List<Display3D.Particles.ParticleSystem>();
 
         Game.CWeapon weapon;
-        List<Display3D.CModel> models = new List<Display3D.CModel>();
         GraphicsDevice _graphics;
 
         public void Initialize()
@@ -71,7 +70,7 @@ namespace Engine.GameStates
                 foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
                     modelTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
 
-                models.Add(new Display3D.CModel(
+                Display3D.CModelManager.addModel(new Display3D.CModel(
                     content.Load<Model>(modelInfo.ModelFile),
                     modelInfo.Position.Vector3,
                     modelInfo.Rotation.Vector3,
@@ -170,19 +169,14 @@ namespace Engine.GameStates
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
-
-            // Load content for Chara class
-            _character.LoadContent(content, graphics, weapon, cam);
             
             // ******* All the consol informations ******* //
+
+            _character.LoadContent(content, graphics, weapon, cam);
+            Display3D.CModelManager.AddPhysicsInformations(cam);
+
             Game.CConsole._Camera = cam;
             Game.CConsole._Weapon = weapon;
-
-            for (int i = 0; i < models.Count; i++)
-            {
-                cam._physicsMap._triangleList.AddRange(models[i]._trianglesPositions);
-                cam._physicsMap._triangleNormalsList.AddRange(models[i]._trianglesNormal);
-            }
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
@@ -235,9 +229,8 @@ namespace Engine.GameStates
 
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
-            for (int i = 0; i < models.Count; i++)
-                if (cam.BoundingVolumeIsInView(models[i].BoundingSphere))
-                    models[i].Draw(cam._view, cam._projection, cam._cameraPos);
+
+            Display3D.CModelManager.Draw(cam, gameTime);
 
 
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);

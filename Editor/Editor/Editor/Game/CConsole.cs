@@ -129,18 +129,21 @@ namespace Engine.Game
                         {
                             _Terrain.debugActivated = false;
                             _Water.debugActivated = false;
+                            Display3D.CModelManager.DebugActivated = false;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
                         }
                         if (debugType == 1)
                         {
                             _Terrain.debugActivated = true;
                             _Water.debugActivated = true;
+                            Display3D.CModelManager.DebugActivated = true;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
                         }
                         if (debugType == 2)
                         {
                             _Terrain.debugActivated = true;
                             _Water.debugActivated = true;
+                            Display3D.CModelManager.DebugActivated = true;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.LineList;
                         }
                         addMessage("Debug mode " + debugType + " activated.");
