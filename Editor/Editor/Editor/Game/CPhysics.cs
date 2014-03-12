@@ -13,7 +13,7 @@ namespace Engine.Game
 {
     class CPhysics
     {
-        
+
         // Private
         private float _entityHeight;
         private float _intersectionDistanceH = 5.5f; // Horizontal distance collision with models
@@ -65,7 +65,7 @@ namespace Engine.Game
             translation *= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector3 assumedNewPosition = entityPos + translation;
-            Ray translationRay = new Ray(entityPos, translation);
+            Ray translationRay = new Ray(new Vector3(entityPos.X, entityPos.Y - _entityHeight / 2, entityPos.Z), translation);
 
             Vector3 horizontalNormalReaction = Vector3.Zero;
 
@@ -76,7 +76,7 @@ namespace Engine.Game
                 _velocity.Y = 0;
                 assumedNewPosition.Y = _waterHeight + translation.Y;
             }
-            else if(_isOnWaterSurface)
+            else if (_isOnWaterSurface)
                 _isOnWaterSurface = false;
 
             /* Horizontal check - models */
@@ -98,7 +98,7 @@ namespace Engine.Game
             // Terrain informations
             float Steepness;
             float terrainHeight = (_isGameUsing[0]) ? _terrain.GetHeightAtPosition(assumedNewPosition.X, assumedNewPosition.Z, out Steepness) : 0;
-            
+
             float jumpVelocity = 0f;
             if (_velocity.Y > 0)
                 jumpVelocity = _velocity.Y;
@@ -150,7 +150,7 @@ namespace Engine.Game
                 }
             }
 
-            if (closestTriangle != -1 && closestTriangleBelowDistance <= (_velocity.Y <= 0 ? _entityHeight : _entityHeight/3))
+            if (closestTriangle != -1 && closestTriangleBelowDistance <= (_velocity.Y <= 0 ? _entityHeight : _entityHeight / 3))
             {
                 // If the player is falling, and not jumping
                 if (_velocity.Y <= 0)
@@ -171,7 +171,7 @@ namespace Engine.Game
                 _velocity.Y = 0;
             }
 
-            if(_isOnWaterSurface)
+            if (_isOnWaterSurface)
                 _velocity.Y = 0;
 
             if (isVerticalIntersecting)
