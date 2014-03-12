@@ -94,6 +94,7 @@ namespace Engine.GameStates
                 terrain.InitializeTextures(levelData.Terrain.TerrainTextures, content);
                 terrain.LoadContent(levelData.Terrain.CellSize, levelData.Terrain.Height, levelData.Terrain.TextureTiling, lensFlare.LightDirection, graphics, content);
                 _character._terrain = terrain;
+                Game.CConsole._Terrain = terrain;
             }
 
             /**** Water ****/
@@ -110,6 +111,7 @@ namespace Engine.GameStates
                     water.Objects.Add(terrain);
 
                 Game.CSoundManager.Water = water;
+                Game.CConsole._Water = water;
                 _character._water = water;
             }
 
@@ -205,7 +207,7 @@ namespace Engine.GameStates
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
 
-        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
 
             //renderer.Draw();
@@ -244,10 +246,12 @@ namespace Engine.GameStates
             BlendState defaultBS = _graphics.BlendState;
             _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
             _graphics.BlendState = BlendState.AlphaBlend;
-            _character.Draw(spritebatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+            _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
             _graphics.BlendState = defaultBS;
 
             lensFlare.Draw(gameTime);
+
+            water.DrawDebug(spriteBatch);
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

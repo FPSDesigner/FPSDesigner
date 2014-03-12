@@ -20,7 +20,7 @@ namespace Engine.Display3D
         ContentManager content;
         GraphicsDevice graphics;
 
-        RenderTarget2D reflectionTarg;
+        public RenderTarget2D reflectionTarg;
         RenderTarget2D defaultRenderTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
@@ -34,6 +34,8 @@ namespace Engine.Display3D
         private bool isInView = true;
 
         private Matrix pickWorld;
+
+        public bool debugActivated = false;
 
         
         public float _waveSpeed = 0.04f;
@@ -145,6 +147,7 @@ namespace Engine.Display3D
             // Set the reflected scene to its effect parameter in
             // the water effect
             waterEffect.Parameters["ReflectionMap"].SetValue(reflectionTarg);
+
         }
 
         /// <summary>
@@ -159,6 +162,16 @@ namespace Engine.Display3D
             {
                 renderReflection(camera, gameTime);
                 waterEffect.Parameters["Time"].SetValue((float)gameTime.TotalGameTime.TotalSeconds);
+            }
+        }
+
+        public void DrawDebug(SpriteBatch spriteBatch)
+        {
+            if (debugActivated)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(reflectionTarg, new Vector2(0, 0), null, Color.White, 0, new Vector2(0, 0), 0.25f, SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically, 1);
+                spriteBatch.End();
             }
         }
 

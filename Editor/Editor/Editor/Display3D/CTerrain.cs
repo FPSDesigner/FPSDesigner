@@ -110,6 +110,8 @@ namespace Engine.Display3D
         private bool areDefaultParamsLoaded = false;
         private int usedTechniqueIndex = -1;
 
+        public PrimitiveType terrainDrawPrimitive = PrimitiveType.TriangleList;
+        public bool debugActivated = false;
 
         /// <summary>
         /// Constructor
@@ -397,7 +399,10 @@ namespace Engine.Display3D
             GetFirstAndLastPrimitives(ref startPrimitive, ref endPrimitive);
 
             // Draw terrain
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, nVertices, startPrimitive, nIndices / 3 - startPrimitive / 3 - endPrimitive / 3);
+            if(terrainDrawPrimitive == PrimitiveType.TriangleList)
+                GraphicsDevice.DrawIndexedPrimitives(terrainDrawPrimitive, 0, 0, nVertices, startPrimitive, nIndices / 3 - startPrimitive / 3 - endPrimitive / 3);
+            else
+                GraphicsDevice.DrawIndexedPrimitives(terrainDrawPrimitive, 0, 0, nVertices, 0, nIndices / 3);
         }
 
         public void SendEffectDefaultParameters()
@@ -488,7 +493,9 @@ namespace Engine.Display3D
                 float steepness;
                 float IndHeight = GetHeightAtPosition(newPos.X, newPos.Z, out steepness, false);
 
-                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(new Vector3(XPos, YPos, ZPos), 1.0f), Color.Blue, 255f);
+                if(debugActivated)
+                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(newPos, 0.1f), Color.Blue, 5f);
+
                 if (IndHeight >= newPos.Y)
                 {
                     IsValid = true;

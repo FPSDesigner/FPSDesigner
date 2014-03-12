@@ -57,6 +57,8 @@ namespace Engine.Game
         public static Display3D.CCamera _Camera;
         public static Game.CCharacter _Character;
         public static Game.CWeapon _Weapon;
+        public static Display3D.CTerrain _Terrain;
+        public static Display3D.CWater _Water;
 
         /// <summary>
         /// Process new commands
@@ -119,6 +121,32 @@ namespace Engine.Game
                 case "getposition":
                     addMessage(_Camera._cameraPos.ToString());
                     break;
+                case "debug":
+                    int debugType;
+                    if (cmd.Length > 1 && Int32.TryParse(cmd[1], out debugType))
+                    {
+                        if (debugType == 0)
+                        {
+                            _Terrain.debugActivated = false;
+                            _Water.debugActivated = true;
+                            _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
+                        }
+                        if (debugType == 1)
+                        {
+                            _Terrain.debugActivated = true;
+                            _Water.debugActivated = true;
+                            _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
+                        }
+                        if (debugType == 2)
+                        {
+                            _Terrain.debugActivated = true;
+                            _Terrain.terrainDrawPrimitive = PrimitiveType.LineList;
+                        }
+                        addMessage("Debug mode " + debugType + " activated.");
+                    }
+                    else
+                        addMessage("USAGE: " + cmd[0] + " <0-2>");
+                    break;
                 case "setrunspeed":
                     float runSpeed;
                     if (cmd.Length > 1 && float.TryParse(cmd[1], out runSpeed))
@@ -131,7 +159,7 @@ namespace Engine.Game
                     break;
                 case "help":
                     addMessage("Command List:");
-                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info");
+                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info - debug");
                     break;
                 case "weapon_info":
                     addMessage("Magazine : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._actualClip + " | Bullets available : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._bulletsAvailable);
