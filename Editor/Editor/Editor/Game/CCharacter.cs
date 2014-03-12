@@ -57,6 +57,7 @@ namespace Engine.Game
         public float _sprintSpeed = 18f;
         public float _walkSpeed = 9f;
         public float _aimSpeed = 3f;
+        public float _crouchSpeed = 2f;
         public float _movementsLerp = 0.006f;
 
         private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
@@ -200,6 +201,17 @@ namespace Engine.Game
                 if (_horizontalVelocity != _aimSpeed)
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _aimSpeed, _movementsLerp);
+
+                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
+                }
+            }
+
+            if (_isCrouched)
+            {
+                if (_horizontalVelocity != _crouchSpeed)
+                {
+                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _crouchSpeed, 0.7f);
 
                     if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
