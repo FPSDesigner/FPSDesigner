@@ -67,6 +67,7 @@ namespace Engine.Game.Settings
                     MCrouch = Keys.C,
                     MSprint = Keys.LeftShift,
                     Console = (isKeyboardQwerty) ? Keys.OemTilde : Keys.OemQuotes,
+                    Reload = Keys.R,
                     MouseSensibility = 0.001f,
 
                     GPSensibility = 0.05f,
@@ -74,6 +75,7 @@ namespace Engine.Game.Settings
                     GPShot = Buttons.RightTrigger,
                     GPRun = Buttons.LeftShoulder,
                     GPCrouch = Buttons.B,
+                    GPReload = Buttons.X,
                 },
                 Video = new Video
                 {
@@ -114,10 +116,12 @@ namespace Engine.Game.Settings
         public Keys MCrouch { get; set; }
         public Keys MSprint { get; set; }
         public Keys Console { get; set; }
+        public Keys Reload { get; set; }
         public Buttons GPJump { get; set; }
         public Buttons GPShot { get; set; }
         public Buttons GPRun { get; set; }
         public Buttons GPCrouch { get; set; }
+        public Buttons GPReload { get; set; }
         public float MouseSensibility { get; set; }
         public float GPSensibility { get; set; }
     }

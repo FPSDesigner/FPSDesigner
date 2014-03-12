@@ -486,9 +486,11 @@ namespace Engine.Game
         // Reloading function
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState, GameTime gameTime)
         {
-
-            if ((kbState.IsKeyDown(Keys.R) && oldKbState.IsKeyUp(Keys.R)) &&
-                (weapon.Reloading() && !_isReloading) && !_isShoting)
+            if (
+                ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload) && oldKbState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.Reload))
+                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload) && CGameSettings.oldGamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
+                && (weapon.Reloading() && !_isReloading) && !_isShoting
+                )
             {
                 _isReloading = true;
                 _isRealoadingSoundPlayed = false;
