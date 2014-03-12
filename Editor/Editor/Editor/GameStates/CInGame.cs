@@ -149,7 +149,7 @@ namespace Engine.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.6f, 4.0f, 0.7f,0.0f,3.8f
+                    1.4f, 4.0f, 0.7f,0.0f,3.8f
                 },
                 new float[] {
                     1.6f, 16.0f, 0.8f,2.5f,3.8f
@@ -170,7 +170,10 @@ namespace Engine.GameStates
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            
+            // ******* All the consol informations ******* //
             Game.CConsole._Camera = cam;
+            Game.CConsole._Weapon = weapon;
 
             for (int i = 0; i < models.Count; i++)
             {
@@ -195,6 +198,9 @@ namespace Engine.GameStates
             // Update all character actions
             _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
             _oldKeyState = kbState;
+
+            // ****** We get the weapon attribute to display it in consol ****** //
+            Game.CConsole._Weapon = weapon;
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }

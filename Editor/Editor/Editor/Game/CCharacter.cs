@@ -52,10 +52,10 @@ namespace Engine.Game
         private float elapsedTime; // We get the time to know when play a sound
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
 
-        public float _sprintSpeed = 12f;
-        public float _walkSpeed = 8f;
-        public float _aimSpeed = 4f;
-        public float _movementsLerp = 0.01f;
+        public float _sprintSpeed = 18f;
+        public float _walkSpeed = 9f;
+        public float _aimSpeed = 3f;
+        public float _movementsLerp = 0.006f;
 
         public Display3D.CTerrain _terrain;
         public Display3D.CWater _water;
@@ -175,7 +175,7 @@ namespace Engine.Game
             {
                 if (_horizontalVelocity != _walkSpeed)
                 {
-                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp);
+                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp*2.5f);
 
                     if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);

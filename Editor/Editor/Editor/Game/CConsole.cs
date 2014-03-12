@@ -56,7 +56,7 @@ namespace Engine.Game
         public static Keys _activationKeys = Keys.OemTilde;
         public static Display3D.CCamera _Camera;
         public static Game.CCharacter _Character;
-
+        public static Game.CWeapon _Weapon;
 
         /// <summary>
         /// Process new commands
@@ -131,7 +131,10 @@ namespace Engine.Game
                     break;
                 case "help":
                     addMessage("Command List:");
-                    addMessage("togglefps - effect - getposition - setrunspeed");
+                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info");
+                    break;
+                case "weapon_info":
+                    addMessage("Magazine : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._actualClip + " | Bullets available : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._bulletsAvailable);
                     break;
             }
         }
