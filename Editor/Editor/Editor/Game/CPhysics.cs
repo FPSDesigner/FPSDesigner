@@ -189,7 +189,7 @@ namespace Engine.Game
         {
             if (_velocity.Y == 0)
             {
-                _velocity.Y = 0.025f;
+                _velocity.Y = 0.1f;
             }
         }
     }
