@@ -196,6 +196,12 @@ namespace Engine.Game
                         _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
                         isRealoadingDone = true;
                     }
+
+                    else if (_weaponsArray[_selectedWeapon]._bulletsAvailable > 0
+                        && (_weaponsArray[_selectedWeapon]._actualClip + _weaponsArray[_selectedWeapon]._bulletsAvailable) <= _weaponsArray[_selectedWeapon]._maxClip)
+                    {
+                        _weaponsArray[_selectedWeapon]._actualClip += _weaponsArray[_selectedWeapon]._bulletsAvailable;
+                    }
                 }
 
                 //Console.WriteLine(" Bullet avaible : " + _weaponsArray[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
