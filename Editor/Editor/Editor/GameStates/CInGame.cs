@@ -149,10 +149,10 @@ namespace Engine.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.6f, 4.0f, 0.7f,0.0f,3.2f
+                    1.6f, 4.0f, 0.7f,0.0f,3.8f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.8f,2.5f,3.2f
+                    1.6f, 16.0f, 0.8f,2.5f,3.8f
                 },
 
             };

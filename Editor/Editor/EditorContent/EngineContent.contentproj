@@ -555,15 +555,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\TrafficLight.fbx">
-      <Name>TrafficLight</Name>
+    <Compile Include="Models\Container.fbx">
+      <Name>Container</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Container.fbx">
-      <Name>Container</Name>
+    <Compile Include="Models\TrafficLight.fbx">
+      <Name>TrafficLight</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>

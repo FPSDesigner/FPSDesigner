@@ -10,10 +10,10 @@ FBXHeaderExtension:  {
 		Version: 1000
 		Year: 2014
 		Month: 03
-		Day: 11
-		Hour: 20
-		Minute: 32
-		Second: 15
+		Day: 12
+		Hour: 11
+		Minute: 04
+		Second: 21
 		Millisecond: 0
 	}
 	Creator: "FBX SDK/FBX Plugins build 20070228"
@@ -21,7 +21,7 @@ FBXHeaderExtension:  {
 		FlagPLE: 0
 	}
 }
-CreationTime: "2014-03-11 20:32:15:000"
+CreationTime: "2014-03-12 11:04:21:000"
 Creator: "Blender version 2.69 (sub 0)"
 
 ; Object definitions
@@ -29,7 +29,7 @@ Creator: "Blender version 2.69 (sub 0)"
 
 Definitions:  {
 	Version: 100
-	Count: 7
+	Count: 4
 	ObjectType: "Model" {
 		Count: 2
 	}
@@ -37,12 +37,6 @@ Definitions:  {
 		Count: 2
 	}
 	ObjectType: "Material" {
-		Count: 2
-	}
-	ObjectType: "Texture" {
-		Count: 1
-	}
-	ObjectType: "Video" {
 		Count: 1
 	}
 	ObjectType: "Pose" {
@@ -136,21 +130,21 @@ Objects:  {
 		MultiTake: 1
 		Shading: Y
 		Culling: "CullingOff"
-		Vertices: -2.100000,-1.100000,-0.100000,-2.100000,1.100000,-0.100000,2.100000,1.100000,-0.100000,2.100000,-1.100000,-0.100000,
-		          -2.100000,-1.100000,2.100000,-2.100000,1.100000,2.100000,2.100000,1.100000,2.100000,2.100000,-1.100000,2.100000
-		PolygonVertexIndex: 4,5,1,-1,5,6,2,-2,6,7,3,-3,7,4,0,-4,0,1,2,-4,7,6,5,-5
+		Vertices: -2.100000,-1.100000,2.100000,-2.100000,1.100000,2.100000,-2.100000,1.100000,-0.100000,-2.100000,-1.100000,-0.100000,
+		          2.100000,1.100000,2.100000,2.100000,1.100000,-0.100000,2.100000,-1.100000,2.100000,2.100000,-1.100000,-0.100000
+		PolygonVertexIndex: 0,1,2,-4,1,4,5,-3,4,6,7,-6,6,0,3,-8,3,2,5,-8,1,0,6,-5
 		GeometryVersion: 124
 		LayerElementNormal: 0 {
 			Version: 101
 			Name: ""
 			MappingInformationType: "ByPolygonVertex"
 			ReferenceInformationType: "Direct"
-			Normals: -1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,
+			Normals: -1.000000,-0.000000,0.000000,-1.000000,-0.000000,0.000000,-1.000000,-0.000000,0.000000,-1.000000,-0.000000,0.000000,
 			         0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,
-			         1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,
-			         0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,
+			         1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,
+			         0.000000,-1.000000,-0.000000,0.000000,-1.000000,-0.000000,0.000000,-1.000000,-0.000000,0.000000,-1.000000,-0.000000,
 			         0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,
-			         0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000
+			         0.000000,-0.000000,1.000000,0.000000,-0.000000,1.000000,0.000000,-0.000000,1.000000,0.000000,-0.000000,1.000000
 		}
 		LayerElementSmoothing: 0 {
 			Version: 102
@@ -158,6 +152,23 @@ Objects:  {
 			MappingInformationType: "ByPolygon"
 			ReferenceInformationType: "Direct"
 			Smoothing: 0,0,0,0,0,0
+		}
+		LayerElementUV: 0 {
+			Version: 101
+			Name: "UVMap"
+			MappingInformationType: "ByPolygonVertex"
+			ReferenceInformationType: "IndexToDirect"
+			UV: 0.666467,0.666467
+			UVIndex: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+		}
+		LayerElementTexture: 0 {
+			Version: 101
+			Name: ""
+			MappingInformationType: "NoMappingInformation"
+			ReferenceInformationType: "IndexToDirect"
+			BlendMode: "Translucent"
+			TextureAlpha: 1
+			TextureId: 
 		}
 		LayerElementMaterial: 0 {
 			Version: 101
@@ -174,6 +185,10 @@ Objects:  {
 			}
 			LayerElement:  {
 				Type: "LayerElementSmoothing"
+				TypedIndex: 0
+			}
+			LayerElement:  {
+				Type: "LayerElementUV"
 				TypedIndex: 0
 			}
 			LayerElement:  {
@@ -261,9 +276,9 @@ Objects:  {
 		MultiTake: 1
 		Shading: Y
 		Culling: "CullingOff"
-		Vertices: 1.999999,1.000000,0.000000,1.999999,-1.000000,0.000000,-1.999999,-1.000000,0.000000,-1.999998,1.000000,0.000000,
-		          2.000000,0.999999,2.000000,1.999998,-1.000001,2.000000,-2.000000,-1.000000,2.000000,-1.999999,1.000000,2.000000
-		PolygonVertexIndex: 0,1,2,-4,4,7,6,-6,0,4,5,-2,1,5,6,-3,2,6,7,-4,4,0,3,-8
+		Vertices: 1.999999,1.000000,0.000000,1.999999,-1.000000,-0.000000,-1.999999,-1.000000,-0.000000,-1.999998,1.000000,0.000000,
+		          2.000000,0.999999,2.000000,-1.999999,1.000000,2.000000,-2.000000,-1.000000,2.000000,1.999998,-1.000001,2.000000
+		PolygonVertexIndex: 0,1,2,-4,4,5,6,-8,0,4,7,-2,1,7,6,-3,2,6,5,-4,4,0,3,-6
 		GeometryVersion: 124
 		LayerElementNormal: 0 {
 			Version: 101
@@ -271,10 +286,10 @@ Objects:  {
 			MappingInformationType: "ByPolygonVertex"
 			ReferenceInformationType: "Direct"
 			Normals: 0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,0.000000,0.000000,-1.000000,
-			         0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,
-			         1.000000,-0.000001,0.000000,1.000000,-0.000001,0.000000,1.000000,-0.000001,0.000000,1.000000,-0.000001,0.000000,
+			         -0.000000,-0.000000,1.000000,-0.000000,-0.000000,1.000000,-0.000000,-0.000000,1.000000,-0.000000,-0.000000,1.000000,
+			         1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,1.000000,-0.000000,0.000000,
 			         -0.000000,-1.000000,-0.000000,-0.000000,-1.000000,-0.000000,-0.000000,-1.000000,-0.000000,-0.000000,-1.000000,-0.000000,
-			         -1.000000,0.000000,-0.000000,-1.000000,0.000000,-0.000000,-1.000000,0.000000,-0.000000,-1.000000,0.000000,-0.000000,
+			         -1.000000,0.000000,-0.000001,-1.000000,0.000000,-0.000001,-1.000000,0.000000,-0.000001,-1.000000,0.000000,-0.000001,
 			         0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000,0.000000,1.000000,0.000000
 		}
 		LayerElementSmoothing: 0 {
@@ -286,23 +301,23 @@ Objects:  {
 		}
 		LayerElementUV: 0 {
 			Version: 101
-			Name: "Bake"
+			Name: "UVMap"
 			MappingInformationType: "ByPolygonVertex"
 			ReferenceInformationType: "IndexToDirect"
-			UV: 0.000200,0.999800,0.333533,0.333134,0.333134,0.666867,0.666867,0.333533,0.000200,0.333533,0.000200,0.000200,
-			    0.333134,0.333133,0.666467,0.333533,0.999800,0.333533,0.000200,0.666867,0.666467,0.333133,0.333134,0.666467,
-			    0.666867,0.666467,0.333133,0.000200,0.666467,0.000200,0.000200,0.333134,0.999800,0.666467,0.666467,0.666467,
-			    0.333533,0.000200,0.333134,0.333533,0.333533,0.666467,0.333134,0.999800,0.000200,0.666467,0.333533,0.333533
-			UVIndex: 17,20,23,7,6,15,5,13,14,10,1,18,8,16,12,3,0,9,2,21,19,11,22,4
+			UV: 0.666467,0.000200,0.333133,0.000200,0.000200,0.999800,0.000200,0.333134,0.333134,0.333533,0.000200,0.666467,
+			    0.333533,0.000200,0.333134,0.666867,0.000200,0.000200,0.333533,0.333533,0.666467,0.333533,0.333134,0.999800,
+			    0.000200,0.666867,0.333533,0.666467,0.333533,0.333134,0.333134,0.333133,0.333134,0.666467,0.666467,0.333133,
+			    0.000200,0.333533,0.666467,0.666467,0.999800,0.666467,0.666867,0.333533,0.999800,0.333533,0.666867,0.666467
+			UVIndex: 19,13,9,10,15,3,8,1,0,17,14,6,22,20,23,21,2,12,7,11,4,16,5,18
 		}
 		LayerElementTexture: 0 {
 			Version: 101
-			Name: "Bake"
-			MappingInformationType: "AllSame"
+			Name: ""
+			MappingInformationType: "NoMappingInformation"
 			ReferenceInformationType: "IndexToDirect"
 			BlendMode: "Translucent"
 			TextureAlpha: 1
-			TextureId: 0
+			TextureId: 
 		}
 		LayerElementMaterial: 0 {
 			Version: 101
@@ -326,35 +341,9 @@ Objects:  {
 				TypedIndex: 0
 			}
 			LayerElement:  {
-				Type: "LayerElementTexture"
-				TypedIndex: 0
-			}
-			LayerElement:  {
 				Type: "LayerElementMaterial"
 				TypedIndex: 0
 			}
-		}
-	}
-	Material: "Material::Material__RustyContainer_png", "" {
-		Version: 102
-		ShadingModel: "lambert"
-		MultiLayer: 0
-		Properties60:  {
-			Property: "ShadingModel", "KString", "", "Lambert"
-			Property: "MultiLayer", "bool", "",0
-			Property: "EmissiveColor", "ColorRGB", "",0.8000,0.8000,0.8000
-			Property: "EmissiveFactor", "double", "",0.0000
-			Property: "AmbientColor", "ColorRGB", "",1.0000,1.0000,1.0000
-			Property: "AmbientFactor", "double", "",1.0000
-			Property: "DiffuseColor", "ColorRGB", "",0.8000,0.8000,0.8000
-			Property: "DiffuseFactor", "double", "",0.8000
-			Property: "Bump", "Vector3D", "",0,0,0
-			Property: "TransparentColor", "ColorRGB", "",1,1,1
-			Property: "TransparencyFactor", "double", "",0.0000
-			Property: "Emissive", "ColorRGB", "",0,0,0
-			Property: "Ambient", "ColorRGB", "",1.0,1.0,1.0
-			Property: "Diffuse", "ColorRGB", "",0.8,0.8,0.8
-			Property: "Opacity", "double", "",1.0
 		}
 	}
 	Material: "Material::unnamed", "" {
@@ -386,56 +375,6 @@ Objects:  {
 			Property: "Opacity", "double", "",1.0
 			Property: "Reflectivity", "double", "",0
 		}
-	}
-	Video: "Video::RustyContainer_png", "Clip" {
-		Type: "Clip"
-		Properties60:  {
-			Property: "FrameRate", "double", "",0
-			Property: "LastFrame", "int", "",0
-			Property: "Width", "int", "",0
-			Property: "Height", "int", "",0
-			Property: "Path", "charptr", "", "RustyContainer.png"
-			Property: "StartFrame", "int", "",0
-			Property: "StopFrame", "int", "",0
-			Property: "PlaySpeed", "double", "",1
-			Property: "Offset", "KTime", "",0
-			Property: "InterlaceMode", "enum", "",0
-			Property: "FreeRunning", "bool", "",0
-			Property: "Loop", "bool", "",0
-			Property: "AccessMode", "enum", "",0
-		}
-		UseMipMap: 0
-		Filename: "RustyContainer.png"
-		RelativeFilename: "C:\Users\David\Documents\Project EP3\Ressource\RustyContainer.png"
-	}
-	Texture: "Texture::RustyContainer_png", "TextureVideoClip" {
-		Type: "TextureVideoClip"
-		Version: 202
-		TextureName: "Texture::RustyContainer_png"
-		Properties60:  {
-			Property: "Translation", "Vector", "A+",0,0,0
-			Property: "Rotation", "Vector", "A+",0,0,0
-			Property: "Scaling", "Vector", "A+",1,1,1
-			Property: "Texture alpha", "Number", "A+",0
-			Property: "TextureTypeUse", "enum", "",0
-			Property: "CurrentTextureBlendMode", "enum", "",1
-			Property: "UseMaterial", "bool", "",0
-			Property: "UseMipMap", "bool", "",0
-			Property: "CurrentMappingType", "enum", "",0
-			Property: "UVSwap", "bool", "",0
-			Property: "WrapModeU", "enum", "",0
-			Property: "WrapModeV", "enum", "",0
-			Property: "TextureRotationPivot", "Vector3D", "",0,0,0
-			Property: "TextureScalingPivot", "Vector3D", "",0,0,0
-			Property: "VideoProperty", "object", ""
-		}
-		Media: "Video::RustyContainer_png"
-		FileName: "RustyContainer.png"
-		RelativeFilename: "C:\Users\David\Documents\Project EP3\Ressource\RustyContainer.png"
-		ModelUVTranslation: 0,0
-		ModelUVScaling: 1,1
-		Texture_Alpha_Source: "None"
-		Cropping: 0,0,0,0
 	}
 	Pose: "Pose::BIND_POSES", "BindPose" {
 		Type: "BindPose"
@@ -490,13 +429,7 @@ Relations:  {
 	}
 	Model: "Model::Camera Switcher", "CameraSwitcher" {
 	}
-	Material: "Material::Material__RustyContainer_png", "" {
-	}
 	Material: "Material::unnamed", "" {
-	}
-	Texture: "Texture::RustyContainer_png", "TextureVideoClip" {
-	}
-	Video: "Video::RustyContainer_png", "Clip" {
 	}
 }
 
@@ -507,9 +440,7 @@ Connections:  {
 	Connect: "OO", "Model::collision_shape", "Model::Scene"
 	Connect: "OO", "Model::RustyContainer", "Model::Scene"
 	Connect: "OO", "Material::unnamed", "Model::collision_shape"
-	Connect: "OO", "Material::Material__RustyContainer_png", "Model::RustyContainer"
-	Connect: "OO", "Texture::RustyContainer_png", "Model::RustyContainer"
-	Connect: "OO", "Video::RustyContainer_png", "Texture::RustyContainer_png"
+	Connect: "OO", "Material::unnamed", "Model::RustyContainer"
 }
 ;Takes and animation section
 ;----------------------------------------------------
