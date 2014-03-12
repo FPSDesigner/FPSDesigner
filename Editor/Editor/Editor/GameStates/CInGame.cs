@@ -161,9 +161,6 @@ namespace Engine.GameStates
 
             weapon.LoadContent(content, testmodel, weaponsTexture, testInfos, testSounds, anims, animVelocity);
 
-            // Load content for Chara class
-            _character.LoadContent(content, graphics, weapon);
-
             /**** Particles ****/
             //Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
             Display3D.Particles.ParticlesManager.AddNewParticle("gunshot_dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, Vector3.Zero, null, false);
@@ -173,6 +170,9 @@ namespace Engine.GameStates
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+
+            // Load content for Chara class
+            _character.LoadContent(content, graphics, weapon, cam);
             
             // ******* All the consol informations ******* //
             Game.CConsole._Camera = cam;

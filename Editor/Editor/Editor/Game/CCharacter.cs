@@ -45,6 +45,7 @@ namespace Engine.Game
 
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
         private bool _isCrouched = false;
+        private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
 
         private bool _isRealoadingSoundPlayed = true;
 
@@ -58,6 +59,8 @@ namespace Engine.Game
         public float _aimSpeed = 3f;
         public float _movementsLerp = 0.006f;
 
+        private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
+
         public Display3D.CTerrain _terrain;
         public Display3D.CWater _water;
 
@@ -67,9 +70,11 @@ namespace Engine.Game
             _previousScrollWheelValue = 0;
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap)
+        public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap, Display3D.CCamera cam)
         {
             _graphicsDevice = graphics;
+
+            _entityHeight = cam._physicsMap._entityHeight; // We save the size of the player, to reuse it when he crouchs
 
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
@@ -140,6 +145,9 @@ namespace Engine.Game
 
             // Aim
             Aim(weapon, mouseState, cam);
+
+            // Crouch
+            Crouch(kbState, oldKbState, cam);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -198,41 +206,6 @@ namespace Engine.Game
 
             return _horizontalVelocity;
 
-            /*if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint))
-            {
-                if ((_velocity < _initSpeed + 0.25f) && fallVelocity <= 0.0f)
-                {
-                    _velocity += .012f;
-                }
-
-                if ((!_isShoting && !_isAiming && !_isReloading) && cam._isMoving)
-                {
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
-                }
-                _isRunning = true;
-            }
-            else
-            {
-                if (_velocity > _initSpeed)
-                {
-                    _velocity -= .014f;
-                }
-
-                if (_isRunning && !_isReloading && !_isShoting) _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
-                _isRunning = false;
-            }
-
-            // If the player is Aiming
-            if (_isAiming)
-            {
-                _velocity = 0.04f;
-            }
-            else if (!_isAiming && !_isRunning)
-            {
-                _velocity = _initSpeed;
-            }
-
-            return _velocity;*/
         }
 
         public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
@@ -551,11 +524,35 @@ namespace Engine.Game
 
         private void Crouch(KeyboardState kstate, KeyboardState oldKeyState, Display3D.CCamera cam)
         {
-           /* if ( &&
-                (kstate.IsKeyDown(Keys.C) && oldKeyState.IsKeyUp(Keys.C)))
-            {
-                
-            }*/
+           if (kstate.IsKeyDown(Keys.C) && oldKeyState.IsKeyUp(Keys.C))
+           {
+               if (_isCrouched && !_isStandingUp)
+               {
+                   _isStandingUp = true;
+               }
+
+               if(!_isCrouched)
+               {
+                   cam._physicsMap._entityHeight *= 0.6f;
+                   _isCrouched = true;
+                   _isStandingUp = false;
+               }
+
+           }
+
+            // If he is standing up
+           if (_isCrouched && _isStandingUp)
+           {
+               if (cam._physicsMap._entityHeight < _entityHeight)
+               {
+                   cam._physicsMap._entityHeight += 0.04f;
+               }
+               else
+               {
+                   _isCrouched = false;
+                   _isStandingUp = true;
+               }
+           }
         }
 
     }

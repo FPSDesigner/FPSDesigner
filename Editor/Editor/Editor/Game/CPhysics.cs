@@ -15,10 +15,11 @@ namespace Engine.Game
     {
 
         // Private
-        private float _entityHeight;
         private float _intersectionDistanceH = 5.5f; // Horizontal distance collision with models
         private double _lastFreeFall;
         private bool _isUnderwater = false;
+
+        public float _entityHeight;
 
         // Components usage  0: terrain, 1: water
         private bool[] _isGameUsing = new bool[2];
