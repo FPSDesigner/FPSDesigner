@@ -175,7 +175,7 @@ namespace Engine.Game
             {
                 if (_horizontalVelocity != _walkSpeed)
                 {
-                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp*2.5f);
+                    _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp * 2.5f);
 
                     if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
@@ -328,7 +328,7 @@ namespace Engine.Game
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
                     _isWalkAnimPlaying = true;
                 }
-                
+
                 _isSwitchingAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = false;
             }
@@ -354,14 +354,21 @@ namespace Engine.Game
                             {
                                 bool IsTerrainShot = false;
                                 bool IsWaterShot = false;
+
                                 Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
                                 Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
                                 Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
+                                /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
 
-                                Display3D.Particles.ParticlesManager.AddParticle("gunshot", terrainPos);
+                                Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                    0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                                Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+
+                                Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                                Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                             }
                         }
                     }

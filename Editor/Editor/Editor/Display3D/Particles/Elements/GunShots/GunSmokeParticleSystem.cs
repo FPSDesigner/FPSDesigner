@@ -9,9 +9,9 @@ namespace Engine.Display3D.Particles.Elements
     /// <summary>
     /// Custom particle system for creating a flame effect.
     /// </summary>
-    class GSDirtParticleSystem : ParticleSystem
+    class GunSmokeParticleSystem : ParticleSystem
     {
-        public GSDirtParticleSystem(ContentManager content)
+        public GunSmokeParticleSystem(ContentManager content)
             : base(content)
         { }
 
@@ -35,8 +35,8 @@ namespace Engine.Display3D.Particles.Elements
             // Set gravity upside down, so the flames will 'fall' upward.
             settings.Gravity = new Vector3(0, 15, 0);
 
-            settings.MinColor = Color.Brown;
-            settings.MaxColor = Color.Brown;
+            settings.MinColor = Color.Gray;
+            settings.MaxColor = Color.Gray;
 
             settings.MinStartSize = 1;
             settings.MaxStartSize = 2;

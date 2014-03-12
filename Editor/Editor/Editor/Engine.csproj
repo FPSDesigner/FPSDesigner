@@ -114,6 +114,7 @@
     <Compile Include="Display3D\Particles\Elements\ExplosionParticleSystem.cs" />
     <Compile Include="Display3D\Particles\Elements\ExplosionSmokeParticleSystem.cs" />
     <Compile Include="Display3D\Particles\Elements\FireParticleSystem.cs" />
+    <Compile Include="Display3D\Particles\Elements\GunShots\GunSmokeParticleSystem.cs" />
     <Compile Include="Display3D\Particles\Elements\GunShots\GSDirtParticleSystem.cs" />
     <Compile Include="Display3D\Particles\Elements\ProjectileTrailParticleSystem.cs" />
     <Compile Include="Display3D\Particles\Elements\SmokePlumeParticleSystem.cs" />

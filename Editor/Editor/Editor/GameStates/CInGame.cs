@@ -166,7 +166,8 @@ namespace Engine.GameStates
 
             /**** Particles ****/
             //Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
-            Display3D.Particles.ParticlesManager.AddNewParticle("gunshot", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, new Vector3(-185.2928f, 172f, 80.45f), null, false);
+            Display3D.Particles.ParticlesManager.AddNewParticle("gunshot_dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, Vector3.Zero, null, false);
+            Display3D.Particles.ParticlesManager.AddNewParticle("gun_smoke", new Display3D.Particles.Elements.GunSmokeParticleSystem(content), true, Vector3.Zero, null, false);
 
             /**** Camera ****/
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);

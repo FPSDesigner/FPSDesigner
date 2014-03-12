@@ -128,7 +128,7 @@ namespace Engine.Game
                         if (debugType == 0)
                         {
                             _Terrain.debugActivated = false;
-                            _Water.debugActivated = true;
+                            _Water.debugActivated = false;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
                         }
                         if (debugType == 1)
@@ -140,6 +140,7 @@ namespace Engine.Game
                         if (debugType == 2)
                         {
                             _Terrain.debugActivated = true;
+                            _Water.debugActivated = true;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.LineList;
                         }
                         addMessage("Debug mode " + debugType + " activated.");
