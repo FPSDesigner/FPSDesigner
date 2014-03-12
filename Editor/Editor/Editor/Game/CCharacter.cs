@@ -44,6 +44,7 @@ namespace Engine.Game
         private bool _isSwitchingAnim2ndPartPlaying = false; // Hands go up
 
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
+        private bool _isCrouched = false;
 
         private bool _isRealoadingSoundPlayed = true;
 
@@ -167,7 +168,7 @@ namespace Engine.Game
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
                 if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.8f);
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.7f);
 
                 _isRunning = true;
             }
@@ -303,8 +304,11 @@ namespace Engine.Game
                 // Inverse the sens of animation
                 _handAnimation.InverseMode("backward");
                 _handAnimation.BeginAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
+
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
+                _isReloading = false;
+                _isShoting = false;
                 _isSwitchingAnim2ndPartPlaying = true;
                 _isSwitchingAnimPlaying = false;
             }
@@ -316,6 +320,8 @@ namespace Engine.Game
                 _handAnimation.InverseMode("forward");
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
+                _isReloading = false;
+                _isShoting = false;
                 if (!_isRunning && !_cam._isMoving)
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
@@ -496,13 +502,17 @@ namespace Engine.Game
             if (
                 ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload) && oldKbState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.Reload))
                 || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload) && CGameSettings.oldGamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
-                && (weapon.Reloading() && !_isReloading) && !_isShoting
+                && (weapon.Reloading() && !_isReloading) && !_isShoting && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying
                 )
             {
-                _isReloading = true;
-                _isRealoadingSoundPlayed = false;
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+
                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[3]);
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false);
+
+                _isReloading = true;
+                _isRealoadingSoundPlayed = false;
             }
 
             // We play the sound after a delay
@@ -536,6 +546,15 @@ namespace Engine.Game
                 cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
                 _isAiming = false;
             }
+        }
+
+        private void Crouch(KeyboardState kstate, KeyboardState oldKeyState, Display3D.CCamera cam)
+        {
+           /* if ( &&
+                (kstate.IsKeyDown(Keys.C) && oldKeyState.IsKeyUp(Keys.C)))
+            {
+                
+            }*/
         }
 
     }

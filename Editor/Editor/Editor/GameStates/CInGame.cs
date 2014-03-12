@@ -129,7 +129,7 @@ namespace Engine.GameStates
 
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.Pi),new Vector3(0.2f, 0.2f, 0.1f), 1f, 0f},
-                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.24f)*Matrix.CreateRotationY(-0.14f),new Vector3(.075f, 0.05f, 0.18f), 1f, 100f},
+                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.21f)*Matrix.CreateRotationY(-0.13f),new Vector3(.075f, 0.04f, 0.22f), 1f, 100f},
             };
             string[][] testSounds = new string[][] {
                 new string[] {
@@ -154,7 +154,7 @@ namespace Engine.GameStates
                     1.4f, 4.0f, 0.7f,0.0f,3.8f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.8f,2.5f,3.8f
+                    1.6f, 16.0f, 0.65f,2.5f,3.8f
                 },
 
             };
