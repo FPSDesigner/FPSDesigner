@@ -341,6 +341,7 @@ namespace Engine.Game
                         _isWalkAnimPlaying = false;
                         _isWaitAnimPlaying = false;
 
+                        // Draw particles
                         if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                         {
                             if (_terrain != null)
@@ -371,6 +372,17 @@ namespace Engine.Game
             }
             else if (mouseState.LeftButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
                 weapon.Shot(false, _isShoting, gameTime);
+
+            // ***** If he has shot : We play vibrations **** //
+            if (_isShoting)
+            {
+                // Set vibrations
+                GamePad.SetVibration(PlayerIndex.One, 0.9f, 0.1f);
+            }
+            else
+            {
+                GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
+            }
         }
 
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
@@ -450,7 +462,8 @@ namespace Engine.Game
             if (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isReloading && !_isShoting && !_isSwimAnimationPlaying)
             {
                 // If he scrolls down
-                if (mouseState.ScrollWheelValue > _previousScrollWheelValue)
+                if ((mouseState.ScrollWheelValue > _previousScrollWheelValue) || 
+                    CGameSettings.useGamepad && (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPSwitch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPSwitch)))
                 {
                     int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
                     _futurSelectedWeapon = newWeap;
@@ -479,6 +492,14 @@ namespace Engine.Game
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[4], false);
                     _isSwitchingAnimPlaying = true;
                 }
+
+                //// Switching weapons with a GamePad
+                //if(CGameSettings.useGamepad &&
+                //    (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPSwitch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPSwitch)))
+                //{
+                //    int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
+                //    _futurSelectedWeapon = newWeap;
+                //}
             }
 
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
@@ -489,8 +510,8 @@ namespace Engine.Game
         {
             if (
                 ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload) && oldKbState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.Reload))
-                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload) && CGameSettings.oldGamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
-                && (weapon.Reloading() && !_isReloading) && !_isShoting && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying
+                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPReload)))
+                && (weapon.Reloading() && !_isReloading) && (!_isShoting && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                 )
             {
                 _isWaitAnimPlaying = false;
@@ -519,9 +540,9 @@ namespace Engine.Game
         private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
         {
             // If he presse the right mouse button
-            if (mstate.RightButton == ButtonState.Pressed && !_isAiming)
+            if (!_isAiming && 
+                (mstate.RightButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPAim))))
             {
-
                 if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                 {
                     cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
@@ -529,7 +550,8 @@ namespace Engine.Game
                 }
             }
 
-            else if (mstate.RightButton == ButtonState.Released && _isAiming)
+            else if (_isAiming && mstate.RightButton == ButtonState.Released ||
+                (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPAim)))
             {
                 cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
                 _isAiming = false;
@@ -538,7 +560,8 @@ namespace Engine.Game
 
         private void Crouch(KeyboardState kstate, KeyboardState oldKeyState, Display3D.CCamera cam, GameTime gameTime)
         {
-           if (kstate.IsKeyDown(Keys.C) && oldKeyState.IsKeyUp(Keys.C))
+            if ((kstate.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MCrouch) && oldKeyState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.MCrouch)
+                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPCrouch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPCrouch))))
            {
                if (_isCrouched && !_isStandingUp)
                {

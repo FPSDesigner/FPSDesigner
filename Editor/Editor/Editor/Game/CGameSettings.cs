@@ -76,6 +76,8 @@ namespace Engine.Game.Settings
                     GPRun = Buttons.LeftShoulder,
                     GPCrouch = Buttons.B,
                     GPReload = Buttons.X,
+                    GPSwitch = Buttons.Y,
+                    GPAim = Buttons.LeftTrigger,
                 },
                 Video = new Video
                 {
@@ -119,9 +121,11 @@ namespace Engine.Game.Settings
         public Keys Reload { get; set; }
         public Buttons GPJump { get; set; }
         public Buttons GPShot { get; set; }
+        public Buttons GPAim { get; set; }
         public Buttons GPRun { get; set; }
         public Buttons GPCrouch { get; set; }
         public Buttons GPReload { get; set; }
+        public Buttons GPSwitch { get; set; }
         public float MouseSensibility { get; set; }
         public float GPSensibility { get; set; }
     }

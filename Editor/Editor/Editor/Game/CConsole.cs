@@ -163,10 +163,24 @@ namespace Engine.Game
                     break;
                 case "help":
                     addMessage("Command List:");
-                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info - debug");
+                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info - debug - teleport");
                     break;
                 case "weapon_info":
                     addMessage("Magazine : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._actualClip + " | Bullets available : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._bulletsAvailable);
+                    break;
+                case "teleport":
+                    if (cmd.Length > 3)
+                    {
+                        float x, y, z;
+                        if(float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
+                        {
+                            _Camera._cameraPos = new Vector3(x,y,z);
+                        }
+                        else
+                            addMessage("USAGE: " + cmd[0] + " <X : float> <Y : float> <Z : float>");
+                    }
+                    else
+                        addMessage("USAGE: " + cmd[0] + " <X> <Y> <Z>");
                     break;
             }
         }
