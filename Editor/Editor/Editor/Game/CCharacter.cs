@@ -60,6 +60,7 @@ namespace Engine.Game
         public float _movementsLerp = 0.006f;
 
         private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
+        private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
 
         public Display3D.CTerrain _terrain;
         public Display3D.CWater _water;
@@ -75,6 +76,7 @@ namespace Engine.Game
             _graphicsDevice = graphics;
 
             _entityHeight = cam._physicsMap._entityHeight; // We save the size of the player, to reuse it when he crouchs
+            _entityCrouch = _entityHeight * 0.58f;
 
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
@@ -147,7 +149,7 @@ namespace Engine.Game
             Aim(weapon, mouseState, cam);
 
             // Crouch
-            Crouch(kbState, oldKbState, cam);
+            Crouch(kbState, oldKbState, cam, gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -522,7 +524,7 @@ namespace Engine.Game
             }
         }
 
-        private void Crouch(KeyboardState kstate, KeyboardState oldKeyState, Display3D.CCamera cam)
+        private void Crouch(KeyboardState kstate, KeyboardState oldKeyState, Display3D.CCamera cam, GameTime gameTime)
         {
            if (kstate.IsKeyDown(Keys.C) && oldKeyState.IsKeyUp(Keys.C))
            {
@@ -533,7 +535,7 @@ namespace Engine.Game
 
                if(!_isCrouched)
                {
-                   cam._physicsMap._entityHeight *= 0.6f;
+                   cam._physicsMap._entityHeight = _entityCrouch;
                    _isCrouched = true;
                    _isStandingUp = false;
                }
@@ -545,7 +547,7 @@ namespace Engine.Game
            {
                if (cam._physicsMap._entityHeight < _entityHeight)
                {
-                   cam._physicsMap._entityHeight += 0.04f;
+                   cam._physicsMap._entityHeight += 0.007f * gameTime.ElapsedGameTime.Milliseconds;
                }
                else
                {
