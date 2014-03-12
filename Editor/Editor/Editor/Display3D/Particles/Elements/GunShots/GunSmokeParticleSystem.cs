@@ -38,11 +38,11 @@ namespace Engine.Display3D.Particles.Elements
             settings.MinColor = Color.Gray;
             settings.MaxColor = Color.Gray;
 
-            settings.MinStartSize = 1;
-            settings.MaxStartSize = 2;
+            settings.MinStartSize = 0.05f;
+            settings.MaxStartSize = 0.1f;
 
-            settings.MinEndSize = 1;
-            settings.MaxEndSize = 2;
+            settings.MinEndSize = 0.05f;
+            settings.MaxEndSize = 0.1f;
 
             settings.DelayBetweenParticles = 1;
 

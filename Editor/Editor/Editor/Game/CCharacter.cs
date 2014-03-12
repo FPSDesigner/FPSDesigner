@@ -373,6 +373,7 @@ namespace Engine.Game
                                     0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
                                 Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
+                               
                                 Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
                                 Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                             }
