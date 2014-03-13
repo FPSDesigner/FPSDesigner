@@ -44,7 +44,7 @@ namespace Engine.Display3D
         private float _nearClip;
         private float _farClip;
         private float _aspectRatio;
-        
+
         public float _playerHeight = 1.9f;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
@@ -172,26 +172,24 @@ namespace Engine.Display3D
                     if (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPJump))
                         _physicsMap.Jump();
                 }
-                else
-                {
-                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MForward))
-                        _translation += Vector3.Forward;
 
-                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MBackward))
-                        _translation += Vector3.Backward;
+                if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MForward))
+                    _translation += Vector3.Forward;
 
-                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MLeft))
-                        _translation += Vector3.Left;
+                if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MBackward))
+                    _translation += Vector3.Backward;
 
-                    if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MRight))
-                        _translation += Vector3.Right;
+                if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MLeft))
+                    _translation += Vector3.Left;
 
-                    //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
+                if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MRight))
+                    _translation += Vector3.Right;
+
+                //if (keyState.IsKeyDown(_gameSettings._gameSettings.KeyMapping.MCrouch))
 
 
-                    if (keyState.IsKeyDown(Keys.Space))
-                        _physicsMap.Jump();
-                }
+                if (keyState.IsKeyDown(Keys.Space))
+                    _physicsMap.Jump();
             }
 
             //_physicsMap.Swin(isUnderWater);
@@ -236,11 +234,9 @@ namespace Engine.Display3D
                 this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * CGameSettings.gamepadState.ThumbSticks.Right.X;
                 this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * -CGameSettings.gamepadState.ThumbSticks.Right.Y;
             }
-            else
-            {
-                this._yaw -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
-                this._pitch -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
-            }
+
+            this._yaw -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
+            this._pitch -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
 
             if (this._pitch < lowestPitchAngle)
                 this._pitch = lowestPitchAngle;

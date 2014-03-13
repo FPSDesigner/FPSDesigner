@@ -178,7 +178,8 @@ namespace Engine.Game
             {
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
-                if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+                if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying
+                    && !_isWaitAnimPlaying)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.7f);
 
                 _isRunning = true;
@@ -189,32 +190,29 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp * 2.5f);
 
-                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isWaitAnimPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 }
 
                 _isRunning = false;
             }
 
-            if (_isAiming)
+            if (_isAiming && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
             {
                 if (_horizontalVelocity != _aimSpeed)
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _aimSpeed, _movementsLerp);
-
-                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
-                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
                 }
             }
 
-            if (_isCrouched)
+            if (_isCrouched && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
             {
                 if (_horizontalVelocity != _crouchSpeed)
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _crouchSpeed, 0.7f);
 
-                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
-                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
                 }
             }
 
@@ -309,6 +307,8 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
                 _isReloading = false;
                 _isShoting = false;
+
+                // Depending on what is the player doing, after the switch we play an anim
                 if (!_isRunning && !_cam._isMoving)
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
@@ -329,7 +329,7 @@ namespace Engine.Game
             if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPShot)))
             {
-                if (!_isUnderWater && (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying))
+                if (!_isUnderWater && (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                 {
                     // If he does not use a machete AND if he has bullet in a magazine
                     if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
@@ -361,7 +361,7 @@ namespace Engine.Game
                                     0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
                                 Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
-                               
+
                                 Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
                                 Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                             }
@@ -462,7 +462,7 @@ namespace Engine.Game
             if (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isReloading && !_isShoting && !_isSwimAnimationPlaying)
             {
                 // If he scrolls down
-                if ((mouseState.ScrollWheelValue > _previousScrollWheelValue) || 
+                if ((mouseState.ScrollWheelValue > _previousScrollWheelValue) ||
                     CGameSettings.useGamepad && (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPSwitch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPSwitch)))
                 {
                     int newWeap = (weapon._selectedWeapon + 1) % weapon._weaponsArray.Length;
@@ -540,21 +540,25 @@ namespace Engine.Game
         private void Aim(CWeapon weapon, MouseState mstate, Display3D.CCamera cam)
         {
             // If he presse the right mouse button
-            if (!_isAiming && 
-                (mstate.RightButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPAim))))
+            if (!_isAiming && !_isReloading)
             {
-                if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+                if (mstate.RightButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPAim)))
                 {
-                    cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
-                    _isAiming = true;
+                    if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+                    {
+                        cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
+                        _isAiming = true;
+                    }
                 }
             }
-
-            else if (_isAiming && mstate.RightButton == ButtonState.Released ||
-                (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPAim)))
+            else
             {
-                cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
-                _isAiming = false;
+                if (mstate.RightButton == ButtonState.Released && ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPAim)) ||
+                    !CGameSettings.useGamepad))
+                {
+                    cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
+                    _isAiming = false;
+                }
             }
         }
 
@@ -562,34 +566,34 @@ namespace Engine.Game
         {
             if ((kstate.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MCrouch) && oldKeyState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.MCrouch)
                 || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPCrouch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPCrouch))))
-           {
-               if (_isCrouched && !_isStandingUp)
-               {
-                   _isStandingUp = true;
-               }
+            {
+                if (_isCrouched && !_isStandingUp)
+                {
+                    _isStandingUp = true;
+                }
 
-               if(!_isCrouched)
-               {
-                   cam._physicsMap._entityHeight = _entityCrouch;
-                   _isCrouched = true;
-                   _isStandingUp = false;
-               }
+                if (!_isCrouched)
+                {
+                    cam._physicsMap._entityHeight = _entityCrouch;
+                    _isCrouched = true;
+                    _isStandingUp = false;
+                }
 
-           }
+            }
 
             // If he is standing up
-           if (_isCrouched && _isStandingUp)
-           {
-               if (cam._physicsMap._entityHeight < _entityHeight)
-               {
-                   cam._physicsMap._entityHeight += 0.007f * gameTime.ElapsedGameTime.Milliseconds;
-               }
-               else
-               {
-                   _isCrouched = false;
-                   _isStandingUp = true;
-               }
-           }
+            if (_isCrouched && _isStandingUp)
+            {
+                if (cam._physicsMap._entityHeight < _entityHeight)
+                {
+                    cam._physicsMap._entityHeight += 0.007f * gameTime.ElapsedGameTime.Milliseconds;
+                }
+                else
+                {
+                    _isCrouched = false;
+                    _isStandingUp = true;
+                }
+            }
         }
 
     }

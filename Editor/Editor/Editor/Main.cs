@@ -32,8 +32,8 @@ namespace Engine
 
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 700;
-            graphics.IsFullScreen = false;
-            Window.AllowUserResizing = true;
+            graphics.IsFullScreen = true;
+            Window.AllowUserResizing = false;
 
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;

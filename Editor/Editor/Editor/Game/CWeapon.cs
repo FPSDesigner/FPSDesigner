@@ -160,7 +160,11 @@ namespace Engine.Game
             }
             else
             {
-                CSoundManager.PlayInstance("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+
+                if (isCutAnimPlaying)
+                {
+                    CSoundManager.PlayInstance("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+                }
             }
         }
 
