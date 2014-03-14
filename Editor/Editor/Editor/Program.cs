@@ -10,7 +10,7 @@ namespace Engine
         /// </summary>
         static void Main(string[] args)
         {
-            using (Main game = new Main())
+            using (MainGameEngine game = new MainGameEngine())
             {
                 game.Run();
             }

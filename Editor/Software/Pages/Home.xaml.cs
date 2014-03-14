@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Engine;
+
 namespace Software.Pages
 {
     /// <summary>
@@ -20,9 +22,13 @@ namespace Software.Pages
     /// </summary>
     public partial class Home : UserControl
     {
+        private MainGameEngine m_game = new Engine.MainGameEngine(true);
+
         public Home()
         {
             InitializeComponent();
+
+            ShowXNAImage.Source = m_game.WriteableBitmap;
         }
     }
 }

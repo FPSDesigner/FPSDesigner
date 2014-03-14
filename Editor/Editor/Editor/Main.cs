@@ -9,12 +9,18 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+
+using System.Diagnostics;
+
 namespace Engine
 {
     /// <summary>
     /// The main file, core of the program
     /// </summary>
-    public class Main : Microsoft.Xna.Framework.Game
+    public class MainGameEngine : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -24,8 +30,28 @@ namespace Engine
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
 
-        public Main()
+        public bool isSoftwareEmbedded = false;
+
+        // WPF
+        // Objet qui sera transmis au WPF
+        public WriteableBitmap WriteableBitmap { get; set; }
+
+        // A de multiple endroit nous avons besoin de savoir la taille de l'affichage XNA
+        private Point m_sizeViewport;
+        // Objet qui contiendra notre scène après le rendu
+        private RenderTarget2D m_renderTarget2D;
+        // Servira pour faire la conversion du RenderTarget vers le WritableBitmap
+        private byte[] m_bytes;
+        // Les fonctionnements interne de XNA étant bypassés, il faut un timer
+        private DispatcherTimer m_dispatcherTimer;
+
+        private GameTime m_GameTime;
+        private Stopwatch stopwatch_gt;
+
+        public MainGameEngine(bool launchedFromSoftware = false)
         {
+            isSoftwareEmbedded = launchedFromSoftware;
+
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferMultiSampling = true;
             Content.RootDirectory = "Content";
@@ -40,13 +66,45 @@ namespace Engine
 
 
             // Icon
-            if(System.IO.File.Exists("Icon.ico"))
+            if (System.IO.File.Exists("Icon.ico"))
                 ((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon("Icon.ico");
 
+            // WPF
+            if (isSoftwareEmbedded)
+            {
+                // On prepare la resolution du rendu, l'image de sorti, l'image en entré, les bytes pour la conversion
+                m_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                WriteableBitmap = new WriteableBitmap(m_sizeViewport.X, m_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
+                m_bytes = new byte[m_sizeViewport.X * m_sizeViewport.Y * 2];
+
+                m_GameTime = new GameTime();
+                m_dispatcherTimer = new DispatcherTimer();
+                m_dispatcherTimer.Interval = TimeSpan.FromSeconds(1 / 60);
+                m_dispatcherTimer.Tick += new EventHandler(GameLoop);
+
+                this.Initialize();
+                this.LoadContent();
+                m_dispatcherTimer.Start();
+                stopwatch_gt = new Stopwatch();
+                stopwatch_gt.Start();
+            }
         }
 
         protected override void Initialize()
         {
+            if (isSoftwareEmbedded)
+            {
+                // Create the graphics device
+                IGraphicsDeviceManager graphicsDeviceManager = this.Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
+                if (graphicsDeviceManager != null)
+                    graphicsDeviceManager.CreateDevice();
+                else
+                    throw new Exception("Unable to retrieve GraphicsDeviceManager");
+
+                // Width must a multiple of 2
+                m_renderTarget2D = new RenderTarget2D(GraphicsDevice, m_sizeViewport.X, m_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
+            }
+
             Game.CGameManagement.currentState = "CInGame";
             Game.CGameManagement.Initialize();
 
@@ -65,6 +123,9 @@ namespace Engine
             postProcessor = new Display2D.CPostProcessor(GraphicsDevice);
 
             Display2D.C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
+            Display2D.C2DEffect.isSoftwareEmbedded = isSoftwareEmbedded;
+            Display2D.C2DEffect.renderTarget = (isSoftwareEmbedded) ? m_renderTarget2D : renderCapture.renderTarget;
+
             Display3D.Particles.ParticlesManager.LoadContent(GraphicsDevice);
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
@@ -81,8 +142,8 @@ namespace Engine
                 Game.CConsole.WriteLogs(e.ToString());
             }
 
-            Game.Script.CLuaVM.Initialize();
-            Game.Script.CLuaVM.LoadScript("GuiManager.lua");
+            /*Game.Script.CLuaVM.Initialize();
+            Game.Script.CLuaVM.LoadScript("GuiManager.lua");*/
         }
 
 
@@ -91,10 +152,17 @@ namespace Engine
             Game.CGameManagement.UnloadContent(Content);
         }
 
+        TimeSpan lastTime = new TimeSpan();
         protected override void Update(GameTime gameTime)
         {
-            if (base.IsActive)
+            if (isSoftwareEmbedded || base.IsActive)
             {
+                if (isSoftwareEmbedded)
+                {
+                    TimeSpan currentTime = stopwatch_gt.Elapsed;
+                    m_GameTime = new GameTime(currentTime, currentTime - lastTime);
+                    lastTime = currentTime;
+                }
                 KeyboardState kbState = Keyboard.GetState();
                 MouseState mouseState = Mouse.GetState();
 
@@ -118,9 +186,13 @@ namespace Engine
 
         protected override void Draw(GameTime gameTime)
         {
+            // WPF
+            if (isSoftwareEmbedded)
+                GraphicsDevice.SetRenderTarget(m_renderTarget2D);
+
             // Capture the render
             renderCapture.Begin();
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
             // Draw "All" the State
             Game.CGameManagement.Draw(spriteBatch, gameTime);
@@ -137,6 +209,26 @@ namespace Engine
             postProcessor.Draw(gameTime);
 
             base.Draw(gameTime);
+
+            // WPF
+            if (isSoftwareEmbedded)
+            {
+                GraphicsDevice.SetRenderTarget(null);
+
+                m_renderTarget2D.GetData(m_bytes);
+
+                WriteableBitmap.Lock();
+                System.Runtime.InteropServices.Marshal.Copy(m_bytes, 0, WriteableBitmap.BackBuffer, m_bytes.Length);
+                WriteableBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, m_sizeViewport.X, m_sizeViewport.Y));
+                WriteableBitmap.Unlock();
+            }
         }
+
+        private void GameLoop(object sender, EventArgs e)
+        {
+            this.Update(m_GameTime);
+            this.Draw(m_GameTime);
+        }
+
     }
 }

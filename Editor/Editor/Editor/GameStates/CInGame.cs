@@ -101,7 +101,7 @@ namespace Engine.GameStates
             {
                 water = new Display3D.CWater(
                     content, graphics, new Vector3(levelData.Water.Coordinates.X, levelData.Water.Coordinates.Y, levelData.Water.Coordinates.Z),
-                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect._renderCapture.renderTarget
+                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect.renderTarget
                 );
 
                 water.Objects.Add(skybox);
@@ -215,6 +215,7 @@ namespace Engine.GameStates
                 water.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
+
             terrain.frustum = cam._Frustum;
 
             skybox.ColorIntensity = 0.8f;
@@ -223,6 +224,7 @@ namespace Engine.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
@@ -249,6 +251,7 @@ namespace Engine.GameStates
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
+            
         }
 
     }

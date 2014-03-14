@@ -84,6 +84,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\EPITA - Workspace Project\NLua.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -91,6 +92,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Display2D\C2DEffect.cs" />
@@ -155,7 +157,7 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>

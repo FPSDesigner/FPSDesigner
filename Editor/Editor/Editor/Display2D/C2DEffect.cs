@@ -37,6 +37,9 @@ namespace Engine.Display2D
         public static KeyboardState _kbState;
         public static MouseState _mouseState;
 
+        public static bool isSoftwareEmbedded;
+        public static RenderTarget2D renderTarget;
+
         // fadeEffect
         private static bool _isFading = false;
         private static double _opacityPerMilliSecond;
