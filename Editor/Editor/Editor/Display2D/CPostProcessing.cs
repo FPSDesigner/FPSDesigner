@@ -213,6 +213,12 @@ namespace Engine.Display2D
             renderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, false, SurfaceFormat.Color, DepthFormat.Depth24, 4, RenderTargetUsage.PreserveContents);
         }
 
+        public void ChangeRenderTargetSize(int width, int height)
+        {
+            renderTarget = new RenderTarget2D(graphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24, 4, RenderTargetUsage.PreserveContents);
+            Display2D.C2DEffect.renderTarget = renderTarget;
+        }
+
         /// <summary>
         /// Begins the capture with the graphic device
         /// </summary>

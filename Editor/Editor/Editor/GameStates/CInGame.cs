@@ -101,7 +101,7 @@ namespace Engine.GameStates
             {
                 water = new Display3D.CWater(
                     content, graphics, new Vector3(levelData.Water.Coordinates.X, levelData.Water.Coordinates.Y, levelData.Water.Coordinates.Z),
-                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha, Display2D.C2DEffect.renderTarget
+                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha
                 );
 
                 water.Objects.Add(skybox);
@@ -218,12 +218,12 @@ namespace Engine.GameStates
 
             terrain.frustum = cam._Frustum;
 
+            
             skybox.ColorIntensity = 0.8f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
-
             
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 

@@ -33,20 +33,16 @@ namespace Engine
         public bool isSoftwareEmbedded = false;
 
         // WPF
-        // Objet qui sera transmis au WPF
-        public WriteableBitmap WriteableBitmap { get; set; }
+        // Used to emulate XNA when embedded in WPF
 
-        // A de multiple endroit nous avons besoin de savoir la taille de l'affichage XNA
-        private Point m_sizeViewport;
-        // Objet qui contiendra notre scène après le rendu
-        private RenderTarget2D m_renderTarget2D;
-        // Servira pour faire la conversion du RenderTarget vers le WritableBitmap
-        private byte[] m_bytes;
-        // Les fonctionnements interne de XNA étant bypassés, il faut un timer
-        private DispatcherTimer m_dispatcherTimer;
-
-        private GameTime m_GameTime;
-        private Stopwatch stopwatch_gt;
+        public WriteableBitmap em_WriteableBitmap { get; set; }
+        private Point em_sizeViewport;
+        private RenderTarget2D em_renderTarget2D;
+        private byte[] em_bytes;
+        private DispatcherTimer em_dispatcherTimer;
+        private GameTime em_GameTime;
+        private Stopwatch em_StopWatch;
+        private TimeSpan em_LastTime;
 
         public MainGameEngine(bool launchedFromSoftware = false)
         {
@@ -59,7 +55,8 @@ namespace Engine
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 700;
             graphics.IsFullScreen = false;
-            Window.AllowUserResizing = false;
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -72,22 +69,48 @@ namespace Engine
             // WPF
             if (isSoftwareEmbedded)
             {
-                // On prepare la resolution du rendu, l'image de sorti, l'image en entré, les bytes pour la conversion
-                m_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                WriteableBitmap = new WriteableBitmap(m_sizeViewport.X, m_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
-                m_bytes = new byte[m_sizeViewport.X * m_sizeViewport.Y * 2];
+                em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
+                em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
 
-                m_GameTime = new GameTime();
-                m_dispatcherTimer = new DispatcherTimer();
-                m_dispatcherTimer.Interval = TimeSpan.FromSeconds(1 / 60);
-                m_dispatcherTimer.Tick += new EventHandler(GameLoop);
+                em_LastTime = new TimeSpan();
+                em_GameTime = new GameTime();
+                em_dispatcherTimer = new DispatcherTimer();
+                em_dispatcherTimer.Interval = TimeSpan.FromSeconds(1 / 60);
+                em_dispatcherTimer.Tick += new EventHandler(GameLoop);
 
                 this.Initialize();
                 this.LoadContent();
-                m_dispatcherTimer.Start();
-                stopwatch_gt = new Stopwatch();
-                stopwatch_gt.Start();
+                em_dispatcherTimer.Start();
+                em_StopWatch = new Stopwatch();
+                em_StopWatch.Start();
             }
+        }
+
+        void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            ChangeEmbeddedViewport(Window.ClientBounds.Width, Window.ClientBounds.Height);
+        }
+
+        public void ChangeEmbeddedViewport(int width, int height)
+        {
+            if (width % 2 != 0)
+                width++;
+
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
+            renderCapture.ChangeRenderTargetSize(width, height);
+            
+            if (isSoftwareEmbedded)
+            {
+                em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
+                em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
+                em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
+                Display2D.C2DEffect.renderTarget = em_renderTarget2D;
+            }
+
+            //graphics.ApplyChanges(); // Seem to be crashing
         }
 
         protected override void Initialize()
@@ -102,7 +125,7 @@ namespace Engine
                     throw new Exception("Unable to retrieve GraphicsDeviceManager");
 
                 // Width must a multiple of 2
-                m_renderTarget2D = new RenderTarget2D(GraphicsDevice, m_sizeViewport.X, m_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
+                em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
             }
 
             Game.CGameManagement.currentState = "CInGame";
@@ -124,7 +147,7 @@ namespace Engine
 
             Display2D.C2DEffect.LoadContent(Content, GraphicsDevice, spriteBatch, postProcessor, renderCapture);
             Display2D.C2DEffect.isSoftwareEmbedded = isSoftwareEmbedded;
-            Display2D.C2DEffect.renderTarget = (isSoftwareEmbedded) ? m_renderTarget2D : renderCapture.renderTarget;
+            Display2D.C2DEffect.renderTarget = (isSoftwareEmbedded) ? em_renderTarget2D : renderCapture.renderTarget;
 
             Display3D.Particles.ParticlesManager.LoadContent(GraphicsDevice);
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
@@ -141,7 +164,6 @@ namespace Engine
                 Game.CGameManagement.SendParam("Error encountered\n\nCheck logs for more information");
                 Game.CConsole.WriteLogs(e.ToString());
             }
-
             /*Game.Script.CLuaVM.Initialize();
             Game.Script.CLuaVM.LoadScript("GuiManager.lua");*/
         }
@@ -152,16 +174,15 @@ namespace Engine
             Game.CGameManagement.UnloadContent(Content);
         }
 
-        TimeSpan lastTime = new TimeSpan();
         protected override void Update(GameTime gameTime)
         {
             if (isSoftwareEmbedded || base.IsActive)
             {
                 if (isSoftwareEmbedded)
                 {
-                    TimeSpan currentTime = stopwatch_gt.Elapsed;
-                    m_GameTime = new GameTime(currentTime, currentTime - lastTime);
-                    lastTime = currentTime;
+                    TimeSpan currentTime = em_StopWatch.Elapsed;
+                    em_GameTime = new GameTime(currentTime, currentTime - em_LastTime);
+                    em_LastTime = currentTime;
                 }
                 KeyboardState kbState = Keyboard.GetState();
                 MouseState mouseState = Mouse.GetState();
@@ -188,11 +209,11 @@ namespace Engine
         {
             // WPF
             if (isSoftwareEmbedded)
-                GraphicsDevice.SetRenderTarget(m_renderTarget2D);
+                GraphicsDevice.SetRenderTarget(em_renderTarget2D);
 
             // Capture the render
             renderCapture.Begin();
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
 
             // Draw "All" the State
             Game.CGameManagement.Draw(spriteBatch, gameTime);
@@ -215,19 +236,18 @@ namespace Engine
             {
                 GraphicsDevice.SetRenderTarget(null);
 
-                m_renderTarget2D.GetData(m_bytes);
-
-                WriteableBitmap.Lock();
-                System.Runtime.InteropServices.Marshal.Copy(m_bytes, 0, WriteableBitmap.BackBuffer, m_bytes.Length);
-                WriteableBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, m_sizeViewport.X, m_sizeViewport.Y));
-                WriteableBitmap.Unlock();
+                em_renderTarget2D.GetData(em_bytes);
+                em_WriteableBitmap.Lock();
+                System.Runtime.InteropServices.Marshal.Copy(em_bytes, 0, em_WriteableBitmap.BackBuffer, em_bytes.Length);
+                em_WriteableBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, em_sizeViewport.X, em_sizeViewport.Y));
+                em_WriteableBitmap.Unlock();
             }
         }
 
         private void GameLoop(object sender, EventArgs e)
         {
-            this.Update(m_GameTime);
-            this.Draw(m_GameTime);
+            this.Update(em_GameTime);
+            this.Draw(em_GameTime);
         }
 
     }

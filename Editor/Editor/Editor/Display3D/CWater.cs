@@ -21,7 +21,6 @@ namespace Engine.Display3D
         GraphicsDevice graphics;
 
         public RenderTarget2D reflectionTarg;
-        RenderTarget2D defaultRenderTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
         public Vector3 waterPosition;
@@ -68,15 +67,13 @@ namespace Engine.Display3D
             }
         }
 
-        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha, RenderTarget2D renderTarget)
+        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha)
         {
             this.content = content;
             this.graphics = graphics;
 
             this.waterPosition = position;
             this.waterSize = size;
-
-            this.defaultRenderTarg = renderTarget;
 
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
@@ -142,7 +139,7 @@ namespace Engine.Display3D
                 renderable.SetClipPlane(null);
             }
             
-            graphics.SetRenderTarget(defaultRenderTarg);
+            graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);
 
             // Set the reflected scene to its effect parameter in
             // the water effect

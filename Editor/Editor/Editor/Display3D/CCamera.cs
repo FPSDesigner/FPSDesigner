@@ -44,6 +44,7 @@ namespace Engine.Display3D
         private float _nearClip;
         private float _farClip;
         private float _aspectRatio;
+        private float fieldOfView;
 
         public float _playerHeight = 1.9f;
 
@@ -106,7 +107,7 @@ namespace Engine.Display3D
 
             _view = Matrix.CreateLookAt(cameraPos, target, Vector3.Up);
 
-            float fieldOfView = MathHelper.ToRadians(40);
+            fieldOfView = MathHelper.ToRadians(40);
             _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
             _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
 
@@ -122,6 +123,14 @@ namespace Engine.Display3D
         public void Update(GameTime gametime, float camVelocity = 0.3f, bool isUnderWater = false, float waterLevel = 0f, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
+            if (_graphics.Viewport.AspectRatio != _aspectRatio)
+            {
+                // Window size have changed
+                _aspectRatio = _graphics.Viewport.AspectRatio;
+                _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
+                _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
+            }
+
             if (!isCamFrozen)
             {
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
@@ -146,9 +155,9 @@ namespace Engine.Display3D
             // Just used for the animation in Character
             _isMoving = false;
 
-            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
+            //Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
-            Rotation(mouseState, gametime);
+            //Rotation(mouseState, gametime);
 
             if (_translation != Vector3.Zero)
             {
