@@ -95,25 +95,28 @@ namespace Engine.Display3D
                 {
                     foreach (BasicEffect effect in mesh.Effects)
                     {
-                        effect.EnableDefaultLighting();
-
-                        effect.TextureEnabled = true;
-
-                        string[] nameMultiple; // Used to store all split string
-                        string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
-
-                        if (mesh.Name.Contains('_'))
+                        if (mesh.Name != collisionShapeName)
                         {
-                            nameMultiple = mesh.Name.Split('_');
-                            newName = nameMultiple[0];
-                        }
+                            effect.EnableDefaultLighting();
 
-                        if (_textures.ContainsKey(newName))
-                        {
-                            effect.Texture = _textures[newName];
+                            effect.TextureEnabled = true;
+
+                            string[] nameMultiple; // Used to store all split string
+                            string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
+
+                            if (mesh.Name.Contains('_'))
+                            {
+                                nameMultiple = mesh.Name.Split('_');
+                                newName = nameMultiple[0];
+                            }
+
+                            if (_textures.ContainsKey(newName))
+                            {
+                                effect.Texture = _textures[newName];
+                            }
+                            effect.SpecularColor = new Vector3(_specularColor);
+                            effect.SpecularPower = 32;
                         }
-                        effect.SpecularColor = new Vector3(_specularColor);
-                        effect.SpecularPower = 32;
                     }
                 }
             }
