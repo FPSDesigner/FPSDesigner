@@ -155,9 +155,9 @@ namespace Engine.Display3D
             // Just used for the animation in Character
             _isMoving = false;
 
-            //Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
+            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
-            //Rotation(mouseState, gametime);
+            Rotation(mouseState, gametime);
 
             if (_translation != Vector3.Zero)
             {

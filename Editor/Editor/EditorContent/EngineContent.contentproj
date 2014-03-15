@@ -297,7 +297,7 @@
     <Folder Include="3D\3DModels\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
+    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
     </ProjectReference>
@@ -506,20 +506,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Model textures\RustyContainer.png">
-      <Name>RustyContainer</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\Barrel.fbx">
-      <Name>Barrel</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Model textures\RustyMetal.tga">
       <Name>RustyMetal</Name>
       <Importer>TextureImporter</Importer>
@@ -541,13 +527,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Container.fbx">
-      <Name>Container</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Model textures\StreetLight.png">
       <Name>StreetLight</Name>
       <Importer>TextureImporter</Importer>
@@ -555,36 +534,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Arm_Animation%28Smoothed%29.fbx">
-      <Name>Arm_Animation%28Smoothed%29</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Models\StreetLight.fbx">
       <Name>StreetLight</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\OpenContainer.fbx">
-      <Name>OpenContainer</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Model textures\MetalRustyContainer.tga">
-      <Name>MetalRustyContainer</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Model textures\MetalRustyContainerDoor.tga">
-      <Name>MetalRustyContainerDoor</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -611,6 +564,163 @@
   <ItemGroup>
     <Compile Include="Models\TrafficLight.fbx">
       <Name>TrafficLight</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\MetalBarrelYellow.tga">
+      <Name>MetalBarrelYellow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Arm_Animation%28Smoothed%29.fbx">
+      <Name>Arm_Animation%28Smoothed%29</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Barrel.fbx">
+      <Name>Barrel</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\OpenContainer.fbx">
+      <Name>OpenContainer</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\ContainerBLACK.tga">
+      <Name>ContainerBLACK</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerBLUE.tga">
+      <Name>ContainerBLUE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorBLACK.tga">
+      <Name>ContainerDoorBLACK</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorBLUE.tga">
+      <Name>ContainerDoorBLUE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorGREEN.tga">
+      <Name>ContainerDoorGREEN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorRED.tga">
+      <Name>ContainerDoorRED</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorWHITE.tga">
+      <Name>ContainerDoorWHITE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerDoorYELLOW.tga">
+      <Name>ContainerDoorYELLOW</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerGREEN.tga">
+      <Name>ContainerGREEN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRED.tga">
+      <Name>ContainerRED</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyBLACK.tga">
+      <Name>ContainerRustyBLACK</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyBLUE.tga">
+      <Name>ContainerRustyBLUE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorBLACK.tga">
+      <Name>ContainerRustyDoorBLACK</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorBLUE.tga">
+      <Name>ContainerRustyDoorBLUE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorGREEN.tga">
+      <Name>ContainerRustyDoorGREEN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorRED.tga">
+      <Name>ContainerRustyDoorRED</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorWHITE.tga">
+      <Name>ContainerRustyDoorWHITE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyDoorYELLOW.tga">
+      <Name>ContainerRustyDoorYELLOW</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyGreen.tga">
+      <Name>ContainerRustyGreen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyRED.tga">
+      <Name>ContainerRustyRED</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyWHITE.tga">
+      <Name>ContainerRustyWHITE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerRustyYELLOW.tga">
+      <Name>ContainerRustyYELLOW</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerWHITE.tga">
+      <Name>ContainerWHITE</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Model textures\ContainerYELLOW.tga">
+      <Name>ContainerYELLOW</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Container.fbx">
+      <Name>Container</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
