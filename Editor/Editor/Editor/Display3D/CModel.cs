@@ -101,19 +101,14 @@ namespace Engine.Display3D
 
                             effect.TextureEnabled = true;
 
-                            string[] nameMultiple; // Used to store all split string
                             string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
 
                             if (mesh.Name.Contains('_'))
-                            {
-                                nameMultiple = mesh.Name.Split('_');
-                                newName = nameMultiple[0];
-                            }
+                                newName = mesh.Name.Split('_')[0];
 
                             if (_textures.ContainsKey(newName))
-                            {
                                 effect.Texture = _textures[newName];
-                            }
+
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;
                         }

@@ -24,7 +24,7 @@ namespace Software.Pages
     /// </summary>
     public partial class Home : UserControl
     {
-        private MainGameEngine m_game = new Engine.MainGameEngine(true);
+        private MainGameEngine m_game;
 
         private int count = 0;
         private DispatcherTimer resizeTimer = new DispatcherTimer();
@@ -33,14 +33,16 @@ namespace Software.Pages
         {
             InitializeComponent();
 
+            /*m_game = new Engine.MainGameEngine(true);
+
             ShowXNAImage.Source = m_game.em_WriteableBitmap;
             ShowXNAImage.SizeChanged += ShowXNAImage_SizeChanged;
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
-            resizeTimer.Tick += new EventHandler(disTimer_Tick);
+            resizeTimer.Tick += new EventHandler(disTimer_Tick);*/
         }
 
-        void disTimer_Tick(object sender, EventArgs e)
+        /*void disTimer_Tick(object sender, EventArgs e)
         {
             m_game.ChangeEmbeddedViewport((int)ShowXNAImage.RenderSize.Width, (int)ShowXNAImage.RenderSize.Height);
             ShowXNAImage.Source = m_game.em_WriteableBitmap;
@@ -51,6 +53,7 @@ namespace Software.Pages
         {
             resizeTimer.Stop();
             resizeTimer.Start();
-        }
+            XNAStatus.Width = e.NewSize.Width;
+        }*/
     }
 }

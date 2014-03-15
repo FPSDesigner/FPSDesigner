@@ -13,5 +13,11 @@ namespace Software
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            // Set the current user interface culture to the specific culture
+            System.Threading.Thread.CurrentThread.CurrentUICulture =
+                        new System.Globalization.CultureInfo("en-US");
+        }
     }
 }
