@@ -4,18 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:p="clr-namespace:Software.Properties"
-             mc:Ignorable="d" d:DesignWidth="200.25" d:DesignHeight="185">
+             mc:Ignorable="d" d:DesignWidth="263.583" d:DesignHeight="230.333">
 
-    <Grid ShowGridLines="{StaticResource ShowGridLines}" x:Name="RootGrid" Margin="{StaticResource RootMargin}">
+    <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}" x:Name="RootGrid" Margin="{StaticResource RootMargin}">
         <!-- Root -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*" />
-            <RowDefinition Height="90*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="95*" />
             <RowDefinition Height="23" />
         </Grid.RowDefinitions>
+        
+        <!-- Tools -->
+        <Button Content="M" Width="31" Height="21" Grid.Row="0" HorizontalAlignment="Left" Margin="20,0,0,0" ToolTip="Movement" Padding="0" />
+        <Button Content="D" Width="31" Height="21" Grid.Row="0" HorizontalAlignment="Left" Margin="82,0,0,0" ToolTip="Deplace" Padding="0" />
+        <Button Content="R" Width="31" Height="21" Grid.Row="0" HorizontalAlignment="Left" Margin="113,0,0,0" ToolTip="Rotate" Padding="0" />
+        <Button Content="S" Width="31" Height="21" Grid.Row="0" HorizontalAlignment="Left" Margin="51,0,0,0" ToolTip="Scale" Padding="0" />
 
         <GridSplitter Grid.Row="1"
               HorizontalAlignment="Stretch" 
@@ -23,10 +29,10 @@
               Background="Black" 
               ShowsPreview="true"
               ResizeDirection="Rows"
-              Height="{StaticResource GridSplitterWidth}"/>
+              Height="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
 
         <!-- Below Tools Grid-->
-        <Grid Grid.Row="1" ShowGridLines="{StaticResource ShowGridLines}">
+        <Grid Grid.Row="1" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="45*" />
                 <ColumnDefinition Width="35*"/>
@@ -38,17 +44,17 @@
               VerticalAlignment="Stretch"
               Background="Black" 
               ShowsPreview="true"
-              Width="{StaticResource GridSplitterWidth}"/>
+              Width="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
 
             <GridSplitter Grid.Column="2"
               HorizontalAlignment="Left" 
               VerticalAlignment="Stretch"
               Background="Black" 
               ShowsPreview="true"
-              Width="{StaticResource GridSplitterWidth}"/>
+              Width="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
 
             <!-- Game Views Grid -->
-            <Grid Grid.Column="0" ShowGridLines="{StaticResource ShowGridLines}">
+            <Grid Grid.Column="0" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50*" />
                     <RowDefinition Height="50*" />
@@ -60,9 +66,9 @@
                   Background="Black" 
                   ShowsPreview="true"
                   ResizeDirection="Rows"
-                  Height="{StaticResource GridSplitterWidth}"/>
+                  Height="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
 
-                <Grid Grid.Row="0" ShowGridLines="{StaticResource ShowGridLines}">
+                <Grid Grid.Row="0" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="23" />
@@ -77,7 +83,7 @@
                          Text="{x:Static p:Resources.Status_Game_Loading}"/>
                 </Grid>
 
-                <Grid Grid.Row="1" ShowGridLines="{StaticResource ShowGridLines}">
+                <Grid Grid.Row="1" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="23" />
@@ -95,7 +101,7 @@
             </Grid>
 
             <!-- Game Objects-->
-            <Grid Grid.Column="1" ShowGridLines="{StaticResource ShowGridLines}">
+            <Grid Grid.Column="1" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50*" />
                     <RowDefinition Height="50*" />
@@ -107,7 +113,7 @@
                   Background="Black" 
                   ShowsPreview="true"
                   ResizeDirection="Rows"
-                  Height="{StaticResource GridSplitterWidth}"/>
+                  Height="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
 
                 <TreeView Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0">
                     <TreeViewItem Header="Cold Drinks">

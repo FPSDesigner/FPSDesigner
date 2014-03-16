@@ -18,6 +18,10 @@ namespace Software
             // Set the current user interface culture to the specific culture
             System.Threading.Thread.CurrentThread.CurrentUICulture =
                         new System.Globalization.CultureInfo("en-US");
+
+            App.Current.Properties["Console"] = new List<string>();
+            List<string> console = (List<string>)App.Current.Properties["Console"];
+            console.Add("Initializing ressources...");
         }
     }
 }

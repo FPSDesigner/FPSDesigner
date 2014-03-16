@@ -32,7 +32,7 @@ namespace Software.Pages
         public Home()
         {
             InitializeComponent();
-
+            
             /*m_game = new Engine.MainGameEngine(true);
 
             ShowXNAImage.Source = m_game.em_WriteableBitmap;

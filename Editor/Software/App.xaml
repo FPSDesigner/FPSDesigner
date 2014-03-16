@@ -7,7 +7,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
                 <ResourceDictionary Source="/Assets/ModernUI.DefaultTheme.xaml"/>
-                <ResourceDictionary Source="/Assets/SettingsRessources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
