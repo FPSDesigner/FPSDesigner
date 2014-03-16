@@ -5,24 +5,28 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Editor\Editor\Eng
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineContent", "Editor\EditorContent\EngineContent.contentproj", "{A70DA665-6832-42E3-A876-35B77F4F730D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj", "{2A857645-A225-4177-99BD-C8F6D22B72FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimation", "XNAnimation\XNAnimation.csproj", "{2A857645-A225-4177-99BD-C8F6D22B72FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAnimationPipeline", "XNAnimationPipeline\XNAnimationPipeline.csproj", "{863795EB-0753-4461-AF43-48F38828D8E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Software", "Software\Software.csproj", "{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelViewer", "WindowsGame1\ModelViewer.csproj", "{126262CA-2B0C-42AB-9958-64CD4F0F74F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelViewerContent", "WindowsGame1Content\ModelViewerContent.contentproj", "{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://apockalipss.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimation\\XNAnimation.csproj
+		SccProjectUniqueName1 = XNAnimation\\XNAnimation.csproj
 		SccProjectName1 = XNAnimation
-		SccLocalPath1 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimation
-		SccProjectUniqueName2 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimationPipeline\\XNAnimationPipeline.csproj
+		SccLocalPath1 = XNAnimation
+		SccProjectUniqueName2 = XNAnimationPipeline\\XNAnimationPipeline.csproj
 		SccProjectName2 = XNAnimationPipeline
-		SccLocalPath2 = ..\\..\\..\\Downloads\\xnanimation-80132\\release\\0700b3\\XNAnimation\\XNAnimationPipeline
+		SccLocalPath2 = XNAnimationPipeline
 		SccProjectUniqueName3 = Editor\\Editor\\Engine.csproj
 		SccProjectName3 = Editor/Editor
 		SccLocalPath3 = Editor\\Editor
@@ -32,6 +36,12 @@ Global
 		SccProjectUniqueName5 = Software\\Software.csproj
 		SccProjectName5 = Software
 		SccLocalPath5 = Software
+		SccProjectUniqueName6 = WindowsGame1\\ModelViewer.csproj
+		SccProjectName6 = WindowsGame1
+		SccLocalPath6 = WindowsGame1
+		SccProjectUniqueName7 = WindowsGame1Content\\ModelViewerContent.contentproj
+		SccProjectName7 = WindowsGame1Content
+		SccLocalPath7 = WindowsGame1Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +114,26 @@ Global
 		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{CA3E7986-D4FF-429D-8AD8-2F7D1C20D4E3}.Release|Xbox 360.ActiveCfg = Release|Any CPU
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|x86.ActiveCfg = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|x86.Build.0 = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|Any CPU.ActiveCfg = Release|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|Mixed Platforms.Build.0 = Release|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|x86.ActiveCfg = Release|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|x86.Build.0 = Release|x86
+		{126262CA-2B0C-42AB-9958-64CD4F0F74F5}.Release|Xbox 360.ActiveCfg = Release|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Debug|x86.ActiveCfg = Debug|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Release|Any CPU.ActiveCfg = Release|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Release|x86.ActiveCfg = Release|x86
+		{98CC3ECC-60E3-46CB-B32A-166B86FB4CB2}.Release|Xbox 360.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
