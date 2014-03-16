@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:p="clr-namespace:Software.Properties"
-             mc:Ignorable="d" d:DesignWidth="263.583" d:DesignHeight="230.333">
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" d:DesignWidth="334.583" d:DesignHeight="274.333">
 
     <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}" x:Name="RootGrid" Margin="{StaticResource RootMargin}">
         <!-- Root -->
@@ -80,7 +84,7 @@
                          Foreground="White"
                          Padding="7,2,0,0"
                          TextWrapping="NoWrap"
-                         Text="{x:Static p:Resources.Status_Game_Loading}"/>
+                         Text="{lex:Loc Status_Game_Loading}"/>
                 </Grid>
 
                 <Grid Grid.Row="1" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
@@ -95,7 +99,7 @@
                          Foreground="White"
                          Padding="7,2,0,0"
                          TextWrapping="NoWrap"
-                         Text="{x:Static p:Resources.Status_Game_Loading}"/>
+                         Text="{lex:Loc Status_Game_Loading}"/>
                 </Grid>
 
             </Grid>
@@ -144,6 +148,6 @@
                          Foreground="White"
                          Padding="7,2,0,0"
                          TextWrapping="NoWrap"
-                         Text="Loading Ressources..."/>
+                         Text="{lex:Loc Logs_Initializing_Editor}"/>
     </Grid>
 </UserControl>

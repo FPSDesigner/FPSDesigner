@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using WPFLocalizeExtension.Extensions;
+using WPFLocalizeExtension.Engine;
 
 namespace Software
 {
@@ -16,12 +18,10 @@ namespace Software
         public App()
         {
             // Set the current user interface culture to the specific culture
-            System.Threading.Thread.CurrentThread.CurrentUICulture =
-                        new System.Globalization.CultureInfo("en-US");
 
-            App.Current.Properties["Console"] = new List<string>();
-            List<string> console = (List<string>)App.Current.Properties["Console"];
-            console.Add("Initializing ressources...");
+            LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
+            
+            GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"));
         }
     }
 }

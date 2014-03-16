@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-        Title="FPSDesigner" IsTitleVisible="True"
+        xmlns:p="clr-namespace:Software.Properties"
+        Title="FPSDESIGNER" IsTitleVisible="True"
         ContentSource="/Pages/Home.xaml"
         WindowState="Maximized">
 
