@@ -417,7 +417,7 @@ namespace Engine.Game
                 Display3D.CSimpleShapes.AddLine(new Vector3(0f, 0f, 0f), new Vector3(0f, 1f, 0f), Color.Blue);
                 Display3D.CSimpleShapes.AddLine(new Vector3(0f, 0f, 0f), new Vector3(1f, 0f, 0f), Color.Green);
 
-                Vector3 position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_Camera._yaw, _Camera._pitch, 0));
+                Vector3 position = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(_Camera._yaw, _Camera._pitch, _Camera._roll));
                 Matrix viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
                 Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _graphicsDevice.Viewport.AspectRatio, .1f, 100f);
 

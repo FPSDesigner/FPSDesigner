@@ -40,6 +40,7 @@ namespace Engine.Display3D
         // Rotations angles
         public float _yaw { get; private set; }
         public float _pitch { get; private set; }
+        public float _roll { get; private set; }
 
         private float _nearClip;
         private float _farClip;
@@ -85,6 +86,7 @@ namespace Engine.Display3D
 
             this._pitch = 0f;
             this._yaw = 0f;
+            this._roll = 0f;
 
             this.isCamFrozen = isCamFrozen;
 
@@ -201,6 +203,11 @@ namespace Engine.Display3D
                     _physicsMap.Jump();
             }
 
+            if (_translation.X != 0)
+                _roll = MathHelper.Lerp(_roll, -_translation.X * 0.1f, 0.1f);
+            else
+                _roll = MathHelper.Lerp(_roll, 0, 0.1f);
+
             //_physicsMap.Swin(isUnderWater);
 
             if (hasPlayerUwEffect != isUnderWater)
@@ -213,7 +220,7 @@ namespace Engine.Display3D
                 _translation = _translation * 0.5f;
             }
 
-            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, 0);
+            Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, _roll);
 
             Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
             _cameraTarget = _cameraPos + forward;
