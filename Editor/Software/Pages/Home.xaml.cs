@@ -1,5 +1,10 @@
-﻿using System;
+﻿using FirstFloor.ModernUI.Windows;
+using FirstFloor.ModernUI.Windows.Controls;
+using FirstFloor.ModernUI.Windows.Navigation;
+using FirstFloor.ModernUI.Presentation;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +15,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Windows.Threading;
@@ -22,17 +26,19 @@ namespace Software.Pages
     /// <summary>
     /// Interaction logic for Home.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class Home : UserControl, IContent
     {
         private MainGameEngine m_game;
 
         private int count = 0;
         private DispatcherTimer resizeTimer = new DispatcherTimer();
+        private MainWindow MainWindowInstance;
 
         public Home()
         {
             InitializeComponent();
-            
+            MainWindowInstance = MainWindow.Instance;
+
             /*m_game = new Engine.MainGameEngine(true);
 
             ShowXNAImage.Source = m_game.em_WriteableBitmap;
@@ -55,5 +61,27 @@ namespace Software.Pages
             resizeTimer.Start();
             XNAStatus.Width = e.NewSize.Width;
         }*/
+
+        public void OnFragmentNavigation(FragmentNavigationEventArgs e)
+        {
+        }
+
+        public void OnNavigatedTo(NavigationEventArgs e)
+        {
+            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+                lc.Source = e.Source;
+        }
+
+        public void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+                lc.Source = e.Source;
+        }
+
+        public void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+                lc.Source = e.Source;
+        }
     }
 }

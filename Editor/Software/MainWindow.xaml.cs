@@ -21,7 +21,14 @@ namespace Software
     /// </summary>
     public partial class MainWindow : ModernWindow
     {
-        public MainWindow()
+        public static MainWindow Instance { get; private set; }
+
+        static MainWindow()
+        {
+            Instance = new MainWindow();
+        }
+
+        private MainWindow()
         {
             InitializeComponent();
         }

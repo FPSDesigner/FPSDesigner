@@ -374,14 +374,12 @@ namespace Engine.Game
                 weapon.Shot(false, _isShoting, gameTime);
 
             // ***** If he has shot : We play vibrations **** //
-            if (_isShoting)
+            if (CGameSettings.useGamepad)
             {
-                // Set vibrations
-                GamePad.SetVibration(PlayerIndex.One, 0.9f, 0.1f);
-            }
-            else
-            {
-                GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
+                if (_isShoting)
+                    GamePad.SetVibration(PlayerIndex.One, 0.9f, 0.1f);
+                else
+                    GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
             }
         }
 

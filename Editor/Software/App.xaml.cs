@@ -22,6 +22,13 @@ namespace Software
             LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
             
             GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"));
+
+            Startup += App_Startup;
+        }
+
+        void App_Startup(object sender, StartupEventArgs e)
+        {
+            Software.MainWindow.Instance.Show();
         }
     }
 }
