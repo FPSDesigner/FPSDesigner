@@ -60,7 +60,6 @@ namespace Engine.GameStates
 
             Game.CConsole._Character = _character;
 
-
             /**** Models ****/
 
             foreach (Game.LevelInfo.MapModels_Model modelInfo in levelData.MapModels.Models)
@@ -218,7 +217,6 @@ namespace Engine.GameStates
 
             terrain.frustum = cam._Frustum;
 
-            
             skybox.ColorIntensity = 0.8f;
             water.PreDraw(cam, gameTime);
             skybox.ColorIntensity = 1;

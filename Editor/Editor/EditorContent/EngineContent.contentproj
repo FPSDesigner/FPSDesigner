@@ -297,7 +297,7 @@
     <Folder Include="3D\3DModels\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
+    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
     </ProjectReference>
@@ -527,20 +527,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Model textures\StreetLight.png">
-      <Name>StreetLight</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\StreetLight.fbx">
-      <Name>StreetLight</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Model textures\MetalFloorPattern001.tga">
       <Name>MetalFloorPattern001</Name>
       <Importer>TextureImporter</Importer>
@@ -585,13 +571,6 @@
   <ItemGroup>
     <Compile Include="Models\Barrel.fbx">
       <Name>Barrel</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\OpenContainer.fbx">
-      <Name>OpenContainer</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
@@ -719,10 +698,73 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\OpenContainer.fbx">
+      <Name>OpenContainer</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Models\Container.fbx">
       <Name>Container</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\StreetLight.fbx">
+      <Name>StreetLight</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\BrickGlass.tga">
+      <Name>BrickGlass</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\Window001.tga">
+      <Name>Window001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\Window002.tga">
+      <Name>Window002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\ConcreteUsed.tga">
+      <Name>ConcreteUsed</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\Brick001.tga">
+      <Name>Brick001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\DoorUsed001.tga">
+      <Name>DoorUsed001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\DoorMetal.tga">
+      <Name>DoorMetal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

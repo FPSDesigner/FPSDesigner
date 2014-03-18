@@ -99,7 +99,7 @@ namespace Engine.Display3D
                         {
                             effect.EnableDefaultLighting();
 
-                            effect.TextureEnabled = true;
+                            //effect.TextureEnabled = true;
 
                             string newName = mesh.Name.Split('_')[0];; // If there is no * : newName corresponds to the mesh.Name
 
@@ -138,33 +138,33 @@ namespace Engine.Display3D
             Matrix.CreateRotationX( - MathHelper.PiOver2)*
             Matrix.CreateTranslation(_modelPosition);*/
 
-            if (_textures != null)
-            {
-                foreach (ModelMesh mesh in _model.Meshes)
-                {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        if (mesh.Name != collisionShapeName)
-                        {
-                            effect.EnableDefaultLighting();
+            //if (_textures != null)
+            //{
+            //    foreach (ModelMesh mesh in _model.Meshes)
+            //    {
+            //        foreach (BasicEffect effect in mesh.Effects)
+            //        {
+            //            if (mesh.Name != collisionShapeName)
+            //            {
+            //                effect.EnableDefaultLighting();
 
-                            effect.TextureEnabled = true;
+            //                effect.TextureEnabled = true;
 
-                            string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
+            //                string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
 
-                            if (mesh.Name.Contains('_'))
-                                newName = mesh.Name.Split('_')[0];
+            //                if (mesh.Name.Contains('_'))
+            //                    newName = mesh.Name.Split('_')[0];
 
-                            if (_textures.ContainsKey(newName))
-                                effect.Texture = _textures[newName];
+            //                if (_textures.ContainsKey(newName))
+            //                    effect.Texture = _textures[newName];
 
-                            effect.SpecularColor = new Vector3(_specularColor);
-                            effect.SpecularPower = 32;
+            //                effect.SpecularColor = new Vector3(_specularColor);
+            //                effect.SpecularPower = 32;
 
-                        }
-                    }
-                }
-            }
+            //            }
+            //        }
+            //    }
+            //}
 
             foreach (ModelMesh mesh in _model.Meshes)
             {

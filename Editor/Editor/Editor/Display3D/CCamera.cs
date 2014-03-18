@@ -204,7 +204,7 @@ namespace Engine.Display3D
             }
 
             if (_translation.X != 0)
-                _roll = MathHelper.Lerp(_roll, -_translation.X * 0.1f, 0.1f);
+                _roll = MathHelper.Lerp(_roll, -_translation.X * 0.05f, 0.2f);
             else
                 _roll = MathHelper.Lerp(_roll, 0, 0.1f);
 
