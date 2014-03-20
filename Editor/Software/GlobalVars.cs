@@ -11,6 +11,9 @@ namespace Software
     static class GlobalVars
     {
         public static List<string> LogList = new List<string>();
+        public static string selectedTool = "Select";
+
+        
 
         public static string GetUIString(string key)
         {

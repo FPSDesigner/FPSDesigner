@@ -39,7 +39,7 @@ namespace ModelViewer
         private TimeSpan em_LastTime;
         public bool isSoftwareEmbedded = false;
 
-        private CModel currentModel; 
+        private CModel _currentModel; 
 
         public ModelViewer(bool launchedFromSoftware = false)
         {
@@ -54,7 +54,7 @@ namespace ModelViewer
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
-            camera = new CCamera(GraphicsDevice, Vector3.Up + Vector3.UnitX, Vector3.Zero, 0.5f, 10000f);
+            
 
             // Icon
             if (System.IO.File.Exists("Icon.ico"))
@@ -120,6 +120,8 @@ namespace ModelViewer
                 em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
             }
 
+            camera = new CCamera(GraphicsDevice, Vector3.Up + Vector3.UnitX, Vector3.Zero, 0.5f, 10000f);
+
             base.Initialize();
         }
 
@@ -133,12 +135,11 @@ namespace ModelViewer
 
         }
 
-        public void LoadNewModel(string modelUri, Dictionary<String, Texture2D> textures, float alpha = 1)
+        public void LoadNewModel(string modelUri, Dictionary<String, Texture2D> textures,Vector3 modelRotation,float alpha = 1)
         {
-            currentModel = new CModel(
+            _currentModel = new CModel(
                 Content.Load<Model>(modelUri),
-                Vector3.Zero,
-                Vector3.Zero,
+                modelRotation,
                 new Vector3(1),
                 GraphicsDevice,
                 textures,
@@ -160,12 +161,9 @@ namespace ModelViewer
                 KeyboardState kbState = Keyboard.GetState();
                 MouseState mouseState = Mouse.GetState();
 
-                if (currentModel != null)
+                if (_currentModel != null)
                 {
-                    currentModel._modelRotation = new Vector3(
-                        currentModel._modelRotation.X,
-                        currentModel._modelRotation.Y + 0.1f * (float)gameTime.ElapsedGameTime.TotalSeconds,
-                        currentModel._modelRotation.Z);
+                    _currentModel.Update(gameTime);
                 }
 
                 base.Update(gameTime);
@@ -180,9 +178,9 @@ namespace ModelViewer
 
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
-            if (currentModel != null)
+            if (_currentModel != null)
             {
-                currentModel.Draw(camera._view, camera._projection);
+                _currentModel.Draw(camera._view, camera._projection);
             }
 
             base.Draw(gameTime);
@@ -205,5 +203,6 @@ namespace ModelViewer
             this.Update(em_GameTime);
             this.Draw(em_GameTime);
         }
+
     }
 }

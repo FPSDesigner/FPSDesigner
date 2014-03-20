@@ -16,7 +16,6 @@ namespace ModelViewer
     /// </summary>
     class CModel
     {
-        public Vector3 _modelPosition { get; set; }
         public Vector3 _modelRotation { get; set; }
         public Vector3 _modelScale { get; set; }
         public Vector3 _lightDirection { get; set; }
@@ -45,11 +44,10 @@ namespace ModelViewer
         /// <param name="modelRotation">Rotation of the model</param>
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
-        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null, float specColor = 0.0f, float alpha = 1.0f)
+        public CModel(Model model, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null, float specColor = 0.0f, float alpha = 1.0f)
         {
             this._model = model;
 
-            this._modelPosition = modelPos;
             this._modelRotation = modelRotation;
             this._modelScale = modelScale;
             this.Alpha = alpha;
@@ -93,6 +91,11 @@ namespace ModelViewer
             this._graphicsDevice = device;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            _modelRotation = new Vector3(_modelRotation.X, _modelRotation.Y + 0.1f * (float)gameTime.ElapsedGameTime.Milliseconds, _modelRotation.Z);
+        }
+
         /// <summary>
         /// Draw the model in the world
         /// </summary>
@@ -103,35 +106,35 @@ namespace ModelViewer
         {
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
-                Matrix.CreateTranslation(_modelPosition);
+                Matrix.CreateTranslation(new Vector3(0));
 
-            if (_textures != null)
-            {
-                foreach (ModelMesh mesh in _model.Meshes)
-                {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        if (mesh.Name != collisionShapeName)
-                        {
-                            effect.EnableDefaultLighting();
+            //if (_textures != null)
+            //{
+            //    foreach (ModelMesh mesh in _model.Meshes)
+            //    {
+            //        foreach (BasicEffect effect in mesh.Effects)
+            //        {
+            //            if (mesh.Name != collisionShapeName)
+            //            {
+            //                effect.EnableDefaultLighting();
 
-                            effect.TextureEnabled = true;
+            //                effect.TextureEnabled = true;
 
-                            string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
+            //                string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
 
-                            if (mesh.Name.Contains('_'))
-                                newName = mesh.Name.Split('_')[0];
+            //                if (mesh.Name.Contains('_'))
+            //                    newName = mesh.Name.Split('_')[0];
 
-                            if (_textures.ContainsKey(newName))
-                                effect.Texture = _textures[newName];
+            //                if (_textures.ContainsKey(newName))
+            //                    effect.Texture = _textures[newName];
 
-                            effect.SpecularColor = new Vector3(_specularColor);
-                            effect.SpecularPower = 32;
+            //                effect.SpecularColor = new Vector3(_specularColor);
+            //                effect.SpecularPower = 32;
 
-                        }
-                    }
-                }
-            }
+            //            }
+            //        }
+            //    }
+            //}
 
             foreach (ModelMesh mesh in _model.Meshes)
             {
@@ -267,7 +270,7 @@ namespace ModelViewer
         {
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
-                Matrix.CreateTranslation(_modelPosition);
+                Matrix.CreateTranslation(new Vector3(0));
 
             bool hasCollisionMesh = false;
             ModelMesh collisionMesh = default(ModelMesh);
