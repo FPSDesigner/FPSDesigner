@@ -70,18 +70,18 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WPFLocalizeExtension">
-      <HintPath>..\Ressources\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions">
-      <HintPath>..\Ressources\XAMLMarkupExtensions.dll</HintPath>
+      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Pages\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Pages\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

@@ -62,26 +62,26 @@ namespace Software.Pages
             XNAStatus.Width = e.NewSize.Width;
         }*/
 
+        #region "Windows Menu Helper"
         public void OnFragmentNavigation(FragmentNavigationEventArgs e)
         {
+            GlobalVars.OnFragmentNavigation(e);
         }
 
         public void OnNavigatedTo(NavigationEventArgs e)
         {
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = e.Source;
+            GlobalVars.OnNavigatedTo(e);
         }
 
         public void OnNavigatedFrom(NavigationEventArgs e)
         {
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = e.Source;
+            GlobalVars.OnNavigatedFrom(e);
         }
 
         public void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = e.Source;
+            GlobalVars.OnNavigatingFrom(e);
         }
+        #endregion
     }
 }

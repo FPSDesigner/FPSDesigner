@@ -20,6 +20,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="windows" x:Name="MenuWindows">
             <mui:LinkGroup.Links>
+                <mui:Link DisplayName="Choose a menu:" Source="/Pages/Home.xaml"/>
                 <mui:Link DisplayName="window1" Source="/Pages/Home.xaml"/>
                 <mui:Link DisplayName="window2" Source="/Pages/Home.xaml"/>
             </mui:LinkGroup.Links>

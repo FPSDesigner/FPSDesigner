@@ -121,8 +121,6 @@ namespace Engine.Game
             _weaponsAmount = modelsList.Length;
             _weaponsArray = new WeaponData[_weaponsAmount];
 
-
-
             // Initializing sounds
             for (int i = 0; i < weaponsSounds.Length; i++)
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
