@@ -24,6 +24,8 @@ namespace ModelViewer
 
         public float Alpha = 1.0f;
 
+        public int polyCount; // Used to display model Poly count
+
         private float _specularColor;
 
         private Matrix[] _modelTransforms;
@@ -97,6 +99,8 @@ namespace ModelViewer
 
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;
+
+                            polyCount += mesh.MeshParts.Count;
                         }
                     }
                 }
@@ -159,6 +163,7 @@ namespace ModelViewer
                 // We draw the mesh only if it's not a collision shape and only if we need to draw it
                 if (mesh.Name != collisionShapeName)
                     mesh.Draw();
+
             }
 
         }

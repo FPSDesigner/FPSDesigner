@@ -42,7 +42,7 @@ namespace ModelViewer
         private CModel _currentModel;
 
         // Informations about the model
-        private SpriteFont _modelSpriteName;
+        private SpriteFont _modelFontName;
 
         public ModelViewer(bool launchedFromSoftware = false)
         {
@@ -50,15 +50,13 @@ namespace ModelViewer
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.Window.Title = "Model Viewer Made By David Alias GROSSEDICK";
+            this.Window.Title = "Model Viewer";
 
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 700;
             graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
-
-
 
             // Icon
             if (System.IO.File.Exists("Icon.ico"))
@@ -137,6 +135,8 @@ namespace ModelViewer
             text.Add("Barrel", Content.Load<Texture2D>("11"));
 
             LoadNewModel("B", text, new Vector3(0), 1.0f);
+
+            _modelFontName = Content.Load<SpriteFont>("Font1");
         }
 
         protected override void UnloadContent()
@@ -214,6 +214,17 @@ namespace ModelViewer
                 _currentModel.Draw(camera._view, camera._projection);
             }
 
+            // Draw the text info
+
+            int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
+            int yPos = (40 * this.GraphicsDevice.Viewport.Height) / 1080;
+
+            float scale = (this.GraphicsDevice.Viewport.Width) / 1920f;
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : "+_currentModel.polyCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            spriteBatch.End();
+
             base.Draw(gameTime);
 
             // WPF
@@ -227,6 +238,7 @@ namespace ModelViewer
                 em_WriteableBitmap.AddDirtyRect(new System.Windows.Int32Rect(0, 0, em_sizeViewport.X, em_sizeViewport.Y));
                 em_WriteableBitmap.Unlock();
             }
+
         }
 
         private void GameLoop(object sender, EventArgs e)
