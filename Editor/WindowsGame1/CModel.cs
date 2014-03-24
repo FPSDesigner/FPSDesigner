@@ -36,6 +36,23 @@ namespace ModelViewer
 
         private string collisionShapeName = "collision_shape";
 
+        private BoundingSphere boundingSphere;
+
+         public BoundingSphere BoundingSphere
+        {
+            get
+            {
+                Matrix worldTransform = Matrix.CreateScale(_modelScale) *
+                    Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
+                    Matrix.CreateTranslation(Vector3.Zero);
+
+                BoundingSphere transformed = boundingSphere;
+                transformed = transformed.Transform(worldTransform);
+
+                return transformed;
+            }
+        }
+
         /// <summary>
         /// Initialize the model class
         /// </summary>
@@ -85,6 +102,8 @@ namespace ModelViewer
                 }
             }
 
+            buildBoundingSphere();
+
             generateTags();
             generateModelTriangles();
 
@@ -93,7 +112,7 @@ namespace ModelViewer
 
         public void Update(GameTime gameTime)
         {
-            _modelRotation = new Vector3(_modelRotation.X, _modelRotation.Y + 0.1f * (float)gameTime.ElapsedGameTime.Milliseconds, _modelRotation.Z);
+            _modelRotation = new Vector3(_modelRotation.X, _modelRotation.Y + 0.001f * (float)gameTime.ElapsedGameTime.Milliseconds, _modelRotation.Z);
         }
 
         /// <summary>
@@ -107,34 +126,6 @@ namespace ModelViewer
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(new Vector3(0));
-
-            //if (_textures != null)
-            //{
-            //    foreach (ModelMesh mesh in _model.Meshes)
-            //    {
-            //        foreach (BasicEffect effect in mesh.Effects)
-            //        {
-            //            if (mesh.Name != collisionShapeName)
-            //            {
-            //                effect.EnableDefaultLighting();
-
-            //                effect.TextureEnabled = true;
-
-            //                string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
-
-            //                if (mesh.Name.Contains('_'))
-            //                    newName = mesh.Name.Split('_')[0];
-
-            //                if (_textures.ContainsKey(newName))
-            //                    effect.Texture = _textures[newName];
-
-            //                effect.SpecularColor = new Vector3(_specularColor);
-            //                effect.SpecularPower = 32;
-
-            //            }
-            //        }
-            //    }
-            //}
 
             foreach (ModelMesh mesh in _model.Meshes)
             {
@@ -172,6 +163,27 @@ namespace ModelViewer
 
         }
 
+        /// <summary>
+        /// Creates the bounding sphere associated to the model
+        /// </summary>
+        public void buildBoundingSphere()
+        {
+            _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
+
+            BoundingSphere sphere = new BoundingSphere(Vector3.Zero, 0);
+            // Merge all the model's built in bounding spheres
+            foreach (ModelMesh mesh in _model.Meshes)
+            {
+                if (mesh.Name != collisionShapeName)
+                {
+                    BoundingSphere transformed = mesh.BoundingSphere.Transform(
+                        _modelTransforms[mesh.ParentBone.Index]);
+                    sphere = BoundingSphere.CreateMerged(sphere, transformed);
+                }
+            }
+
+            boundingSphere = sphere;
+        }
 
         /// <summary>
         /// Set to the specified effet the parameter given

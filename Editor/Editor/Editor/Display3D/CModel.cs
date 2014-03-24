@@ -99,7 +99,7 @@ namespace Engine.Display3D
                         {
                             effect.EnableDefaultLighting();
 
-                            //effect.TextureEnabled = true;
+                            effect.TextureEnabled = true;
 
                             string newName = mesh.Name.Split('_')[0];; // If there is no * : newName corresponds to the mesh.Name
 

@@ -36,6 +36,8 @@ namespace ModelViewer
 
         private GraphicsDevice _graphics;
 
+        public BoundingFrustum _frustum;
+
         /// <summary>
         /// Initialize the class
         /// </summary>
@@ -62,6 +64,8 @@ namespace ModelViewer
 
             fieldOfView = MathHelper.ToRadians(40);
             _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
+
+            _frustum = new BoundingFrustum(_view * _projection);
         }
 
         /// <summary>

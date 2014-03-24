@@ -25,7 +25,7 @@ namespace ModelViewer
 
         CCamera camera;
 
-        
+
         // WPF
         // Used to emulate XNA when embedded in WPF
 
@@ -39,7 +39,7 @@ namespace ModelViewer
         private TimeSpan em_LastTime;
         public bool isSoftwareEmbedded = false;
 
-        private CModel _currentModel; 
+        private CModel _currentModel;
 
         public ModelViewer(bool launchedFromSoftware = false)
         {
@@ -54,7 +54,7 @@ namespace ModelViewer
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
-            
+
 
             // Icon
             if (System.IO.File.Exists("Icon.ico"))
@@ -120,7 +120,7 @@ namespace ModelViewer
                 em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
             }
 
-            camera = new CCamera(GraphicsDevice, Vector3.Up + Vector3.UnitX, Vector3.Zero, 0.5f, 10000f);
+            camera = new CCamera(GraphicsDevice, Vector3.Up + new Vector3(50.0f), Vector3.Zero, 0.5f, 10000f);
 
             base.Initialize();
         }
@@ -128,6 +128,11 @@ namespace ModelViewer
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Dictionary<string, Texture2D> text = new Dictionary<string, Texture2D>();
+            text.Add("Barrel", Content.Load<Texture2D>("11"));
+
+            LoadNewModel("B", text, new Vector3(0), 1.0f);
         }
 
         protected override void UnloadContent()
@@ -135,7 +140,7 @@ namespace ModelViewer
 
         }
 
-        public void LoadNewModel(string modelUri, Dictionary<String, Texture2D> textures,Vector3 modelRotation,float alpha = 1)
+        public void LoadNewModel(string modelUri, Dictionary<String, Texture2D> textures, Vector3 modelRotation, float alpha = 1)
         {
             _currentModel = new CModel(
                 Content.Load<Model>(modelUri),
@@ -145,6 +150,23 @@ namespace ModelViewer
                 textures,
                 0,
                 alpha);
+
+            if (camera._frustum.Contains(_currentModel.BoundingSphere) == ContainmentType.Contains)
+            {
+                while (camera._frustum.Contains(_currentModel.BoundingSphere) == ContainmentType.Contains)
+                {
+                    _currentModel._modelScale += new Vector3(1f);
+                    _currentModel.buildBoundingSphere();
+                }
+            }
+            else
+            {
+                while (camera._frustum.Contains(_currentModel.BoundingSphere) != ContainmentType.Contains)
+                {
+                    _currentModel._modelScale -= new Vector3(0.1f);
+                    _currentModel.buildBoundingSphere();
+                }
+            }
         }
 
         protected override void Update(GameTime gameTime)
