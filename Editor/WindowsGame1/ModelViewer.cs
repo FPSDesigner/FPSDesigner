@@ -41,12 +41,16 @@ namespace ModelViewer
 
         private CModel _currentModel;
 
+        // Informations about the model
+        private SpriteFont _modelSpriteName;
+
         public ModelViewer(bool launchedFromSoftware = false)
         {
             isSoftwareEmbedded = launchedFromSoftware;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.Window.Title = "Model Viewer Made By David Alias GROSSEDICK";
 
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 700;
@@ -198,7 +202,12 @@ namespace ModelViewer
             if (isSoftwareEmbedded)
                 GraphicsDevice.SetRenderTarget(em_renderTarget2D);
 
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color();
+            color.R = 78;
+            color.G = 77;
+            color.B = 71;
+            GraphicsDevice.Clear(color);
 
             if (_currentModel != null)
             {
