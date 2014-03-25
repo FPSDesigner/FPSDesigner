@@ -202,15 +202,14 @@ namespace ModelViewer
             if (isSoftwareEmbedded)
                 GraphicsDevice.SetRenderTarget(em_renderTarget2D);
 
-            //GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
-            Microsoft.Xna.Framework.Color color = new Microsoft.Xna.Framework.Color();
-            color.R = 78;
-            color.G = 77;
-            color.B = 71;
-            GraphicsDevice.Clear(color);
+            GraphicsDevice.Clear(new Microsoft.Xna.Framework.Color(78, 77, 71));
 
             if (_currentModel != null)
             {
+                GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
                 _currentModel.Draw(camera._view, camera._projection);
             }
 
@@ -224,6 +223,8 @@ namespace ModelViewer
             spriteBatch.Begin();
             spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : "+_currentModel.polyCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             spriteBatch.End();
+
+
 
             base.Draw(gameTime);
 

@@ -28,7 +28,7 @@ namespace Engine.Display3D
         private bool _isLooped;
         private Texture2D[] _textures;
 
-        private Vector3 _position;
+        public Vector3 _position;
         private Matrix _rotation;
 
         private SkinnedModel skinnedModel;
