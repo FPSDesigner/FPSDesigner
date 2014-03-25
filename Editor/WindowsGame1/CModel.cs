@@ -24,7 +24,7 @@ namespace ModelViewer
 
         public float Alpha = 1.0f;
 
-        public int polyCount; // Used to display model Poly count
+        public int verticesCount; // Used to display model Poly count
 
         private float _specularColor;
 
@@ -40,7 +40,7 @@ namespace ModelViewer
 
         private BoundingSphere boundingSphere;
 
-         public BoundingSphere BoundingSphere
+        public BoundingSphere BoundingSphere
         {
             get
             {
@@ -92,7 +92,7 @@ namespace ModelViewer
 
                             effect.TextureEnabled = true;
 
-                            string newName = mesh.Name.Split('_')[0];; // If there is no * : newName corresponds to the mesh.Name
+                            string newName = mesh.Name.Split('_')[0]; ; // If there is no * : newName corresponds to the mesh.Name
 
                             if (_textures.ContainsKey(newName))
                                 effect.Texture = _textures[newName];
@@ -100,7 +100,7 @@ namespace ModelViewer
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;
 
-                            polyCount += mesh.MeshParts.Count;
+                            verticesCount += 5;
                         }
                     }
                 }

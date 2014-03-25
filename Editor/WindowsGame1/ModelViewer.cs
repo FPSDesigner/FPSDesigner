@@ -41,6 +41,10 @@ namespace ModelViewer
 
         private CModel _currentModel;
 
+        // All arround the scale
+        private Vector2 _maxResolution = new Vector2(1920f, 1080f);
+        private Vector3 _scalingFactor = new Vector3(1f, 1f, 1f);
+
         // Informations about the model
         private SpriteFont _modelFontName;
 
@@ -220,10 +224,13 @@ namespace ModelViewer
             int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
             int yPos = (40 * this.GraphicsDevice.Viewport.Height) / 1080;
 
-            float scale = (this.GraphicsDevice.Viewport.Width) / 1920f;
+            _scalingFactor.X = (this.GraphicsDevice.PresentationParameters.BackBufferWidth) / _maxResolution.X;
+            _scalingFactor.Y = (this.GraphicsDevice.PresentationParameters.BackBufferHeight) / _maxResolution.Y;
 
-            spriteBatch.Begin();
-            spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : "+_currentModel.polyCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            Microsoft.Xna.Framework.Matrix globalTransformation = Microsoft.Xna.Framework.Matrix.CreateScale(_scalingFactor);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
+            spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : " + _currentModel.verticesCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White);
             spriteBatch.End();
 
 
