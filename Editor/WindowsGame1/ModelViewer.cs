@@ -187,6 +187,8 @@ namespace ModelViewer
                 KeyboardState kbState = Keyboard.GetState();
                 MouseState mouseState = Mouse.GetState();
 
+                camera.Update(gameTime);
+
                 if (_currentModel != null)
                 {
                     _currentModel.Update(gameTime);

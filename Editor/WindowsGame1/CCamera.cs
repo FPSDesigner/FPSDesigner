@@ -74,8 +74,7 @@ namespace ModelViewer
         /// <param name="gametime">GameTime snapshot</param>
         /// <param name="keyState">Current KeyboardState</param>
         /// <param name="mouseState">Current mouseState</param>
-        public void Update(GameTime gametime, float camVelocity = 0.3f, bool isUnderWater = false, float waterLevel = 0f, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
-            KeyboardState oldKeyState = default(KeyboardState))
+        public void Update(GameTime gametime)
         {
             if (_graphics.Viewport.AspectRatio != _aspectRatio)
             {
