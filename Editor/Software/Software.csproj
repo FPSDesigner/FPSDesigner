@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FirstFloor.ModernUI">
-      <HintPath>C:\Users\epita\Downloads\FirstFloor.ModernUI.dll</HintPath>
+      <HintPath>..\..\..\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
@@ -70,10 +70,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WPFLocalizeExtension">
-      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\WPFLocalizeExtension.dll</HintPath>
     </Reference>
     <Reference Include="XAMLMarkupExtensions">
-      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\XAMLMarkupExtensions.dll</HintPath>
+      <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

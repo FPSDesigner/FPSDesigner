@@ -64,6 +64,8 @@
                     <RowDefinition Height="50*" />
                     <RowDefinition Height="50*" />
                 </Grid.RowDefinitions>
+                
+                <Image x:Name="ShowXNAImage" />
 
                 <GridSplitter Grid.Row="1" 
                   HorizontalAlignment="Stretch" 

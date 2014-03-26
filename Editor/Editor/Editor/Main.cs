@@ -213,7 +213,7 @@ namespace Engine
                 GraphicsDevice.SetRenderTarget(em_renderTarget2D);
 
             // Capture the render
-            renderCapture.Begin();
+            //renderCapture.Begin();
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
 
             // Draw "All" the State
@@ -224,11 +224,11 @@ namespace Engine
             Game.CConsole.Draw(gameTime);
 
             // End capturing
-            renderCapture.End();
+            /*renderCapture.End();
 
             // Draw the render via post processing
             postProcessor.Input = renderCapture.GetTexture();
-            postProcessor.Draw(gameTime);
+            postProcessor.Draw(gameTime);*/
 
             base.Draw(gameTime);
 
