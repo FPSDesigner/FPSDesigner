@@ -157,6 +157,10 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LTreesLibrary\LTreesLibrary.csproj">
+      <Project>{8aaab1d0-6c1d-4f92-851b-56d4611a6d1e}</Project>
+      <Name>LTreesLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>

@@ -23,6 +23,8 @@ namespace Software
     {
         public static MainWindow Instance { get; private set; }
 
+        public static string 
+
         static MainWindow()
         {
             Instance = new MainWindow();

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using LTreesLibrary.Trees;
 
 namespace Engine.GameStates
 {
@@ -31,6 +32,9 @@ namespace Engine.GameStates
 
         Game.CWeapon weapon;
         GraphicsDevice _graphics;
+
+        TreeProfile treeProfile;
+        SimpleTree tree;
 
         public void Initialize()
         {
@@ -179,6 +183,10 @@ namespace Engine.GameStates
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
+
+
+            treeProfile = content.Load<TreeProfile>("Trees/Trees/Graywood");
+            tree = treeProfile.GenerateSimpleTree(new Random(125));
         }
 
         public void UnloadContent(ContentManager content)
@@ -227,21 +235,25 @@ namespace Engine.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
+            // Draw a tree
+            Matrix worldt = Matrix.CreateScale(0.00500f) * Matrix.CreateFromYawPitchRoll(0.0f, 0, 0) * Matrix.CreateTranslation(new Vector3(-128, 170, 82));
+            tree.DrawTrunk(worldt, cam._view, cam._projection);
+            tree.DrawLeaves(worldt, cam._view, cam._projection);
+            _graphics.BlendState = BlendState.Opaque;
+            _graphics.DepthStencilState = DepthStencilState.Default;
+            
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
-
             Display3D.CModelManager.Draw(cam, gameTime);
 
-
+            _graphics.BlendState = BlendState.Additive;
             lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
+            _graphics.BlendState = BlendState.Opaque;
 
             Display3D.Particles.ParticlesManager.Draw(gameTime, cam._view, cam._projection);
 
-            BlendState defaultBS = _graphics.BlendState;
             _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
-            _graphics.BlendState = BlendState.AlphaBlend;
             _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-            _graphics.BlendState = defaultBS;
 
             lensFlare.Draw(gameTime);
 
@@ -249,6 +261,7 @@ namespace Engine.GameStates
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
+
             
         }
 

@@ -297,6 +297,10 @@
     <Folder Include="3D\3DModels\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LTreesPipeline\LTreesPipeline.csproj">
+      <Project>{199aa449-800e-4908-bf49-778990a2983a}</Project>
+      <Name>LTreesPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
@@ -758,6 +762,94 @@
       <Name>Arm_Animation%28Smoothed%29</Name>
       <Importer>FbxImporter</Importer>
       <Processor>SkinnedModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Trees\Textures\BirchBark.png">
+      <Name>BirchBark</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\BirchLeaf.png">
+      <Name>BirchLeaf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\Grass.jpg">
+      <Name>Grass</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\GrayBark.JPG">
+      <Name>GrayBark</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\GraywoodLeaf.png">
+      <Name>GraywoodLeaf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\OakLeaf.png">
+      <Name>OakLeaf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\PineBark.png">
+      <Name>PineBark</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\PineLeaf.png">
+      <Name>PineLeaf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="Trees\Textures\WillowLeaf.png">
+      <Name>WillowLeaf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Trees\Trees\Birch.ltree">
+      <Name>Birch</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\Trees\Gardenwood.ltree">
+      <Name>Gardenwood</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\Trees\Graywood.ltree">
+      <Name>Graywood</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\Trees\Pine.ltree">
+      <Name>Pine</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\Trees\Rug.ltree">
+      <Name>Rug</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\Trees\Willow.ltree">
+      <Name>Willow</Name>
+      <Importer>TreeGeneratorImporter</Importer>
+      <Processor>TreeProfileProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
