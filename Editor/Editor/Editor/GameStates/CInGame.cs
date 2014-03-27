@@ -33,9 +33,6 @@ namespace Engine.GameStates
         Game.CWeapon weapon;
         GraphicsDevice _graphics;
 
-        TreeProfile treeProfile;
-        SimpleTree tree;
-
         public void Initialize()
         {
             levelInfo = new Game.LevelInfo.CLevelInfo();
@@ -88,6 +85,9 @@ namespace Engine.GameStates
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
 
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
+
+            /**** Trees ****/
+            Display3D.TreeManager.LoadXMLTrees(content, levelData.MapModels.Trees);
 
             /**** Terrain ****/
             if (levelData.Terrain.UseTerrain)
@@ -173,7 +173,7 @@ namespace Engine.GameStates
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
             
-            // ******* All the consol informations ******* //
+            // ******* All the console informations ******* //
 
             _character.LoadContent(content, graphics, weapon, cam);
             Display3D.CModelManager.AddPhysicsInformations(cam);
@@ -183,10 +183,6 @@ namespace Engine.GameStates
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
-
-
-            treeProfile = content.Load<TreeProfile>("Trees/Trees/Graywood");
-            tree = treeProfile.GenerateSimpleTree(new Random(125));
         }
 
         public void UnloadContent(ContentManager content)
@@ -236,9 +232,7 @@ namespace Engine.GameStates
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
             // Draw a tree
-            Matrix worldt = Matrix.CreateScale(0.00500f) * Matrix.CreateFromYawPitchRoll(0.0f, 0, 0) * Matrix.CreateTranslation(new Vector3(-128, 170, 82));
-            tree.DrawTrunk(worldt, cam._view, cam._projection);
-            tree.DrawLeaves(worldt, cam._view, cam._projection);
+            Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
             _graphics.DepthStencilState = DepthStencilState.Default;
             

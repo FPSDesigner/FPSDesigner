@@ -106,6 +106,18 @@ namespace Engine.Game.LevelInfo
         public MapModels() { Models = new List<MapModels_Model>(); }
         [XmlElement("MapModels_Model")]
         public List<MapModels_Model> Models { get; set; }
+        [XmlElement("MapModels_Tree")]
+        public List<MapModels_Tree> Trees { get; set; }
+    }
+
+    // 3D Models - Tree
+    public class MapModels_Tree
+    {
+        public int Seed { get; set; }
+        public string Profile { get; set; }
+        public Coordinates Position { get; set; }
+        public Coordinates Rotation { get; set; }
+        public Coordinates Scale { get; set; }
     }
 
     // 3D Models - Model

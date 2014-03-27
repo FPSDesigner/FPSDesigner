@@ -124,6 +124,7 @@
     <Compile Include="Display3D\Particles\ParticlesManager.cs" />
     <Compile Include="Display3D\Particles\ParticleSystem.cs" />
     <Compile Include="Display3D\Particles\ParticleVertex.cs" />
+    <Compile Include="Display3D\TreeManager.cs" />
     <Compile Include="GameStates\CError.cs" />
     <Compile Include="GameStates\CInGame.cs" />
     <Compile Include="GameStates\CLoading.cs" />
