@@ -86,9 +86,6 @@ namespace Engine.GameStates
 
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
-            /**** Trees ****/
-            Display3D.TreeManager.LoadXMLTrees(content, levelData.MapModels.Trees);
-
             /**** Terrain ****/
             if (levelData.Terrain.UseTerrain)
             {
@@ -172,7 +169,10 @@ namespace Engine.GameStates
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
-            
+
+            /**** Trees ****/
+            Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
+
             // ******* All the console informations ******* //
 
             _character.LoadContent(content, graphics, weapon, cam);
