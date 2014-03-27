@@ -734,6 +734,8 @@
       <Name>Brick001</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_ResizeToPowerOfTwo>True</ProcessorParameters_ResizeToPowerOfTwo>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -850,6 +852,18 @@
       <Name>Willow</Name>
       <Importer>TreeGeneratorImporter</Importer>
       <Processor>TreeProfileProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Trees\LTreeShaders\Leaves.fx">
+      <Name>Leaves</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Trees\LTreeShaders\Trunk.fx">
+      <Name>Trunk</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

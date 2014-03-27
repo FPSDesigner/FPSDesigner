@@ -12,8 +12,8 @@ namespace LTreesLibrary.Pipeline
 {
     public class TreeProfileReader : ContentTypeReader<TreeProfile>
     {
-        public String DefaultTreeShaderAssetName = "LTreeShaders/Trunk";
-        public String DefaultLeafShaderAssetName = "LTreeShaders/Leaves";
+        public String DefaultTreeShaderAssetName = "Trees/LTreeShaders/Trunk";
+        public String DefaultLeafShaderAssetName = "Trees/LTreeShaders/Leaves";
 
         protected override TreeProfile Read(ContentReader input, TreeProfile existingInstance)
         {

@@ -429,7 +429,7 @@ namespace Engine.Game
                 Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
                     Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
                     0.33f + randomScale, new Vector3(-1f, -2.0f + randomScale, -2.85f));
-
+                _graphicsDevice.BlendState = BlendState.Additive;
                 foreach (ModelMesh mesh in _muzzleFlash.Meshes)
                 {
                     foreach (BasicEffect effect in mesh.Effects)
@@ -440,6 +440,7 @@ namespace Engine.Game
                     }
                     mesh.Draw();
                 }
+                _graphicsDevice.BlendState = BlendState.Opaque;
 
             }
 
