@@ -167,6 +167,8 @@ namespace Engine
             }
             /*Game.Script.CLuaVM.Initialize();
             Game.Script.CLuaVM.LoadScript("GuiManager.lua");*/
+
+            
         }
 
 

@@ -57,6 +57,7 @@ namespace Engine.Game
         public float _sprintSpeed = 18f;
         public float _walkSpeed = 9f;
         public float _aimSpeed = 3f;
+        public float _freeCamSpeed = 30f;
         public float _crouchSpeed = 2f;
         public float _movementsLerp = 0.006f;
 
@@ -174,6 +175,9 @@ namespace Engine.Game
         /// <returns>The camera velocity</returns>
         public float SpeedModification(KeyboardState kbState, float fallVelocity, CWeapon weapon, Display3D.CCamera cam)
         {
+            if (cam.isFreeCam)
+                return _freeCamSpeed;
+
             if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint) && !_isAiming)
             {
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);

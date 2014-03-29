@@ -35,6 +35,7 @@ namespace Engine.Display3D
 
         private bool isCamFrozen = false;
         private bool hasPlayerUwEffect = false;
+        public bool isFreeCam = false;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
@@ -72,8 +73,9 @@ namespace Engine.Display3D
         /// <param name="farClip">Farthest elements to be rentered</param>
         /// <param name="camVelocity">Camera movement speed</param>
         /// <param name="isCamFrozen">Camera Frozen or not</param>
+        /// <param name="freeCam">Is the camera free of physics or not</param>
         /// /// <param name="camVelocity">Give an map (heightmap) instance</param>
-        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, CTerrain map = null, bool[] componentUsages = null)
+        public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, bool freeCam = false, CTerrain map = null, bool[] componentUsages = null)
         {
             this._graphics = device;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
@@ -89,6 +91,7 @@ namespace Engine.Display3D
             this._roll = 0f;
 
             this.isCamFrozen = isCamFrozen;
+            this.isFreeCam = freeCam;
 
             //this._physicsMap = new Game.CPhysics2(9.81f / 500, _map, _playerHeight);
             this._physicsMap = new Game.CPhysics();
@@ -166,11 +169,17 @@ namespace Engine.Display3D
                 _translation.Normalize();
             }
 
-            _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
-
             // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
-            _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
-
+            if (isFreeCam)
+            {
+                _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, _pitch, _roll));
+                _cameraPos += _translation * camVelocity * (float)gametime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                _translation = Vector3.Transform(_translation, Matrix.CreateFromYawPitchRoll(_yaw, (isUnderWater || _physicsMap._isOnWaterSurface) ? _pitch : 0, 0));
+                _cameraPos = _physicsMap.GetNewPosition(gametime, _cameraPos, _translation * camVelocity, ((isUnderWater || _physicsMap._isOnWaterSurface) && _cameraPos.Y - _playerHeight < waterLevel));
+            }
             _translation = Vector3.Zero;
 
             if (!Game.CConsole._isConsoleEnabled)
@@ -203,11 +212,13 @@ namespace Engine.Display3D
                     _physicsMap.Jump();
             }
 
-            if (_translation.X != 0)
-                _roll = MathHelper.Lerp(_roll, -_translation.X * 0.05f, 0.2f);
-            else
-                _roll = MathHelper.Lerp(_roll, 0, 0.1f);
-
+            if (!isFreeCam)
+            {
+                if (_translation.X != 0)
+                    _roll = MathHelper.Lerp(_roll, -_translation.X * 0.05f, 0.2f);
+                else if(_roll != 0)
+                    _roll = MathHelper.Lerp(_roll, 0, 0.1f);
+            }
             //_physicsMap.Swin(isUnderWater);
 
             if (hasPlayerUwEffect != isUnderWater)
@@ -215,7 +226,7 @@ namespace Engine.Display3D
                 Display2D.C2DEffect.UnderwaterEffect(isUnderWater);
                 hasPlayerUwEffect = isUnderWater;
             }
-            if (isUnderWater)
+            if (isUnderWater && !isFreeCam)
             {
                 _translation = _translation * 0.5f;
             }
@@ -233,7 +244,6 @@ namespace Engine.Display3D
             if (_translation != Vector3.Zero)
             {
                 _isMoving = true;
-
             }
 
         }

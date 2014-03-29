@@ -21,6 +21,7 @@ namespace Engine.GameStates
         private KeyboardState _oldKeyState;
 
         private bool isPlayerUnderwater = false;
+        private bool isSoftwareEmbedded = false;
 
         Game.LevelInfo.CLevelInfo levelInfo;
         Game.LevelInfo.LevelData levelData;
@@ -65,7 +66,7 @@ namespace Engine.GameStates
 
             foreach (Game.LevelInfo.MapModels_Model modelInfo in levelData.MapModels.Models)
             {
-                Dictionary<string, Texture2D> modelTextures = new Dictionary<string,Texture2D>();
+                Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
 
                 foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
                     modelTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
@@ -116,7 +117,7 @@ namespace Engine.GameStates
 
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
                 terrain.waterHeight = water.waterPosition.Y;
-                
+
 
             // We create array containing all informations about weapons.
 
@@ -168,7 +169,7 @@ namespace Engine.GameStates
             /**** Camera ****/
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
-            cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
 
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
@@ -183,6 +184,8 @@ namespace Engine.GameStates
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
+
+            isSoftwareEmbedded = Display2D.C2DEffect.isSoftwareEmbedded;
         }
 
         public void UnloadContent(ContentManager content)
@@ -226,7 +229,7 @@ namespace Engine.GameStates
             skybox.ColorIntensity = 1;
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
-            
+
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
@@ -235,7 +238,7 @@ namespace Engine.GameStates
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
             _graphics.DepthStencilState = DepthStencilState.Default;
-            
+
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             Display3D.CModelManager.Draw(cam, gameTime);
@@ -246,17 +249,21 @@ namespace Engine.GameStates
 
             Display3D.Particles.ParticlesManager.Draw(gameTime, cam._view, cam._projection);
 
-            _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
-            _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+            if (!isSoftwareEmbedded)
+            {
+                _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+                _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+                
+                lensFlare.Draw(gameTime);
 
-            lensFlare.Draw(gameTime);
-
-            water.DrawDebug(spriteBatch);
+                water.DrawDebug(spriteBatch);
+            }
+            
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
-            
+
         }
 
     }
