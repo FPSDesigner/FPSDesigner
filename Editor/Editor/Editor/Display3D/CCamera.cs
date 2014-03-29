@@ -33,9 +33,9 @@ namespace Engine.Display3D
 
         private Point _middleScreen;
 
-        private bool isCamFrozen = false;
         private bool hasPlayerUwEffect = false;
         public bool isFreeCam = false;
+        public bool isCamFrozen = false;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
@@ -52,8 +52,6 @@ namespace Engine.Display3D
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
-
-        private float _cameraSpeed = 1.0f; // This float is used 
 
         private KeyboardState _oldKeyState;
 
@@ -143,6 +141,9 @@ namespace Engine.Display3D
                 _oldKeyState = keyState;
             }
 
+            if (Display2D.C2DEffect.isSoftwareEmbedded)
+                _middleScreen = new Point(mouseState.X, mouseState.Y);
+
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
             if (!isCamFrozen)
@@ -160,7 +161,8 @@ namespace Engine.Display3D
             // Just used for the animation in Character
             _isMoving = false;
 
-            Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
+            if(!Display2D.C2DEffect.isSoftwareEmbedded)
+                Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
             Rotation(mouseState, gametime);
 

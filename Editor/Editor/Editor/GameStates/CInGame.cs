@@ -46,6 +46,7 @@ namespace Engine.GameStates
         public void LoadContent(ContentManager content, SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             /**** Variables Initialization ***/
+            isSoftwareEmbedded = Display2D.C2DEffect.isSoftwareEmbedded;
             levelData = levelInfo.loadLevelData("GameLevel.xml");
             _graphics = graphics;
 
@@ -169,7 +170,10 @@ namespace Engine.GameStates
             /**** Camera ****/
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
             Vector3 camRotation = new Vector3(levelData.SpawnInfo.SpawnRotation.X, levelData.SpawnInfo.SpawnRotation.Y, levelData.SpawnInfo.SpawnRotation.Z);
-            cam = new Display3D.CCamera(graphics, camPosition, camRotation, levelData.SpawnInfo.NearClip, levelData.SpawnInfo.FarClip, false, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            float nearClip = levelData.SpawnInfo.NearClip;
+            if (isSoftwareEmbedded)
+                nearClip = 0.6f;
+            cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
 
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
@@ -184,8 +188,6 @@ namespace Engine.GameStates
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
-
-            isSoftwareEmbedded = Display2D.C2DEffect.isSoftwareEmbedded;
         }
 
         public void UnloadContent(ContentManager content)
@@ -264,6 +266,19 @@ namespace Engine.GameStates
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
 
+        }
+
+        public void SendParam(object param)
+        {
+            if (param.GetType().IsArray)
+            {
+                object[] p = (object[])param;
+
+                if (p[0] == "changeCamFreeze")
+                {
+                    cam.isCamFrozen = (bool)p[1];
+                }
+            }
         }
 
     }

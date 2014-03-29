@@ -41,17 +41,37 @@ namespace Software.Pages
 
             m_game = new Engine.MainGameEngine(true);
 
-            ShowXNAImage.Source = m_game.em_WriteableBitmap;
-            ShowXNAImage.SizeChanged += ShowXNAImage_SizeChanged;
+            ShowXNAImage1.Source = m_game.em_WriteableBitmap;
+            ShowXNAImage1.SizeChanged += ShowXNAImage_SizeChanged;
+
+            //Mouse.AddMouseUpHandler(R
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
         }
 
+        private void GameButton1_MouseRightDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Mouse down!");
+            m_game.WPFHandler("changeCamFreeze", false);
+
+            UIElement el = (UIElement)sender;
+            el.CaptureMouse();
+        }
+
+        private void GameButton1_MouseRightUp(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Mouse up!");
+            m_game.WPFHandler("changeCamFreeze", true);
+
+            UIElement el = (UIElement)sender;
+            el.ReleaseMouseCapture();
+        }
+
         void disTimer_Tick(object sender, EventArgs e)
         {
-            m_game.ChangeEmbeddedViewport((int)ShowXNAImage.RenderSize.Width, (int)ShowXNAImage.RenderSize.Height);
-            ShowXNAImage.Source = m_game.em_WriteableBitmap;
+            m_game.ChangeEmbeddedViewport((int)ShowXNAImage1.RenderSize.Width, (int)ShowXNAImage1.RenderSize.Height);
+            ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             resizeTimer.Stop();
         }
 

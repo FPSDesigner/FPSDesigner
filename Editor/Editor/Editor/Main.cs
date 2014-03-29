@@ -247,6 +247,17 @@ namespace Engine
             }
         }
 
+        public void WPFHandler(string handle, object value)
+        {
+            switch (handle)
+            {
+                case "changeCamFreeze":
+                    Game.CGameManagement.SendParam(new object[] { handle, value });
+                    break;
+            }
+
+        }
+
         private void GameLoop(object sender, EventArgs e)
         {
             this.Update(em_GameTime);
