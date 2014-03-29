@@ -252,6 +252,7 @@ namespace Engine
             switch (handle)
             {
                 case "changeCamFreeze":
+                case "moveCameraForward":
                     Game.CGameManagement.SendParam(new object[] { handle, value });
                     break;
             }

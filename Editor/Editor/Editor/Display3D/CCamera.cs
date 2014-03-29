@@ -27,7 +27,7 @@ namespace Engine.Display3D
         public Vector3 _cameraTarget { get; set; }
 
         // This vector take the movement (Forward, etc...) & the rotatio, so, movement follow the view
-        private Vector3 _translation;
+        public Vector3 _translation;
         public Vector3 _up;
         public Vector3 _right;
 
@@ -146,8 +146,7 @@ namespace Engine.Display3D
 
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
-            if (!isCamFrozen)
-                generateFrustum();
+            generateFrustum();
         }
 
         /// <summary>
@@ -262,9 +261,12 @@ namespace Engine.Display3D
                 this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * CGameSettings.gamepadState.ThumbSticks.Right.X;
                 this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * -CGameSettings.gamepadState.ThumbSticks.Right.Y;
             }
+            float coefRotation = 1f;
+            if (Display2D.C2DEffect.isSoftwareEmbedded)
+                coefRotation = 1.5f;
 
-            this._yaw -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
-            this._pitch -= CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
+            this._yaw -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
+            this._pitch -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
 
             if (this._pitch < lowestPitchAngle)
                 this._pitch = lowestPitchAngle;

@@ -201,11 +201,14 @@ namespace Engine.GameStates
             cam.Update(gameTime, _character.SpeedModification(kbState, cam._physicsMap._fallingVelocity, weapon, cam), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
 
             // Update all character actions
-            _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
-            _oldKeyState = kbState;
+            if (!isSoftwareEmbedded)
+            {
+                _character.Update(mouseState, oldMouseState, kbState, _oldKeyState, weapon, gameTime, cam, (isPlayerUnderwater || cam._physicsMap._isOnWaterSurface));
+                _oldKeyState = kbState;
 
-            // ****** We get the weapon attribute to display it in consol ****** //
-            Game.CConsole._Weapon = weapon;
+                // ****** We get the weapon attribute to display it in console ****** //
+                Game.CConsole._Weapon = weapon;
+            }
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
@@ -274,9 +277,18 @@ namespace Engine.GameStates
             {
                 object[] p = (object[])param;
 
-                if (p[0] == "changeCamFreeze")
-                {
+                string action = (string)p[0];
+
+                if (action == "changeCamFreeze")
                     cam.isCamFrozen = (bool)p[1];
+                else if(action == "moveCameraForward")
+                {
+                    Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, cam._roll);
+                    Vector3 _translation = Vector3.Transform(Vector3.Forward * (float)p[1] * 0.1f, rotation);
+                    Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+
+                    cam._cameraPos += _translation;
+                    cam._cameraTarget = cam._cameraPos + forward;
                 }
             }
         }

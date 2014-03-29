@@ -43,11 +43,20 @@ namespace Software.Pages
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             ShowXNAImage1.SizeChanged += ShowXNAImage_SizeChanged;
-
-            //Mouse.AddMouseUpHandler(R
+            GameButton1.MouseWheel += GameButton1_MouseWheel;
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
+        }
+
+        void GameButton1_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            Console.WriteLine("MouseWheel: " + e.Delta);
+            float coef = 1;
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                coef /= 4;
+
+            m_game.WPFHandler("moveCameraForward", (float)e.Delta * coef);
         }
 
         private void GameButton1_MouseRightDown(object sender, MouseButtonEventArgs e)
@@ -57,6 +66,7 @@ namespace Software.Pages
 
             UIElement el = (UIElement)sender;
             el.CaptureMouse();
+            Cursor = Cursors.IBeam;
         }
 
         private void GameButton1_MouseRightUp(object sender, MouseButtonEventArgs e)
@@ -66,6 +76,7 @@ namespace Software.Pages
 
             UIElement el = (UIElement)sender;
             el.ReleaseMouseCapture();
+            Cursor = Cursors.Arrow;
         }
 
         void disTimer_Tick(object sender, EventArgs e)
