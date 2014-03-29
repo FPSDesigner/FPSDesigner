@@ -98,7 +98,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	float3 reflectionVector = -reflect(LightDirection, normal.rgb);
 	float specular = dot(normalize(reflectionVector), viewDirection);
-	specular = pow(specular, 256);
+	specular = pow(abs(specular), 256);
 
 	if(IsUnderWater)
 	{
