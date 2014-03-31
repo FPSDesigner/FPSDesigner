@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Software.Pages
 {
@@ -24,7 +25,22 @@ namespace Software.Pages
         {
             InitializeComponent();
 
-            //LoginBtn.
+            userIdBox.Focus();
+            loadingLogin.IsActive = false;
+            textLoginIncorrect.Opacity = 0;
+            imgLoginIncorrect.Opacity = 0;
+
+            btnLogin.Click += btnLogin_Click;
+        }
+
+        void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Validate!");
+            loadingLogin.IsActive = true;
+
+            DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+            textLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
+            imgLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
         }
     }
 }

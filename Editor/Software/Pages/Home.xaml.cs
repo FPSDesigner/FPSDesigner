@@ -51,7 +51,7 @@ namespace Software.Pages
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
 
-            //LoadLoginPage();
+            LoadLoginPage();
         }
 
         private void LoadLoginPage()
