@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Software.Pages.Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Software.Properties"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" 
+             d:DesignHeight="320" d:DesignWidth="850">
+    <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*" />
+            <ColumnDefinition Width="70*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="30*" />
+            <RowDefinition Height="40*" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <!-- Boxes -->
+        <TextBox Height="25" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" />
+        <PasswordBox Height="25" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" />
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" MaxHeight="50">
+             <Button x:Name="LoginBtn" Content="Login" IsDefault="True" MinWidth="100" />
+        </StackPanel>
+    </Grid>
+</UserControl>

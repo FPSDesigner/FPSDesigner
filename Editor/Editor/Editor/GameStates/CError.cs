@@ -61,7 +61,7 @@ namespace Engine.GameStates
 
         public void SendParam(object error)
         {
-            if ((string)error != "")
+            if (error.GetType() == typeof(string))
             {
                 _errorText = (string)error;
                 _errorFont = content.Load<SpriteFont>("2D/consoleFont");

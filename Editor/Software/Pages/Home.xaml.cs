@@ -47,6 +47,26 @@ namespace Software.Pages
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
+
+            LoadLoginPage();
+        }
+
+        private void LoadLoginPage()
+        {
+            var wnd = new ModernWindow
+            {
+                Style = (Style)App.Current.Resources["EmptyWindow"],
+                Content = new Login
+                {
+                    Margin = new Thickness(32)
+                },
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+                MaxWidth = 850,
+                MaxHeight = 320,
+                Topmost = true,
+            };
+
+            wnd.Show();
         }
 
         void GameButton1_MouseWheel(object sender, MouseWheelEventArgs e)

@@ -90,6 +90,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GlobalVars.cs" />
+    <Compile Include="Pages\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Strings.fr-FR.Designer.cs">
       <DependentUpon>Strings.fr-FR.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -138,6 +141,10 @@
     </Compile>
     <Compile Include="Content\SettingsAppearanceViewModel.cs" />
     <Page Include="Pages\Home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

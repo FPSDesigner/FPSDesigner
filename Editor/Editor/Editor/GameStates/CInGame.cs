@@ -229,9 +229,12 @@ namespace Engine.GameStates
 
             terrain.frustum = cam._Frustum;
 
-            skybox.ColorIntensity = 0.8f;
-            water.PreDraw(cam, gameTime);
-            skybox.ColorIntensity = 1;
+            if (!isSoftwareEmbedded)
+            {
+                skybox.ColorIntensity = 0.8f;
+                water.PreDraw(cam, gameTime);
+                skybox.ColorIntensity = 1;
+            }
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
