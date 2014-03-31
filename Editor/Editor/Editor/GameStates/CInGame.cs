@@ -235,6 +235,8 @@ namespace Engine.GameStates
                 water.PreDraw(cam, gameTime);
                 skybox.ColorIntensity = 1;
             }
+            else
+                _graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
@@ -283,8 +285,11 @@ namespace Engine.GameStates
                 string action = (string)p[0];
 
                 if (action == "changeCamFreeze")
+                {
                     cam.isCamFrozen = (bool)p[1];
-                else if(action == "moveCameraForward")
+                    cam.shouldUpdateMiddleScreen = true;
+                }
+                else if (action == "moveCameraForward")
                 {
                     Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, cam._roll);
                     Vector3 _translation = Vector3.Transform(Vector3.Forward * (float)p[1] * 0.1f, rotation);

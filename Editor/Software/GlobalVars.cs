@@ -33,6 +33,7 @@ namespace Software
             LogList.Add(key);
         }
 
+
         #region "Windows Menu Helper"
         public static void OnFragmentNavigation(FragmentNavigationEventArgs e)
         {
@@ -67,4 +68,14 @@ namespace Software
         }
         #endregion
     }
+
+    static public partial class NativeMethods
+    {
+        /// Return Type: BOOL->int  
+        ///X: int  
+        ///Y: int  
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int X, int Y);
+    } 
 }

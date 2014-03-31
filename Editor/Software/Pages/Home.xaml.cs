@@ -30,9 +30,11 @@ namespace Software.Pages
     {
         private MainGameEngine m_game;
 
-        private int count = 0;
         private DispatcherTimer resizeTimer = new DispatcherTimer();
         private MainWindow MainWindowInstance;
+
+        private bool isMovingGame1 = false;
+        private Point initialMoveMousePosGame1;
 
         public Home()
         {
@@ -44,11 +46,12 @@ namespace Software.Pages
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             ShowXNAImage1.SizeChanged += ShowXNAImage_SizeChanged;
             GameButton1.MouseWheel += GameButton1_MouseWheel;
+            GameButton1.MouseMove += GameButton1_MouseMove;
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
 
-            LoadLoginPage();
+            //LoadLoginPage();
         }
 
         private void LoadLoginPage()
@@ -69,6 +72,14 @@ namespace Software.Pages
             wnd.Show();
         }
 
+        void GameButton1_MouseMove(object sender, MouseEventArgs e)
+        {
+            /*Console.WriteLine("Normal:"+e.GetPosition(null));
+            Console.WriteLine("Fixed:"+PointToScreen(e.GetPosition(null)));
+            if (isMovingGame1)
+                NativeMethods.SetCursorPos((int)initialMoveMousePosGame1.X, (int)initialMoveMousePosGame1.Y);*/
+        }
+
         void GameButton1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             Console.WriteLine("MouseWheel: " + e.Delta);
@@ -84,9 +95,12 @@ namespace Software.Pages
             Console.WriteLine("Mouse down!");
             m_game.WPFHandler("changeCamFreeze", false);
 
+            isMovingGame1 = true;
+            initialMoveMousePosGame1 = PointToScreen(Mouse.GetPosition(null));
+            Cursor = Cursors.ScrollAll;
+
             UIElement el = (UIElement)sender;
             el.CaptureMouse();
-            Cursor = Cursors.IBeam;
         }
 
         private void GameButton1_MouseRightUp(object sender, MouseButtonEventArgs e)
@@ -94,9 +108,11 @@ namespace Software.Pages
             Console.WriteLine("Mouse up!");
             m_game.WPFHandler("changeCamFreeze", true);
 
+            isMovingGame1 = false;
+            Cursor = Cursors.Arrow;
+
             UIElement el = (UIElement)sender;
             el.ReleaseMouseCapture();
-            Cursor = Cursors.Arrow;
         }
 
         void disTimer_Tick(object sender, EventArgs e)

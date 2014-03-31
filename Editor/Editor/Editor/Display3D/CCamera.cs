@@ -32,7 +32,7 @@ namespace Engine.Display3D
         public Vector3 _right;
 
         private Point _middleScreen;
-
+        
         private bool hasPlayerUwEffect = false;
         public bool isFreeCam = false;
         public bool isCamFrozen = false;
@@ -49,6 +49,8 @@ namespace Engine.Display3D
         private float fieldOfView;
 
         public float _playerHeight = 1.9f;
+
+        public bool shouldUpdateMiddleScreen = false;
 
         private float lowestPitchAngle = -MathHelper.PiOver2 + 0.1f;
         private float highestPitchAngle = MathHelper.PiOver2 - 0.1f;
@@ -126,6 +128,12 @@ namespace Engine.Display3D
         public void Update(GameTime gametime, float camVelocity = 0.3f, bool isUnderWater = false, float waterLevel = 0f, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
+            if (shouldUpdateMiddleScreen)
+            {
+                _middleScreen = new Point(mouseState.X, mouseState.Y);
+                shouldUpdateMiddleScreen = false;
+            }
+
             if (_graphics.Viewport.AspectRatio != _aspectRatio)
             {
                 // Window size have changed
