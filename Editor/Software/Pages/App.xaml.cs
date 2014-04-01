@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WPFLocalizeExtension.Extensions;
 using WPFLocalizeExtension.Engine;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace Software
 {
@@ -15,6 +16,8 @@ namespace Software
     /// </summary>
     public partial class App : Application
     {
+        private ModernWindow LoginPage;
+
         public App()
         {
             // Set the current user interface culture to the specific culture
@@ -28,7 +31,29 @@ namespace Software
 
         void App_Startup(object sender, StartupEventArgs e)
         {
+            Software.MainWindow.LoadMainWindow();
+
+            LoginPage = new ModernWindow
+            {
+                Style = (Style)App.Current.Resources["EmptyWindow"],
+                Content = new Pages.Login
+                {
+                    Margin = new Thickness(32)
+                },
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+                MaxWidth = 850,
+                MaxHeight = 320,
+            };
+
+            ((Pages.Login)LoginPage.Content).LoginSucceed += App_LoginSucceed;
+
+            LoginPage.Show();
+        }
+
+        void App_LoginSucceed(object sender, RoutedEventArgs e)
+        {
             Software.MainWindow.Instance.Show();
+            LoginPage.Close();
         }
     }
 }

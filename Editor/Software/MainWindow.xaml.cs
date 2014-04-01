@@ -25,14 +25,10 @@ namespace Software
 
         //public static string 
 
-        static MainWindow()
+        public static void LoadMainWindow()
         {
             Instance = new MainWindow();
-        }
-
-        private MainWindow()
-        {
-            InitializeComponent();
+            Instance.InitializeComponent();
         }
     }
 }

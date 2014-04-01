@@ -37,34 +37,34 @@ namespace Software
         #region "Windows Menu Helper"
         public static void OnFragmentNavigation(FragmentNavigationEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            if (e.Fragment == MainWindowInstance.MenuWindows.Links[0].DisplayName)
-                return;
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //if (e.Fragment == MainWindowInstance.MenuWindows.Links[0].DisplayName)
+            //    return;
 
-            Console.WriteLine("Open Window: " + e.Fragment);
-            RoutedUICommand ruic = NavigationCommands.BrowseHome;
-            ruic.Execute(null, null);
+            //Console.WriteLine("Open Window: " + e.Fragment);
+            //RoutedUICommand ruic = NavigationCommands.BrowseHome;
+            //ruic.Execute(null, null);
         }
 
         public static void OnNavigatedTo(NavigationEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+            //    lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
 
         public static void OnNavigatedFrom(NavigationEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+            //    lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
 
         public static void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuWindows.Links)
-                lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuWindows.Links)
+            //    lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
         #endregion
     }
