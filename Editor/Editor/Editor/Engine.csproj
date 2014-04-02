@@ -71,6 +71,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\EPITA - Workspace Project\LearningMahesh.DynamicIOStream.dll</HintPath>
     </Reference>
+    <Reference Include="LTreesLibrary">
+      <HintPath>..\..\..\..\..\Downloads\LTreesLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -155,11 +158,7 @@
     <None Include="References\NLua.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LTreesLibrary\LTreesLibrary.csproj">
-      <Project>{8aaab1d0-6c1d-4f92-851b-56d4611a6d1e}</Project>
-      <Name>LTreesLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\XNAnimation\XNAnimation.csproj">
+    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimation\XNAnimation.csproj">
       <Project>{2a857645-a225-4177-99bd-c8f6d22b72fa}</Project>
       <Name>XNAnimation</Name>
     </ProjectReference>

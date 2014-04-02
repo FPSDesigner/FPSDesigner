@@ -100,7 +100,7 @@ namespace Engine.Game
                     effect.TextureEnabled = true;
                     effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
-                    effect.SpecularColor = new Vector3(0.3f);
+                    effect.SpecularColor = new Vector3(0.01f);
                     effect.SpecularPower = 32;
                 }
             }

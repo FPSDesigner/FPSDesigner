@@ -124,17 +124,23 @@ namespace Engine.GameStates
 
             weapon = new Game.CWeapon();
 
-            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911") };
+            Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911"), content.Load<Model>("Models//M24") };
 
-            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Uvw_Machete"), content.Load<Texture2D>("Textures//M1911") };
+            Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Uvw_Machete"), content.Load<Texture2D>("Textures//M1911")
+            ,content.Load<Texture2D>("Textures//M24")};
 
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.Pi),new Vector3(0.2f, 0.2f, 0.1f), 1f, 0f},
                 new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.21f)*Matrix.CreateRotationY(-0.13f),new Vector3(.075f, 0.04f, 0.22f), 1f, 100f},
+                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.5f) * Matrix.CreateRotationY(-0.2f)
+                ,new Vector3(0.15f,1.8f,0.2f), 1f, 100f}
             };
             string[][] testSounds = new string[][] {
                 new string[] {
                     "Sounds\\Weapons\\MACHET_ATTACK"
+                },
+                new string[] {
+                    "Sounds\\Weapons\\M1911_SHOT","Sounds\\Weapons\\DryFireSound", "Sounds\\Weapons\\M1911_RELOAD",
                 },
                 new string[] {
                     "Sounds\\Weapons\\M1911_SHOT","Sounds\\Weapons\\DryFireSound", "Sounds\\Weapons\\M1911_RELOAD",
@@ -148,11 +154,17 @@ namespace Engine.GameStates
                 new string[] {
                     "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch"
                 },
+                new string[] {
+                    "M1911_Walk", "M1911_Attack", "M24_Wait", "M1911_Reloading","M1911_Switch"
+                },
             };
 
             float[][] animVelocity = new float[][] {
                 new float[] {
                     1.4f, 4.0f, 0.7f,0.0f,3.8f
+                },
+                new float[] {
+                    1.6f, 16.0f, 0.65f,2.5f,3.8f
                 },
                 new float[] {
                     1.6f, 16.0f, 0.65f,2.5f,3.8f
