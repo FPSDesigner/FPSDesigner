@@ -8,21 +8,29 @@
         WindowState="Maximized">
 
     <mui:ModernWindow.MenuLinkGroups>
-        <mui:LinkGroup DisplayName="welcome">
+        <mui:LinkGroup DisplayName="home">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="home" Source="/Pages/Home.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="settings">
+        
+        <mui:LinkGroup DisplayName="scripts">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="software" Source="/Pages/Settings.xaml" />
+                <mui:Link DisplayName="code editor" Source="/Pages/CodeEditor.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="windows" x:Name="MenuWindows">
+        
+        <mui:LinkGroup DisplayName="extensions" x:Name="MenuWindows">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Choose a menu:" Source="/Pages/Home.xaml"/>
                 <mui:Link DisplayName="window1" Source="/Pages/Home.xaml"/>
                 <mui:Link DisplayName="window2" Source="/Pages/Home.xaml"/>
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
+
+        <mui:LinkGroup DisplayName="settings">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="software" Source="/Pages/Settings.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>

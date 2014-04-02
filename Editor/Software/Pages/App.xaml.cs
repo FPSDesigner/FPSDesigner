@@ -18,6 +18,8 @@ namespace Software
     {
         private ModernWindow LoginPage;
 
+        private bool IsLogged = false;
+
         public App()
         {
             // Set the current user interface culture to the specific culture
@@ -42,16 +44,25 @@ namespace Software
                 },
                 ResizeMode = System.Windows.ResizeMode.NoResize,
                 MaxWidth = 850,
+                Title = "FPSDesigner - Login",
                 MaxHeight = 320,
             };
 
             ((Pages.Login)LoginPage.Content).LoginSucceed += App_LoginSucceed;
+            LoginPage.Closing += LoginPage_Closed;
 
             LoginPage.Show();
         }
 
+        void LoginPage_Closed(object sender, EventArgs e)
+        {
+            if (!IsLogged)
+                Application.Current.Shutdown();
+        }
+
         void App_LoginSucceed(object sender, RoutedEventArgs e)
         {
+            IsLogged = true;
             Software.MainWindow.Instance.Show();
             LoginPage.Close();
         }
