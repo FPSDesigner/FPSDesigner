@@ -11,6 +11,10 @@
              lex:ResxLocalizationProvider.DefaultDictionary="Strings"
              mc:Ignorable="d" d:DesignWidth="505.583" d:DesignHeight="287.333">
 
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="SelectedTabButton" Color="{DynamicResource AccentColor}"/>
+    </UserControl.Resources>
+    
     <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80*" MinWidth="100" />
@@ -25,17 +29,36 @@
               VerticalAlignment="Stretch"
               Background="Black" 
               ShowsPreview="true"
-              Width="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"/>
+              Width="{Binding Source={x:Static p:Settings.Default}, Path=GridSplitterWidth}"
+              Opacity="0"/>
 
-        <Grid Grid.Column="0" Grid.Row="0" Background="White">
-            <avalonEdit:TextEditor
+        <!-- Code Editor Grid -->
+        <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}" Grid.Column="0" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="46" />
+            </Grid.RowDefinitions>
+            
+            <!-- File Tabs -->
+            <StackPanel x:Name="listButtonsTab" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,5">
+                <Button Content="New Script" Background="{StaticResource SelectedTabButton}" />
+            </StackPanel>
+
+            <!-- Code Editor -->
+            <Grid Grid.Row="1" Background="White">
+                <avalonEdit:TextEditor
             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
             Name="textEditor"
             FontFamily="Consolas"
             SyntaxHighlighting="LUA"
             FontSize="10pt" ShowLineNumbers="True">
-                Code Content
-            </avalonEdit:TextEditor>
+                    Code Content
+                </avalonEdit:TextEditor>
+            </Grid>
+            
+            <!-- Buttons -->
+            <mui:ModernButton x:Name="saveFileButton" Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,10,0,0" EllipseDiameter="33" EllipseStrokeThickness="2" IconWidth="16" IconHeight="16" IsDefault="True"  IconData="F1 M 20.5833,20.5833L 55.4167,20.5833L 55.4167,55.4167L 45.9167,55.4167L 45.9167,44.3333L 30.0833,44.3333L 30.0833,55.4167L 20.5833,55.4167L 20.5833,20.5833 Z M 33.25,55.4167L 33.25,50.6667L 39.5833,50.6667L 39.5833,55.4167L 33.25,55.4167 Z M 26.9167,23.75L 26.9167,33.25L 49.0833,33.25L 49.0833,23.75L 26.9167,23.75 Z " />
         </Grid>
 
         <!-- Second row -->
