@@ -132,9 +132,10 @@ namespace Engine.GameStates
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.Pi),new Vector3(0.2f, 0.2f, 0.1f), 1f, 0f},
                 new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.21f)*Matrix.CreateRotationY(-0.13f),new Vector3(.075f, 0.04f, 0.22f), 1f, 100f},
-                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.5f) * Matrix.CreateRotationY(-0.2f)
-                ,new Vector3(0.15f,1.8f,0.2f), 1f, 100f}
+                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.34f) * Matrix.CreateRotationY(-0.17f)* Matrix.CreateRotationX(0.15f)
+                ,new Vector3(0.42f,1.95f,0.16f), 1f, 100f}
             };
+
             string[][] testSounds = new string[][] {
                 new string[] {
                     "Sounds\\Weapons\\MACHET_ATTACK"
@@ -155,7 +156,7 @@ namespace Engine.GameStates
                     "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch"
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M24_Wait", "M1911_Reloading","M1911_Switch"
+                    "M24_Walk", "M1911_Attack", "M24_Wait", "M1911_Reloading","M1911_Switch"
                 },
             };
 
