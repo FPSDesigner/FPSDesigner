@@ -301,7 +301,7 @@
       <Project>{199aa449-800e-4908-bf49-778990a2983a}</Project>
       <Name>LTreesPipeline</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Downloads\xnanimation-80132\release\0700b3\XNAnimation\XNAnimationPipeline\XNAnimationPipeline.csproj">
+    <ProjectReference Include="..\..\XNAnimationPipeline\XNAnimationPipeline.csproj">
       <Project>{863795eb-0753-4461-af43-48f38828d8e0}</Project>
       <Name>XNAnimationPipeline</Name>
     </ProjectReference>

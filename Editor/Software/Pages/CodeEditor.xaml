@@ -14,7 +14,7 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="SelectedTabButton" Color="{DynamicResource AccentColor}"/>
     </UserControl.Resources>
-    
+
     <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80*" MinWidth="100" />
@@ -39,7 +39,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="46" />
             </Grid.RowDefinitions>
-            
+
             <!-- File Tabs -->
             <StackPanel x:Name="listButtonsTab" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,5">
                 <Button Content="New Script" Background="{StaticResource SelectedTabButton}" />
@@ -56,9 +56,12 @@
                     Code Content
                 </avalonEdit:TextEditor>
             </Grid>
-            
+
             <!-- Buttons -->
-            <mui:ModernButton x:Name="saveFileButton" Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,10,0,0" EllipseDiameter="33" EllipseStrokeThickness="2" IconWidth="16" IconHeight="16" IsDefault="True"  IconData="F1 M 20.5833,20.5833L 55.4167,20.5833L 55.4167,55.4167L 45.9167,55.4167L 45.9167,44.3333L 30.0833,44.3333L 30.0833,55.4167L 20.5833,55.4167L 20.5833,20.5833 Z M 33.25,55.4167L 33.25,50.6667L 39.5833,50.6667L 39.5833,55.4167L 33.25,55.4167 Z M 26.9167,23.75L 26.9167,33.25L 49.0833,33.25L 49.0833,23.75L 26.9167,23.75 Z " />
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right">
+                <mui:ModernButton x:Name="checkValidSave" Margin="0,10,0,0" EllipseDiameter="33" EllipseStrokeThickness="0" IconWidth="22" IconHeight="22" IsEnabled="False" Opacity="0" Foreground="Green" IconData="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " />
+                <mui:ModernButton x:Name="saveFileButton" Margin="0,10,0,0" EllipseDiameter="33" EllipseStrokeThickness="2" IconWidth="16" IconHeight="16" IsDefault="True"  IconData="F1 M 20.5833,20.5833L 55.4167,20.5833L 55.4167,55.4167L 45.9167,55.4167L 45.9167,44.3333L 30.0833,44.3333L 30.0833,55.4167L 20.5833,55.4167L 20.5833,20.5833 Z M 33.25,55.4167L 33.25,50.6667L 39.5833,50.6667L 39.5833,55.4167L 33.25,55.4167 Z M 26.9167,23.75L 26.9167,33.25L 49.0833,33.25L 49.0833,23.75L 26.9167,23.75 Z " />
+            </StackPanel>
         </Grid>
 
         <!-- Second row -->

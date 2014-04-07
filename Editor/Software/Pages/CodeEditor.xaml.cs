@@ -17,6 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using System.Windows.Media.Animation;
+using System.Timers;
 
 using System.Windows.Threading;
 
@@ -125,11 +127,30 @@ namespace Software.Pages
 
         void saveFileButton_Click(object sender, RoutedEventArgs e)
         {
-            /*if (File.Exists("Scripts/" + TabNameFile.Content))
+            if ((string)selectedButton.Content != newScriptName)
             {
-                System.IO.File.WriteAllText("Scripts/" + TabNameFile.Content, textEditor.Text);
-            }*/
+                if (File.Exists("Scripts/" + selectedButton.Content))
+                {
+                    System.IO.File.WriteAllText("Scripts/" + selectedButton.Content, textEditor.Text);
+
+                    DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+                    checkValidSave.BeginAnimation(OpacityProperty, opacityAnim);
+
+                    Timer timerResetCheck = new Timer(2000);
+                    timerResetCheck.Elapsed += timerResetCheck_Elapsed;
+                    timerResetCheck.Enabled = true;
+                }
+            }
         }
+        void timerResetCheck_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                DoubleAnimation opacityAnim2 = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(500)));
+                checkValidSave.BeginAnimation(OpacityProperty, opacityAnim2);
+            }));
+        }
+
 
         void tabFileButton_Click(object sender, RoutedEventArgs e)
         {
