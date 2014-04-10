@@ -19,8 +19,9 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Windows.Media.Animation;
 using System.Timers;
-
 using System.Windows.Threading;
+
+using Engine;
 
 namespace Software.Pages
 {
@@ -50,9 +51,9 @@ namespace Software.Pages
                 TextBlock tb = new TextBlock();
 
                 // Image & TextBlock
-                string imgSource = "/Assets/Script.png";
+                string imgSource = "/Assets/Icons/Script.png";
                 if (file == newScriptName)
-                    imgSource = "/Assets/NewScript.png";
+                    imgSource = "/Assets/Icons/NewScript.png";
 
                 icon.Source = new BitmapImage(new Uri(imgSource, UriKind.Relative));
                 icon.Width = 16;
@@ -75,6 +76,34 @@ namespace Software.Pages
             codeFiles.Add(newScriptName, textEditor.Text);
 
             selectedButton.Click += tabFileButton_Click;
+
+            // Methods list generation
+            foreach (var method in (typeof(Engine.Game.Script.CLuaScriptFunctions)).GetMethods())
+            {
+                var parameters = method.GetParameters();
+                var parameterDescriptions = string.Join(", ", method.GetParameters()
+                                 .Select(x => x.ParameterType + " " + x.Name)
+                                 .ToArray());
+
+                StackPanel sp = new StackPanel();
+                Image icon = new Image();
+                TextBlock tb = new TextBlock();
+
+                // Image & TextBlock
+                icon.Source = new BitmapImage(new Uri("/Assets/Icons/AddMethod.png", UriKind.Relative));
+                icon.Width = 16;
+                icon.Height = 16;
+                tb.Text = method.Name;
+                tb.Margin = new Thickness(15, 0, 0, 3);
+
+                // Add content to StackPanel
+                sp.Orientation = Orientation.Horizontal;
+                sp.Children.Add(icon);
+                sp.Children.Add(tb);
+                sp.MouseDown += sp_MouseDown;
+
+                FunctionsList.Items.Add(sp);
+            }
         }
 
         void sp_MouseDown(object sender, MouseButtonEventArgs e)
@@ -144,6 +173,7 @@ namespace Software.Pages
         }
         void timerResetCheck_Elapsed(object sender, ElapsedEventArgs e)
         {
+            ((Timer)sender).Stop();
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 DoubleAnimation opacityAnim2 = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(500)));

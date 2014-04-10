@@ -18,7 +18,7 @@ namespace Engine.Game.Script.Embedded
     // Convenction: C + type + Script + name. Ex: C2DScriptRectangle.
 
     // 2D Related
-    class C2DScriptRectangle
+    public class C2DScriptRectangle
     {
         
         public Rectangle? SourceRectangle;
@@ -77,7 +77,7 @@ namespace Engine.Game.Script.Embedded
     }
 
     // XML Manager
-    class XMLManager
+    public class XMLManager
     {
         public string fileName;
 

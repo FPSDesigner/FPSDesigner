@@ -19,7 +19,7 @@ using NLua;
 
 namespace Engine.Game.Script
 {
-    class CLuaScriptFunctions
+    public class CLuaScriptFunctions
     {
         public void SetTimer(string func, double ms)
         {

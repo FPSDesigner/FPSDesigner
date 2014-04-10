@@ -64,20 +64,45 @@
             </StackPanel>
         </Grid>
 
-        <!-- Second row -->
-        <TreeView
-            Grid.Column="1"
+
+        <Grid Grid.Column="1" ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30*" />
+                <RowDefinition Height="70*" />
+            </Grid.RowDefinitions>
+            <!-- Second row -->
+            <TreeView
+            Grid.Row="0"
 	        HorizontalAlignment="Left"
 	        VerticalAlignment="Top">
-            <TreeViewItem x:Name="ScriptsListView" IsExpanded="true">
-                <TreeViewItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Software;component/Assets/folder.ico" Width="16" Height="16"/>
-                        <TextBlock Text="Scripts" Margin="15,0,0,3"/>
-                    </StackPanel>
-                </TreeViewItem.Header>
-            </TreeViewItem>
+                <TreeViewItem x:Name="ScriptsListView" IsExpanded="true">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Software;component/Assets/Icons/Folder.ico" Width="16" Height="16"/>
+                            <TextBlock Text="Scripts" Margin="15,0,0,3"/>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
 
-        </TreeView>
+            </TreeView>
+            <!-- List Functions -->
+            <TreeView
+            Margin="0,20,0,0"
+            Grid.Row="1"
+	        HorizontalAlignment="Left"
+	        VerticalAlignment="Top">
+                <TreeViewItem x:Name="FunctionsList" IsExpanded="true">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Software;component/Assets/Icons/NewMethods.png" Width="16" Height="16"/>
+                            <TextBlock Text="Methods" Margin="15,0,0,3"/>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+            </TreeView>
+        </Grid>
     </Grid>
 </UserControl>

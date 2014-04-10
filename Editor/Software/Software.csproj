@@ -50,12 +50,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirstFloor.ModernUI, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FirstFloor.ModernUI, Version=1.0.5.0, Culture=neutral, PublicKeyToken=2d21ec3cd074c59a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\FirstFloor.ModernUI.dll</HintPath>
+      <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.AvalonEdit">
-      <HintPath>A:\Dropbox\Dropbox\FPSDesigner\Codes\References\ICSharpCode.AvalonEdit.dll</HintPath>
+      <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="LTreesLibrary, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -221,13 +221,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Folder.ico" />
+    <Resource Include="Assets\Icons\Folder.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\NewScript.png" />
+    <Resource Include="Assets\Icons\NewScript.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Script.png" />
+    <Resource Include="Assets\Icons\Script.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\AddMethod.png" />
+    <Resource Include="Assets\Icons\NewMethods.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
