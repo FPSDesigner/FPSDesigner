@@ -20,6 +20,7 @@ using System.IO;
 using System.Windows.Media.Animation;
 using System.Timers;
 using System.Windows.Threading;
+using System.Reflection;
 
 using Engine;
 
@@ -78,7 +79,14 @@ namespace Software.Pages
             selectedButton.Click += tabFileButton_Click;
 
             // Methods list generation
-            foreach (var method in (typeof(Engine.Game.Script.CLuaScriptFunctions)).GetMethods())
+            MethodInfo[] mi = (typeof(Engine.Game.Script.CLuaScriptFunctions)).GetMethods();
+            Array.Sort(mi,
+                delegate(MethodInfo m1, MethodInfo m2)
+                {
+                    return m1.Name.CompareTo(m2.Name);
+                }
+            );
+            foreach (var method in mi)
             {
                 var parameters = method.GetParameters();
                 var parameterDescriptions = string.Join(", ", method.GetParameters()
@@ -98,12 +106,19 @@ namespace Software.Pages
 
                 // Add content to StackPanel
                 sp.Orientation = Orientation.Horizontal;
+
+                sp.ToolTip = method.Name + "(" + parameterDescriptions + ")";
                 sp.Children.Add(icon);
                 sp.Children.Add(tb);
-                sp.MouseDown += sp_MouseDown;
+                sp.MouseDown += sp_MouseDownMethods;
 
                 FunctionsList.Items.Add(sp);
             }
+        }
+
+        private void sp_MouseDownMethods(object sender, MouseButtonEventArgs e)
+        {
+            textEditor.Text += ((TextBlock)((StackPanel)sender).Children[1]).Text+"()";
         }
 
         void sp_MouseDown(object sender, MouseButtonEventArgs e)

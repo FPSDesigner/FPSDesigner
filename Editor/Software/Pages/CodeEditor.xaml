@@ -97,7 +97,7 @@
                 <TreeViewItem x:Name="FunctionsList" IsExpanded="true">
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Software;component/Assets/Icons/NewMethods.png" Width="16" Height="16"/>
+                            <Image Source="/Software;component/Assets/Icons/NewMethods.png" Width="16" Height="16" />
                             <TextBlock Text="Methods" Margin="15,0,0,3"/>
                         </StackPanel>
                     </TreeViewItem.Header>
