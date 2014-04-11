@@ -98,6 +98,9 @@
     <Compile Include="Pages\CodeEditor.xaml.cs">
       <DependentUpon>CodeEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TextboxDialog.xaml.cs">
+      <DependentUpon>TextboxDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,10 @@
     </Compile>
     <Compile Include="Content\SettingsAppearanceViewModel.cs" />
     <Page Include="Pages\CodeEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\TextboxDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

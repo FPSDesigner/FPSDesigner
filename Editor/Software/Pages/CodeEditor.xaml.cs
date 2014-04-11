@@ -31,6 +31,8 @@ namespace Software.Pages
     /// </summary>
     public partial class CodeEditor : UserControl, IContent
     {
+        public static RoutedCommand Shortcuts = new RoutedCommand();
+
         Dictionary<string, string> codeFiles = new Dictionary<string, string>();
         Button selectedButton;
         string newScriptName = "New Script";
@@ -78,6 +80,10 @@ namespace Software.Pages
 
             selectedButton.Click += tabFileButton_Click;
 
+            RoutedCommand firstSettings = new RoutedCommand();
+            firstSettings.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control));
+            CommandBindings.Add(new CommandBinding(firstSettings, ShortcutSave));
+
             // Methods list generation
             MethodInfo[] mi = (typeof(Engine.Game.Script.CLuaScriptFunctions)).GetMethods();
             Array.Sort(mi,
@@ -116,9 +122,14 @@ namespace Software.Pages
             }
         }
 
+        private void ShortcutSave(object sender, ExecutedRoutedEventArgs e)
+        {
+            saveCurrentFile();
+        }
+
         private void sp_MouseDownMethods(object sender, MouseButtonEventArgs e)
         {
-            textEditor.Text += ((TextBlock)((StackPanel)sender).Children[1]).Text+"()";
+            textEditor.Text = textEditor.Text.Insert(textEditor.CaretOffset, ((TextBlock)((StackPanel)sender).Children[1]).Text + "()");
         }
 
         void sp_MouseDown(object sender, MouseButtonEventArgs e)
@@ -171,6 +182,11 @@ namespace Software.Pages
 
         void saveFileButton_Click(object sender, RoutedEventArgs e)
         {
+            saveCurrentFile();
+        }
+
+        private void saveCurrentFile()
+        {
             if ((string)selectedButton.Content != newScriptName)
             {
                 if (File.Exists("Scripts/" + selectedButton.Content))
@@ -185,7 +201,24 @@ namespace Software.Pages
                     timerResetCheck.Enabled = true;
                 }
             }
+            else
+            {
+                var wnd = new ModernWindow
+                {
+                    Style = (Style)App.Current.Resources["EmptyWindow"],
+                    Content = new TextboxDialog
+                    {
+                        Margin = new Thickness(32),
+                    },
+                    MaxHeight = 100,
+                    MaxWidth = 635,
+                    ResizeMode = ResizeMode.NoResize
+                };
+
+                wnd.Show();
+            }
         }
+
         void timerResetCheck_Elapsed(object sender, ElapsedEventArgs e)
         {
             ((Timer)sender).Stop();

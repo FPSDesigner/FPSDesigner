@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Software.Pages.TextboxDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Software.Properties"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" 
+             d:DesignHeight="284" d:DesignWidth="635">
+    <Grid>
+        <StackPanel VerticalAlignment="Top">
+            <TextBlock Text="Script name" Style="{StaticResource Heading2}" />
+            <TextBlock Text="Please enter the script name below. It will be saved in the /Scripts folder of your game root directory." Margin="0,0,0,8" TextWrapping="Wrap" />
+        </StackPanel>
+        <TextBox Text="Script.lua" Margin="0,0,0,10" VerticalAlignment="Center"/>
+        <mui:ModernButton x:Name="saveButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" EllipseDiameter="32" IconWidth="20" IconHeight="20" IconData="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " Margin="0,0,0,0" />
+    </Grid>
+</UserControl>
