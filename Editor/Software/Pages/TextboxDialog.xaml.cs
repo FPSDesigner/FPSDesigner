@@ -18,9 +18,22 @@ namespace Software.Pages
     /// </summary>
     public partial class TextboxDialog : UserControl
     {
+        public event RoutedEventHandler EnteredText;
+
         public TextboxDialog()
         {
             InitializeComponent();
+
+            saveButton.Click += saveButton_Click;
+        }
+
+        void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            string text = fileNameBox.Text;
+            if (text != "" && !System.IO.File.Exists("Scripts/" + text))
+            {
+                EnteredText(fileNameBox, null);
+            }
         }
     }
 }

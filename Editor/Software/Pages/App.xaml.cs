@@ -17,6 +17,7 @@ namespace Software
     public partial class App : Application
     {
         private ModernWindow LoginPage;
+        private ModernWindow RegisterPage;
 
         private bool IsLogged = false;
 
@@ -33,12 +34,12 @@ namespace Software
 
         void App_Startup(object sender, StartupEventArgs e)
         {
-            /****/
+            /****
             IsLogged = true;
             Software.MainWindow.LoadMainWindow();
             Software.MainWindow.Instance.Show();
             return;
-            /***/
+            ***/
 
             Software.MainWindow.LoadMainWindow();
 
@@ -56,14 +57,40 @@ namespace Software
             };
 
             ((Pages.Login)LoginPage.Content).LoginSucceed += App_LoginSucceed;
-            LoginPage.Closing += LoginPage_Closed;
+            ((Pages.Login)LoginPage.Content).NeedRegister += App_NeedRegister;
+            LoginPage.Closing += ModernWindow_Closed;
 
             LoginPage.Show();
         }
 
-        void LoginPage_Closed(object sender, EventArgs e)
+        void App_NeedRegister(object sender, RoutedEventArgs e)
         {
-            if (!IsLogged)
+            RegisterPage = new ModernWindow
+            {
+                Style = (Style)App.Current.Resources["EmptyWindow"],
+                Content = new Pages.Register
+                {
+                    Margin = new Thickness(32)
+                },
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+                MaxWidth = 650,
+                Title = "FPSDesigner - Register",
+                MaxHeight = 430,
+            };
+            RegisterPage.Closing += ModernWindow_Closed;
+            RegisterPage.Show();
+
+            LoginPage.Close();
+        }
+
+        void ModernWindow_Closed(object sender, EventArgs e)
+        {
+            ModernWindow windowClosed = (ModernWindow)sender;
+
+            if (!IsLogged && windowClosed.Content is Pages.Login && !RegisterPage.IsActive)
+                Application.Current.Shutdown();
+
+            else if(!IsLogged && windowClosed.Content is Pages.Register && !LoginPage.IsActive)
                 Application.Current.Shutdown();
         }
 

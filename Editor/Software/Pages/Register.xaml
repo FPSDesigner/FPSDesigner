@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="Software.Pages.Register"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Software.Properties"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" 
+             d:DesignHeight="430" d:DesignWidth="650">
+    <Grid ShowGridLines="{Binding Source={x:Static p:Settings.Default}, Path=ShowGridLines}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="90*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*" />
+            <RowDefinition Height="70*" />
+            <RowDefinition Height="10*" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Text="REGISTER" Style="{StaticResource Heading2}" Grid.Column="0" Grid.Row="0" />
+
+        <Canvas Width="49.5" Height="45" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0" Grid.Column="0" Grid.Row="1">
+            <Path Width="49.5" Height="45" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{DynamicResource WindowText}" Data="F1 M 22,46.9996C 26.4235,48.3026 34.4825,48.8053 37.2083,52.2153L 37.2083,32.9996C 34.4826,29.5896 26.4235,29.0869 22,27.7839L 22,46.9996 Z M 22,24.3078L 22,24.028C 26.4235,25.331 34.4825,25.8337 37.2083,29.2437L 38,29.4716L 38.7917,29.2157C 41.5174,25.8057 49.5765,25.303 54,24L 54,24.2798C 55.2286,24.6498 56,24.9716 56,24.9716L 56,27.9716L 59,26.8258L 59,50.9716C 59,50.9716 41.1667,52.2216 38,57.7633L 37.9999,57.7913C 34.8333,52.2496 17,50.9996 17,50.9996L 17,26.8538L 20,27.9996L 20,24.9996C 20,24.9996 20.7714,24.6778 22,24.3078 Z M 23.5,44.506L 23.5,41.3844C 27.269,42.243 32.4604,42.8187 35.5,44.7496L 35.5,47.8712C 32.4604,45.9402 27.269,45.3646 23.5,44.506 Z M 23.5,39.1212L 23.5,35.9996C 27.269,36.8582 32.4604,37.4338 35.5,39.3648L 35.5,42.4864C 32.4604,40.5554 27.269,39.9798 23.5,39.1212 Z M 23.5,33.6344L 23.5,30.5128C 27.269,31.3714 32.4604,31.947 35.5,33.878L 35.5,36.9996C 32.4604,35.0686 27.269,34.493 23.5,33.6344 Z M 54,46.9716L 54,27.7559C 49.5765,29.0589 41.5174,29.5616 38.7917,32.9716L 38.7917,52.1873C 41.5175,48.7773 49.5765,48.2746 54,46.9716 Z M 52.5,44.478C 48.731,45.3366 43.5395,45.9122 40.5,47.8432L 40.5,44.7216C 43.5395,42.7906 48.731,42.215 52.5,41.3564L 52.5,44.478 Z M 52.5,39.0932C 48.731,39.9518 43.5395,40.5274 40.5,42.4584L 40.5,39.3368C 43.5396,37.4058 48.731,36.8302 52.5,35.9716L 52.5,39.0932 Z M 52.5,33.6064C 48.731,34.465 43.5395,35.0406 40.5,36.9716L 40.5,33.85C 43.5395,31.919 48.731,31.3434 52.5,30.4848L 52.5,33.6064 Z "/>
+        </Canvas>
+
+        <!-- Description -->
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Left" Width="500">
+                Veuillez remplir les champs ci-dessous afin de vous inscrire à FPSDesigner.
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Labels -->
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nom d'utilisateur :" HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="0" Grid.Column="2" x:Name="userIdBox" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Mot de passe :" HorizontalAlignment="Right"/>
+            <PasswordBox Grid.Row="1" Grid.Column="2" x:Name="passwordBox" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Mot de passe (Vérification) :" HorizontalAlignment="Right"/>
+            <PasswordBox Grid.Row="2" Grid.Column="2" x:Name="passwordBox2" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Adresse E-Mail :" HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="3" Grid.Column="2" x:Name="emailAddress" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Prénom :" HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="4" Grid.Column="2" x:Name="firstname" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Nom :" HorizontalAlignment="Right"/>
+            <TextBox Grid.Row="5" Grid.Column="2" x:Name="name" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Date de naissance :" HorizontalAlignment="Right"/>
+            <DatePicker Grid.Row="6" Grid.Column="2" x:Name="birthday" Margin="0,0,0,10" SelectedDateFormat="Long" FirstDayOfWeek="Monday" />
+            <!-- Boxes -->
+            
+            
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" MaxHeight="40" VerticalAlignment="Bottom">
+            <StackPanel.Resources>
+                <Style TargetType="mui:ModernButton">
+                    <Setter Property="Margin" Value="0,0,8,0" />
+                    <Setter Property="BorderThickness" Value="2" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock x:Name="textLoginIncorrect" VerticalAlignment="Center" Margin="0,0,10,0">Identifiants incorrects !</TextBlock>
+            <Canvas x:Name="imgLoginIncorrect" Width="25" Height="25" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0" Margin="0,0,30,0">
+                <Path x:Name="errLogin" Width="22" Height="22" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="#FFFF3232" Data="F1 M 38.3958,62.1458C 38.3958,55.8125 41.1667,49.875 41.1667,51.4583C 41.1667,53.0417 44.3333,46.7083 45.9167,43.5417C 47.5,40.375 49.0833,36.0208 49.0833,36.0208L 55.4167,36.4167C 55.4167,36.4167 57,22.5625 53.8333,20.9792C 50.6667,19.3958 47.3692,21.6132 44.3333,19.7917C 36.4167,15.0417 23.75,18.2083 25.3333,21.375C 25.3333,21.375 19,24.5417 20.5833,26.125C 20.5833,26.125 19,28.5 20.9792,30.875C 19,33.25 19.7917,35.625 20.9792,37.2083C 19.7917,39.5833 19,41.9583 23.75,43.5417C 26.7542,44.5431 34.8333,40.7708 34.8333,45.125C 34.8333,46.7083 31.6667,51.4583 31.6667,54.625C 31.6667,60.9583 38.3958,62.1458 38.3958,62.1458 Z "/>
+            </Canvas>
+            <mui:ModernProgressRing x:Name="loadingLogin" IsActive="True" Width="40" Height="40" Style="{StaticResource PulseProgressRingStyle}" Margin="0,0,30,0" />
+            <mui:ModernButton x:Name="btnLogin" EllipseDiameter="38" EllipseStrokeThickness="2" IconWidth="25" IconHeight="25" IsDefault="True"  IconData="F1 M 19.0002,34L 19.0002,42L 43.7502,42L 33.7502,52L 44.2502,52L 58.2502,38L 44.2502,24L 33.7502,24L 43.7502,34L 19.0002,34 Z " />
+        </StackPanel>
+    </Grid>
+</UserControl>

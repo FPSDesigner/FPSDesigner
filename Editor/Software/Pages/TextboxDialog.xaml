@@ -16,7 +16,7 @@
             <TextBlock Text="Script name" Style="{StaticResource Heading2}" />
             <TextBlock Text="Please enter the script name below. It will be saved in the /Scripts folder of your game root directory." Margin="0,0,0,8" TextWrapping="Wrap" />
         </StackPanel>
-        <TextBox Text="Script.lua" Margin="0,0,0,10" VerticalAlignment="Center"/>
-        <mui:ModernButton x:Name="saveButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" EllipseDiameter="32" IconWidth="20" IconHeight="20" IconData="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " Margin="0,0,0,0" />
+        <TextBox Text="Script.lua" x:Name="fileNameBox" Margin="0,0,0,10" VerticalAlignment="Center"/>
+        <mui:ModernButton x:Name="saveButton" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" EllipseDiameter="32" IconWidth="20" IconHeight="20" IconData="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " Margin="0,0,0,0" />
     </Grid>
 </UserControl>

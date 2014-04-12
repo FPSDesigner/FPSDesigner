@@ -33,9 +33,10 @@ namespace Software.Pages
     {
         public static RoutedCommand Shortcuts = new RoutedCommand();
 
-        Dictionary<string, string> codeFiles = new Dictionary<string, string>();
-        Button selectedButton;
-        string newScriptName = "New Script";
+        private Dictionary<string, string> codeFiles = new Dictionary<string, string>();
+        private Button selectedButton;
+        private ModernWindow textboxDialog;
+        private string newScriptName = "New Script";
 
         public CodeEditor()
         {
@@ -44,34 +45,7 @@ namespace Software.Pages
             if (!Directory.Exists("Scripts"))
                 Directory.CreateDirectory("Scripts");
 
-            List<string> listFiles = Directory.GetFiles("Scripts").ToList<string>();
-            listFiles.Add(newScriptName);
-
-            foreach (string file in listFiles)
-            {
-                StackPanel sp = new StackPanel();
-                Image icon = new Image();
-                TextBlock tb = new TextBlock();
-
-                // Image & TextBlock
-                string imgSource = "/Assets/Icons/Script.png";
-                if (file == newScriptName)
-                    imgSource = "/Assets/Icons/NewScript.png";
-
-                icon.Source = new BitmapImage(new Uri(imgSource, UriKind.Relative));
-                icon.Width = 16;
-                icon.Height = 16;
-                tb.Text = file.Replace("Scripts\\", "");
-                tb.Margin = new Thickness(15, 0, 0, 3);
-
-                // Add content to StackPanel
-                sp.Orientation = Orientation.Horizontal;
-                sp.Children.Add(icon);
-                sp.Children.Add(tb);
-                sp.MouseDown += sp_MouseDown;
-
-                ScriptsListView.Items.Add(sp);
-            }
+            ReloadFilesToTreeView();
 
             saveFileButton.Click += saveFileButton_Click;
 
@@ -94,6 +68,9 @@ namespace Software.Pages
             );
             foreach (var method in mi)
             {
+                if (method.Name == "Equals" || method.Name == "ToString" || method.Name == "GetType")
+                    continue;
+
                 var parameters = method.GetParameters();
                 var parameterDescriptions = string.Join(", ", method.GetParameters()
                                  .Select(x => x.ParameterType + " " + x.Name)
@@ -161,21 +138,7 @@ namespace Software.Pages
             {
                 if (File.Exists("Scripts/" + blockid.Text))
                 {
-                    Button newBut = new Button();
-
-                    newBut.Content = blockid.Text;
-                    newBut.SetResourceReference(Grid.BackgroundProperty, "SelectedTabButton");
-                    newBut.Click += tabFileButton_Click;
-
-                    listButtonsTab.Children.Add(newBut);
-
-                    selectedButton.SetResourceReference(Grid.BackgroundProperty, "ButtonBackground");
-                    selectedButton = newBut;
-
-                    string txtFile = System.IO.File.ReadAllText("Scripts/" + blockid.Text);
-
-                    textEditor.Text = txtFile;
-                    codeFiles.Add(blockid.Text, txtFile);
+                    CreateNewFileTab(blockid.Text);
                 }
             }
         }
@@ -203,7 +166,7 @@ namespace Software.Pages
             }
             else
             {
-                var wnd = new ModernWindow
+                textboxDialog = new ModernWindow
                 {
                     Style = (Style)App.Current.Resources["EmptyWindow"],
                     Content = new TextboxDialog
@@ -215,8 +178,28 @@ namespace Software.Pages
                     ResizeMode = ResizeMode.NoResize
                 };
 
-                wnd.Show();
+                textboxDialog.Show();
+
+                ((Pages.TextboxDialog)textboxDialog.Content).EnteredText += CodeEditor_EnteredText;
             }
+        }
+
+        void CodeEditor_EnteredText(object sender, RoutedEventArgs e)
+        {
+            string text = ((TextBox)sender).Text;
+            textboxDialog.Close();
+
+            System.IO.File.WriteAllText("Scripts/" + text, textEditor.Text);
+
+            DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+            checkValidSave.BeginAnimation(OpacityProperty, opacityAnim);
+
+            Timer timerResetCheck = new Timer(2000);
+            timerResetCheck.Elapsed += timerResetCheck_Elapsed;
+            timerResetCheck.Enabled = true;
+
+            CreateNewFileTab(text);
+            ReloadFilesToTreeView();
         }
 
         void timerResetCheck_Elapsed(object sender, ElapsedEventArgs e)
@@ -228,7 +211,6 @@ namespace Software.Pages
                 checkValidSave.BeginAnimation(OpacityProperty, opacityAnim2);
             }));
         }
-
 
         void tabFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -242,6 +224,68 @@ namespace Software.Pages
                 clickedButton.SetResourceReference(Grid.BackgroundProperty, "SelectedTabButton");
                 selectedButton.SetResourceReference(Grid.BackgroundProperty, "ButtonBackground");
                 selectedButton = clickedButton;
+            }
+        }
+
+        private void CreateNewFileTab(string fileName)
+        {
+            Button newBut = new Button();
+
+            newBut.Content = fileName;
+            newBut.SetResourceReference(Grid.BackgroundProperty, "SelectedTabButton");
+            newBut.Click += tabFileButton_Click;
+
+            listButtonsTab.Children.Add(newBut);
+
+            selectedButton.SetResourceReference(Grid.BackgroundProperty, "ButtonBackground");
+            selectedButton = newBut;
+
+            string txtFile = System.IO.File.ReadAllText("Scripts/" + fileName);
+
+            textEditor.Text = txtFile;
+            codeFiles.Add(fileName, txtFile);
+        }
+
+        private void ReloadFilesToTreeView()
+        {
+            // Removing items from the listview
+            if (ScriptsListView.Items.Count > 0)
+            {
+                foreach (UIElement elt in ScriptsListView.Items)
+                {
+                    StackPanel element = (StackPanel)elt;
+                    element.Children.Clear();
+                }
+                ScriptsListView.Items.Clear();
+            }
+
+            List<string> listFiles = Directory.GetFiles("Scripts").ToList<string>();
+            listFiles.Add(newScriptName);
+
+            foreach (string file in listFiles)
+            {
+                StackPanel sp = new StackPanel();
+                Image icon = new Image();
+                TextBlock tb = new TextBlock();
+
+                // Image & TextBlock
+                string imgSource = "/Assets/Icons/Script.png";
+                if (file == newScriptName)
+                    imgSource = "/Assets/Icons/NewScript.png";
+
+                icon.Source = new BitmapImage(new Uri(imgSource, UriKind.Relative));
+                icon.Width = 16;
+                icon.Height = 16;
+                tb.Text = file.Replace("Scripts\\", "");
+                tb.Margin = new Thickness(15, 0, 0, 3);
+
+                // Add content to StackPanel
+                sp.Orientation = Orientation.Horizontal;
+                sp.Children.Add(icon);
+                sp.Children.Add(tb);
+                sp.MouseDown += sp_MouseDown;
+
+                ScriptsListView.Items.Add(sp);
             }
         }
 

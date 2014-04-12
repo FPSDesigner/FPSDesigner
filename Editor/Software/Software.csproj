@@ -57,10 +57,6 @@
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="LTreesLibrary, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>A:\Dropbox\Dropbox\FPSDesigner\Codes\References\LTreesLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -97,6 +93,9 @@
     <Compile Include="GlobalVars.cs" />
     <Compile Include="Pages\CodeEditor.xaml.cs">
       <DependentUpon>CodeEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Register.xaml.cs">
+      <DependentUpon>Register.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\TextboxDialog.xaml.cs">
       <DependentUpon>TextboxDialog.xaml</DependentUpon>
@@ -152,6 +151,10 @@
     </Compile>
     <Compile Include="Content\SettingsAppearanceViewModel.cs" />
     <Page Include="Pages\CodeEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Register.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

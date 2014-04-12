@@ -26,6 +26,7 @@ namespace Software.Pages
     public partial class Login : UserControl
     {
         public event RoutedEventHandler LoginSucceed;
+        public event RoutedEventHandler NeedRegister;
 
         public Login()
         {
@@ -37,6 +38,12 @@ namespace Software.Pages
             imgLoginIncorrect.Opacity = 0;
 
             btnLogin.Click += btnLogin_Click;
+            RegisterButton.Click += RegisterButton_Click;
+        }
+
+        void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            NeedRegister(sender, e);
         }
 
         async void btnLogin_Click(object sender, RoutedEventArgs e)
