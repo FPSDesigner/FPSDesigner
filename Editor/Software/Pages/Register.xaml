@@ -19,8 +19,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20*" />
-            <RowDefinition Height="70*" />
-            <RowDefinition Height="10*" />
+            <RowDefinition Height="68*" />
+            <RowDefinition Height="12*" />
         </Grid.RowDefinitions>
 
         <!-- Title -->
@@ -38,7 +38,7 @@
         </StackPanel>
 
         <!-- Labels -->
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Grid Grid.Row="1" Grid.Column="2" x:Name="FieldsGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
@@ -53,44 +53,35 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nom d'utilisateur :" HorizontalAlignment="Right"/>
-            <TextBox Grid.Row="0" Grid.Column="2" x:Name="userIdBox" Margin="0,0,0,10"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Mot de passe :" HorizontalAlignment="Right"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="Nom d'utilisateur" HorizontalAlignment="Right" Target="{Binding ElementName=userName}"/>
+            <TextBox Grid.Row="0" Grid.Column="2" x:Name="userName" Margin="0,0,0,10" Text="{Binding UserName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Mot de passe" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox}"/>
             <PasswordBox Grid.Row="1" Grid.Column="2" x:Name="passwordBox" Margin="0,0,0,10"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Mot de passe (Vérification) :" HorizontalAlignment="Right"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="Mot de passe (Vérification)" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox2}"/>
             <PasswordBox Grid.Row="2" Grid.Column="2" x:Name="passwordBox2" Margin="0,0,0,10"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Adresse E-Mail :" HorizontalAlignment="Right"/>
-            <TextBox Grid.Row="3" Grid.Column="2" x:Name="emailAddress" Margin="0,0,0,10"/>
+            <Label Grid.Row="3" Grid.Column="0" Content="Adresse E-Mail" HorizontalAlignment="Right" Target="{Binding ElementName=emailAddress}"/>
+            <TextBox Grid.Row="3" Grid.Column="2" x:Name="emailAddress" Margin="0,0,0,10" Text="{Binding Email, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Prénom :" HorizontalAlignment="Right"/>
-            <TextBox Grid.Row="4" Grid.Column="2" x:Name="firstname" Margin="0,0,0,10"/>
+            <Label Grid.Row="4" Grid.Column="0" Content="Prénom" HorizontalAlignment="Right" Target="{Binding ElementName=firstname}"/>
+            <TextBox Grid.Row="4" Grid.Column="2" x:Name="firstname" Margin="0,0,0,10" Text="{Binding FirstName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Nom :" HorizontalAlignment="Right"/>
-            <TextBox Grid.Row="5" Grid.Column="2" x:Name="name" Margin="0,0,0,10"/>
+            <Label Grid.Row="5" Grid.Column="0" Content="Nom" HorizontalAlignment="Right" Target="{Binding ElementName=name}"/>
+            <TextBox Grid.Row="5" Grid.Column="2" x:Name="name" Margin="0,0,0,10" Text="{Binding LastName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Date de naissance :" HorizontalAlignment="Right"/>
+            <Label Grid.Row="6" Grid.Column="0" Content="Date de naissance" HorizontalAlignment="Right" Target="{Binding ElementName=birthday}"/>
             <DatePicker Grid.Row="6" Grid.Column="2" x:Name="birthday" Margin="0,0,0,10" SelectedDateFormat="Long" FirstDayOfWeek="Monday" />
             <!-- Boxes -->
             
             
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" MaxHeight="40" VerticalAlignment="Bottom">
-            <StackPanel.Resources>
-                <Style TargetType="mui:ModernButton">
-                    <Setter Property="Margin" Value="0,0,8,0" />
-                    <Setter Property="BorderThickness" Value="2" />
-                </Style>
-            </StackPanel.Resources>
-            <TextBlock x:Name="textLoginIncorrect" VerticalAlignment="Center" Margin="0,0,10,0">Identifiants incorrects !</TextBlock>
-            <Canvas x:Name="imgLoginIncorrect" Width="25" Height="25" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0" Margin="0,0,30,0">
-                <Path x:Name="errLogin" Width="22" Height="22" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="#FFFF3232" Data="F1 M 38.3958,62.1458C 38.3958,55.8125 41.1667,49.875 41.1667,51.4583C 41.1667,53.0417 44.3333,46.7083 45.9167,43.5417C 47.5,40.375 49.0833,36.0208 49.0833,36.0208L 55.4167,36.4167C 55.4167,36.4167 57,22.5625 53.8333,20.9792C 50.6667,19.3958 47.3692,21.6132 44.3333,19.7917C 36.4167,15.0417 23.75,18.2083 25.3333,21.375C 25.3333,21.375 19,24.5417 20.5833,26.125C 20.5833,26.125 19,28.5 20.9792,30.875C 19,33.25 19.7917,35.625 20.9792,37.2083C 19.7917,39.5833 19,41.9583 23.75,43.5417C 26.7542,44.5431 34.8333,40.7708 34.8333,45.125C 34.8333,46.7083 31.6667,51.4583 31.6667,54.625C 31.6667,60.9583 38.3958,62.1458 38.3958,62.1458 Z "/>
-            </Canvas>
-            <mui:ModernProgressRing x:Name="loadingLogin" IsActive="True" Width="40" Height="40" Style="{StaticResource PulseProgressRingStyle}" Margin="0,0,30,0" />
-            <mui:ModernButton x:Name="btnLogin" EllipseDiameter="38" EllipseStrokeThickness="2" IconWidth="25" IconHeight="25" IsDefault="True"  IconData="F1 M 19.0002,34L 19.0002,42L 43.7502,42L 33.7502,52L 44.2502,52L 58.2502,38L 44.2502,24L 33.7502,24L 43.7502,34L 19.0002,34 Z " />
+            <TextBlock x:Name="ErrMsg" VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0"/>
+            <mui:ModernProgressRing x:Name="loadingRegister" IsActive="True" Width="40" Height="40" Style="{StaticResource PulseProgressRingStyle}" Margin="0,0,30,0" />
+            <mui:ModernButton x:Name="btnRegister" Margin="0,0,8,0" EllipseDiameter="38" EllipseStrokeThickness="2" IconWidth="25" IconHeight="25" IsDefault="True"  IconData="F1 M 19.0002,34L 19.0002,42L 43.7502,42L 33.7502,52L 44.2502,52L 58.2502,38L 44.2502,24L 33.7502,24L 43.7502,34L 19.0002,34 Z " />
         </StackPanel>
     </Grid>
 </UserControl>
