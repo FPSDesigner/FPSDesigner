@@ -89,6 +89,8 @@ namespace Software.Pages
                     }
                 });
             }
+            else
+                loginStatus = "WP";
 
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
             delegate(object o, RunWorkerCompletedEventArgs args)

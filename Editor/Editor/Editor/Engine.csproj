@@ -72,7 +72,7 @@
       <HintPath>..\..\..\..\EPITA - Workspace Project\LearningMahesh.DynamicIOStream.dll</HintPath>
     </Reference>
     <Reference Include="LTreesLibrary">
-      <HintPath>..\..\..\..\..\Downloads\LTreesLibrary.dll</HintPath>
+      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\LTreesLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />

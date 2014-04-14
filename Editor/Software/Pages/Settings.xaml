@@ -10,6 +10,7 @@
         <mui:ModernTab Layout="List" SelectedSource="/Content/SettingsAppearance.xaml">
             <mui:ModernTab.Links>
                 <mui:Link DisplayName="appearance" Source="/Content/SettingsAppearance.xaml" />
+                <mui:Link DisplayName="account" Source="/Content/Account.xaml" />
                 <mui:Link DisplayName="about" Source="/Content/About.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
