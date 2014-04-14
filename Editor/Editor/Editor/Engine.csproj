@@ -65,14 +65,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="KeraLua">
-      <HintPath>..\..\..\..\Project EP\Ressources\KeraLua.dll</HintPath>
+      <HintPath>.\KeraLua.dll</HintPath>
     </Reference>
     <Reference Include="LearningMahesh.DynamicIOStream, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\EPITA - Workspace Project\LearningMahesh.DynamicIOStream.dll</HintPath>
     </Reference>
     <Reference Include="LTreesLibrary">
-      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\LTreesLibrary.dll</HintPath>
+      <HintPath>..\..\..\..\..\Downloads\LTreesLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />

@@ -118,9 +118,6 @@
     <Compile Include="SkinnedModelBoneCollection.cs" />
     <Compile Include="SkinnedModelBoneDictionary.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--
