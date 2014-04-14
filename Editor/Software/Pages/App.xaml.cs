@@ -87,7 +87,7 @@ namespace Software
         {
             ModernWindow windowClosed = (ModernWindow)sender;
 
-            if (!IsLogged && windowClosed.Content is Pages.Login && !RegisterPage.IsActive)
+            if (!IsLogged && windowClosed.Content is Pages.Login && (RegisterPage == null || !RegisterPage.IsActive))
                 Application.Current.Shutdown();
 
             else if(!IsLogged && windowClosed.Content is Pages.Register && !LoginPage.IsActive)

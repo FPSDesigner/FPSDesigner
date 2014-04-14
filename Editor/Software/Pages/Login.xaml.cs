@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Security;
 using System.Security.Cryptography;
 using FirstFloor.ModernUI.Windows.Controls;
+using System.ComponentModel;
 
 namespace Software.Pages
 {
@@ -55,48 +56,63 @@ namespace Software.Pages
             string username = userIdBox.Text;
             string password = passwordBox.Password;
 
-            bool loginSuccess = false;
+            string loginStatus = "ERR";
+
+            BackgroundWorker bw = new BackgroundWorker();
 
             if (username.Length > 0 && password.Length > 0)
             {
-                password = GetSHA256Hash(new SHA256Managed(), GetMd5Hash(MD5.Create(), password));
-
-                // Check authentification
-                using (var wb = new WebClient())
+                bw.DoWork += new DoWorkEventHandler(
+                delegate(object o, DoWorkEventArgs args)
                 {
-                    var data = new System.Collections.Specialized.NameValueCollection();
-                    data["user"] = username;
-                    data["pass"] = password;
+                    password = GetSHA256Hash(new SHA256Managed(), GetMd5Hash(MD5.Create(), password));
 
-                    AuthAnswer answer = null;
-                    try
+                    // Check authentification
+                    using (var wb = new WebClient())
                     {
-                        string response = System.Text.Encoding.UTF8.GetString(wb.UploadValues("http://www.fpsdesigner.com/sft/login.php", "POST", data));
-                        answer = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<AuthAnswer>(response);
+                        var data = new System.Collections.Specialized.NameValueCollection();
+                        data["user"] = username;
+                        data["pass"] = password;
 
-                        if (answer.ans == "OK")
-                            loginSuccess = true;
+                        AuthAnswer answer = null;
+                        try
+                        {
+                            string response = System.Text.Encoding.UTF8.GetString(wb.UploadValues("http://www.fpsdesigner.com/sft/login.php", "POST", data));
+                            answer = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<AuthAnswer>(response);
+
+                            loginStatus = answer.ans;
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine("Login error occured: " + exc.GetType());
+                        }
                     }
-                    catch (Exception exc)
-                    {
-                        ModernDialog.ShowMessage("An unexpected error occured.\nPlease check your internet connection to log in.", "Can't log in", MessageBoxButton.OK);
-                        Console.WriteLine("Login error occured: "+exc.GetType());
-                    }
-                }
+                });
             }
 
-            if (!loginSuccess)
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+            delegate(object o, RunWorkerCompletedEventArgs args)
             {
-                DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
-                textLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
-                imgLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
                 loadingLogin.IsActive = false;
-            }
-            else
-            {
-                // Login succeed
-                LoginSucceed(this, null);
-            }
+                if (loginStatus != "OK")
+                {
+                    if(loginStatus == "ERR")
+                        textLoginIncorrect.Text = "An unexpected error occured.\nPlease check your internet connection to log in.";
+                    else if (loginStatus == "WP")
+                        textLoginIncorrect.Text = "Identifiants incorrects !";
+                    
+                    DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+                    textLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
+                    imgLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
+                }
+                else
+                {
+                    // Login succeed
+                    LoginSucceed(this, null);
+                }
+            });
+
+            bw.RunWorkerAsync();
         }
 
         #region Cryptography

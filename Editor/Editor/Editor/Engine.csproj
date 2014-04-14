@@ -104,7 +104,6 @@
     <Compile Include="Display3D\CWater.cs" />
     <Compile Include="Display3D\CModel.cs" />
     <Compile Include="Display3D\CSimpleShapes.cs" />
-    <Compile Include="Display3D\CTerrainChunk.cs" />
     <Compile Include="Display3D\Materials\Material.cs" />
     <Compile Include="Display3D\Materials\MultiLightingMaterial.cs" />
     <Compile Include="Display3D\Materials\PointLightMaterial.cs" />

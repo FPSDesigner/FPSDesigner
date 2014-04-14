@@ -80,6 +80,8 @@ namespace Software.Pages
                     ShowError("L'adresse E-Mail entrée est incorrecte.");
                     return;
                 }
+
+
             }));
 
         }
@@ -92,7 +94,6 @@ namespace Software.Pages
             ErrMsg.BeginAnimation(OpacityProperty, opacityAnim);
 
             ErrMsg.Text = err;
-
         }
 
         public static bool IsValidEmail(string mailAddress)
