@@ -39,6 +39,7 @@ namespace Engine.Game.LevelInfo
         public Water Water { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
+        public Weapons Weapons { get; set; }
     }
 
     #region "Node - SpawnInfo"
@@ -64,7 +65,6 @@ namespace Engine.Game.LevelInfo
         public string LevelName { get; set; }
     }
     #endregion
-
 
     #region "Node - MapTerrain"
     public class Terrain
@@ -97,7 +97,6 @@ namespace Engine.Game.LevelInfo
         public Coordinates Coordinates { get; set; }
     }
     #endregion
-
 
     #region "Node - MapModels"
     // 3D Models
@@ -161,7 +160,6 @@ namespace Engine.Game.LevelInfo
     }
     #endregion
 
-
     #region "Node - GameFiles"
     public class GameFiles
     {
@@ -175,6 +173,40 @@ namespace Engine.Game.LevelInfo
         public string[] Model { get; set; }
     }
     #endregion
+
+    #region "Node - Weapons"
+    // Weapons
+    public class Weapons
+    {
+        public Weapons() { Weapon = new List<Weapon>(); }
+        [XmlElement("Weapon")]
+        public List<Weapon> Weapon { get; set; }
+    }
+    
+    // Weapons
+    public class Weapon
+    {
+        public int Type { get; set; }
+        public int MaxType { get; set; }
+        public bool IsAutomatic { get; set; }
+        public int ShotsPerSecs { get; set; }
+        public int Range { get; set; }
+        //public Matrix Rotation { get; set; }
+        public Coordinates Offset { get; set; }
+        public float Scale { get; set; }
+        public float Delay { get; set; }
+        public WeaponSound WeaponSound { get; set; }
+    }
+
+    // WeaponSound
+    public class WeaponSound
+    {
+        public string Shot { get; set; }
+        public string DryShot { get; set; }
+        public string Reload { get; set; }
+    }
+    #endregion
+
 
     // TODO: Add all the nodes to the example
     #region Examples

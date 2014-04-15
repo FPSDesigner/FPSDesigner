@@ -120,6 +120,15 @@ namespace Engine.GameStates
                 terrain.waterHeight = water.waterPosition.Y;
 
 
+            /**** Weapons ****/
+            List<object[]> objList = new List<object[]>();
+            foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
+            {
+                objList.Add(
+                    new object[] { wep.Type, wep.IsAutomatic }
+                    );
+            };
+
             // We create array containing all informations about weapons.
 
             weapon = new Game.CWeapon();
