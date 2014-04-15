@@ -120,16 +120,16 @@ namespace Engine.GameStates
                 terrain.waterHeight = water.waterPosition.Y;
 
 
-            /**** Weapons ****/
-            List<object[]> objList = new List<object[]>();
-            foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
-            {
-                objList.Add(
-                    new object[] { wep.Type, wep.IsAutomatic }
-                    );
-            };
+            ///**** Weapons ****/
+            //List<object[]> objList = new List<object[]>();
+            //foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
+            //{
+            //    objList.Add(
+            //        new object[] { wep.Type, wep.IsAutomatic }
+            //        );
+            //};
 
-            // We create array containing all informations about weapons.
+            //// We create array containing all informations about weapons.
 
             weapon = new Game.CWeapon();
 
@@ -141,8 +141,8 @@ namespace Engine.GameStates
             object[][] testInfos = new object[][] {
                 new object[] {2,1,1,1,1,false,2.0f,1,Matrix.CreateRotationX(MathHelper.PiOver2) * Matrix.CreateRotationZ(2.9f),new Vector3(0.21f, 0.15f, 0.04f), 1f, 0f},
                 new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.21f)*Matrix.CreateRotationY(-0.13f),new Vector3(.075f, 0.04f, 0.22f), 1f, 100f},
-                new object[] {0,10,10,20,1,false,2.0f,1,Matrix.CreateRotationZ(1.30f) * Matrix.CreateRotationY(-0.13f)* Matrix.CreateRotationX(0.15f)
-                ,new Vector3(0.42f,1.95f,0.16f), 1f, 100f}
+                new object[] {0,10,10,20,1,false,2.0f,1, Matrix.CreateRotationY(-0.13f)* Matrix.CreateRotationX(0.15f)
+                ,new Vector3(0.42f,1.95f,0.16f), 0.8f, 100f}
             };
 
             string[][] testSounds = new string[][] {
@@ -159,19 +159,19 @@ namespace Engine.GameStates
 
             string[][] anims = new string[][] {
                 new string[] {
-                    "Machete_Walk", "Machete_Attack", "Machete_Wait","","Machete_Switch"
+                    "Machete_Walk", "Machete_Attack", "Machete_Wait","","Machete_Switch",""
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch"
+                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch","M1911_Aim"
                 },
                 new string[] {
-                    "", "", "M24_Wait", "",""
+                    "M24_Walk", "", "M24_Wait", "","",""
                 },
             };
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.4f, 4.0f, 0.7f,0.0f,3.8f
+                    1.4f, 3.0f, 0.7f,0.0f,3.8f
                 },
                 new float[] {
                     1.6f, 16.0f, 0.65f,2.5f,3.8f

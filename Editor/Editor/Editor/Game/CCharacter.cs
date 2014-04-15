@@ -550,6 +550,7 @@ namespace Engine.Game
                     if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                     {
                         cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
+                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true);
                         _isAiming = true;
                     }
                 }
