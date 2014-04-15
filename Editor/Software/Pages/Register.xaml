@@ -74,8 +74,6 @@
 
             <Label Grid.Row="6" Grid.Column="0" Content="Date de naissance" HorizontalAlignment="Right" Target="{Binding ElementName=birthday}"/>
             <DatePicker Grid.Row="6" Grid.Column="2" x:Name="birthday" Margin="0,0,0,10" SelectedDateFormat="Long" FirstDayOfWeek="Monday" />
-            <!-- Boxes -->
-            
             
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" MaxHeight="40" VerticalAlignment="Bottom">

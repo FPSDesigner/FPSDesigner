@@ -78,6 +78,7 @@ namespace Software
                 MaxHeight = 430,
             };
             RegisterPage.Closing += ModernWindow_Closed;
+            ((Pages.Register)RegisterPage.Content).RegisterSucceed += App_RegisterSucceed;
             RegisterPage.Show();
 
             LoginPage.Close();
@@ -99,6 +100,13 @@ namespace Software
             IsLogged = true;
             Software.MainWindow.Instance.Show();
             LoginPage.Close();
+        }
+
+        void App_RegisterSucceed(object sender, RoutedEventArgs e)
+        {
+            IsLogged = true;
+            Software.MainWindow.Instance.Show();
+            RegisterPage.Close();
         }
     }
 }

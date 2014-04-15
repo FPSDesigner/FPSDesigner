@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using FirstFloor.ModernUI.Windows.Controls;
 using System.Timers;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace Software.Pages
 {
@@ -26,6 +27,9 @@ namespace Software.Pages
     public partial class Register : UserControl
     {
         private Timer timerAnim;
+
+        public event RoutedEventHandler RegisterSucceed;
+
         public Register()
         {
             InitializeComponent();
@@ -81,7 +85,58 @@ namespace Software.Pages
                     return;
                 }
 
+                string registerStatus = "ERR";
 
+                // Datas sent to the server
+                var data = new System.Collections.Specialized.NameValueCollection();
+                data["username"] = userName.Text;
+                data["pass"] = passwordBox.Password;
+                data["pass2"] = passwordBox2.Password;
+                data["email"] = emailAddress.Text;
+                data["firstname"] = firstname.Text;
+                data["name"] = name.Text;
+                data["birthday"] = birthday.Text;
+
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(
+                delegate(object o, DoWorkEventArgs args)
+                {
+                    // Check authentification
+                    using (var wb = new WebClient())
+                    {
+                        AuthAnswer answer = null;
+                        try
+                        {
+                            string response = System.Text.Encoding.UTF8.GetString(wb.UploadValues("http://www.fpsdesigner.com/sft/register.php", "POST", data));
+                            answer = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<AuthAnswer>(response);
+
+                            registerStatus = answer.ans;
+                        }
+                        catch (Exception exc)
+                        {
+                            Console.WriteLine("Register error occured: " + exc.GetType());
+                            ShowError("Impossible de contacter le serveur.");
+                            return;
+                        }
+                    }
+                });
+
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                delegate(object o, RunWorkerCompletedEventArgs args)
+                {
+                    if (registerStatus != "OK")
+                    {
+                        ShowError("Impossible de contacter le serveur.");
+                        return;
+                    }
+                    else
+                    {
+                        // Register succeed
+                        RegisterSucceed(this, null);
+                    }
+                });
+
+                bw.RunWorkerAsync();
             }));
 
         }
