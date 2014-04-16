@@ -174,7 +174,7 @@ namespace Engine.GameStates
                     1.4f, 3.0f, 0.7f,0.0f,3.8f,1f,0.0f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.65f,2.5f,3.8f,1f,16.0f
+                    1.6f, 16.0f, 0.65f,2.8f,3.8f,1f,16.0f
                 },
                 new float[] {
                     1.4f, 10.0f, 0.65f,2.5f,3.8f,1f,0.0f
