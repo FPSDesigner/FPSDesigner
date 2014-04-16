@@ -46,7 +46,7 @@ namespace Engine.Display3D
         private float _nearClip;
         private float _farClip;
         private float _aspectRatio;
-        private float fieldOfView;
+        public float fieldOfView;
 
         public float _playerHeight = 1.9f;
 
@@ -313,6 +313,8 @@ namespace Engine.Display3D
 
         public void ChangeFieldOfView(float newFov)
         {
+            fieldOfView = newFov;
+
             _projection = Matrix.CreatePerspectiveFieldOfView(newFov, _aspectRatio, _nearClip, _farClip);
             _nearProjection = Matrix.CreatePerspectiveFieldOfView(newFov, _aspectRatio, 0.02f, 1f);
         }

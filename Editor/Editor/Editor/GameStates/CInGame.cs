@@ -162,7 +162,7 @@ namespace Engine.GameStates
                     "Machete_Walk", "Machete_Attack", "Machete_Wait","","Machete_Switch",""
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch","M1911_Aim"
+                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch","M1911_Aim","M1911_AimShot"
                 },
                 new string[] {
                     "M24_Walk", "", "M24_Wait", "","",""
@@ -171,13 +171,13 @@ namespace Engine.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.4f, 3.0f, 0.7f,0.0f,3.8f
+                    1.4f, 3.0f, 0.7f,0.0f,3.8f,1f,0.0f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.65f,2.5f,3.8f
+                    1.6f, 16.0f, 0.65f,2.5f,3.8f,1f,16.0f
                 },
                 new float[] {
-                    1.4f, 10.0f, 0.65f,2.5f,3.8f
+                    1.4f, 10.0f, 0.65f,2.5f,3.8f,1f,0.0f
                 },
 
             };
