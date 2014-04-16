@@ -173,10 +173,11 @@ namespace Engine.Display3D
 
             Rotation(mouseState, gametime);
 
-            if (_translation != Vector3.Zero)
+            if (_translation.LengthSquared() > 1)
             {
                 _translation.Normalize();
             }
+            Console.WriteLine(_translation.Length());
 
             // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
             if (isFreeCam)
@@ -206,7 +207,7 @@ namespace Engine.Display3D
                     _translation += Vector3.Forward;
 
                 if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MBackward))
-                    _translation += Vector3.Backward;
+                    _translation += 0.48f*Vector3.Backward;
 
                 if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MLeft))
                     _translation += Vector3.Left;
@@ -237,7 +238,7 @@ namespace Engine.Display3D
             }
             if (isUnderWater && !isFreeCam)
             {
-                _translation = _translation * 0.5f;
+                _translation = _translation * 0.3f;
             }
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, _roll);

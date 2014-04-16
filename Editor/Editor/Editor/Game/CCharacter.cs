@@ -54,12 +54,12 @@ namespace Engine.Game
         private float elapsedTime; // We get the time to know when play a sound
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
 
-        public float _sprintSpeed = 18f;
+        public float _sprintSpeed = 16f;
         public float _walkSpeed = 9f;
         public float _aimSpeed = 3f;
         public float _freeCamSpeed = 30f;
         public float _crouchSpeed = 2f;
-        public float _movementsLerp = 0.006f;
+        public float _movementsLerp = 0.2f;
 
         private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
         private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
@@ -183,10 +183,10 @@ namespace Engine.Game
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
                 if (_horizontalVelocity != _sprintSpeed && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying
-                    && !_isWaitAnimPlaying)
+                    && !_isWaitAnimPlaying && !_isAiming)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 1.7f);
+                    _isRunning = true;
 
-                _isRunning = true;
             }
             else
             {
@@ -194,7 +194,7 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _walkSpeed, _movementsLerp * 2.5f);
 
-                    if (!_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isWaitAnimPlaying)
+                    if (!_isShoting && !_isReloading && !_isAiming && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isWaitAnimPlaying)
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                 }
 
@@ -209,7 +209,7 @@ namespace Engine.Game
                 }
             }
 
-            if (_isCrouched && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+            if (_isCrouched && !_isShoting && !_isReloading && !_isAiming && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
             {
                 if (_horizontalVelocity != _crouchSpeed)
                 {
@@ -247,6 +247,7 @@ namespace Engine.Game
                 {
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                    _isWaitAnimPlaying = true;
                 }
                 else
                 {
@@ -259,9 +260,9 @@ namespace Engine.Game
                 _isSwimAnimationPlaying = false;
                 _isSwitchingAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = false;
+
                 _isShoting = false;
                 _isReloading = false;
-                _isWaitAnimPlaying = true;
             }
 
             // If player move, we play the walk anim
@@ -289,6 +290,7 @@ namespace Engine.Game
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
                 _isShoting = false;
+                _isAiming = false;
                 _isSwitchingAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = false;
                 _isSwimAnimationPlaying = true;
@@ -305,6 +307,7 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
                 _isReloading = false;
                 _isShoting = false;
+                _isAiming = false;
                 _isSwitchingAnim2ndPartPlaying = true;
                 _isSwitchingAnimPlaying = false;
             }
@@ -317,6 +320,7 @@ namespace Engine.Game
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
                 _isReloading = false;
+                _isAiming = false;
                 _isShoting = false;
 
                 // Depending on what is the player doing, after the switch we play an anim
@@ -570,9 +574,10 @@ namespace Engine.Game
                 {
                     if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                     {
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[5]);
                         _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true, 0.05f);
 
-                        _isShoting = false;
+                        _isRunning = false;
                         _isAiming = true;
                     }
                 }
@@ -583,7 +588,12 @@ namespace Engine.Game
                 if (mstate.RightButton == ButtonState.Released && ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPAim)) ||
                     !CGameSettings.useGamepad))
                 {
-                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
+                    if (!_isShoting && !_isReloading)
+                    {
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
+                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
+                    }
+
                     _isAiming = false;
                 }
             }
