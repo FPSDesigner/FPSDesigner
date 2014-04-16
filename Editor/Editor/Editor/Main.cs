@@ -53,7 +53,7 @@ namespace Engine
             graphics.PreferMultiSampling = true;
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;

@@ -47,7 +47,7 @@ namespace Engine.Game
         private bool _isCrouched = false;
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
 
-        private bool _isRealoadingSoundPlayed = true;
+        private bool _isReloadingSoundPlayed = true;
 
         private float _horizontalVelocity;
 
@@ -524,17 +524,17 @@ namespace Engine.Game
                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false);
 
                 _isReloading = true;
-                _isRealoadingSoundPlayed = false;
+                _isReloadingSoundPlayed = false;
             }
 
             // We play the sound after a delay
-            if (!_isRealoadingSoundPlayed && (elapsedTime >= weapon._weaponsArray[weapon._selectedWeapon]._delay))
+            if (!_isReloadingSoundPlayed && (elapsedTime >= weapon._weaponsArray[weapon._selectedWeapon]._delay))
             {
                 CSoundManager.PlayInstance("WEP." + weapon._weaponsArray[weapon._selectedWeapon]._reloadSound);
                 elapsedTime = 0f;
-                _isRealoadingSoundPlayed = true;
+                _isReloadingSoundPlayed = true;
             }
-            else if (!_isRealoadingSoundPlayed)
+            else if (!_isReloadingSoundPlayed)
             {
                 elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             }
@@ -550,7 +550,7 @@ namespace Engine.Game
                     if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
                     {
                         cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(40), MathHelper.ToRadians(30), 0.5f));
-                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true);
+                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true, 0.1f);
                         _isAiming = true;
                     }
                 }
@@ -561,6 +561,7 @@ namespace Engine.Game
                     !CGameSettings.useGamepad))
                 {
                     cam.ChangeFieldOfView(MathHelper.Lerp(MathHelper.ToRadians(30), MathHelper.ToRadians(40), 0.8f));
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
                     _isAiming = false;
                 }
             }

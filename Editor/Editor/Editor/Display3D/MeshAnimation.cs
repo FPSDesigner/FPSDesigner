@@ -123,11 +123,11 @@ namespace Engine.Display3D
             animationController.LoopEnabled = looping;
         }
 
-        public void ChangeAnimation(string name, bool looping)
+        public void ChangeAnimation(string name, bool looping, float velocity = 0.4f)
         {
             //Change animation smoothly
             animationController.LoopEnabled = looping;
-            animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(0.4f));
+            animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(velocity));
         }
 
         public bool isPlaying()
