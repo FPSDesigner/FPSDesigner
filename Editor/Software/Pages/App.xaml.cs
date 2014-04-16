@@ -30,6 +30,8 @@ namespace Software
             GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"));
 
             Startup += App_Startup;
+
+            GlobalVars.LaunchNewWindow += GlobalVars_LaunchNewWindow;
         }
 
         void App_Startup(object sender, StartupEventArgs e)
@@ -108,5 +110,14 @@ namespace Software
             Software.MainWindow.Instance.Show();
             RegisterPage.Close();
         }
+
+        void GlobalVars_LaunchNewWindow(object sender, RoutedEventArgs e)
+        {
+            if ((string)sender == "Console")
+            {
+                var result = ModernDialog.ShowMessage("This is a simple Modern UI styled message dialog. Do you like it?", "Message Dialog", MessageBoxButton.YesNoCancel);
+            }
+        }
+
     }
 }

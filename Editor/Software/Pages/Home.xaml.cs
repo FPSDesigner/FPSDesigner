@@ -50,6 +50,8 @@ namespace Software.Pages
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
+
+            statusBarView1.Text = "Idle";
         }
 
         void GameButton1_MouseMove(object sender, MouseEventArgs e)
@@ -62,7 +64,6 @@ namespace Software.Pages
 
         void GameButton1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Console.WriteLine("MouseWheel: " + e.Delta);
             float coef = 1;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 coef /= 4;
@@ -72,7 +73,7 @@ namespace Software.Pages
 
         private void GameButton1_MouseRightDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("Mouse down!");
+            statusBarView1.Text = "Moving...";
             m_game.WPFHandler("changeCamFreeze", false);
 
             isMovingGame1 = true;
@@ -85,7 +86,8 @@ namespace Software.Pages
 
         private void GameButton1_MouseRightUp(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("Mouse up!");
+            statusBarView1.Text = "Idle";
+
             m_game.WPFHandler("changeCamFreeze", true);
 
             isMovingGame1 = false;
