@@ -140,10 +140,10 @@ namespace Engine.GameStates
                     new string[] { wep.WeaponSound.Shot, wep.WeaponSound.DryShot, wep.WeaponSound.Reload }
                     );
                 animList.Add(
-                    new string[] { wep.WeaponAnim.Walk, wep.WeaponAnim.Attack, wep.WeaponAnim.Idle, wep.WeaponAnim.Reload, wep.WeaponAnim.Switch, wep.WeaponAnim.Aim }
+                    new string[] { wep.WeaponAnim.Walk, wep.WeaponAnim.Attack, wep.WeaponAnim.Idle, wep.WeaponAnim.Reload, wep.WeaponAnim.Switch, wep.WeaponAnim.Aim, wep.WeaponAnim.AimShot }
                     );
                 animVelocityList.Add(
-                    new float[] { wep.WeaponAnim.WalkSpeed, wep.WeaponAnim.AttackSpeed, wep.WeaponAnim.IdleSpeed, wep.WeaponAnim.ReloadSpeed, wep.WeaponAnim.SwitchSpeed, wep.WeaponAnim.AimSpeed }
+                    new float[] { wep.WeaponAnim.WalkSpeed, wep.WeaponAnim.AttackSpeed, wep.WeaponAnim.IdleSpeed, wep.WeaponAnim.ReloadSpeed, wep.WeaponAnim.SwitchSpeed, wep.WeaponAnim.AimSpeed, wep.WeaponAnim.AimShotSpeed }
                     );
             };
 

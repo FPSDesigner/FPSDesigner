@@ -219,6 +219,7 @@ namespace Engine.Game.LevelInfo
         public string Reload { get; set; }
         public string Switch { get; set; }
         public string Aim { get; set; }
+        public string AimShot { get; set; }
         
         public float WalkSpeed { get; set; }
         public float AttackSpeed { get; set; }
@@ -226,6 +227,7 @@ namespace Engine.Game.LevelInfo
         public float ReloadSpeed { get; set; }
         public float SwitchSpeed { get; set; }
         public float AimSpeed { get; set; }
+        public float AimShotSpeed { get; set; }
     }
     #endregion
 
