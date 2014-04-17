@@ -27,7 +27,7 @@ namespace Software
 
             LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
             
-            GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"));
+            GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"), "info");
 
             Startup += App_Startup;
 
@@ -115,7 +115,18 @@ namespace Software
         {
             if ((string)sender == "Console")
             {
-                var result = ModernDialog.ShowMessage("This is a simple Modern UI styled message dialog. Do you like it?", "Message Dialog", MessageBoxButton.YesNoCancel);
+                ModernWindow ConsoleLog = new ModernWindow
+                {
+                    Style = (Style)App.Current.Resources["EmptyWindow"],
+                    Content = new Pages.ConsoleLogs
+                    {
+                        Margin = new Thickness(32)
+                    },
+                    Width = 800,
+                    Height = 400
+                };
+
+                ConsoleLog.Show();
             }
         }
 

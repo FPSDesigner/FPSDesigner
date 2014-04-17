@@ -18,7 +18,7 @@ namespace Software
 {
     static class GlobalVars
     {
-        public static List<string> LogList = new List<string>();
+        public static List<string[]> LogList = new List<string[]>();
         public static string selectedTool = "Select";
         public static event RoutedEventHandler LaunchNewWindow;
         
@@ -31,9 +31,9 @@ namespace Software
             return uiString;
         }
 
-        public static void AddConsoleMsg(string key)
+        public static void AddConsoleMsg(string msg, string icon)
         {
-            LogList.Add(key);
+            LogList.Add(new string[] { msg, icon });
         }
 
 
@@ -41,55 +41,39 @@ namespace Software
         public static void OnFragmentNavigation(FragmentNavigationEventArgs e)
         {
             MainWindow MainWindowInstance = MainWindow.Instance;
-            if (e.Fragment == MainWindowInstance.MenuActions.Links[0].DisplayName)
-                return;
 
-            Console.WriteLine("FN");
-            Console.WriteLine("Open Window: " + e.Fragment);
+            //Console.WriteLine("Open Window: " + e.Fragment);
 
-            if (e.Fragment == "TreeManager")
+            foreach (Link elt in MainWindowInstance.HomeGroupAction.Links)
             {
-                NavigationCommands.GoToPage.Execute("/Pages/Home.xaml", null);
+                string[] splittedFrag = elt.Source.OriginalString.Split('#');
+                if (splittedFrag.Length > 1 && splittedFrag[1] == e.Fragment)
+                {
+                    MainWindowInstance.ContentSource = new Uri("/Pages/Home.xaml", UriKind.Relative);
+                    LaunchNewWindow(e.Fragment, null);
+                }
             }
-            /*NavigationCommands.GoToPage.Execute("/Pages/Home.xaml", null);
-
-            BBCodeBlock bs = new BBCodeBlock();
-
-            bs.LinkNavigator.Navigate(new Uri("/Pages/Home.xaml", UriKind.Relative), (FrameworkElement)this);
-    
-
-            List<Link> l = new List<Link>();
-            l.AddRange(MainWindowInstance.MenuActions.Links);
-            MainWindowInstance.MenuActions.Links.Clear();
-            foreach (Link elt in l)
-                MainWindowInstance.MenuActions.Links.Add(elt);
-
-            //LaunchNewWindow(e.Fragment, null);*/
         }
 
         public static void OnNavigatedTo(NavigationEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuActions.Links)
-                lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
-
-            Console.WriteLine("TO");
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuActions.Links)
+            //    lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
 
         public static void OnNavigatedFrom(NavigationEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuActions.Links)
-                lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuActions.Links)
+            //    lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
 
         public static void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            MainWindow MainWindowInstance = MainWindow.Instance;
-            foreach (Link lc in MainWindowInstance.MenuActions.Links)
-            lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
-
-            Console.WriteLine("FROM: " + e.Source);
+            //MainWindow MainWindowInstance = MainWindow.Instance;
+            //foreach (Link lc in MainWindowInstance.MenuActions.Links)
+            //lc.Source = new Uri(e.Source.OriginalString + "#" + lc.DisplayName, UriKind.RelativeOrAbsolute);
         }
         #endregion
     }
