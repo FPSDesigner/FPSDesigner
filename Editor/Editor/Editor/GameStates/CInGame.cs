@@ -119,20 +119,39 @@ namespace Engine.GameStates
             if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
                 terrain.waterHeight = water.waterPosition.Y;
 
+            /**** Weapons ****/
+            List<Model> modelsList = new List<Model>();
+            List<Texture2D> textureList = new List<Texture2D>();
+            List<object[]> objList = new List<object[]>();
+            List<string[]> soundList = new List<string[]>();
+            List<string[]> animList = new List<string[]>();
+            List<float[]> animVelocityList = new List<float[]>();
 
-            ///**** Weapons ****/
-            //List<object[]> objList = new List<object[]>();
-            //foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
-            //{
-            //    objList.Add(
-            //        new object[] { wep.Type, wep.IsAutomatic }
-            //        );
-            //};
-
-            //// We create array containing all informations about weapons.
+            foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
+            {
+                modelsList.Add(content.Load<Model>(wep.Model));
+                textureList.Add(content.Load<Texture2D>(wep.Texture));
+                objList.Add(
+                    new object[] { wep.Type, 10, wep.MaxClip, 10, 10, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
+                        Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
+                        wep.Offset.Vector3, wep.Scale, wep.Delay }
+                    );
+                soundList.Add(
+                    new string[] { wep.WeaponSound.Shot, wep.WeaponSound.DryShot, wep.WeaponSound.Reload }
+                    );
+                animList.Add(
+                    new string[] { wep.WeaponAnim.Walk, wep.WeaponAnim.Attack, wep.WeaponAnim.Idle, wep.WeaponAnim.Reload, wep.WeaponAnim.Switch, wep.WeaponAnim.Aim }
+                    );
+                animVelocityList.Add(
+                    new float[] { wep.WeaponAnim.WalkSpeed, wep.WeaponAnim.AttackSpeed, wep.WeaponAnim.IdleSpeed, wep.WeaponAnim.ReloadSpeed, wep.WeaponAnim.SwitchSpeed, wep.WeaponAnim.AimSpeed }
+                    );
+            };
 
             weapon = new Game.CWeapon();
+            weapon.LoadContent(content, modelsList, textureList, objList, soundList, animList, animVelocityList);
 
+            /*// We create array containing all informations about weapons.
+            weapon = new Game.CWeapon();
             Model[] testmodel = new Model[] { content.Load<Model>("Models//Machete"), content.Load<Model>("Models//M1911"), content.Load<Model>("Models//M24") };
 
             Texture2D[] weaponsTexture = new Texture2D[] { content.Load<Texture2D>("Textures//Uv_Machete"), content.Load<Texture2D>("Textures//M1911")
@@ -162,7 +181,7 @@ namespace Engine.GameStates
                     "Machete_Walk", "Machete_Attack", "Machete_Wait","","Machete_Switch",""
                 },
                 new string[] {
-                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch","M1911_Aim","M1911_AimShot"
+                    "M1911_Walk", "M1911_Attack", "M1911_Wait", "M1911_Reloading","M1911_Switch","M1911_Aim"
                 },
                 new string[] {
                     "M24_Walk", "", "M24_Wait", "","",""
@@ -171,18 +190,19 @@ namespace Engine.GameStates
 
             float[][] animVelocity = new float[][] {
                 new float[] {
-                    1.4f, 3.0f, 0.7f,0.0f,3.8f,1f,0.0f
+                    1.4f, 3.0f, 0.7f, 0.0f, 3.8f
                 },
                 new float[] {
-                    1.6f, 16.0f, 0.65f,2.8f,3.8f,1f,16.0f
+                    1.6f, 16.0f, 0.65f, 2.5f, 3.8f
                 },
                 new float[] {
-                    1.4f, 10.0f, 0.65f,2.5f,3.8f,1f,0.0f
+                    1.4f, 10.0f, 0.65f, 2.5f, 3.8f
                 },
 
             };
 
             weapon.LoadContent(content, testmodel, weaponsTexture, testInfos, testSounds, anims, animVelocity);
+            */
 
             /**** Particles ****/
             //Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
@@ -210,8 +230,12 @@ namespace Engine.GameStates
 
             if (levelData.Water.UseWater)
                 cam._physicsMap._waterHeight = water.waterPosition.Y;
-        }
 
+            x = levelData.Weapons.Weapon[1].Rotation.X;
+            y = levelData.Weapons.Weapon[1].Rotation.Y;
+            z = levelData.Weapons.Weapon[1].Rotation.Z;
+        }
+        float x, y, z;
         public void UnloadContent(ContentManager content)
         {
 
@@ -231,6 +255,18 @@ namespace Engine.GameStates
                 // ****** We get the weapon attribute to display it in console ****** //
                 Game.CConsole._Weapon = weapon;
             }
+
+            if (kbState.IsKeyDown(Keys.Left))
+                z -= 0.002f;
+            else if (kbState.IsKeyDown(Keys.Right))
+                z += 0.002f;
+            else if (kbState.IsKeyDown(Keys.Up))
+                x -= 0.002f;
+            else if (kbState.IsKeyDown(Keys.Down))
+                x += 0.002f;
+
+            weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
+            Game.CConsole.addMessage(x + " " + y + " " + z);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
@@ -285,12 +321,12 @@ namespace Engine.GameStates
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-                
+
                 lensFlare.Draw(gameTime);
 
                 water.DrawDebug(spriteBatch);
             }
-            
+
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);

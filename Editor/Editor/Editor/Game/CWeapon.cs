@@ -111,21 +111,22 @@ namespace Engine.Game
 
         }
 
-        public void LoadContent(ContentManager content, Model[] modelsList, Texture2D[] weapTexture, object[][] weaponsInfo, string[][] weaponsSounds, string[][] weapAnim,
-            float[][] animVelocity)
+        public void LoadContent(ContentManager content, List<Model> modelsList, List<Texture2D> weapTexture, List<object[]> weaponsInfo, List<string[]> weaponsSounds, List<string[]> weapAnim,
+            List<float[]> animVelocity)
         {
-            if ((modelsList.Length != weaponsInfo.Length || modelsList.Length != weaponsSounds.Length
-                ) && weapAnim.Length != modelsList.Length)
+            if ((modelsList.Count != weaponsInfo.Count || modelsList.Count != weaponsSounds.Count) && weapAnim.Count != modelsList.Count)
                 throw new Exception("Weapons Loading Error - Arrays of different lengths");
 
-            _weaponsAmount = modelsList.Length;
+            _weaponsAmount = modelsList.Count;
             _weaponsArray = new WeaponData[_weaponsAmount];
 
             // Initializing sounds
-            for (int i = 0; i < weaponsSounds.Length; i++)
+            for (int i = 0; i < weaponsSounds.Count; i++)
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
-                    CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]), (bool)weaponsInfo[i][5], (float)weaponsInfo[i][11]);
-
+                {
+                    if(weaponsSounds[i][x] != "")
+                        CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]), (bool)weaponsInfo[i][5], (float)weaponsInfo[i][11]);
+                }
             for (int i = 0; i < _weaponsAmount; i++)
             {
                 _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[i]);

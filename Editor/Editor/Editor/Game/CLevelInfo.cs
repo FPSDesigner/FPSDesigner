@@ -186,16 +186,20 @@ namespace Engine.Game.LevelInfo
     // Weapons
     public class Weapon
     {
+        public string Model { get; set; }
+        public string Texture { get; set; }
         public int Type { get; set; }
-        public int MaxType { get; set; }
+        public int MaxClip { get; set; }
         public bool IsAutomatic { get; set; }
-        public int ShotsPerSecs { get; set; }
+        public float ShotsPerSecs { get; set; }
         public int Range { get; set; }
         //public Matrix Rotation { get; set; }
         public Coordinates Offset { get; set; }
+        public Coordinates Rotation { get; set; }
         public float Scale { get; set; }
         public float Delay { get; set; }
         public WeaponSound WeaponSound { get; set; }
+        public WeaponAnim WeaponAnim { get; set; }
     }
 
     // WeaponSound
@@ -204,6 +208,24 @@ namespace Engine.Game.LevelInfo
         public string Shot { get; set; }
         public string DryShot { get; set; }
         public string Reload { get; set; }
+    }
+
+    // WeaponAnim
+    public class WeaponAnim
+    {
+        public string Walk { get; set; }
+        public string Attack { get; set; }
+        public string Idle { get; set; }
+        public string Reload { get; set; }
+        public string Switch { get; set; }
+        public string Aim { get; set; }
+        
+        public float WalkSpeed { get; set; }
+        public float AttackSpeed { get; set; }
+        public float IdleSpeed { get; set; }
+        public float ReloadSpeed { get; set; }
+        public float SwitchSpeed { get; set; }
+        public float AimSpeed { get; set; }
     }
     #endregion
 
