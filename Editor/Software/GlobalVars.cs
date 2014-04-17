@@ -47,6 +47,10 @@ namespace Software
             Console.WriteLine("FN");
             Console.WriteLine("Open Window: " + e.Fragment);
 
+            if (e.Fragment == "TreeManager")
+            {
+                NavigationCommands.GoToPage.Execute("/Pages/Home.xaml", null);
+            }
             /*NavigationCommands.GoToPage.Execute("/Pages/Home.xaml", null);
 
             BBCodeBlock bs = new BBCodeBlock();

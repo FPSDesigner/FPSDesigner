@@ -148,13 +148,11 @@ namespace Engine.Game
                     InternFire();
                 else if (_weaponsArray[_selectedWeapon]._isAutomatic)
                 {
-
                     if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
                     {
                         InternFire();
                         _lastShotMs = gameTime.TotalGameTime.TotalMilliseconds;
                     }
-
                 }
             }
             else

@@ -11,8 +11,8 @@
         <mui:LinkGroup DisplayName="home">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="home" Source="/Pages/Home.xaml" />
-                <mui:Link DisplayName="terrain manager" Source="/Pages/Home.xaml" />
-                <mui:Link DisplayName="tree manager" Source="/Pages/Home.xaml" />
+                <mui:Link DisplayName="terrain manager" Source="/Pages/Home.xaml#TerrainManager" />
+                <mui:Link DisplayName="tree manager" Source="/Pages/Home.xaml#TreeManager" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         

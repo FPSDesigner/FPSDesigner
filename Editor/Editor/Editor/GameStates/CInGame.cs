@@ -235,7 +235,9 @@ namespace Engine.GameStates
             y = levelData.Weapons.Weapon[1].Rotation.Y;
             z = levelData.Weapons.Weapon[1].Rotation.Z;
         }
+
         float x, y, z;
+
         public void UnloadContent(ContentManager content)
         {
 
