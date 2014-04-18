@@ -19,6 +19,8 @@ namespace Software
         private ModernWindow LoginPage;
         private ModernWindow RegisterPage;
 
+        private Dictionary<string, ModernWindow> listExtWindows;
+
         private bool IsLogged = false;
 
         public App()
@@ -28,10 +30,11 @@ namespace Software
             LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
             
             GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"), "info");
+            GlobalVars.LaunchNewWindow += GlobalVars_LaunchNewWindow;
 
             Startup += App_Startup;
 
-            GlobalVars.LaunchNewWindow += GlobalVars_LaunchNewWindow;
+            listExtWindows = new Dictionary<string, ModernWindow>();
         }
 
         void App_Startup(object sender, StartupEventArgs e)
@@ -115,18 +118,24 @@ namespace Software
         {
             if ((string)sender == "Console")
             {
-                ModernWindow ConsoleLog = new ModernWindow
+                if (!listExtWindows.ContainsKey("Console"))
                 {
-                    Style = (Style)App.Current.Resources["EmptyWindow"],
-                    Content = new Pages.ConsoleLogs
+                    listExtWindows["Console"] = new ModernWindow
                     {
-                        Margin = new Thickness(32)
-                    },
-                    Width = 800,
-                    Height = 400
-                };
+                        Style = (Style)App.Current.Resources["EmptyWindow"],
+                        Content = new Pages.ConsoleLogs
+                        {
+                            Margin = new Thickness(32)
+                        },
+                        Width = 800,
+                        Height = 400
+                    };
 
-                ConsoleLog.Show();
+                    listExtWindows["Console"].Show();
+                    listExtWindows["Console"].Closed += (send, args) => listExtWindows.Remove("Console");
+                }
+                else
+                    listExtWindows["Console"].Activate();
             }
         }
 
