@@ -75,7 +75,9 @@
                         <Setter Property="Padding" Value="0,3" />
                     </Style>
                 </StackPanel.Resources>
-                <StackPanel Orientation="Horizontal">
+
+                <TextBlock Text="Tree Style:" Style="{StaticResource Heading2}" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,10">
                     <Label Content="Tree Type" Target="{Binding ElementName=TreeProfile}"/>
                     <ComboBox x:Name="TreeProfile" Width="150">
                         <ComboBoxItem>Type A</ComboBoxItem>
@@ -83,11 +85,21 @@
                         <ComboBoxItem>Type C</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                     <Label Content="Tree Seed" Target="{Binding ElementName=TreeSeed}"/>
                     <Slider x:Name="TreeSeedSlider" TickPlacement="TopLeft" Value="5" Width="100"  />
                     <TextBox x:Name="TreeSeedTB" Width="50"></TextBox>
                 </StackPanel>
+
+                <TextBlock Text="Tree Options:" Style="{StaticResource Heading2}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+                <CheckBox Content="Branches" Margin="10,0,0,0" IsChecked="True"/>
+                <CheckBox Content="Wind" Margin="10,0,0,0" IsChecked="True"/>
+
+                <TextBlock Text="Tree Statistics:" Style="{StaticResource Heading2}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+                <TextBlock Margin="10,0,0,0" x:Name="STTrunkVertices">0 Trunk Vertices</TextBlock>
+                <TextBlock Margin="10,0,0,0" x:Name="STTrunkPolygons">0 Trunk Polygons</TextBlock>
+                <TextBlock Margin="10,0,0,0" x:Name="STLeaves">0 Leaves</TextBlock>
+                <TextBlock Margin="10,0,0,0" x:Name="STBones">0 Bones</TextBlock>
             </StackPanel>
         </Border>
     </Grid>
