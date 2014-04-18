@@ -100,6 +100,9 @@
     <Compile Include="Pages\ConsoleLogs.xaml.cs">
       <DependentUpon>ConsoleLogs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TreeManager.xaml.cs">
+      <DependentUpon>TreeManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Register.xaml.cs">
       <DependentUpon>Register.xaml</DependentUpon>
     </Compile>
@@ -168,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\TreeManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\Register.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -208,6 +215,10 @@
     <ProjectReference Include="..\Editor\Editor\Engine.csproj">
       <Project>{67264f9a-5d37-4a7a-8623-558392d47577}</Project>
       <Name>Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsGame1\ModelViewer.csproj">
+      <Project>{126262ca-2b0c-42ab-9958-64cd4f0f74f5}</Project>
+      <Name>ModelViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

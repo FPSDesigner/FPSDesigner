@@ -16,7 +16,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
 using System.Windows.Threading;
 
 using Engine;
@@ -108,7 +107,6 @@ namespace Software.Pages
         {
             resizeTimer.Stop();
             resizeTimer.Start();
-            //XNAStatus.Width = e.NewSize.Width;
         }
 
         #region "Windows Menu Helper"

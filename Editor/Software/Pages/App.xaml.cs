@@ -116,11 +116,12 @@ namespace Software
 
         void GlobalVars_LaunchNewWindow(object sender, RoutedEventArgs e)
         {
-            if ((string)sender == "Console")
+            string windowName = (string)sender;
+            if (windowName == "Console")
             {
-                if (!listExtWindows.ContainsKey("Console"))
+                if (!listExtWindows.ContainsKey(windowName))
                 {
-                    listExtWindows["Console"] = new ModernWindow
+                    listExtWindows[windowName] = new ModernWindow
                     {
                         Style = (Style)App.Current.Resources["EmptyWindow"],
                         Content = new Pages.ConsoleLogs
@@ -131,11 +132,32 @@ namespace Software
                         Height = 400
                     };
 
-                    listExtWindows["Console"].Show();
-                    listExtWindows["Console"].Closed += (send, args) => listExtWindows.Remove("Console");
+                    listExtWindows[windowName].Show();
+                    listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
                 }
                 else
-                    listExtWindows["Console"].Activate();
+                    listExtWindows[windowName].Activate();
+            }
+            else if (windowName == "TreeManager")
+            {
+                if (!listExtWindows.ContainsKey(windowName))
+                {
+                    listExtWindows[windowName] = new ModernWindow
+                    {
+                        Style = (Style)App.Current.Resources["EmptyWindow"],
+                        Content = new Pages.TreeManager
+                        {
+                            Margin = new Thickness(32)
+                        },
+                        Width = 800,
+                        Height = 600
+                    };
+
+                    listExtWindows[windowName].Show();
+                    listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
+                }
+                else
+                    listExtWindows[windowName].Activate();
             }
         }
 

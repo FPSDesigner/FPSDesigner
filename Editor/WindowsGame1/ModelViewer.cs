@@ -28,7 +28,6 @@ namespace ModelViewer
 
         // WPF
         // Used to emulate XNA when embedded in WPF
-
         public WriteableBitmap em_WriteableBitmap { get; set; }
         private Point em_sizeViewport;
         private RenderTarget2D em_renderTarget2D;

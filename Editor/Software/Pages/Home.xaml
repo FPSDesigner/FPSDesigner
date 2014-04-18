@@ -92,9 +92,7 @@
                 </Grid.RowDefinitions>
 
                 <Button Style="{DynamicResource NoChromeButton}" x:Name="GameButton1" MouseRightButtonDown="GameButton1_MouseRightDown" MouseRightButtonUp="GameButton1_MouseRightUp">
-                    <Image x:Name="ShowXNAImage1" Grid.Row="0" Stretch="UniformToFill">
-                        
-                    </Image>
+                    <Image x:Name="ShowXNAImage1" Grid.Row="0" Stretch="UniformToFill" />
                 </Button>
 
                 <GridSplitter Grid.Row="1" 
