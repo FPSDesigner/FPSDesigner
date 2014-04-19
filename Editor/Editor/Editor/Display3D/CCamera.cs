@@ -177,7 +177,6 @@ namespace Engine.Display3D
             {
                 _translation.Normalize();
             }
-            Console.WriteLine(_translation.Length());
 
             // _cameraPos = Vector3.Lerp(_cameraPos, _physicsMap.checkCollisions(gametime, _cameraPos, _translation * camVelocity, isUnderWater, waterLevel), 0.5f);
             if (isFreeCam)

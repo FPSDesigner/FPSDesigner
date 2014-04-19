@@ -238,6 +238,7 @@ namespace Engine.GameStates
 
         float x, y, z;
 
+
         public void UnloadContent(ContentManager content)
         {
 
@@ -267,8 +268,8 @@ namespace Engine.GameStates
             else if (kbState.IsKeyDown(Keys.Down))
                 x += 0.002f;
 
-            weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
-            Game.CConsole.addMessage(x + " " + y + " " + z);
+            //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
+            //Game.CConsole.addMessage(x + " " + y + " " + z);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }

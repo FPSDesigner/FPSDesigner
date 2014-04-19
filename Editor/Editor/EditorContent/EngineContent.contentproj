@@ -888,6 +888,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Ak.fbx">
+      <Name>Ak</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Uv_Ak.png">
+      <Name>Uv_Ak</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Models\Arm_Animation%28Smoothed%29.fbx">
       <Name>Arm_Animation%28Smoothed%29</Name>
       <Importer>FbxImporter</Importer>

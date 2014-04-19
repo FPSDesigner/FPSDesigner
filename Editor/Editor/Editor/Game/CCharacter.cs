@@ -54,12 +54,12 @@ namespace Engine.Game
         private float elapsedTime; // We get the time to know when play a sound
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
 
-        public float _sprintSpeed = 16f;
+        public float _sprintSpeed = 13f;
         public float _walkSpeed = 9f;
         public float _aimSpeed = 3f;
         public float _freeCamSpeed = 30f;
-        public float _crouchSpeed = 2f;
-        public float _movementsLerp = 0.2f;
+        public float _crouchSpeed = 3f;
+        public float _movementsLerp = 0.1f;
 
         private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
         private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
@@ -429,8 +429,12 @@ namespace Engine.Game
                     // If the mesh is the slide, we anim it
                     if (mesh.Name == "Slide" && _isShoting)
                     {
-                        world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
-                            weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.3f * Vector3.Up);
+                        // Move the slide of a shot by shot weapon
+                        if (weap._weaponsArray[weap._selectedWeapon]._wepType == 0)
+                        {
+                            world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                                weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.3f * Vector3.Up);
+                        }
                     }
                     else
                     {
