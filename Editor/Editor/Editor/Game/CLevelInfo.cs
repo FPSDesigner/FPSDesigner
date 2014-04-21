@@ -198,6 +198,7 @@ namespace Engine.Game.LevelInfo
         public Coordinates Rotation { get; set; }
         public float Scale { get; set; }
         public float Delay { get; set; }
+        public string Name { get; set; }
         public WeaponSound WeaponSound { get; set; }
         public WeaponAnim WeaponAnim { get; set; }
     }

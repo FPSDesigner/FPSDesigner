@@ -134,7 +134,7 @@ namespace Engine.GameStates
                 objList.Add(
                     new object[] { wep.Type, 10, wep.MaxClip, 10, 10, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
                         Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
-                        wep.Offset.Vector3, wep.Scale, wep.Delay }
+                        wep.Offset.Vector3, wep.Scale, wep.Delay, wep.Name}
                     );
                 soundList.Add(
                     new string[] { wep.WeaponSound.Shot, wep.WeaponSound.DryShot, wep.WeaponSound.Reload }
@@ -259,14 +259,14 @@ namespace Engine.GameStates
                 Game.CConsole._Weapon = weapon;
             }
 
-            if (kbState.IsKeyDown(Keys.Left))
-                z -= 0.002f;
-            else if (kbState.IsKeyDown(Keys.Right))
-                z += 0.002f;
-            else if (kbState.IsKeyDown(Keys.Up))
-                x -= 0.002f;
-            else if (kbState.IsKeyDown(Keys.Down))
-                x += 0.002f;
+            //if (kbState.IsKeyDown(Keys.Left))
+            //    z -= 0.002f;
+            //else if (kbState.IsKeyDown(Keys.Right))
+            //    z += 0.002f;
+            //else if (kbState.IsKeyDown(Keys.Up))
+            //    x -= 0.002f;
+            //else if (kbState.IsKeyDown(Keys.Down))
+            //    x += 0.002f;
 
             //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
             //Game.CConsole.addMessage(x + " " + y + " " + z);

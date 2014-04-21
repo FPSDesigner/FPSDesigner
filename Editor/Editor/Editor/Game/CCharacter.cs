@@ -341,8 +341,9 @@ namespace Engine.Game
                 _isSwitchingAnim2ndPartPlaying = false;
             }
 
-            if ((mouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released) ||
-                (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPShot)))
+            // If the player shot
+            if (mouseState.LeftButton == ButtonState.Pressed ||
+                (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
             {
                 if (!_isUnderWater && (!_isShoting && !_isReloading && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)))
                 {
@@ -363,39 +364,37 @@ namespace Engine.Game
                         _isWaitAnimPlaying = false;
 
                         _isShoting = true;
+                    }
 
+                    weapon.Shot(true, _isShoting, gameTime);
 
-                        // Draw particles
-                        if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2)
+                    // Draw particles
+                    if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
+                    {
+                        if (_terrain != null)
                         {
-                            if (_terrain != null)
-                            {
-                                bool IsTerrainShot = false;
-                                bool IsWaterShot = false;
+                            bool IsTerrainShot = false;
+                            bool IsWaterShot = false;
 
-                                Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
-                                Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+                            Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+                            Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                            Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
+                            /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                            Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
 
-                                Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
-                                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                                    0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
-                                Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+                            Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                            Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
 
-                                Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
-                                Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
-                            }
+                            Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                            Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                         }
                     }
-                    weapon.Shot(true, _isShoting, gameTime);
                 }
             }
-            else if (mouseState.LeftButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
-                weapon.Shot(false, _isShoting, gameTime);
 
             // ***** If he has shot : We play vibrations **** //
             if (CGameSettings.useGamepad)
@@ -451,12 +450,26 @@ namespace Engine.Game
 
             // Draw the muzzle flash
             if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && !_isReloading &&
-                (_isShoting && _elapsedTimeMuzzle <= 15))
+                (_isShoting && _elapsedTimeMuzzle <= 150))
             {
                 float randomScale = (float)_muzzleRandom.NextDouble() / 4f;
-                Matrix muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                    0.33f + randomScale, new Vector3(-1f, -2.0f + randomScale, -2.85f));
+                Matrix muzzleDestination = Matrix.Identity;
+ 
+                switch (weap._weaponsArray[weap._selectedWeapon]._name)
+                {
+                    case "M1911":
+                        muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                        0.33f + randomScale, new Vector3(-1f, -2.0f + randomScale, -2.85f));
+                        break;
+                    case "AK47":
+                        muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                        0.7f + randomScale, new Vector3(-3.6f, -1.6f + randomScale, -2.85f));
+                        break;
+                }
+                
+
                 _graphicsDevice.BlendState = BlendState.Additive;
                 foreach (ModelMesh mesh in _muzzleFlash.Meshes)
                 {

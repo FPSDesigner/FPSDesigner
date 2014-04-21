@@ -42,8 +42,10 @@ namespace Engine.Game
                 this._rotation = (Matrix)weaponInfo[8];
                 this._offset = (Vector3)weaponInfo[9];
                 this._scale = (float)weaponInfo[10];
-
+                
                 this._delay = (float)weaponInfo[11];
+
+                this._name = (string)weaponInfo[12];
 
                 this._animVelocity = animVelocity;
 
@@ -80,6 +82,7 @@ namespace Engine.Game
             public int _shotPerSeconds; // 0 if non automatic
             public int _range; // 0 if unlimited range
             public float _delay; // the delay used to play the sound
+            public string _name; // The weapon name
 
             // Models
             public Model _wepModel;
