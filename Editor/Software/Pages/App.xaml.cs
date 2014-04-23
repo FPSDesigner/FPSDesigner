@@ -39,12 +39,12 @@ namespace Software
 
         void App_Startup(object sender, StartupEventArgs e)
         {
-            /****
+            
             IsLogged = true;
             Software.MainWindow.LoadMainWindow();
             Software.MainWindow.Instance.Show();
             return;
-            ***/
+            
 
             Software.MainWindow.LoadMainWindow();
 

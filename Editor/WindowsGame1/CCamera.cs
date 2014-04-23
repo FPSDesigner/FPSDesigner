@@ -30,7 +30,7 @@ namespace ModelViewer
         private float _nearClip;
         private float _farClip;
         private float _aspectRatio;
-        private float fieldOfView;
+        public float fieldOfView;
 
         private KeyboardState _oldKeyState;
 
@@ -65,6 +65,11 @@ namespace ModelViewer
             fieldOfView = MathHelper.ToRadians(40);
             _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
 
+            _frustum = new BoundingFrustum(_view * _projection);
+        }
+
+        public void ReloadFrustum()
+        {
             _frustum = new BoundingFrustum(_view * _projection);
         }
 

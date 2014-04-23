@@ -9,11 +9,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using System.Diagnostics;
+
+using LTreesLibrary.Trees;
 
 
 namespace ModelViewer
@@ -38,9 +39,20 @@ namespace ModelViewer
         private TimeSpan em_LastTime;
         public bool isSoftwareEmbedded = false;
 
+        private bool useTree = false;
+        public SimpleTree tree;
+        private Matrix treeMatrix;
+        private float TreeRotation = 0f;
+        private float treeScale = 0f;
+        private Matrix[] treeMatrices;
+        private bool treeUseWind = true;
+        private LTreesLibrary.Trees.Wind.WindStrengthSin treeWind;
+        private LTreesLibrary.Trees.Wind.TreeWindAnimator treeAnimator;
+        private bool treeUseBranches = true;
+
         private CModel _currentModel;
 
-        // All arround the scale
+        // Scale
         private Vector2 _maxResolution = new Vector2(1920f, 1080f);
         private Vector3 _scalingFactor = new Vector3(1f, 1f, 1f);
 
@@ -69,7 +81,7 @@ namespace ModelViewer
             if (launchedFromSoftware)
             {
                 em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
+                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, System.Windows.Media.PixelFormats.Bgr565, null);
                 em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
 
                 em_LastTime = new TimeSpan();
@@ -98,16 +110,17 @@ namespace ModelViewer
 
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
-
+            graphics.ApplyChanges(); // Seem to be crashing
             if (isSoftwareEmbedded)
             {
+                //camera.ChangeProjectionMatrix(width, height, graphics.GraphicsDevice);
                 em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
+                em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, System.Windows.Media.PixelFormats.Bgr565, null);
                 em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
                 em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
             }
 
-            //graphics.ApplyChanges(); // Seem to be crashing
+
         }
 
         protected override void Initialize()
@@ -125,7 +138,7 @@ namespace ModelViewer
                 em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
             }
 
-            camera = new CCamera(GraphicsDevice, Vector3.Up + new Vector3(50.0f), Vector3.Zero, 0.5f, 10000f);
+            camera = new CCamera(GraphicsDevice, Vector3.Up + new Vector3(50f), Vector3.Zero, 0.5f, 10000f);
 
             base.Initialize();
         }
@@ -145,6 +158,35 @@ namespace ModelViewer
         protected override void UnloadContent()
         {
 
+        }
+
+        public void LoadNewTree(string profileName, int seed = -1, bool displayBranch = true, bool wind = true)
+        {
+            TreeProfile profile = Content.Load<TreeProfile>(profileName);
+
+            if (seed == -1)
+                tree = profile.GenerateSimpleTree();
+            else
+            {
+                Random rand = new Random(seed);
+                tree = profile.GenerateSimpleTree(rand);
+            }
+
+            useTree = true;
+
+            treeUseBranches = displayBranch;
+            treeUseWind = wind;
+
+            // Wind
+            treeWind = new LTreesLibrary.Trees.Wind.WindStrengthSin();
+            treeAnimator = new LTreesLibrary.Trees.Wind.TreeWindAnimator(treeWind);
+
+            // Scale
+            ChangeCameraZoom(0);
+            float BoundingSphereRadius = (float)(new Ray(Vector3.Zero, Vector3.Up)).Intersects(camera._frustum.Top);
+            treeMatrices = new Matrix[2];
+            treeMatrices[0] = Matrix.CreateScale(BoundingSphereRadius / tree.TrunkMesh.BoundingSphere.Radius);
+            treeMatrices[1] = Matrix.CreateTranslation(new Vector3(0, -BoundingSphereRadius / 2, 0));
         }
 
         public void LoadNewModel(string modelUri, Dictionary<String, Texture2D> textures, Vector3 modelRotation, float alpha = 1)
@@ -196,6 +238,17 @@ namespace ModelViewer
                     _currentModel.Update(gameTime);
                 }
 
+                if (useTree)
+                {
+                    TreeRotation += 0.005f;
+                    treeMatrix = treeMatrices[0] * Matrix.CreateRotationY(TreeRotation) * treeMatrices[1];
+                    if (treeUseWind)
+                    {
+                        treeWind.Update(gameTime);
+                        treeAnimator.Animate(tree.Skeleton, tree.AnimationState, gameTime);
+                    }
+                }
+
                 base.Update(gameTime);
             }
         }
@@ -214,12 +267,19 @@ namespace ModelViewer
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
-                _currentModel.Draw(camera._view, camera._projection);
+                //_currentModel.Draw(camera._view, camera._projection);
+            }
+
+            if (useTree)
+            {
+                tree.DrawTrunk(treeMatrix, camera._view, camera._projection);
+                if (treeUseBranches)
+                    tree.DrawLeaves(treeMatrix, camera._view, camera._projection);
             }
 
             // Draw the text info
 
-            int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
+            /*int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
             int yPos = (40 * this.GraphicsDevice.Viewport.Height) / 1080;
 
             _scalingFactor.X = (this.GraphicsDevice.PresentationParameters.BackBufferWidth) / _maxResolution.X;
@@ -230,7 +290,7 @@ namespace ModelViewer
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
             spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : " + _currentModel.verticesCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White);
             spriteBatch.End();
-
+            */
 
 
             base.Draw(gameTime);
@@ -247,6 +307,34 @@ namespace ModelViewer
                 em_WriteableBitmap.Unlock();
             }
 
+        }
+        public int GetTreeData(int data)
+        {
+            switch (data)
+            {
+                case 0:
+                    return tree.TrunkMesh.NumberOfTriangles;
+                case 1:
+                    return tree.TrunkMesh.NumberOfVertices;
+                case 2:
+                    return tree.Skeleton.Leaves.Count;
+                case 3:
+                    return tree.Skeleton.Bones.Count;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Change the camera zoom
+        /// </summary>
+        /// <param name="zoom">Negative value to zoom in, positive to zoom out.</param>
+        public void ChangeCameraZoom(float zoom)
+        {
+            if (zoom == 0 || zoom < 0 && camera._cameraPos.Y <= 1.0f)
+                return;
+
+            camera._cameraPos = Vector3.Up + new Vector3(zoom);
+            camera.ReloadFrustum();
         }
 
         private void GameLoop(object sender, EventArgs e)

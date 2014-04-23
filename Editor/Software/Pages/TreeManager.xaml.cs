@@ -29,6 +29,7 @@ namespace Software.Pages
     {
         private ModelViewer.ModelViewer modelViewer;
         private DispatcherTimer resizeTimer = new DispatcherTimer();
+        private float initialZoom = 20;
 
         public TreeManager()
         {
@@ -39,6 +40,8 @@ namespace Software.Pages
             TreeViewImage.Source = modelViewer.em_WriteableBitmap;
             TreeViewImage.SizeChanged += TreeViewImage_SizeChanged;
 
+            ButtonGame.SizeChanged += ButtonGame_SizeChanged;
+
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
 
@@ -46,7 +49,8 @@ namespace Software.Pages
             TreeProfile.SelectedIndex = 1;
 
             TreeSeedSlider.ValueChanged += (sender, args) => TreeSeedTB.Text = ((int)(args.NewValue * 100)).ToString();
-            TreeSeedTB.TextChanged += (sender, args) => { 
+            TreeSeedTB.TextChanged += (sender, args) =>
+            {
                 double newValue;
                 if (Double.TryParse(TreeSeedTB.Text, out newValue))
                 {
@@ -61,6 +65,39 @@ namespace Software.Pages
 
             // Allow only integers
             TreeSeedTB.PreviewTextInput += (sender, args) => args.Handled = !IsTextAllowed(args.Text);
+            TreeSeedTB.Text = TreeSeedSlider.Value.ToString();
+
+            PreviewButton.Click += PreviewButton_Click;
+
+            ZoomSlider.ValueChanged += ZoomSlider_ValueChanged;
+            modelViewer.ChangeCameraZoom((float)ZoomSlider.Value * 2);
+            initialZoom = (float)ZoomSlider.Value;
+        }
+
+        void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            modelViewer.ChangeCameraZoom((float)e.NewValue * 2);
+        }
+
+        void PreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+            int seed = -1;
+            if (TreeSeedTB.Text != "")
+                seed = int.Parse(TreeSeedTB.Text);
+
+            ZoomSlider.Value = initialZoom;
+            modelViewer.LoadNewTree("Trees/" + (string)((ComboBoxItem)TreeProfile.SelectedValue).Content, seed, (bool)BranchesButton.IsChecked, (bool)WindButton.IsChecked);
+
+            STTrunkVertices.Text = modelViewer.GetTreeData(0) + " Trunk Vertices";
+            STTrunkTriangles.Text = modelViewer.GetTreeData(1) + " Trunk Triangles";
+            STBones.Text = modelViewer.GetTreeData(2) + " Bones";
+            STLeaves.Text = STBones.Text = modelViewer.GetTreeData(3) + " Leaves";
+        }
+
+        void ButtonGame_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            resizeTimer.Stop();
+            resizeTimer.Start();
         }
 
         private bool IsTextAllowed(string text)
@@ -71,7 +108,7 @@ namespace Software.Pages
 
         void disTimer_Tick(object sender, EventArgs e)
         {
-            modelViewer.ChangeEmbeddedViewport((int)TreeViewImage.RenderSize.Width, (int)TreeViewImage.RenderSize.Height);
+            modelViewer.ChangeEmbeddedViewport((int)ButtonGame.RenderSize.Width, (int)ButtonGame.RenderSize.Height);
             TreeViewImage.Source = modelViewer.em_WriteableBitmap;
             resizeTimer.Stop();
         }
