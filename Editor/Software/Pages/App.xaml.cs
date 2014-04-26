@@ -159,6 +159,35 @@ namespace Software
                 else
                     listExtWindows[windowName].Activate();
             }
+            else if (windowName == "TerrainManager")
+            {
+                if (!listExtWindows.ContainsKey(windowName))
+                {
+                    listExtWindows[windowName] = new ModernWindow
+                    {
+                        Style = (Style)App.Current.Resources["EmptyWindow"],
+                        Content = new Pages.TerrainManager.TerrainManager
+                        {
+                            Margin = new Thickness(32)
+                        },
+                        Width = 750,
+                        Height = 500,
+                        MinWidth = 750,
+                        MinHeight = 500
+                    };
+
+                    listExtWindows[windowName].Show();
+                    listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
+                    ((Pages.TerrainManager.TerrainManager)listExtWindows[windowName].Content).ShouldClose += App_ShouldClose;
+                }
+                else
+                    listExtWindows[windowName].Activate();
+            }
+        }
+
+        void App_ShouldClose(object sender, RoutedEventArgs e)
+        {
+            listExtWindows[(string)sender].Close();
         }
 
     }

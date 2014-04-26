@@ -100,6 +100,15 @@
     <Compile Include="Pages\ConsoleLogs.xaml.cs">
       <DependentUpon>ConsoleLogs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TerrainManager\Terrain.xaml.cs">
+      <DependentUpon>Terrain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\TerrainManager\Textures.xaml.cs">
+      <DependentUpon>Textures.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\TerrainManager\TerrainManager.xaml.cs">
+      <DependentUpon>TerrainManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TreeManager.xaml.cs">
       <DependentUpon>TreeManager.xaml</DependentUpon>
     </Compile>
@@ -168,6 +177,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\ConsoleLogs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\TerrainManager\Terrain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\TerrainManager\Textures.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\TerrainManager\TerrainManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -267,6 +288,9 @@
   <ItemGroup>
     <Resource Include="Assets\Icons\AddMethod.png" />
     <Resource Include="Assets\Icons\NewMethods.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\placeholder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

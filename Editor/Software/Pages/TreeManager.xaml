@@ -48,7 +48,7 @@
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
-        <GridSplitter Grid.Column="2" x:Name="testGS"
+        <GridSplitter Grid.Column="2"
               HorizontalAlignment="Left"
               VerticalAlignment="Stretch"
               Background="Black" 

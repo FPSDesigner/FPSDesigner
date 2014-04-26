@@ -147,12 +147,12 @@ namespace ModelViewer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Dictionary<string, Texture2D> text = new Dictionary<string, Texture2D>();
+            /*Dictionary<string, Texture2D> text = new Dictionary<string, Texture2D>();
             text.Add("Barrel", Content.Load<Texture2D>("11"));
 
             LoadNewModel("B", text, new Vector3(0), 1.0f);
 
-            _modelFontName = Content.Load<SpriteFont>("Font1");
+            _modelFontName = Content.Load<SpriteFont>("Font1");*/
         }
 
         protected override void UnloadContent()

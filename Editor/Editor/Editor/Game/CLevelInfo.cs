@@ -114,6 +114,7 @@ namespace Engine.Game.LevelInfo
     {
         public int Seed { get; set; }
         public string Profile { get; set; }
+        public bool Wind { get; set; }
         public Coordinates Position { get; set; }
         public Coordinates Rotation { get; set; }
         public Coordinates Scale { get; set; }
