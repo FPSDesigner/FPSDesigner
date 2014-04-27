@@ -240,31 +240,6 @@ namespace Engine.Game
                 _isWaitAnimPlaying = true;
             }
 
-            // We wanted to know if the shoting animation is finished
-            if ((_isShoting || _isReloading) && _handAnimation.HasFinished())
-            {
-                if (!_isAiming)
-                {
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
-                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true);
-                    _isWaitAnimPlaying = true;
-                }
-                else
-                {
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[5]);
-                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true);
-                }
-
-                //just the wait animation is playing
-                _isWalkAnimPlaying = false;
-                _isSwimAnimationPlaying = false;
-                _isSwitchingAnimPlaying = false;
-                _isSwitchingAnim2ndPartPlaying = false;
-
-                _isShoting = false;
-                _isReloading = false;
-            }
-
             // If player move, we play the walk anim
             if ((cam._isMoving && !_isWalkAnimPlaying && !_isShoting) && !_isUnderWater && !_isReloading &&
                 (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying) && !_isAiming)
@@ -341,56 +316,84 @@ namespace Engine.Game
                 _isSwitchingAnim2ndPartPlaying = false;
             }
 
+            // We wanted to know if the shoting animation is finished
+            if ((_isShoting || _isReloading) && _handAnimation.HasFinished())
+            {
+                if (!_isAiming)
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[2]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[2], true,0.02f);
+                    _isWaitAnimPlaying = true;
+                }
+                else
+                {
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[5]);
+                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[5], true,0.02f);
+                }
+
+                //just the wait animation is playing
+                _isWalkAnimPlaying = false;
+                _isSwimAnimationPlaying = false;
+                _isSwitchingAnimPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
+
+                _isReloading = false;
+                _isShoting = false;
+            }
+
             // If the player shot
             if (mouseState.LeftButton == ButtonState.Pressed ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
             {
                 if (!_isUnderWater && (!_isShoting && !_isReloading && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)))
                 {
-                    // If he does not use a machete AND if he has bullet in a magazine
-                    if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
+                    if (weapon._weaponsArray[weapon._selectedWeapon]._isAutomatic || oldMouseState.LeftButton == ButtonState.Released)
                     {
-                        if (!_isAiming)
+                        // If he does not use a machete AND if he has bullet in a magazine
+                        if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
                         {
-                            _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
-                            _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false,0.12f);
+                            if (!_isAiming)
+                            {
+                                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
+                                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false, 0.12f);
+                            }
+                            else
+                            {
+                                _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[6]);
+                                _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[6], false, 0.1f);
+                            }
+                            _isWalkAnimPlaying = false;
+                            _isWaitAnimPlaying = false;
+
+                            _isShoting = true;
                         }
-                        else
+
+                        weapon.Shot(true, _isShoting, gameTime);
+                    
+                        // Draw particles
+                        if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
                         {
-                            _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[6]);
-                            _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[6], false, 0.1f);
-                        }
-                        _isWalkAnimPlaying = false;
-                        _isWaitAnimPlaying = false;
+                            if (_terrain != null)
+                            {
+                                bool IsTerrainShot = false;
+                                bool IsWaterShot = false;
 
-                        _isShoting = true;
-                    }
+                                Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+                                Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                                Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                    weapon.Shot(true, _isShoting, gameTime);
+                                /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
 
-                    // Draw particles
-                    if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
-                    {
-                        if (_terrain != null)
-                        {
-                            bool IsTerrainShot = false;
-                            bool IsWaterShot = false;
-
-                            Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
-                            Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                            Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
-
-                            /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                            Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
-
-                            Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
-                                Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                                0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
-                            Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+                                Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                    0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                                Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
 
-                            Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
-                            Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
+                                Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                                Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
+                            }
                         }
                     }
                 }
@@ -426,13 +429,23 @@ namespace Engine.Game
                     effect.Texture = weap._weaponsArray[weap._selectedWeapon]._weapTexture;
 
                     // If the mesh is the slide, we anim it
-                    if (mesh.Name == "Slide" && _isShoting)
+                    if (mesh.Name == "Slide" && (_isShoting || _isReloading))
                     {
                         // Move the slide of a shot by shot weapon
-                        if (weap._weaponsArray[weap._selectedWeapon]._wepType == 0)
+                        switch (weap._weaponsArray[weap._selectedWeapon]._name)
                         {
+                            case "M1911":
                             world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
                                 weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.3f * Vector3.Up);
+                            break;
+                            case "AK47":
+                            world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                            weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.24f * Vector3.Up);
+                            break;
+                            case "Deagle":
+                            world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponsArray[weap._selectedWeapon]._rotation,
+                            weap._weaponsArray[weap._selectedWeapon]._scale, weap._weaponsArray[weap._selectedWeapon]._offset + 0.18f * Vector3.Forward);
+                            break;
                         }
                     }
                     else
@@ -450,22 +463,28 @@ namespace Engine.Game
 
             // Draw the muzzle flash
             if (weap._weaponsArray[weap._selectedWeapon]._wepType != 2 && !_isReloading &&
-                (_isShoting && _elapsedTimeMuzzle <= 150))
+                (_isShoting))
             {
-                float randomScale = (float)_muzzleRandom.NextDouble() / 4f;
                 Matrix muzzleDestination = Matrix.Identity;
- 
+                float randomScale = (float)_muzzleRandom.NextDouble() / 2f;
+                
                 switch (weap._weaponsArray[weap._selectedWeapon]._name)
                 {
                     case "M1911":
                         muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
                         Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                        0.33f + randomScale, new Vector3(-1f, -2.0f + randomScale, -2.85f));
+                        0.25f + randomScale * 0.5f, new Vector3(-1f, -2.0f + randomScale, -2.85f));
                         break;
                     case "AK47":
+                        randomScale = (float)_muzzleRandom.NextDouble() * 1.4f;
                         muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
                         Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                        0.7f + randomScale, new Vector3(-3.6f, -1.6f + randomScale, -2.85f));
+                        0.7f + randomScale * 1.4f, new Vector3(-3.6f, -1.6f + randomScale*1.1f, -2.85f + 0.1f*randomScale));
+                        break;
+                    case "Deagle":
+                        muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                        0.5f + randomScale * 0.05f, new Vector3(-0.7f, -1.4f, -2.85f));
                         break;
                 }
                 
@@ -494,6 +513,7 @@ namespace Engine.Game
             {
                 _elapsedTimeMuzzle = 0;
             }
+
         }
 
         // Check the key entered to change the weapon
@@ -548,8 +568,8 @@ namespace Engine.Game
         // Reloading function
         private void Reloading(CWeapon weapon, KeyboardState kbState, KeyboardState oldKbState, GameTime gameTime)
         {
-            if (((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload) && oldKbState.IsKeyUp(CGameSettings._gameSettings.KeyMapping.Reload))
-                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPReload))))
+            if ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload))
+                || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
             {
                 if((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                 {
@@ -609,6 +629,8 @@ namespace Engine.Game
                     {
                         _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0]);
                         _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[0], true);
+                        _isWalkAnimPlaying = true;
+                        _isWaitAnimPlaying = false;
                     }
 
                     _isAiming = false;

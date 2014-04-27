@@ -139,6 +139,7 @@
     <Compile Include="Game\CXMLManager.cs" />
     <Compile Include="Game\CGameManagement.cs" />
     <Compile Include="Display3D\CSkybox.cs" />
+    <Compile Include="Game\Enemie.cs" />
     <Compile Include="Game\Script\CEmbeddedClasses.cs" />
     <Compile Include="Game\Script\CLuaScriptFunctions.cs" />
     <Compile Include="Game\Script\CLuaVM.cs" />

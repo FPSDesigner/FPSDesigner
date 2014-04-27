@@ -260,13 +260,13 @@ namespace Engine.GameStates
             }
 
             //if (kbState.IsKeyDown(Keys.Left))
-            //    z -= 0.002f;
+            //    z -= 0.005f;
             //else if (kbState.IsKeyDown(Keys.Right))
-            //    z += 0.002f;
+            //    z += 0.005f;
             //else if (kbState.IsKeyDown(Keys.Up))
-            //    x -= 0.002f;
+            //    x -= 0.005f;
             //else if (kbState.IsKeyDown(Keys.Down))
-            //    x += 0.002f;
+            //    x += 0.005f;
 
             //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
             //Game.CConsole.addMessage(x + " " + y + " " + z);
