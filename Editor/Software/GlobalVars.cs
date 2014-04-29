@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Automation.Peers;
+using System.Windows.Media.Imaging;
 
 using FirstFloor.ModernUI.Windows;
 using FirstFloor.ModernUI.Windows.Controls;
@@ -23,7 +24,7 @@ namespace Software
         public static event RoutedEventHandler LaunchNewWindow;
         public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
         public static string projectFile = "";
-        
+        public static BitmapFrame SoftwareIcon = BitmapFrame.Create(new Uri("pack://application:,,,/Assets/Icon.ico", UriKind.RelativeOrAbsolute));
 
         public static string GetUIString(string key)
         {

@@ -39,6 +39,7 @@ namespace Software
 
         void App_Startup(object sender, StartupEventArgs e)
         {
+            // Load 'open-with' projects
             if (e.Args.Length > 0)
             {
                 if (System.IO.File.Exists(e.Args[0]) && GlobalVars.extensionsProjectFile.Contains(System.IO.Path.GetExtension(e.Args[0])))
@@ -74,6 +75,7 @@ namespace Software
                 MaxWidth = 850,
                 Title = "FPSDesigner - Login",
                 MaxHeight = 320,
+                Icon = GlobalVars.SoftwareIcon
             };
 
             ((Pages.Login)LoginPage.Content).LoginSucceed += App_LoginSucceed;
@@ -96,6 +98,7 @@ namespace Software
                 MaxWidth = 650,
                 Title = "FPSDesigner - Register",
                 MaxHeight = 430,
+                Icon = GlobalVars.SoftwareIcon
             };
             RegisterPage.Closing += ModernWindow_Closed;
             ((Pages.Register)RegisterPage.Content).RegisterSucceed += App_RegisterSucceed;
@@ -144,6 +147,7 @@ namespace Software
                     MaxWidth = 650,
                     Title = "FPSDesigner - Select a project",
                     MaxHeight = 200,
+                    Icon = GlobalVars.SoftwareIcon
                 };
                 SelectProjectPage.Closing += (s, e) => { if (GlobalVars.projectFile == "") Application.Current.Shutdown(); };
 
@@ -176,8 +180,10 @@ namespace Software
                         {
                             Margin = new Thickness(32)
                         },
+                        Title = "Console",
                         Width = 800,
-                        Height = 400
+                        Height = 400,
+                        Icon = GlobalVars.SoftwareIcon
                     };
 
                     listExtWindows[windowName].Show();
@@ -197,8 +203,10 @@ namespace Software
                         {
                             Margin = new Thickness(32)
                         },
+                        Title = "Tree Manager",
                         Width = 800,
-                        Height = 600
+                        Height = 600,
+                        Icon = GlobalVars.SoftwareIcon
                     };
 
                     listExtWindows[windowName].Show();
@@ -218,10 +226,12 @@ namespace Software
                         {
                             Margin = new Thickness(32)
                         },
+                        Title = "Terrain Manager",
                         Width = 750,
                         Height = 500,
                         MinWidth = 750,
-                        MinHeight = 500
+                        MinHeight = 500,
+                        Icon = GlobalVars.SoftwareIcon
                     };
 
                     listExtWindows[windowName].Show();

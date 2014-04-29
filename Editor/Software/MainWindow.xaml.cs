@@ -29,6 +29,7 @@ namespace Software
         {
             Instance = new MainWindow();
             Instance.InitializeComponent();
+            Instance.Icon = GlobalVars.SoftwareIcon;
         }
     }
 }
