@@ -281,7 +281,6 @@ namespace Engine.Display2D
         /// <param name="gameTime">GameTime snapshot</param>
         public static void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin();
             if (ScriptableRectangle.Any())
             {
                 for (int i = 0; i < ScriptableRectangle.Count; i++)
@@ -296,8 +295,6 @@ namespace Engine.Display2D
             }
 
             _spriteBatch.Draw(pixel, new Rectangle(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2, 4, 4), Color.Red);
-
-            _spriteBatch.End();
         }
 
         /// <summary>

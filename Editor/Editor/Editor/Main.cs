@@ -222,8 +222,10 @@ namespace Engine
             Game.CGameManagement.Draw(spriteBatch, gameTime);
 
             // Draw the Console effect
+            spriteBatch.Begin();
             Display2D.C2DEffect.Draw(gameTime);
             Game.CConsole.Draw(gameTime);
+            spriteBatch.End();
 
             // End capturing
             renderCapture.End();

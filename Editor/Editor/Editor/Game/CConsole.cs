@@ -401,8 +401,6 @@ namespace Engine.Game
         /// <param name="gameTime">GameTime snapshot</param>
         public static void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin();
-
             if (_drawFPS)
             {
                 _totalFrames++;
@@ -438,8 +436,6 @@ namespace Engine.Game
                 }
                 drawFormattedText(_inputLinePre + _inputLine_preLine + _inputLineCursor + _inputLine_postLine, _inputLinePos);
             }
-
-            _spriteBatch.End();
 
         }
 
