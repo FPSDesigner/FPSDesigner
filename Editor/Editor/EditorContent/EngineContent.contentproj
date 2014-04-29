@@ -944,17 +944,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Arm_Animation%28Smoothed%29.fbx">
-      <Name>Arm_Animation%28Smoothed%29</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Lens.png">
       <Name>Lens</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Arm_Animation%28Smoothed%29.fbx">
+      <Name>Arm_Animation%28Smoothed%29</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

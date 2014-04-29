@@ -324,7 +324,6 @@ namespace Engine.GameStates
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-
                 lensFlare.Draw(gameTime);
 
                 water.DrawDebug(spriteBatch);
@@ -333,7 +332,6 @@ namespace Engine.GameStates
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
-
 
         }
 
