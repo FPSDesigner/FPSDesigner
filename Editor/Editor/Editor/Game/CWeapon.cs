@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+// TYPE 0 : Gun, Semi Auto, Auto...
+// TYPE 1 : Sniper
+// TYPE 2 : Cut
+
 namespace Engine.Game
 {
     class CWeapon
