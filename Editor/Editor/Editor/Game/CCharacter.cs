@@ -176,7 +176,9 @@ namespace Engine.Game
             }
             else
             {
+                spriteBatch.Begin();
                 spriteBatch.Draw(_lensTexture, Vector2.Zero, Color.White);
+                spriteBatch.End();
             }
         }
 
@@ -192,7 +194,8 @@ namespace Engine.Game
             if (cam.isFreeCam)
                 return _freeCamSpeed;
 
-            if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint) && !_isAiming)
+            // If the player is running
+            if ((CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPRun)) || kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MSprint) && !_isAiming && !_isCrouched)
             {
                 _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _sprintSpeed, _movementsLerp);
 
@@ -215,7 +218,8 @@ namespace Engine.Game
                 _isRunning = false;
             }
 
-            if (_isAiming && !_isShoting && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+            if (_isAiming && !_isShoting 
+                && !_isReloading && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying && !_isCrouched)
             {
                 if (_horizontalVelocity != _aimSpeed)
                 {
@@ -280,6 +284,7 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
                 _isShoting = false;
                 _isAiming = false;
+                _isSniping = false;
                 _isSwitchingAnimPlaying = false;
                 _isSwitchingAnim2ndPartPlaying = false;
                 _isSwimAnimationPlaying = true;
@@ -296,6 +301,7 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
                 _isReloading = false;
                 _isShoting = false;
+                _isSniping = false;
                 _isAiming = false;
                 _isSwitchingAnim2ndPartPlaying = true;
                 _isSwitchingAnimPlaying = false;
@@ -310,6 +316,7 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
                 _isReloading = false;
                 _isAiming = false;
+                _isSniping = false;
                 _isShoting = false;
 
                 // Depending on what is the player doing, after the switch we play an anim
@@ -373,7 +380,7 @@ namespace Engine.Game
                                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);
                                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[1], false, 0.12f);
                             }
-                            else
+                            else if(_isAiming && !_isSniping)
                             {
                                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[6]);
                                 _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[6], false, 0.1f);
@@ -554,6 +561,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = false;
                     _isReloading = false;
+                    _isSniping = false;
 
                     _handAnimation.InverseMode("forward");
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[4]);
@@ -568,6 +576,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = true;
                     _isReloading = false;
+                    _isSniping = false;
 
                     _isReloading = false;
                     _handAnimation.InverseMode("Forward");
@@ -598,6 +607,7 @@ namespace Engine.Game
                 {
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = false;
+                    _isSniping = false;
 
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[3]);
                     _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false, 0.12f);
