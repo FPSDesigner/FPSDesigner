@@ -55,9 +55,8 @@ namespace Engine
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -70,6 +69,7 @@ namespace Engine
             // WPF
             if (isSoftwareEmbedded)
             {
+                Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
                 em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                 em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, PixelFormats.Bgr565, null);
                 em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
