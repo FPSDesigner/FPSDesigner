@@ -9,6 +9,7 @@ using WPFLocalizeExtension.Extensions;
 using WPFLocalizeExtension.Engine;
 using FirstFloor.ModernUI.Windows.Controls;
 
+
 namespace Software
 {
     /// <summary>
@@ -16,8 +17,7 @@ namespace Software
     /// </summary>
     public partial class App : Application
     {
-        private ModernWindow LoginPage;
-        private ModernWindow RegisterPage;
+        private ModernWindow LoginPage, RegisterPage, SelectProjectPage;
 
         private Dictionary<string, ModernWindow> listExtWindows;
 
@@ -28,7 +28,7 @@ namespace Software
             // Set the current user interface culture to the specific culture
 
             LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
-            
+
             GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"), "info");
             GlobalVars.LaunchNewWindow += GlobalVars_LaunchNewWindow;
 
@@ -39,12 +39,27 @@ namespace Software
 
         void App_Startup(object sender, StartupEventArgs e)
         {
-            
-            IsLogged = true;
+            if (e.Args.Length > 0)
+            {
+                if (System.IO.File.Exists(e.Args[0]) && GlobalVars.extensionsProjectFile.Contains(System.IO.Path.GetExtension(e.Args[0])))
+                {
+                    // Check if the file is not locked.
+                    try
+                    {
+                        using (System.IO.Stream stream = new System.IO.FileStream(e.Args[0], System.IO.FileMode.Open))
+                        {
+                            GlobalVars.projectFile = e.Args[0];
+                        }
+                    }
+                    catch { GlobalVars.projectFile = ""; }
+                }
+            }
+
+            /*IsLogged = true;
             Software.MainWindow.LoadMainWindow();
-            Software.MainWindow.Instance.Show();
-            return;
-            
+            SelectProject();
+            //Software.MainWindow.Instance.Show();
+            return;*/
 
             Software.MainWindow.LoadMainWindow();
 
@@ -96,7 +111,7 @@ namespace Software
             if (!IsLogged && windowClosed.Content is Pages.Login && (RegisterPage == null || !RegisterPage.IsActive))
                 Application.Current.Shutdown();
 
-            else if(!IsLogged && windowClosed.Content is Pages.Register && !LoginPage.IsActive)
+            else if (!IsLogged && windowClosed.Content is Pages.Register && !LoginPage.IsActive)
                 Application.Current.Shutdown();
         }
 
@@ -116,7 +131,34 @@ namespace Software
 
         void SelectProject()
         {
+            if (GlobalVars.projectFile == "")
+            {
+                SelectProjectPage = new ModernWindow
+                {
+                    Style = (Style)App.Current.Resources["EmptyWindow"],
+                    Content = new Pages.SelectProject
+                    {
+                        Margin = new Thickness(32)
+                    },
+                    ResizeMode = System.Windows.ResizeMode.NoResize,
+                    MaxWidth = 650,
+                    Title = "FPSDesigner - Select a project",
+                    MaxHeight = 200,
+                };
+                SelectProjectPage.Closing += (s, e) => { if (GlobalVars.projectFile == "") Application.Current.Shutdown(); };
 
+                ((Pages.SelectProject)SelectProjectPage.Content).ProjectSelected += App_ProjectSelected;
+
+                SelectProjectPage.Show();
+            }
+            else
+                Software.MainWindow.Instance.Show();
+        }
+
+        void App_ProjectSelected(object sender, RoutedEventArgs e)
+        {
+            GlobalVars.projectFile = (string)sender;
+            SelectProjectPage.Close();
             Software.MainWindow.Instance.Show();
         }
 

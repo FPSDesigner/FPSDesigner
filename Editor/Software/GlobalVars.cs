@@ -21,6 +21,8 @@ namespace Software
         public static List<string[]> LogList = new List<string[]>();
         public static string selectedTool = "Select";
         public static event RoutedEventHandler LaunchNewWindow;
+        public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
+        public static string projectFile = "";
         
 
         public static string GetUIString(string key)

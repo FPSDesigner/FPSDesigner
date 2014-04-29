@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LTreesLibrary">
-      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\LTreesLibrary.dll</HintPath>
+      <HintPath>..\LTreesLibrary\bin\x86\Debug\LTreesLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />

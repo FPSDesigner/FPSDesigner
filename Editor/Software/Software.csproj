@@ -100,6 +100,9 @@
     <Compile Include="Pages\ConsoleLogs.xaml.cs">
       <DependentUpon>ConsoleLogs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SelectProject.xaml.cs">
+      <DependentUpon>SelectProject.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TerrainManager\Terrain.xaml.cs">
       <DependentUpon>Terrain.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\ConsoleLogs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\SelectProject.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
