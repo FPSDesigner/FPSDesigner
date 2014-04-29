@@ -49,6 +49,7 @@ namespace Software
                     {
                         using (System.IO.Stream stream = new System.IO.FileStream(e.Args[0], System.IO.FileMode.Open))
                         {
+                            GlobalVars.projectData = Codes.CXMLManager.deserializeClass<Codes.ProjectData>(e.Args[0]);
                             GlobalVars.projectFile = e.Args[0];
                         }
                     }

@@ -25,6 +25,8 @@ namespace Software
         public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
         public static string projectFile = "";
         public static BitmapFrame SoftwareIcon = BitmapFrame.Create(new Uri("pack://application:,,,/Assets/Icon.ico", UriKind.RelativeOrAbsolute));
+        public static Codes.ProjectData projectData;
+        public static string defaultProjectInfoName = "projectInfo.fpsd";
 
         public static string GetUIString(string key)
         {

@@ -219,9 +219,7 @@ namespace Engine
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
 
             // Draw "All" the State
-            spriteBatch.Begin();
             Game.CGameManagement.Draw(spriteBatch, gameTime);
-            spriteBatch.End();
 
             // Draw the Console effect
             spriteBatch.Begin();

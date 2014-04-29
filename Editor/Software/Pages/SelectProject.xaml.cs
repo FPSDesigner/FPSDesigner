@@ -57,12 +57,24 @@ namespace Software.Pages
             if (projectDialog.ShowDialog() == true)
             {
                 if (System.IO.File.Exists(projectDialog.FileName))
-                    ProjectSelected(projectDialog.FileName, null);
+                {
+                    try
+                    {
+                        GlobalVars.projectData = Codes.CXMLManager.deserializeClass<Codes.ProjectData>(projectDialog.FileName);
+                        ProjectSelected(projectDialog.FileName, null);
+                    }
+                    catch
+                    {
+                        loadErrorText.Visibility = System.Windows.Visibility.Visible;
+                    }
+
+                }
             }
         }
 
         void buttonNewProject_Click(object sender, RoutedEventArgs e)
         {
+            collapsableGridNew.Visibility = System.Windows.Visibility.Visible;
             collapsableGridNew.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500))));
         }
 
@@ -82,19 +94,32 @@ namespace Software.Pages
 
         void btnValidateNew_Click(object sender, RoutedEventArgs e)
         {
-            if (!System.IO.Directory.Exists(textboxSelectNewFolder.Text))
+            if (textboxSelectName.Text.Length > 0)
             {
                 try
                 {
-                    System.IO.Directory.CreateDirectory(textboxSelectNewFolder.Text);
+                    if (!System.IO.Directory.Exists(textboxSelectNewFolder.Text))
+                        System.IO.Directory.CreateDirectory(textboxSelectNewFolder.Text);
+
+                    GlobalVars.projectData = new Codes.ProjectData
+                    {
+                        Properties = new Codes.Properties
+                        {
+                            Author = System.Security.Principal.WindowsIdentity.GetCurrent().Name,
+                            LastEditionDate = DateTime.Now.ToString("M/d/yyyy"),
+                            GameName = textboxSelectName.Text,
+                        }
+                    };
+
+                    Codes.CXMLManager.serializeClass(textboxSelectNewFolder.Text + '\\' + GlobalVars.defaultProjectInfoName, GlobalVars.projectData);
+
                     ProjectSelected(textboxSelectNewFolder.Text, null);
                 }
                 catch
                 {
                     errorMsg.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500))));
                 }
-            } else
-                ProjectSelected(textboxSelectNewFolder.Text, null);
+            }
         }
     }
 }
