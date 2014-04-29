@@ -103,15 +103,21 @@ namespace Software
         void App_LoginSucceed(object sender, RoutedEventArgs e)
         {
             IsLogged = true;
-            Software.MainWindow.Instance.Show();
+            SelectProject();
             LoginPage.Close();
         }
 
         void App_RegisterSucceed(object sender, RoutedEventArgs e)
         {
             IsLogged = true;
-            Software.MainWindow.Instance.Show();
+            SelectProject();
             RegisterPage.Close();
+        }
+
+        void SelectProject()
+        {
+
+            Software.MainWindow.Instance.Show();
         }
 
         void GlobalVars_LaunchNewWindow(object sender, RoutedEventArgs e)
