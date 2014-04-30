@@ -227,13 +227,15 @@ namespace Engine.Game
                 }
             }
 
-            if (_isCrouched && !_isShoting && !_isReloading && !_isAiming && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
+            if (_isCrouched)
             {
                 if (_horizontalVelocity != _crouchSpeed)
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _crouchSpeed, 0.7f);
 
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.6f);
+                    if(!_isShoting && !_isAiming && !_isReloading
+                        && !_isSwimAnimationPlaying && !_isSwitchingAnim2ndPartPlaying)
+                    _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[0] * 0.65f);
                 }
             }
 
@@ -395,38 +397,31 @@ namespace Engine.Game
 
                         }
 
-                        // Player has no sniper OR he is sniping
-                        if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 1 ||
-                            (!_isSniping && !_isAiming) ||
-                            (_isSniping && _elapsedSnipeShot > 150 * weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]))
+                        weapon.Shot(true, _isShoting, gameTime);
+
+                        // Draw particles
+                        if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
                         {
-                            _elapsedSnipeShot = 0;
-                            weapon.Shot(true, _isShoting, gameTime);
-
-                            // Draw particles
-                            if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
+                            if (_terrain != null)
                             {
-                                if (_terrain != null)
-                                {
-                                    bool IsTerrainShot = false;
-                                    bool IsWaterShot = false;
+                                bool IsTerrainShot = false;
+                                bool IsWaterShot = false;
 
-                                    Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
-                                    Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                    Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+                                Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+                                Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                                Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                    /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
+                                /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
 
-                                    Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
-                                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                                        0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
-                                    Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+                                Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                    0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                                Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
 
-                                    Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
-                                    Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
-                                }
+                                Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                                Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                             }
                         }
 
@@ -637,6 +632,7 @@ namespace Engine.Game
                 elapsedTime = 0f;
                 _isReloadingSoundPlayed = true;
             }
+
             else if (!_isReloadingSoundPlayed)
             {
                 elapsedTime += gameTime.ElapsedGameTime.Milliseconds;

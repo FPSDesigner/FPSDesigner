@@ -212,7 +212,7 @@ namespace Engine.Game
                     }
                 }
 
-                //Console.WriteLine(" Bullet avaible : " + _weaponsArray[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
+                Console.WriteLine(" Bullet avaible : " + _weaponsArray[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
             }
 
             return isRealoadingDone;
