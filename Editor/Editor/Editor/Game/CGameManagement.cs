@@ -105,9 +105,9 @@ namespace Engine.Game
             gameStateList[currentState].Draw(spritebatch, gameTime);
         }
 
-        public static void SendParam(object param)
+        public static object SendParam(object param)
         {
-            gameStateList[currentState].SendParam(param);
+            return gameStateList[currentState].SendParam(param);
         }
 
         private static Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)

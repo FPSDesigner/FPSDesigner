@@ -27,6 +27,7 @@ namespace Software
         public static string projectFile = "";
         public static string projectGameInfoFile = "";
 
+        public static SelectedElement selectedElt;
         public static BitmapFrame SoftwareIcon = BitmapFrame.Create(new Uri("pack://application:,,,/Assets/Icon.ico", UriKind.RelativeOrAbsolute));
         public static Codes.ProjectData projectData;
         public static Engine.Game.LevelInfo.LevelData gameInfo;
@@ -49,7 +50,14 @@ namespace Software
 
         public static void SaveGameLevel()
         {
-            Codes.CXMLManager.serializeClass(projectGameInfoFile, gameInfo);
+            try
+            {
+                Codes.CXMLManager.serializeClass(projectGameInfoFile, gameInfo);
+            }
+            catch (Exception e)
+            {
+                AddConsoleMsg("Couldn't save game level informations. Data: " + e.Message, "error");
+            }
         }
 
 
@@ -98,7 +106,7 @@ namespace Software
         {
             gameInfo = new Engine.Game.LevelInfo.LevelData
             {
-                SpawnInfo =
+                SpawnInfo = new Engine.Game.LevelInfo.SpawnInfo
                 {
                     NearClip = 0.05f,
                     FarClip = 10000f,
@@ -118,7 +126,7 @@ namespace Software
                         Z = 0,
                     }
                 },
-                Terrain =
+                Terrain = new Engine.Game.LevelInfo.Terrain
                 {
                     UseTerrain = false,
                     CellSize = 10,
@@ -134,7 +142,7 @@ namespace Software
                         BaseTexture = "",
                     }
                 },
-                Water =
+                Water = new Engine.Game.LevelInfo.Water
                 {
                     UseWater = false,
                     SizeX = 1000,
@@ -147,7 +155,7 @@ namespace Software
                         Z = 0,
                     }
                 },
-                MapModels = { },
+                MapModels = new Engine.Game.LevelInfo.MapModels { },
                 Weapons = new Engine.Game.LevelInfo.Weapons
                 {
                     Weapon = new List<Engine.Game.LevelInfo.Weapon>
@@ -398,6 +406,20 @@ namespace Software
                     },
                 }
             };
+        }
+        #endregion
+
+        #region Selected Element Class
+        public class SelectedElement
+        {
+            public string eltType;
+            public string eltParent;
+
+            public SelectedElement(string elt, string parent = "")
+            {
+                eltType = elt;
+                eltParent = parent;
+            }
         }
         #endregion
     }

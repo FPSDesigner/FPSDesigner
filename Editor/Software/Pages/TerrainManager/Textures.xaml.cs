@@ -18,8 +18,6 @@ using FirstFloor.ModernUI.Windows.Controls;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
-using System.Text.RegularExpressions;
-using Microsoft.Win32;
 
 using ModelViewer;
 

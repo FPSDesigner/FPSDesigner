@@ -35,7 +35,7 @@ namespace Engine.Display3D
                 if (!_tProfiles.ContainsKey(tree.Profile))
                     _tProfiles.Add(tree.Profile, content.Load<TreeProfile>(tree.Profile));
 
-                _tTrees.Add(new Tree(cam, tree.Profile, tree.Position.Vector3, tree.Rotation.Vector3, tree.Scale.Vector3, tree.Seed, tree.Wind));
+                _tTrees.Add(new Tree(cam, tree.Profile, tree.Position.Vector3, tree.Rotation.Vector3, tree.Scale.Vector3, tree.Seed, tree.Wind, tree.Branches));
             }
         }
 
@@ -46,7 +46,8 @@ namespace Engine.Display3D
 
             // We draw leaves at the end
             for (int i = 0; i < _tTrees.Count; i++)
-                _tTrees[i]._tree.DrawLeaves(_tTrees[i]._worldMatrix, cam._view, cam._projection);
+                if(_tTrees[i]._useBranches)
+                    _tTrees[i]._tree.DrawLeaves(_tTrees[i]._worldMatrix, cam._view, cam._projection);
         }
 
         public static void Update(GameTime gameTime)
@@ -58,12 +59,27 @@ namespace Engine.Display3D
                     treeAnimator.Animate(_tTrees[i]._tree.Skeleton, _tTrees[i]._tree.AnimationState, gameTime);
             }
         }
+
+        public static bool CheckRayCollision(Ray ray, out int treeId)
+        {
+            for (int i = 0; i < _tTrees.Count; i++)
+            {
+                if (ray.Intersects(_tTrees[i]._tree.TrunkMesh.BoundingSphere) != null)
+                {
+                    treeId = i;
+                    return true;
+                }
+            }
+            treeId = -1;
+            return false;
+        }
     }
 
     class Tree
     {
         public string _profile;
         public bool _useWind;
+        public bool _useBranches;
         public Matrix _worldMatrix;
         public SimpleTree _tree;
 
@@ -87,13 +103,14 @@ namespace Engine.Display3D
             set { GenerateWorldMatrix(); _position = value; }
         }
 
-        public Tree(CCamera cam, string profile, Vector3 coordinates, Vector3 rotation, Vector3 scale, int seed = 0, bool wind = false)
+        public Tree(CCamera cam, string profile, Vector3 coordinates, Vector3 rotation, Vector3 scale, int seed = 0, bool wind = false, bool branches = true)
         {
             _profile = profile;
             _position = coordinates;
             _rotation = rotation;
             _scale = scale;
             _useWind = wind;
+            _useBranches = branches;
 
             if (seed == 0)
                 GenerateTree();

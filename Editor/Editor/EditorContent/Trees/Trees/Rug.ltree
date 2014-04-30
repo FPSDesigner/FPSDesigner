@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Tree>
-    <TrunkTexture>Textures/GrayBark</TrunkTexture>
-    <LeafTexture>Textures/OakLeaf</LeafTexture>
+    <TrunkTexture>Trees/Textures/GrayBark</TrunkTexture>
+    <LeafTexture>Trees/Textures/OakLeaf</LeafTexture>
     
 	<Root ref="root" />
 	<Levels value="5" />

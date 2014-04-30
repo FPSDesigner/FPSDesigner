@@ -74,7 +74,6 @@ namespace Software.Pages
                     {
                         loadErrorText.Visibility = System.Windows.Visibility.Visible;
                     }
-
                 }
             }
         }
@@ -122,6 +121,7 @@ namespace Software.Pages
 
                     GlobalVars.projectGameInfoFile = textboxSelectNewFolder.Text + "\\" + GlobalVars.defaultProjectGameName;
                     GlobalVars.CreateDefaultGameLevel();
+                    GlobalVars.SaveGameLevel();
 
                     ProjectSelected(textboxSelectNewFolder.Text, null);
                 }

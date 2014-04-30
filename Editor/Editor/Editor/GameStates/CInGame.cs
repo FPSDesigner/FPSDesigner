@@ -305,7 +305,7 @@ namespace Engine.GameStates
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            // Draw a tree
+            // Draw the trees
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
             _graphics.DepthStencilState = DepthStencilState.Default;
@@ -335,7 +335,7 @@ namespace Engine.GameStates
 
         }
 
-        public void SendParam(object param)
+        public object SendParam(object param)
         {
             if (param.GetType().IsArray)
             {
@@ -357,7 +357,25 @@ namespace Engine.GameStates
                     cam._cameraPos += _translation;
                     cam._cameraTarget = cam._cameraPos + forward;
                 }
+                else if (action == "click")
+                {
+                    // Check if user clicked a gamecomponent
+                    Point cursorPos = (Point)p[1];
+                    var nearPoint = _graphics.Viewport.Unproject(new Vector3(cursorPos.X, cursorPos.Y, 0), cam._projection, cam._view, Matrix.Identity);
+                    var farPoint = _graphics.Viewport.Unproject(new Vector3(cursorPos.X, cursorPos.Y, 1), cam._projection, cam._view, Matrix.Identity);
+
+                    var rayDirection = farPoint - nearPoint;
+                    rayDirection.Normalize();
+
+                    Ray ray = new Ray(nearPoint, rayDirection);
+
+                    // Tree check
+                    int treeIdSelected;
+                    if (Display3D.TreeManager.CheckRayCollision(ray, out treeIdSelected))
+                        return new object[] { "tree", treeIdSelected };
+                }
             }
+            return true;
         }
 
     }

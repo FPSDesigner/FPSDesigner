@@ -29,6 +29,7 @@ namespace Software.Pages
     {
         private ModelViewer.ModelViewer modelViewer;
         private DispatcherTimer resizeTimer = new DispatcherTimer();
+        public event RoutedEventHandler ShouldClose;
         private float initialZoom = 20;
 
         public TreeManager()
@@ -68,10 +69,51 @@ namespace Software.Pages
             TreeSeedTB.Text = TreeSeedSlider.Value.ToString();
 
             PreviewButton.Click += PreviewButton_Click;
+            GenerateButton.Click += GenerateButton_Click;
 
             ZoomSlider.ValueChanged += ZoomSlider_ValueChanged;
             modelViewer.ChangeCameraZoom((float)ZoomSlider.Value * 2);
             initialZoom = (float)ZoomSlider.Value;
+        }
+
+        void GenerateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(GlobalVars.gameInfo.MapModels == null)
+                GlobalVars.gameInfo.MapModels = new Engine.Game.LevelInfo.MapModels { };
+            if (GlobalVars.gameInfo.MapModels.Trees == null)
+                GlobalVars.gameInfo.MapModels.Trees = new List<Engine.Game.LevelInfo.MapModels_Tree>();
+
+            int seed = 1;
+
+            GlobalVars.gameInfo.MapModels.Trees.Add(
+                new Engine.Game.LevelInfo.MapModels_Tree
+                {
+                    Profile = TreeProfile.Text,
+                    Position = new Engine.Game.LevelInfo.Coordinates
+                    {
+                        X = 0,
+                        Y = 0,
+                        Z = 0,
+                    },
+                    Rotation = new Engine.Game.LevelInfo.Coordinates
+                    {
+                        X = 0,
+                        Y = 0,
+                        Z = 0,
+                    },
+                    Scale = new Engine.Game.LevelInfo.Coordinates
+                    {
+                        X = modelViewer.treeScale,
+                        Y = modelViewer.treeScale,
+                        Z = modelViewer.treeScale,
+                    },
+                    Seed = (Int32.TryParse(TreeSeedTB.Text, out seed) ? seed : 1),
+                    Wind = (bool)WindButton.IsChecked,
+                    Branches = (bool)BranchesButton.IsChecked,
+                }
+            );
+            GlobalVars.SaveGameLevel();
+            ShouldClose("TreeManager", null);
         }
 
         void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -86,7 +128,7 @@ namespace Software.Pages
                 seed = int.Parse(TreeSeedTB.Text);
 
             ZoomSlider.Value = initialZoom;
-            modelViewer.LoadNewTree("Trees/" + (string)((ComboBoxItem)TreeProfile.SelectedValue).Content, seed, (bool)BranchesButton.IsChecked, (bool)WindButton.IsChecked);
+            modelViewer.LoadNewTree("Trees/Trees/" + (string)((ComboBoxItem)TreeProfile.SelectedValue).Content, seed, (bool)BranchesButton.IsChecked, (bool)WindButton.IsChecked);
 
             STTrunkVertices.Text = modelViewer.GetTreeData(0) + " Trunk Vertices";
             STTrunkTriangles.Text = modelViewer.GetTreeData(1) + " Trunk Triangles";

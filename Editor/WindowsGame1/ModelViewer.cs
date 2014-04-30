@@ -41,14 +41,15 @@ namespace ModelViewer
 
         private bool useTree = false;
         public SimpleTree tree;
-        private Matrix treeMatrix;
-        private float TreeRotation = 0f;
-        private float treeScale = 0f;
-        private Matrix[] treeMatrices;
-        private bool treeUseWind = true;
         private LTreesLibrary.Trees.Wind.WindStrengthSin treeWind;
         private LTreesLibrary.Trees.Wind.TreeWindAnimator treeAnimator;
+        private Matrix treeMatrix;
+        private Matrix[] treeMatrices;
+        private float TreeRotation = 0f;
+        public float treeScale = 0f;  
+        private bool treeUseWind = true;
         private bool treeUseBranches = true;
+        
 
         private CModel _currentModel;
 
@@ -71,7 +72,6 @@ namespace ModelViewer
             graphics.PreferredBackBufferHeight = 700;
             graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             // Icon
             if (System.IO.File.Exists("Icon.ico"))
@@ -80,6 +80,7 @@ namespace ModelViewer
             // WPF
             if (launchedFromSoftware)
             {
+                Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
                 em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
                 em_WriteableBitmap = new WriteableBitmap(em_sizeViewport.X, em_sizeViewport.Y, 96, 96, System.Windows.Media.PixelFormats.Bgr565, null);
                 em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
@@ -272,14 +273,19 @@ namespace ModelViewer
 
             if (useTree)
             {
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
                 tree.DrawTrunk(treeMatrix, camera._view, camera._projection);
                 if (treeUseBranches)
                     tree.DrawLeaves(treeMatrix, camera._view, camera._projection);
             }
 
+
+            /*
             // Draw the text info
 
-            /*int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
+            int xPos = (40 * this.GraphicsDevice.Viewport.Width) / 1920;
             int yPos = (40 * this.GraphicsDevice.Viewport.Height) / 1080;
 
             _scalingFactor.X = (this.GraphicsDevice.PresentationParameters.BackBufferWidth) / _maxResolution.X;
@@ -288,7 +294,7 @@ namespace ModelViewer
             Microsoft.Xna.Framework.Matrix globalTransformation = Microsoft.Xna.Framework.Matrix.CreateScale(_scalingFactor);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
-            spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : " + _currentModel.verticesCount, new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White);
+            spriteBatch.DrawString(_modelFontName, "Model : Barrel \nPoly Count : ", new Vector2(xPos, yPos), Microsoft.Xna.Framework.Color.White);
             spriteBatch.End();
             */
 

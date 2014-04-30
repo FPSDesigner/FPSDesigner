@@ -221,6 +221,7 @@ namespace Software
 
                     listExtWindows[windowName].Show();
                     listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
+                    ((Pages.TreeManager)listExtWindows[windowName].Content).ShouldClose += App_ShouldClose;
                 }
                 else
                     listExtWindows[windowName].Activate();

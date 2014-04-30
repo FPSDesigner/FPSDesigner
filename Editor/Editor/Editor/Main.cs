@@ -30,8 +30,6 @@ namespace Engine
         Display2D.CRenderCapture renderCapture;
         Display2D.CPostProcessor postProcessor;
 
-        
-
         // WPF
         // Used to emulate XNA when embedded in WPF
 
@@ -44,13 +42,15 @@ namespace Engine
         private Stopwatch em_StopWatch;
         private TimeSpan em_LastTime;
         public bool isSoftwareEmbedded = false;
+        public bool shouldNotUpdate = false;
+        public bool shouldUpdateOnce = false;
 
         public MainGameEngine(bool launchedFromSoftware = false)
         {
             isSoftwareEmbedded = launchedFromSoftware;
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferMultiSampling = false; // Lags!!!
+            //graphics.PreferMultiSampling = false; // Lags!!!
             Content.RootDirectory = "Content";
 
             graphics.PreferredBackBufferWidth = 1920;
@@ -167,8 +167,6 @@ namespace Engine
             }
             /*Game.Script.CLuaVM.Initialize();
             Game.Script.CLuaVM.LoadScript("GuiManager.lua");*/
-
-            
         }
 
 
@@ -204,10 +202,11 @@ namespace Engine
 
                 oldKeyboardState = kbState;
                 oldMouseState = mouseState;
+
                 base.Update(gameTime);
             }
         }
-
+        
         protected override void Draw(GameTime gameTime)
         {
             // WPF
@@ -225,6 +224,7 @@ namespace Engine
             spriteBatch.Begin();
             Display2D.C2DEffect.Draw(gameTime);
             Game.CConsole.Draw(gameTime);
+
             spriteBatch.End();
 
             // End capturing
@@ -249,22 +249,28 @@ namespace Engine
             }
         }
 
-        public void WPFHandler(string handle, object value)
+        public object WPFHandler(string handle, object value)
         {
             switch (handle)
             {
                 case "changeCamFreeze":
                 case "moveCameraForward":
-                    Game.CGameManagement.SendParam(new object[] { handle, value });
-                    break;
+                case "click":
+                    return Game.CGameManagement.SendParam(new object[] { handle, value });
             }
-
+            return true;
         }
 
         private void GameLoop(object sender, EventArgs e)
         {
-            this.Update(em_GameTime);
-            this.Draw(em_GameTime);
+            if (!shouldNotUpdate || shouldUpdateOnce)
+            {
+                this.Update(em_GameTime);
+                this.Draw(em_GameTime);
+
+                if (shouldUpdateOnce)
+                    shouldUpdateOnce = false;
+            }
         }
 
     }
