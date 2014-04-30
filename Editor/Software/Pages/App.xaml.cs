@@ -49,11 +49,20 @@ namespace Software
                     {
                         using (System.IO.Stream stream = new System.IO.FileStream(e.Args[0], System.IO.FileMode.Open))
                         {
+                            // Load the .fpsd
                             GlobalVars.projectData = Codes.CXMLManager.deserializeClass<Codes.ProjectData>(e.Args[0]);
                             GlobalVars.projectFile = e.Args[0];
+
+                            // Load the gameinfo
+                            GlobalVars.projectGameInfoFile = System.IO.Path.GetDirectoryName(e.Args[0]) + "\\" + GlobalVars.defaultProjectGameName;
+                            GlobalVars.gameInfo = Codes.CXMLManager.deserializeClass<Engine.Game.LevelInfo.LevelData>(GlobalVars.projectGameInfoFile);
                         }
                     }
-                    catch { GlobalVars.projectFile = ""; }
+                    catch
+                    {
+                        GlobalVars.projectFile = "";
+                        GlobalVars.projectGameInfoFile = "";
+                    }
                 }
             }
 

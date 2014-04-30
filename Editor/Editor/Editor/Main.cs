@@ -50,7 +50,7 @@ namespace Engine
             isSoftwareEmbedded = launchedFromSoftware;
 
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferMultiSampling = true;
+            //graphics.PreferMultiSampling = true; // Lags!!!
             Content.RootDirectory = "Content";
 
             graphics.PreferredBackBufferWidth = 1920;

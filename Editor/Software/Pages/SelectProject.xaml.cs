@@ -61,6 +61,13 @@ namespace Software.Pages
                     try
                     {
                         GlobalVars.projectData = Codes.CXMLManager.deserializeClass<Codes.ProjectData>(projectDialog.FileName);
+                        GlobalVars.projectGameInfoFile = System.IO.Path.GetDirectoryName(projectDialog.FileName) + "\\" + GlobalVars.defaultProjectGameName;
+
+                        if (System.IO.File.Exists(GlobalVars.projectGameInfoFile))
+                            GlobalVars.gameInfo = Codes.CXMLManager.deserializeClass<Engine.Game.LevelInfo.LevelData>(GlobalVars.projectGameInfoFile);
+                        else
+                            GlobalVars.CreateDefaultGameLevel();
+
                         ProjectSelected(projectDialog.FileName, null);
                     }
                     catch
@@ -112,6 +119,9 @@ namespace Software.Pages
                     };
 
                     Codes.CXMLManager.serializeClass(textboxSelectNewFolder.Text + '\\' + GlobalVars.defaultProjectInfoName, GlobalVars.projectData);
+
+                    GlobalVars.projectGameInfoFile = textboxSelectNewFolder.Text + "\\" + GlobalVars.defaultProjectGameName;
+                    GlobalVars.CreateDefaultGameLevel();
 
                     ProjectSelected(textboxSelectNewFolder.Text, null);
                 }
