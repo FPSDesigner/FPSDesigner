@@ -615,11 +615,15 @@ namespace Engine.Game
                 {
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = false;
-                    _isSniping = false;
 
                     _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[3]);
-                    _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false, 0.12f);
+                    if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 1 || !_isSniping)
+                        _handAnimation.ChangeAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false, 0.12f);
+                    else
+                        _handAnimation.BeginAnimation(weapon._weaponsArray[weapon._selectedWeapon]._weapAnim[3], false);
 
+                    _isSniping = false;
+                    _isAiming = false;
                     _isReloadingSoundPlayed = false;
                     _isReloading = true;
                 }
