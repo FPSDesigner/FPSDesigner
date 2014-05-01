@@ -198,6 +198,11 @@ namespace Software
 
                     listExtWindows[windowName].Show();
                     listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
+                    GlobalVars.NewConsoleMessage += (send, args) =>
+                    {
+                        string[] values = (string[])send;
+                        ((Pages.ConsoleLogs)listExtWindows[windowName].Content).AddConsoleLog(values[0], values[1]);
+                    };
                 }
                 else
                     listExtWindows[windowName].Activate();

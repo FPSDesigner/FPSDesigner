@@ -19,11 +19,13 @@ namespace Software
 {
     static class GlobalVars
     {
-        public static List<string[]> LogList = new List<string[]>();
         public static event RoutedEventHandler LaunchNewWindow;
-        public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
+        public static event RoutedEventHandler NewConsoleMessage;
 
-        public static string selectedTool = "Select";
+        public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
+        public static List<string[]> LogList = new List<string[]>();
+
+        public static ModernButton selectedToolButton;
         public static string projectFile = "";
         public static string projectGameInfoFile = "";
 
@@ -46,6 +48,8 @@ namespace Software
         public static void AddConsoleMsg(string msg, string icon)
         {
             LogList.Add(new string[] { msg, icon });
+            if(NewConsoleMessage != null)
+                NewConsoleMessage(new string[] { msg, icon }, null);
         }
 
         public static void SaveGameLevel()

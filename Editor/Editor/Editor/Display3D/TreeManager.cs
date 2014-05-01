@@ -60,18 +60,19 @@ namespace Engine.Display3D
             }
         }
 
-        public static bool CheckRayCollision(Ray ray, out int treeId)
+        public static float? CheckRayCollision(Ray ray, out int treeId)
         {
             for (int i = 0; i < _tTrees.Count; i++)
             {
-                if (_tTrees[i].CheckRayIntersectsTree(ray))
+                float? rayIntersct = _tTrees[i].CheckRayIntersectsTree(ray);
+                if (rayIntersct != null)
                 {
                     treeId = i;
-                    return true;
+                    return rayIntersct;
                 }
             }
             treeId = -1;
-            return false;
+            return null;
         }
     }
 
@@ -149,8 +150,11 @@ namespace Engine.Display3D
 
             for (int x1 = 0; x1 < _tree.Skeleton.Bones.Count-1; x1++)
             {
-                BoundingSphere b1 = new BoundingSphere(_position + transforms[x1].Translation * _scale.X + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length * _scale.X, _tree.Skeleton.Branches[x1].StartRadius * _scale.X);
-                BoundingSphere b2 = new BoundingSphere(_position + transforms[x1 + 1].Translation * _scale.X + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length * _scale.X, _tree.Skeleton.Branches[x1 + 1].EndRadius * _scale.X);
+                //BoundingSphere b1 = new BoundingSphere(_position + transforms[x1].Translation * _scale.X + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length * _scale.X, _tree.Skeleton.Branches[x1].StartRadius * _scale.X);
+                //BoundingSphere b2 = new BoundingSphere(_position + transforms[x1 + 1].Translation * _scale.X + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length * _scale.X, _tree.Skeleton.Branches[x1 + 1].EndRadius * _scale.X);
+
+                BoundingSphere b1 = new BoundingSphere(transforms[x1].Translation + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length, _tree.Skeleton.Branches[x1].StartRadius).Transform(_worldMatrix);
+                BoundingSphere b2 = new BoundingSphere(transforms[x1 + 1].Translation + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length, _tree.Skeleton.Branches[x1 + 1].StartRadius).Transform(_worldMatrix);
 
                 BoundingBox CollisionBox = BoundingBox.CreateMerged(BoundingBox.CreateFromSphere(b1), BoundingBox.CreateFromSphere(b2));
 
@@ -195,14 +199,15 @@ namespace Engine.Display3D
         /// Checks if the ray interesects the trunk of the tree
         /// </summary>
         /// <param name="ray">The ray to check if it intersects the tree</param>
-        public bool CheckRayIntersectsTree(Ray ray)
+        public float? CheckRayIntersectsTree(Ray ray)
         {
             foreach (BoundingBox box in _boundingBoxes)
             {
-                if(ray.Intersects(box) != null)
-                    return true;
+                float? rayIntersct = ray.Intersects(box);
+                if (rayIntersct != null)
+                    return rayIntersct;
             }
-            return false;
+            return null;
         }
 
         /// <summary>

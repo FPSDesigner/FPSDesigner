@@ -43,5 +43,36 @@ namespace Engine.Display3D
             }
         }
 
+        public static float? CheckRayIntersectsModel(Ray ray, out int modelId)
+        {
+            Dictionary<int, float> modelsClicked = new Dictionary<int, float>();
+            for(int i = 0; i < modelsList.Count; i++)
+            {
+                foreach (Triangle tri in modelsList[i]._trianglesPositions)
+                {
+                    Triangle triangle = tri;
+                    float? distance = TriangleTest.Intersects(ref ray, ref triangle);
+                    if (distance != null)
+                    {
+                        modelsClicked.Add(i, (float)distance);
+                        break;
+                    }
+                }
+            }
+
+            if (modelsClicked.Count == 0)
+            {
+                modelId = -1;
+                return null;
+            }
+
+            var closest = (from pair in modelsClicked
+                        orderby pair.Value ascending
+                        select pair).First();
+
+            modelId = closest.Key;
+            return closest.Value;
+        }
+
     }
 }

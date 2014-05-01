@@ -34,7 +34,7 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
-        private List<TreeViewItem> listTree_Trees;
+        private List<TreeViewItem> listTree_Trees, listTree_Models;
 
         public Home()
         {
@@ -42,7 +42,9 @@ namespace Software.Pages
             MainWindowInstance = MainWindow.Instance;
 
             m_game = new Engine.MainGameEngine(true);
+
             listTree_Trees = new List<TreeViewItem>();
+            listTree_Models = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;
@@ -59,11 +61,26 @@ namespace Software.Pages
             GameButton1.GotFocus += ShowXNAImage1_GotFocus;
             GameButton1.LostFocus += ShowXNAImage1_LostFocus;
             GameButton1.Click += GameButton1_Click;
-            
+
+            GlobalVars.selectedToolButton = SelectButton;
+            SelectButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
+            SelectButton.Click += ToolButton_Click;
+            PositionButton.Click += ToolButton_Click;
+            RotateButton.Click += ToolButton_Click;
+            ScaleButton.Click += ToolButton_Click;
 
             LoadGameComponentsToTreeview();
         }
-        
+
+        void ToolButton_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalVars.selectedToolButton.Foreground = new SolidColorBrush(Color.FromArgb(255, 209, 209, 209));
+            GlobalVars.selectedToolButton = ((ModernButton)sender);
+            GlobalVars.selectedToolButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
+
+            GlobalVars.AddConsoleMsg("Selected tool " + GlobalVars.selectedToolButton.Name, "info");
+        }
+
         void ShowXNAImage1_LostFocus(object sender, RoutedEventArgs e)
         {
             m_game.shouldNotUpdate = true;
@@ -124,16 +141,24 @@ namespace Software.Pages
 
         void GameButton1_Click(object sender, RoutedEventArgs e)
         {
-            object value = m_game.WPFHandler("click", Mouse.GetPosition(ShowXNAImage1));
-            if (value is object[])
+            if (GlobalVars.selectedToolButton.Name == "SelectButton")
             {
-                object[] selectElt = (object[])value;
-                if (selectElt.Length == 2)
+                object value = m_game.WPFHandler("click", Mouse.GetPosition(ShowXNAImage1));
+                if (value is object[])
                 {
-                    if ((string)selectElt[0] == "tree")
+                    object[] selectElt = (object[])value;
+                    if (selectElt.Length == 2)
                     {
-                        if(selectElt[1] is int)
+                        if ((string)selectElt[0] == "tree" && selectElt[1] is int)
+                        {
                             listTree_Trees[(int)selectElt[1]].IsSelected = true;
+                            m_game.WPFHandler("selectObject", new object[] { "tree", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                        }
+                        else if ((string)selectElt[0] == "model" && selectElt[1] is int)
+                        {
+                            listTree_Models[(int)selectElt[1]].IsSelected = true;
+                            m_game.WPFHandler("selectObject", new object[] { "model", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                        }
                     }
                 }
             }
@@ -157,6 +182,7 @@ namespace Software.Pages
         {
             GameComponentsList.Items.Clear();
             listTree_Trees.Clear();
+            listTree_Models.Clear();
 
             TreeViewItem Models = new TreeViewItem();
             TreeViewItem Trees = new TreeViewItem();
@@ -174,10 +200,27 @@ namespace Software.Pages
                 foreach (Engine.Game.LevelInfo.MapModels_Tree tree in GlobalVars.gameInfo.MapModels.Trees)
                 {
                     TreeViewItem treeItem = new TreeViewItem();
-                    treeItem.Header = tree.Profile;
+                    treeItem.Header = System.IO.Path.GetFileName(tree.Profile);
+                    if (treeItem.Header == null)
+                        treeItem.Header = tree.Profile;
 
                     Trees.Items.Add(treeItem);
                     listTree_Trees.Add(treeItem);
+                }
+            }
+
+            // Models
+            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Models != null)
+            {
+                foreach (Engine.Game.LevelInfo.MapModels_Model model in GlobalVars.gameInfo.MapModels.Models)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = System.IO.Path.GetFileName(model.ModelFile);
+                    if (treeItem.Header == null)
+                        treeItem.Header = model.ModelFile;
+
+                    Models.Items.Add(treeItem);
+                    listTree_Models.Add(treeItem);
                 }
             }
 
@@ -185,7 +228,7 @@ namespace Software.Pages
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Models != null && GlobalVars.gameInfo.MapModels.Models.Count > 0)
                 GameComponentsList.Items.Add(Models);
 
-            if(Trees.Items.Count > 0)
+            if (Trees.Items.Count > 0)
                 GameComponentsList.Items.Add(Trees);
 
             if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.UseWater)
@@ -199,6 +242,26 @@ namespace Software.Pages
         {
             TreeViewItem selectedItem = (TreeViewItem)GameComponentsList.SelectedItem;
             GlobalVars.selectedElt = new GlobalVars.SelectedElement((string)selectedItem.Header, (selectedItem.Parent is TreeViewItem) ? (string)((TreeViewItem)selectedItem.Parent).Header : "");
+
+            // Models
+            for (int i = 0; i < listTree_Models.Count; i++)
+            {
+                if (listTree_Models[i].IsSelected)
+                {
+                    m_game.WPFHandler("selectObject", new object[] { "model", i, GlobalVars.selectedToolButton.Name });
+                    return;
+                }
+            }
+
+            // Trees
+            for (int i = 0; i < listTree_Trees.Count; i++)
+            {
+                if (listTree_Trees[i].IsSelected)
+                {
+                    m_game.WPFHandler("selectObject", new object[] { "tree", i, GlobalVars.selectedToolButton.Name });
+                    return;
+                }
+            }
         }
 
         #region "Windows Menu Helper"

@@ -372,7 +372,7 @@ namespace Engine.Display3D
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
 
-                            _trianglesPositions.Add(new Triangle(v0, v1, v2));
+                            _trianglesPositions.Add(new Triangle(v0, v1, v2, mesh.Name));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
 
                             // Calculate normal
@@ -508,12 +508,14 @@ namespace Engine.Display3D
         public Vector3 V0;
         public Vector3 V1;
         public Vector3 V2;
+        public string TriName;
 
-        public Triangle(Vector3 v0, Vector3 v1, Vector3 v2)
+        public Triangle(Vector3 v0, Vector3 v1, Vector3 v2, string Name = "")
         {
             V0 = v0;
             V1 = v1;
             V2 = v2;
+            TriName = Name;
         }
     }
 

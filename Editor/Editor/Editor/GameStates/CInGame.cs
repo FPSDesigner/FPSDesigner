@@ -22,6 +22,7 @@ namespace Engine.GameStates
 
         private bool isPlayerUnderwater = false;
         private bool isSoftwareEmbedded = false;
+        private Display3D.CGizmos Gizmos;
 
         Game.LevelInfo.CLevelInfo levelInfo;
         Game.LevelInfo.LevelData levelData;
@@ -51,6 +52,9 @@ namespace Engine.GameStates
             _graphics = graphics;
 
             Game.CSoundManager.LoadContent();
+
+            if (isSoftwareEmbedded)
+                Gizmos = new Display3D.CGizmos(content, graphics);
 
 
             /**** Character ****/
@@ -331,6 +335,13 @@ namespace Engine.GameStates
 
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
+
+            if (isSoftwareEmbedded)
+            {
+                _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+                Gizmos.Draw(cam, gameTime);
+            }
+
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
         }
@@ -370,10 +381,51 @@ namespace Engine.GameStates
 
                     Ray ray = new Ray(nearSource, direction);
 
+                    // Gyzmo is the priority click
+                    if (Gizmos.shouldDrawPos)
+                    {
+                        int? axisClicked = Gizmos.RayIntersectsAxis(ray);
+                        if (axisClicked != null)
+                            return new object[] { "gizmo", (int)axisClicked };
+                    }
+
+                    // Click distances
+                    float? treeDistance = null, modelDistance = null;
+
                     // Tree check
                     int treeIdSelected;
-                    if (Display3D.TreeManager.CheckRayCollision(ray, out treeIdSelected))
+                    treeDistance = Display3D.TreeManager.CheckRayCollision(ray, out treeIdSelected);
+
+                    // Model check
+                    int modelIdSelected;
+                    modelDistance = Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelIdSelected);
+
+                    // Check which is the closest one
+                    if (treeDistance != null && (treeDistance < modelDistance || modelDistance == null))
                         return new object[] { "tree", treeIdSelected };
+                    else if (modelDistance != null)
+                        return new object[] { "model", modelIdSelected };
+                }
+                else if (action == "selectObject")
+                {
+                    object[] values = (object[])p[1];
+                    if ((string)values[0] == "tree")
+                    {
+                        if ((string)values[2] == "Position")
+                        {
+                            Gizmos.posGizmo._modelPosition = Display3D.TreeManager._tTrees[(int)values[1]].Position;
+                            Gizmos.shouldDrawPos = true;
+                            Gizmos.shouldDrawRot = false;
+                        }
+                    } else if((string)values[0] == "model")
+                    {
+                        if ((string)values[2] == "Position")
+                        {
+                            Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
+                            Gizmos.shouldDrawPos = true;
+                            Gizmos.shouldDrawRot = false;
+                        }
+                    }
                 }
             }
             return true;
