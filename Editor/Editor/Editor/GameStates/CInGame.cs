@@ -132,7 +132,7 @@ namespace Engine.GameStates
                 modelsList.Add(content.Load<Model>(wep.Model));
                 textureList.Add(content.Load<Texture2D>(wep.Texture));
                 objList.Add(
-                    new object[] { wep.Type, 10, wep.MaxClip, 10, 10, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
+                    new object[] { wep.Type, wep.MaxClip, wep.MaxClip, 50, 1, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
                         Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
                         wep.Offset.Vector3, wep.Scale, wep.Delay, wep.Name}
                     );

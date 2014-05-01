@@ -397,8 +397,6 @@ namespace Engine.Game
 
                         }
 
-                        weapon.Shot(true, _isShoting, gameTime);
-
                         // Draw particles
                         if (weapon._weaponsArray[weapon._selectedWeapon]._wepType != 2 && weapon._weaponsArray[weapon._selectedWeapon]._actualClip > 0)
                         {
@@ -411,8 +409,8 @@ namespace Engine.Game
                                 Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
                                 Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                /*Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);*/
+                                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 
                                 Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
                                     Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
@@ -424,6 +422,8 @@ namespace Engine.Game
                                 Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                             }
                         }
+
+                        weapon.Shot(true, _isShoting, gameTime);
 
                     }
                 }
