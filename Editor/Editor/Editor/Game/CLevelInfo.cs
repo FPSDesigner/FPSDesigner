@@ -155,6 +155,7 @@ namespace Engine.Game.LevelInfo
     #region "Node - Coordinates"
     public class Coordinates
     {
+        [XmlIgnore]
         public Vector3 Vector3 { get { return new Vector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
         public float X { get; set; }
         public float Y { get; set; }

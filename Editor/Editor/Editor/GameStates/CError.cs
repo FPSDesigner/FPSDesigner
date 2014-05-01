@@ -59,7 +59,7 @@ namespace Engine.GameStates
 
         }
 
-        public void SendParam(object error)
+        public object SendParam(object error)
         {
             if (error.GetType() == typeof(string))
             {
@@ -70,6 +70,7 @@ namespace Engine.GameStates
 
                 _displayError = true;
             }
+            return true;
         }
 
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)

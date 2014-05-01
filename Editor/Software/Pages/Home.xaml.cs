@@ -34,12 +34,15 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
+        private List<TreeViewItem> listTree_Trees;
+
         public Home()
         {
             InitializeComponent();
             MainWindowInstance = MainWindow.Instance;
 
             m_game = new Engine.MainGameEngine(true);
+            listTree_Trees = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;
@@ -52,11 +55,13 @@ namespace Software.Pages
             statusBarView1.Text = "Idle";
 
             GameComponentsList.SelectedItemChanged += GameComponentsList_SelectedItemChanged;
-            LoadGameComponentsToTreeview();
 
             GameButton1.GotFocus += ShowXNAImage1_GotFocus;
             GameButton1.LostFocus += ShowXNAImage1_LostFocus;
             GameButton1.Click += GameButton1_Click;
+            
+
+            LoadGameComponentsToTreeview();
         }
         
         void ShowXNAImage1_LostFocus(object sender, RoutedEventArgs e)
@@ -125,8 +130,11 @@ namespace Software.Pages
                 object[] selectElt = (object[])value;
                 if (selectElt.Length == 2)
                 {
-                    if(selectElt[0] == "tree")
-                        
+                    if ((string)selectElt[0] == "tree")
+                    {
+                        if(selectElt[1] is int)
+                            listTree_Trees[(int)selectElt[1]].IsSelected = true;
+                    }
                 }
             }
         }
@@ -148,6 +156,7 @@ namespace Software.Pages
         private void LoadGameComponentsToTreeview()
         {
             GameComponentsList.Items.Clear();
+            listTree_Trees.Clear();
 
             TreeViewItem Models = new TreeViewItem();
             TreeViewItem Trees = new TreeViewItem();
@@ -168,6 +177,7 @@ namespace Software.Pages
                     treeItem.Header = tree.Profile;
 
                     Trees.Items.Add(treeItem);
+                    listTree_Trees.Add(treeItem);
                 }
             }
 

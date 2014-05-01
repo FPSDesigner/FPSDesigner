@@ -29,6 +29,8 @@ namespace Software.Pages
         public event RoutedEventHandler LoginSucceed;
         public event RoutedEventHandler NeedRegister;
 
+        private bool pressedValidate = false;
+
         public Login()
         {
             InitializeComponent();
@@ -49,6 +51,11 @@ namespace Software.Pages
 
         async void btnLogin_Click(object sender, RoutedEventArgs e)
         {
+            if (pressedValidate)
+                return;
+
+            pressedValidate = true;
+
             loadingLogin.IsActive = true;
 
             await Task.Delay(1000);
@@ -106,6 +113,7 @@ namespace Software.Pages
                     DoubleAnimation opacityAnim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
                     textLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
                     imgLoginIncorrect.BeginAnimation(OpacityProperty, opacityAnim);
+                    pressedValidate = false;
                 }
                 else
                 {

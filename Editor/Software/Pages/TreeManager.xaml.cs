@@ -78,12 +78,20 @@ namespace Software.Pages
 
         void GenerateButton_Click(object sender, RoutedEventArgs e)
         {
+            int seed = 1;
+
+            if (modelViewer.treeScale == 0)
+            {
+                if (TreeSeedTB.Text != "")
+                    seed = int.Parse(TreeSeedTB.Text);
+                modelViewer.LoadNewTree("Trees/Trees/" + (string)((ComboBoxItem)TreeProfile.SelectedValue).Content, seed, (bool)BranchesButton.IsChecked, (bool)WindButton.IsChecked);
+            }
+
             if(GlobalVars.gameInfo.MapModels == null)
                 GlobalVars.gameInfo.MapModels = new Engine.Game.LevelInfo.MapModels { };
             if (GlobalVars.gameInfo.MapModels.Trees == null)
                 GlobalVars.gameInfo.MapModels.Trees = new List<Engine.Game.LevelInfo.MapModels_Tree>();
-
-            int seed = 1;
+            
 
             GlobalVars.gameInfo.MapModels.Trees.Add(
                 new Engine.Game.LevelInfo.MapModels_Tree

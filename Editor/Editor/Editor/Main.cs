@@ -109,8 +109,10 @@ namespace Engine
                 em_bytes = new byte[em_sizeViewport.X * em_sizeViewport.Y * 2];
                 em_renderTarget2D = new RenderTarget2D(GraphicsDevice, em_sizeViewport.X, em_sizeViewport.Y, true, SurfaceFormat.Bgr565, DepthFormat.Depth16);
                 Display2D.C2DEffect.renderTarget = em_renderTarget2D;
+                Display2D.C2DEffect.softwareViewport.Width = width;
+                Display2D.C2DEffect.softwareViewport.Height = height;
             }
-
+            
             //graphics.ApplyChanges(); // Seem to be crashing
         }
 
@@ -135,6 +137,8 @@ namespace Engine
             SamplerState sState = new SamplerState();
             sState.Filter = TextureFilter.Linear;
             graphics.GraphicsDevice.SamplerStates[0] = sState;
+
+            Display2D.C2DEffect.softwareViewport = GraphicsDevice.Viewport;
 
             base.Initialize();
         }
@@ -224,7 +228,6 @@ namespace Engine
             spriteBatch.Begin();
             Display2D.C2DEffect.Draw(gameTime);
             Game.CConsole.Draw(gameTime);
-
             spriteBatch.End();
 
             // End capturing
@@ -249,6 +252,8 @@ namespace Engine
             }
         }
 
+        public int posx = 0;
+        public int posy = 0;
         public object WPFHandler(string handle, object value)
         {
             switch (handle)

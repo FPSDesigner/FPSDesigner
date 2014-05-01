@@ -64,7 +64,7 @@ namespace Engine.Display3D
         {
             for (int i = 0; i < _tTrees.Count; i++)
             {
-                if (ray.Intersects(_tTrees[i]._tree.TrunkMesh.BoundingSphere) != null)
+                if (_tTrees[i].CheckRayIntersectsTree(ray))
                 {
                     treeId = i;
                     return true;
@@ -82,10 +82,12 @@ namespace Engine.Display3D
         public bool _useBranches;
         public Matrix _worldMatrix;
         public SimpleTree _tree;
+        public BoundingSphere _boundingSphere;
 
         private Vector3 _position;
         private Vector3 _rotation;
         private Vector3 _scale;
+        private List<BoundingBox> _boundingBoxes;
 
         public Vector3 Position
         {
@@ -120,6 +122,8 @@ namespace Engine.Display3D
             GenerateWorldMatrix();
 
             GenerateCollisions(cam);
+
+            _boundingSphere = _tree.TrunkMesh.BoundingSphere.Transform(_worldMatrix);
         }
 
         /// <summary>
@@ -138,43 +142,67 @@ namespace Engine.Display3D
         /// </summary>
         public void GenerateCollisions(CCamera cam)
         {
+            _boundingBoxes = new List<BoundingBox>();
+
             Matrix[] transforms = new Matrix[_tree.Skeleton.Bones.Count];
             _tree.Skeleton.CopyAbsoluteBoneTranformsTo(transforms, _tree.AnimationState.BoneRotations);
 
-            BoundingSphere b1 = new BoundingSphere(_position + transforms[0].Translation, _tree.Skeleton.Branches[0].StartRadius * _scale.X);
-            BoundingSphere b2 = new BoundingSphere(_position + transforms[1].Translation + transforms[1].Up * _tree.Skeleton.Bones[1].Length * _scale.X, _tree.Skeleton.Branches[1].EndRadius * _scale.X);
-
-            BoundingBox CollisionBox = BoundingBox.CreateMerged(BoundingBox.CreateFromSphere(b1), BoundingBox.CreateFromSphere(b2));
-
-            Vector3[] bbox = CollisionBox.GetCorners();
-
-            List<Triangle> triangleList = new List<Triangle>();
-            List<Vector3> triangleNormal = new List<Vector3>();
-
-            int[,] trianglesPos = 
+            for (int x1 = 0; x1 < _tree.Skeleton.Bones.Count-1; x1++)
             {
-                {0, 1, 2}, {0, 3, 2},
-                {4, 0, 3}, {4, 7, 3},
-                {4, 7, 6}, {4, 5, 6},
-                {5, 6, 2}, {5, 1, 2},
-                {4, 0, 1}, {4, 5, 1},
-                {7, 3, 2}, {7, 6, 2},
-            };
+                BoundingSphere b1 = new BoundingSphere(_position + transforms[x1].Translation * _scale.X + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length * _scale.X, _tree.Skeleton.Branches[x1].StartRadius * _scale.X);
+                BoundingSphere b2 = new BoundingSphere(_position + transforms[x1 + 1].Translation * _scale.X + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length * _scale.X, _tree.Skeleton.Branches[x1 + 1].EndRadius * _scale.X);
 
-            for (int i = 0; i < 12; i++)
-            {
-                Triangle tri = new Triangle(bbox[trianglesPos[i, 0]], bbox[trianglesPos[i, 1]], bbox[trianglesPos[i, 2]]);
-                triangleList.Add(tri);
+                BoundingBox CollisionBox = BoundingBox.CreateMerged(BoundingBox.CreateFromSphere(b1), BoundingBox.CreateFromSphere(b2));
 
-                // Compute normal
-                Vector3 Normal = Vector3.Cross(tri.V0 - tri.V1, tri.V0 - tri.V2);
-                Normal.Normalize();
-                triangleNormal.Add(Normal);
+                _boundingBoxes.Add(CollisionBox);
+
+                if (x1 == 0)
+                {
+                    Vector3[] bbox = CollisionBox.GetCorners();
+
+                    List<Triangle> triangleList = new List<Triangle>();
+                    List<Vector3> triangleNormal = new List<Vector3>();
+
+                    int[,] trianglesPos = 
+                    {
+                        {0, 1, 2}, {0, 3, 2},
+                        {4, 0, 3}, {4, 7, 3},
+                        {4, 7, 6}, {4, 5, 6},
+                        {5, 6, 2}, {5, 1, 2},
+                        {4, 0, 1}, {4, 5, 1},
+                        {7, 3, 2}, {7, 6, 2},
+                    };
+
+                    for (int i = 0; i < 12; i++)
+                    {
+                        Triangle tri = new Triangle(bbox[trianglesPos[i, 0]], bbox[trianglesPos[i, 1]], bbox[trianglesPos[i, 2]]);
+                        triangleList.Add(tri);
+
+                        // Compute normal
+                        Vector3 Normal = Vector3.Cross(tri.V0 - tri.V1, tri.V0 - tri.V2);
+                        Normal.Normalize();
+                        triangleNormal.Add(Normal);
+                    }
+
+
+                    cam._physicsMap._triangleList.AddRange(triangleList);
+                    cam._physicsMap._triangleNormalsList.AddRange(triangleNormal);
+                }
             }
+        }
 
-
-            cam._physicsMap._triangleList.AddRange(triangleList);
-            cam._physicsMap._triangleNormalsList.AddRange(triangleNormal);
+        /// <summary>
+        /// Checks if the ray interesects the trunk of the tree
+        /// </summary>
+        /// <param name="ray">The ray to check if it intersects the tree</param>
+        public bool CheckRayIntersectsTree(Ray ray)
+        {
+            foreach (BoundingBox box in _boundingBoxes)
+            {
+                if(ray.Intersects(box) != null)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

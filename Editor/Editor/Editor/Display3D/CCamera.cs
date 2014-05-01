@@ -134,13 +134,15 @@ namespace Engine.Display3D
                 shouldUpdateMiddleScreen = false;
             }
 
-            if (_graphics.Viewport.AspectRatio != _aspectRatio)
+            /*if (_graphics.Viewport.Bounds != Display2D.C2DEffect.softwareViewport.Bounds)
             {
                 // Window size have changed
+                _graphics.Viewport = Display2D.C2DEffect.softwareViewport;
+                
                 _aspectRatio = _graphics.Viewport.AspectRatio;
                 _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
                 _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
-            }
+            }*/
 
             if (!isCamFrozen)
             {

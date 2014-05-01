@@ -360,14 +360,15 @@ namespace Engine.GameStates
                 else if (action == "click")
                 {
                     // Check if user clicked a gamecomponent
-                    Point cursorPos = (Point)p[1];
-                    var nearPoint = _graphics.Viewport.Unproject(new Vector3(cursorPos.X, cursorPos.Y, 0), cam._projection, cam._view, Matrix.Identity);
-                    var farPoint = _graphics.Viewport.Unproject(new Vector3(cursorPos.X, cursorPos.Y, 1), cam._projection, cam._view, Matrix.Identity);
+                    System.Windows.Point cursorPos = (System.Windows.Point)p[1];
 
-                    var rayDirection = farPoint - nearPoint;
-                    rayDirection.Normalize();
+                    Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)cursorPos.X, (float)cursorPos.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
+                    Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)cursorPos.X, (float)cursorPos.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
+                    Vector3 direction = farSource - nearSource;
 
-                    Ray ray = new Ray(nearPoint, rayDirection);
+                    direction.Normalize();
+
+                    Ray ray = new Ray(nearSource, direction);
 
                     // Tree check
                     int treeIdSelected;

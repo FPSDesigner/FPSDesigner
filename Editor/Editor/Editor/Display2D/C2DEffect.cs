@@ -39,6 +39,7 @@ namespace Engine.Display2D
 
         public static bool isSoftwareEmbedded;
         public static RenderTarget2D renderTarget;
+        public static Viewport softwareViewport;
 
         // fadeEffect
         private static bool _isFading = false;

@@ -184,9 +184,12 @@ namespace ModelViewer
 
             // Scale
             ChangeCameraZoom(0);
+            
             float BoundingSphereRadius = (float)(new Ray(Vector3.Zero, Vector3.Up)).Intersects(camera._frustum.Top);
+
+            treeScale = BoundingSphereRadius / tree.TrunkMesh.BoundingSphere.Radius;
             treeMatrices = new Matrix[2];
-            treeMatrices[0] = Matrix.CreateScale(BoundingSphereRadius / tree.TrunkMesh.BoundingSphere.Radius);
+            treeMatrices[0] = Matrix.CreateScale(treeScale);
             treeMatrices[1] = Matrix.CreateTranslation(new Vector3(0, -BoundingSphereRadius / 2, 0));
         }
 
