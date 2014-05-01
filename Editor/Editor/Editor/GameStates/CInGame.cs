@@ -338,7 +338,7 @@ namespace Engine.GameStates
 
             if (isSoftwareEmbedded)
             {
-                _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+                //_graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
             }
 
@@ -411,7 +411,7 @@ namespace Engine.GameStates
                     object[] values = (object[])p[1];
                     if ((string)values[0] == "tree")
                     {
-                        if ((string)values[2] == "Position")
+                        if ((string)values[2] == "SelectButton")
                         {
                             Gizmos.posGizmo._modelPosition = Display3D.TreeManager._tTrees[(int)values[1]].Position;
                             Gizmos.shouldDrawPos = true;
@@ -419,12 +419,31 @@ namespace Engine.GameStates
                         }
                     } else if((string)values[0] == "model")
                     {
-                        if ((string)values[2] == "Position")
+                        if ((string)values[2] == "SelectButton")
                         {
                             Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
                             Gizmos.shouldDrawPos = true;
                             Gizmos.shouldDrawRot = false;
                         }
+                    }
+                }
+                else if (action == "moveObject")
+                {
+                    object[] values = (object[])p[1];
+                    string subaction = (string)values[0];
+
+                    if (subaction == "pos")
+                    {
+                        Gizmos.StartDrag((int)values[1], (string)values[2], (int)values[3]);
+                    }
+                    else if (subaction == "drag")
+                    {
+                        System.Windows.Point mousePoint = (System.Windows.Point)values[1];
+                        Gizmos.Drag((int)mousePoint.X, (int)mousePoint.Y, cam);
+                    }
+                    else if (subaction == "stop")
+                    {
+                        Gizmos.StopDrag();
                     }
                 }
             }

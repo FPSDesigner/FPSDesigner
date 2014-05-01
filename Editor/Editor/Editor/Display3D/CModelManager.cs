@@ -23,6 +23,7 @@ namespace Engine.Display3D
         {
             foreach (CModel model in modelsList)
             {
+                
                 if (cam.BoundingVolumeIsInView(model.BoundingSphere))
                 {
                     model.Draw(cam._view, cam._projection, cam._cameraPos);

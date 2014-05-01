@@ -417,12 +417,12 @@ namespace Software
         public class SelectedElement
         {
             public string eltType;
-            public string eltParent;
+            public int eltId;
 
-            public SelectedElement(string elt, string parent = "")
+            public SelectedElement(string elt, int parent = -1)
             {
                 eltType = elt;
-                eltParent = parent;
+                eltId = parent;
             }
         }
         #endregion

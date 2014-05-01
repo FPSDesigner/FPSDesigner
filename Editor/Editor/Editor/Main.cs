@@ -81,7 +81,7 @@ namespace Engine
                 em_dispatcherTimer.Tick += new EventHandler(GameLoop);
 
                 this.Initialize();
-                this.LoadContent();
+                //this.LoadContent();
                 em_dispatcherTimer.Start();
                 em_StopWatch = new Stopwatch();
                 em_StopWatch.Start();
@@ -262,6 +262,8 @@ namespace Engine
                 case "moveCameraForward":
                 case "click":
                 case "selectObject":
+                case "moveObject":
+
                     return Game.CGameManagement.SendParam(new object[] { handle, value });
             }
             return true;

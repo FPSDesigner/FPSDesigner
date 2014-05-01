@@ -36,6 +36,8 @@ namespace Software.Pages
 
         private List<TreeViewItem> listTree_Trees, listTree_Models;
 
+        private bool isMovingGyzmoAxis = false;
+
         public Home()
         {
             InitializeComponent();
@@ -49,7 +51,13 @@ namespace Software.Pages
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;
             GameButton1.MouseWheel += GameButton1_MouseWheel;
-            GameButton1.MouseMove += GameButton1_MouseMove;
+            GameButton1.PreviewMouseMove += GameButton1_PreviewMouseMove;
+
+            GameButton1.GotFocus += ShowXNAImage1_GotFocus;
+            GameButton1.LostFocus += ShowXNAImage1_LostFocus;
+
+            GameButton1.PreviewMouseLeftButtonDown += GameButton1_MouseDown;
+            GameButton1.PreviewMouseLeftButtonUp += GameButton1_MouseUp;
 
             resizeTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
@@ -58,9 +66,7 @@ namespace Software.Pages
 
             GameComponentsList.SelectedItemChanged += GameComponentsList_SelectedItemChanged;
 
-            GameButton1.GotFocus += ShowXNAImage1_GotFocus;
-            GameButton1.LostFocus += ShowXNAImage1_LostFocus;
-            GameButton1.Click += GameButton1_Click;
+
 
             GlobalVars.selectedToolButton = SelectButton;
             SelectButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
@@ -93,12 +99,13 @@ namespace Software.Pages
             statusBarView1.Text = "Idle";
         }
 
-        void GameButton1_MouseMove(object sender, MouseEventArgs e)
+        void GameButton1_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            /*Console.WriteLine("Normal:"+e.GetPosition(null));
-            Console.WriteLine("Fixed:"+PointToScreen(e.GetPosition(null)));
-            if (isMovingGame1)
-                NativeMethods.SetCursorPos((int)initialMoveMousePosGame1.X, (int)initialMoveMousePosGame1.Y);*/
+            if (isMovingGyzmoAxis)
+            {
+                Console.WriteLine(Mouse.GetPosition(ShowXNAImage1));
+                m_game.WPFHandler("moveObject", new object[] { "drag", Mouse.GetPosition(ShowXNAImage1) });
+            }
         }
 
         void GameButton1_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -134,35 +141,55 @@ namespace Software.Pages
 
             UIElement el = (UIElement)sender;
             el.ReleaseMouseCapture();
-
-            //m_game.mouseX = (int)Mouse.GetPosition(ShowXNAImage1).X;
-            //m_game.mouseY = (int)Mouse.GetPosition(ShowXNAImage1).Y;
         }
 
-        void GameButton1_Click(object sender, RoutedEventArgs e)
+        void GameButton1_MouseUp(object sender, RoutedEventArgs e)
         {
-            if (GlobalVars.selectedToolButton.Name == "SelectButton")
+            if (isMovingGyzmoAxis)
             {
-                object value = m_game.WPFHandler("click", Mouse.GetPosition(ShowXNAImage1));
-                if (value is object[])
+                m_game.WPFHandler("moveObject", new object[] { "stop" });
+
+                isMovingGyzmoAxis = false;
+                Console.WriteLine("isMovingGyzmoAxis to FALSE");
+            }
+        }
+        void GameButton1_MouseDown(object sender, RoutedEventArgs e)
+        {
+            object value = m_game.WPFHandler("click", Mouse.GetPosition(ShowXNAImage1));
+            if (value is object[])
+            {
+                object[] selectElt = (object[])value;
+                if (selectElt.Length == 2)
                 {
-                    object[] selectElt = (object[])value;
-                    if (selectElt.Length == 2)
+                    if (GlobalVars.selectedToolButton.Name == "SelectButton")
                     {
                         if ((string)selectElt[0] == "tree" && selectElt[1] is int)
                         {
                             listTree_Trees[(int)selectElt[1]].IsSelected = true;
                             m_game.WPFHandler("selectObject", new object[] { "tree", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("tree", (int)selectElt[1]);
                         }
                         else if ((string)selectElt[0] == "model" && selectElt[1] is int)
                         {
                             listTree_Models[(int)selectElt[1]].IsSelected = true;
                             m_game.WPFHandler("selectObject", new object[] { "model", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", (int)selectElt[1]);
+                        }
+                    }
+                    else if (GlobalVars.selectedToolButton.Name == "PositionButton" && GlobalVars.selectedElt != null)
+                    {
+                        if ((string)selectElt[0] == "gizmo" && selectElt[1] is int)
+                        {
+                            m_game.WPFHandler("moveObject", new object[] { "pos", (int)selectElt[1], GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                            isMovingGyzmoAxis = true;
+                            Console.WriteLine("isMovingGyzmoAxis to TRUE");
                         }
                     }
                 }
             }
         }
+
 
         void disTimer_Tick(object sender, EventArgs e)
         {
@@ -241,7 +268,6 @@ namespace Software.Pages
         void GameComponentsList_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeViewItem selectedItem = (TreeViewItem)GameComponentsList.SelectedItem;
-            GlobalVars.selectedElt = new GlobalVars.SelectedElement((string)selectedItem.Header, (selectedItem.Parent is TreeViewItem) ? (string)((TreeViewItem)selectedItem.Parent).Header : "");
 
             // Models
             for (int i = 0; i < listTree_Models.Count; i++)
@@ -249,6 +275,8 @@ namespace Software.Pages
                 if (listTree_Models[i].IsSelected)
                 {
                     m_game.WPFHandler("selectObject", new object[] { "model", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", i);
+                    m_game.shouldUpdateOnce = true;
                     return;
                 }
             }
@@ -259,9 +287,12 @@ namespace Software.Pages
                 if (listTree_Trees[i].IsSelected)
                 {
                     m_game.WPFHandler("selectObject", new object[] { "tree", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("tree", i);
+                    m_game.shouldUpdateOnce = true;
                     return;
                 }
             }
+            
         }
 
         #region "Windows Menu Helper"

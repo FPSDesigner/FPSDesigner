@@ -31,7 +31,7 @@ namespace Engine.Display3D
         public Vector3 _up;
         public Vector3 _right;
 
-        private Point _middleScreen;
+        public Point _middleScreen;
         
         private bool hasPlayerUwEffect = false;
         public bool isFreeCam = false;

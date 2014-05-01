@@ -336,21 +336,28 @@ namespace Engine.Display3D
                 }
         }
 
-        public void generateModelTriangles()
+        public void generateModelTriangles(bool haveCollisionInfos = true)
         {
+            if (_trianglesPositions.Count > 0)
+                _trianglesPositions.Clear();
+
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(_modelPosition);
 
             bool hasCollisionMesh = false;
-            ModelMesh collisionMesh = default(ModelMesh);
-            foreach (ModelMesh mesh in _model.Meshes)
+            ModelMesh collisionMesh = null;
+
+            if (haveCollisionInfos)
             {
-                if (mesh.Name == collisionShapeName)
+                foreach (ModelMesh mesh in _model.Meshes)
                 {
-                    hasCollisionMesh = true;
-                    collisionMesh = mesh;
-                    break;
+                    if (mesh.Name == collisionShapeName)
+                    {
+                        hasCollisionMesh = true;
+                        collisionMesh = mesh;
+                        break;
+                    }
                 }
             }
 
