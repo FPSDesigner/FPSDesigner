@@ -16,9 +16,67 @@ namespace Engine.Display3D
     /// </summary>
     class CModel : IRenderable
     {
-        public Vector3 _modelPosition { get; set; }
-        public Vector3 _modelRotation { get; set; }
-        public Vector3 _modelScale { get; set; }
+        private Vector3 _Scale;
+        private Vector3 _Rotation;
+        private Vector3 _Position;
+
+        public Vector3 _modelPosition
+        {
+            get
+            {
+                return _Position;
+            }
+            set
+            {
+                if (value != _Position)
+                {
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(true);
+                    _Position = value;
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(false);
+                }
+            }
+        }
+
+        public Vector3 _modelRotation
+        {
+            get
+            {
+                return _Rotation;
+            }
+            set
+            {
+                if (value != _Rotation)
+                {
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(true);
+                    _Rotation = value;
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(false);
+                }
+            }
+        }
+
+        public Vector3 _modelScale
+        {
+            get
+            {
+                return _Scale;
+            }
+            set
+            {
+                if (value != _Scale)
+                {
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(true);
+                    _Scale = value;
+                    if (!shouldNotUpdateTriangles)
+                        AddTriangles(false);
+                }
+            }
+        }
+
         public Vector3 _lightDirection { get; set; }
 
         public Model _model { get; private set; }
@@ -29,7 +87,8 @@ namespace Engine.Display3D
 
         private Matrix[] _modelTransforms;
         private GraphicsDevice _graphicsDevice;
-        private BoundingSphere _boundingSphere;
+        public BoundingSphere _boundingSphere;
+        public BoundingBox _boundingBox;
 
         public Materials.Material Material { get; set; }
 
@@ -37,6 +96,9 @@ namespace Engine.Display3D
         public List<Vector3> _trianglesNormal = new List<Vector3>();
 
         private Dictionary<String, Texture2D> _textures;
+        private CCamera _camera;
+
+        public bool shouldNotUpdateTriangles = false;
 
         private string collisionShapeName = "collision_shape";
 
@@ -53,13 +115,6 @@ namespace Engine.Display3D
 
                 return transformed;
             }
-        }
-
-        // If we want to move the model
-        public void Update(Vector3 newPos, Vector3 newRotation)
-        {
-            _modelPosition = newPos;
-            _modelRotation = newRotation;
         }
 
         /// <summary>
@@ -100,7 +155,7 @@ namespace Engine.Display3D
 
                             effect.TextureEnabled = true;
 
-                            string newName = mesh.Name.Split('_')[0];; // If there is no * : newName corresponds to the mesh.Name
+                            string newName = mesh.Name.Split('_')[0]; ; // If there is no * : newName corresponds to the mesh.Name
 
                             if (_textures.ContainsKey(newName))
                                 effect.Texture = _textures[newName];
@@ -114,7 +169,7 @@ namespace Engine.Display3D
 
             buildBoundingSphere();
             generateTags();
-            generateModelTriangles();
+            //generateModelTriangles();
 
             this._graphicsDevice = device;
 
@@ -336,14 +391,98 @@ namespace Engine.Display3D
                 }
         }
 
+        public Matrix GetModelMatrix()
+        {
+            return Matrix.CreateScale(_modelScale) *
+               Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
+               Matrix.CreateTranslation(_modelPosition);
+        }
+
+        public List<Triangle> GetRealTriangles()
+        {
+            Matrix world = GetModelMatrix();
+            List<Triangle> triangles = new List<Triangle>();
+            foreach (Triangle tri in _trianglesPositions)
+                triangles.Add(tri.NewByMatrix(world));
+            return triangles;
+        }
+
+        public void AddTrianglesToPhysics(CCamera cam, bool haveCollisionInfos = true)
+        {
+            _camera = cam;
+            AddTrianglesToPhysics(haveCollisionInfos);
+        }
+
+        public void AddTrianglesToPhysics(bool haveCollisionInfos = true)
+        {
+            if (_camera == null || shouldNotUpdateTriangles)
+                return;
+
+
+            generateModelTriangles(haveCollisionInfos);
+            AddTriangles();
+        }
+
+        private void AddTriangles(bool beforeUpdate = false)
+        {
+            if (_camera == null)
+                return;
+
+            Matrix worldMatrix = GetModelMatrix();
+            List<Triangle> allTrianglesList = new List<Triangle>();
+
+            if (beforeUpdate && !Display2D.C2DEffect.isSoftwareEmbedded)
+            {
+                // Remove all triangles from physics info if they exist
+                for (int i = 0; i < _trianglesPositions.Count; i++)
+                    allTrianglesList.Add(_trianglesPositions[i].NewByMatrix(worldMatrix));
+
+                List<Triangle> toDelete = new List<Triangle>();
+                for (int i = 0; i < _camera._physicsMap._triangleList.Count; i++)
+                {
+                    Triangle phTri = _camera._physicsMap._triangleList[i];
+
+
+                    for (int x = 0; x < allTrianglesList.Count; x++)
+                    {
+                        Triangle tri = allTrianglesList[x];
+                        if (tri.V0 == phTri.V0 && tri.V1 == phTri.V1 && tri.V2 == phTri.V2)
+                            toDelete.Add(phTri);
+                    }
+
+                }
+                foreach (Triangle tri in toDelete)
+                    _camera._physicsMap._triangleList.Remove(tri);
+
+                _camera._physicsMap._triangleNormalsList.RemoveAll(normal => _trianglesNormal.Contains(normal));
+            }
+            else if(!beforeUpdate)
+            {
+                List<Vector3> totalPoints = new List<Vector3>();
+                for (int i = 0; i < _trianglesPositions.Count; i++)
+                {
+                    Triangle newTri = _trianglesPositions[i].NewByMatrix(worldMatrix);
+                    allTrianglesList.Add(newTri);
+                    totalPoints.Add(newTri.V0);
+                    totalPoints.Add(newTri.V1);
+                    totalPoints.Add(newTri.V2);
+                }
+
+                if (!Display2D.C2DEffect.isSoftwareEmbedded)
+                {
+                    _camera._physicsMap._triangleList.AddRange(allTrianglesList);
+                    _camera._physicsMap._triangleNormalsList.AddRange(_trianglesNormal);
+                }
+
+                _boundingBox = BoundingBox.CreateFromPoints(totalPoints);
+            }
+
+        }
+
         public void generateModelTriangles(bool haveCollisionInfos = true)
         {
             if (_trianglesPositions.Count > 0)
                 _trianglesPositions.Clear();
-
-            Matrix world = Matrix.CreateScale(_modelScale) *
-                Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
-                Matrix.CreateTranslation(_modelPosition);
 
             bool hasCollisionMesh = false;
             ModelMesh collisionMesh = null;
@@ -361,12 +500,13 @@ namespace Engine.Display3D
                 }
             }
 
+            List<Vector3> totalIndices = new List<Vector3>();
             foreach (ModelMesh mesh in _model.Meshes)
             {
                 bool isCollisionOne = (hasCollisionMesh && collisionMesh.Name == mesh.Name);
                 if (!hasCollisionMesh || isCollisionOne)
                 {
-                    Matrix localWorld = _modelTransforms[mesh.ParentBone.Index] * world;
+                    Matrix localWorld = _modelTransforms[mesh.ParentBone.Index];
                     foreach (ModelMeshPart meshPart in mesh.MeshParts)
                     {
                         List<Vector3> indices = new List<Vector3>();
@@ -388,11 +528,14 @@ namespace Engine.Display3D
 
                             _trianglesNormal.Add(Vector);
                         }
+
+                        totalIndices.AddRange(indices);
                     }
                     if (isCollisionOne)
                         break;
                 }
             }
+            //_boundingBox = BoundingBox.CreateFromPoints(totalIndices);
         }
 
         /// <summary>
@@ -475,9 +618,10 @@ namespace Engine.Display3D
         public bool IsBoundingSphereIntersecting(BoundingSphere Sphere, out Vector3 triangleNormal)
         {
             triangleNormal = Vector3.Zero;
+            Matrix world = GetModelMatrix();
             for (int i = 0; i < _trianglesPositions.Count; i++)
             {
-                Triangle triangleToTest = _trianglesPositions[i];
+                Triangle triangleToTest = _trianglesPositions[i].NewByMatrix(world);
                 if (TriangleTest.Intersects(ref Sphere, ref triangleToTest))
                 {
                     triangleNormal = _trianglesNormal[i];
@@ -510,7 +654,7 @@ namespace Engine.Display3D
         public int C;
     }
 
-    public struct Triangle
+    public class Triangle
     {
         public Vector3 V0;
         public Vector3 V1;
@@ -523,6 +667,18 @@ namespace Engine.Display3D
             V1 = v1;
             V2 = v2;
             TriName = Name;
+        }
+
+        public void UpdateByMatrix(Matrix world)
+        {
+            V0 = Vector3.Transform(V0, world);
+            V1 = Vector3.Transform(V1, world);
+            V2 = Vector3.Transform(V2, world);
+        }
+
+        public Triangle NewByMatrix(Matrix world)
+        {
+            return new Triangle(Vector3.Transform(V0, world), Vector3.Transform(V1, world), Vector3.Transform(V2, world), TriName);
         }
     }
 

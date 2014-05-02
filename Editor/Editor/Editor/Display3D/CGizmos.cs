@@ -16,8 +16,8 @@ namespace Engine.Display3D
     {
         /* Axis IDs:
          * 0: X (Red)
-         * 1: Y (Green)
-         * 2: Z (Blue)
+         * 1: Z (Green)
+         * 2: Y (Blue)
         */
 
         public CModel posGizmo, rotGizmo;
@@ -34,11 +34,13 @@ namespace Engine.Display3D
 
 
 
-        public CGizmos(ContentManager Content, GraphicsDevice GraphicsDevice)
+        public CGizmos(ContentManager Content, GraphicsDevice GraphicsDevice, CCamera cam)
         {
             Dictionary<string, Texture2D> guizmoTexture = new Dictionary<string, Texture2D>();
             guizmoTexture.Add("R", Content.Load<Texture2D>("Textures/Guizmo"));
             posGizmo = new Display3D.CModel(Content.Load<Model>("Models/Guizmo"), new Vector3(-125, 170, 85), Vector3.Zero, Vector3.One, GraphicsDevice, guizmoTexture, 0, 1);
+            posGizmo.AddTrianglesToPhysics(cam, false);
+            GenerateBoundingBoxes();
 
             gizmoSize = new Vector3(0.15f);
         }
@@ -57,7 +59,7 @@ namespace Engine.Display3D
             boxesPos = new BoundingBox[3];
             spheresRot = new BoundingBox[3];
 
-            posGizmo.generateModelTriangles(false);
+            //posGizmo.AddTrianglesToPhysics();
 
             foreach (ModelMesh mesh in posGizmo._model.Meshes)
             {
@@ -68,7 +70,7 @@ namespace Engine.Display3D
                     axisId = 2;
 
                 List<Vector3> listVectPosGyzmo = new List<Vector3>();
-                foreach (Triangle tri in posGizmo._trianglesPositions)
+                foreach (Triangle tri in posGizmo.GetRealTriangles())
                 {
                     if (tri.TriName == mesh.Name)
                     {
@@ -99,16 +101,11 @@ namespace Engine.Display3D
             axisDragging = axis;
             eltTypeDragging = eltType;
             eltIdDragging = eltId;
+            posGizmo.shouldNotUpdateTriangles = true;
         }
 
         public void Drag(int posX, int posY, CCamera cam)
         {
-            // We get the normal of the screen
-            Vector3 nearSourceScreen = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3(cam._middleScreen.X, cam._middleScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
-            Vector3 farSourceScreen = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3(cam._middleScreen.X, cam._middleScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
-            Vector3 directionScreen = farSourceScreen - nearSourceScreen;
-            directionScreen.Normalize();
-
             // We get the normal of the mouse
             Vector3 nearSourceCursor = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3(posX, posY, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
             Vector3 farSourceCursor = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3(posX, posY, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
@@ -117,11 +114,14 @@ namespace Engine.Display3D
 
             // First, we create a plane for the axis we're dragging
             Plane axisPlane;
-            if (axisDragging == 0 || axisDragging == 2) // X/Z
+            if (axisDragging == 0 || axisDragging == 1) // X/Z
                 axisPlane = new Plane(posGizmo._modelPosition + Vector3.UnitX, posGizmo._modelPosition, posGizmo._modelPosition + Vector3.UnitZ);
             else
-                axisPlane = new Plane(directionScreen, Vector3.Distance(cam._cameraPos, posGizmo._modelPosition));
-
+            {
+                Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, 0, 0);
+                axisPlane = new Plane(posGizmo._modelPosition, posGizmo._modelPosition + Vector3.Up, posGizmo._modelPosition + Vector3.Transform(Vector3.Left, rotation));
+            }
+            
             Ray ray = new Ray(nearSourceCursor, directionCursor);
 
             float? distance = ray.Intersects(axisPlane);
@@ -137,7 +137,6 @@ namespace Engine.Display3D
                         CModelManager.modelsList[eltIdDragging]._modelPosition = new Vector3(CModelManager.modelsList[eltIdDragging]._modelPosition.X, contactPoint.Y, CModelManager.modelsList[eltIdDragging]._modelPosition.Z);
                     else if (axisDragging == 0)
                         CModelManager.modelsList[eltIdDragging]._modelPosition = new Vector3(CModelManager.modelsList[eltIdDragging]._modelPosition.X, CModelManager.modelsList[eltIdDragging]._modelPosition.Y, contactPoint.Z);
-                    
                     posGizmo._modelPosition = CModelManager.modelsList[eltIdDragging]._modelPosition;
                 }
                 else if (eltTypeDragging == "tree")
@@ -154,9 +153,12 @@ namespace Engine.Display3D
             }
         }
 
+        
         public void StopDrag()
         {
             isDragging = false;
+            posGizmo.shouldNotUpdateTriangles = false;
+            posGizmo.generateModelTriangles();
         }
     }
 }

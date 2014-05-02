@@ -182,9 +182,9 @@ namespace Engine.Display3D
         {
             if (isInView)
             {
-                if (_isUnderWater)
+                if (_isUnderWater && waterMesh._modelRotation != modelRotationUnderwater)
                     waterMesh._modelRotation = modelRotationUnderwater;
-                else
+                else if (!_isUnderWater && waterMesh._modelRotation != Vector3.Zero)
                     waterMesh._modelRotation = Vector3.Zero;
                 waterMesh.Draw(View, Projection, camPos);
             }

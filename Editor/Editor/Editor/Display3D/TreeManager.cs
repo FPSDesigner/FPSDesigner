@@ -14,6 +14,7 @@ namespace Engine.Display3D
     {
         public static Dictionary<string, TreeProfile> _tProfiles = new Dictionary<string, TreeProfile>();
         public static List<Tree> _tTrees = new List<Tree>();
+        public static int selectedTreeId = -1;
         private static LTreesLibrary.Trees.Wind.WindStrengthSin treeWind;
         private static LTreesLibrary.Trees.Wind.TreeWindAnimator treeAnimator;
 
@@ -42,12 +43,17 @@ namespace Engine.Display3D
         public static void Draw(CCamera cam, GameTime gameTime)
         {
             for (int i = 0; i < _tTrees.Count; i++)
+            {
                 _tTrees[i]._tree.DrawTrunk(_tTrees[i]._worldMatrix, cam._view, cam._projection);
+                if (selectedTreeId == i)
+                    CSimpleShapes.AddBoundingSphere(_tTrees[i]._boundingSphere, Color.Black);
+            }
 
             // We draw leaves at the end
             for (int i = 0; i < _tTrees.Count; i++)
                 if(_tTrees[i]._useBranches)
                     _tTrees[i]._tree.DrawLeaves(_tTrees[i]._worldMatrix, cam._view, cam._projection);
+
         }
 
         public static void Update(GameTime gameTime)
@@ -89,21 +95,23 @@ namespace Engine.Display3D
         private Vector3 _rotation;
         private Vector3 _scale;
         private List<BoundingBox> _boundingBoxes;
+        private List<Triangle> _totalTriangles;
+        private CCamera _camera;
 
         public Vector3 Position
         {
             get { return _position; }
-            set { GenerateWorldMatrix(); _position = value; }
+            set { _position = value; GenerateWorldMatrix(); }
         }
         public Vector3 Rotation
         {
             get { return _rotation; }
-            set { GenerateWorldMatrix(); _position = value; }
+            set { _rotation = value;  GenerateWorldMatrix(); }
         }
         public Vector3 Scale
         {
             get { return _scale; }
-            set { GenerateWorldMatrix(); _position = value; }
+            set { _scale = value; GenerateWorldMatrix(); }
         }
 
         public Tree(CCamera cam, string profile, Vector3 coordinates, Vector3 rotation, Vector3 scale, int seed = 0, bool wind = false, bool branches = true)
@@ -114,6 +122,7 @@ namespace Engine.Display3D
             _scale = scale;
             _useWind = wind;
             _useBranches = branches;
+            _camera = cam;
 
             if (seed == 0)
                 GenerateTree();
@@ -121,8 +130,6 @@ namespace Engine.Display3D
                 GenerateTree(seed);
 
             GenerateWorldMatrix();
-
-            GenerateCollisions(cam);
 
             _boundingSphere = _tree.TrunkMesh.BoundingSphere.Transform(_worldMatrix);
         }
@@ -136,6 +143,9 @@ namespace Engine.Display3D
                Matrix.CreateScale(_scale) *
                Matrix.CreateRotationX(_rotation.X) * Matrix.CreateRotationY(_rotation.Y) * Matrix.CreateRotationZ(_rotation.Z) *
                Matrix.CreateTranslation(_position);
+
+            _boundingSphere = _tree.TrunkMesh.BoundingSphere.Transform(_worldMatrix);
+            GenerateCollisions(_camera);
         }
 
         /// <summary>
@@ -143,6 +153,12 @@ namespace Engine.Display3D
         /// </summary>
         public void GenerateCollisions(CCamera cam)
         {
+            if (_totalTriangles != null && _totalTriangles.Count > 0)
+            {
+                // Unload every triangles from physics
+                cam._physicsMap._triangleList.RemoveAll(tri => _totalTriangles.Contains(tri));
+            }
+            _totalTriangles = new List<Triangle>();
             _boundingBoxes = new List<BoundingBox>();
 
             Matrix[] transforms = new Matrix[_tree.Skeleton.Bones.Count];
@@ -150,9 +166,6 @@ namespace Engine.Display3D
 
             for (int x1 = 0; x1 < _tree.Skeleton.Bones.Count-1; x1++)
             {
-                //BoundingSphere b1 = new BoundingSphere(_position + transforms[x1].Translation * _scale.X + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length * _scale.X, _tree.Skeleton.Branches[x1].StartRadius * _scale.X);
-                //BoundingSphere b2 = new BoundingSphere(_position + transforms[x1 + 1].Translation * _scale.X + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length * _scale.X, _tree.Skeleton.Branches[x1 + 1].EndRadius * _scale.X);
-
                 BoundingSphere b1 = new BoundingSphere(transforms[x1].Translation + transforms[x1].Up * _tree.Skeleton.Bones[x1].Length, _tree.Skeleton.Branches[x1].StartRadius).Transform(_worldMatrix);
                 BoundingSphere b2 = new BoundingSphere(transforms[x1 + 1].Translation + transforms[x1 + 1].Up * _tree.Skeleton.Bones[x1 + 1].Length, _tree.Skeleton.Branches[x1 + 1].StartRadius).Transform(_worldMatrix);
 
@@ -191,6 +204,7 @@ namespace Engine.Display3D
 
                     cam._physicsMap._triangleList.AddRange(triangleList);
                     cam._physicsMap._triangleNormalsList.AddRange(triangleNormal);
+                    _totalTriangles.AddRange(triangleList);
                 }
             }
         }

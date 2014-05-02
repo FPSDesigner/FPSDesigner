@@ -29,6 +29,7 @@ namespace Engine.Display3D
         public CSkybox(ContentManager Content, GraphicsDevice GraphicsDevice, TextureCube Texture)
         {
             model = new CModel(Content.Load<Model>("3D/Skysphere"), Vector3.Zero, Vector3.Zero, new Vector3(2000), GraphicsDevice);
+            model.shouldNotUpdateTriangles = true;
 
             effect = Content.Load<Effect>("Effects/Skysphere");
             effect.Parameters["CubeMap"].SetValue(Texture);

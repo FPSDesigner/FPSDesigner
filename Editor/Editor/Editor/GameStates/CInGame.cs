@@ -53,10 +53,6 @@ namespace Engine.GameStates
 
             Game.CSoundManager.LoadContent();
 
-            if (isSoftwareEmbedded)
-                Gizmos = new Display3D.CGizmos(content, graphics);
-
-
             /**** Character ****/
             _character = new Game.CCharacter();
             _character.Initialize();
@@ -224,6 +220,10 @@ namespace Engine.GameStates
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
 
+            /**** Gizmos ****/
+            if (isSoftwareEmbedded)
+                Gizmos = new Display3D.CGizmos(content, graphics, cam);
+
             // ******* All the console informations ******* //
 
             _character.LoadContent(content, graphics, weapon, cam);
@@ -338,7 +338,7 @@ namespace Engine.GameStates
 
             if (isSoftwareEmbedded)
             {
-                //_graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
+                _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
             }
 
@@ -406,6 +406,18 @@ namespace Engine.GameStates
                     else if (modelDistance != null)
                         return new object[] { "model", modelIdSelected };
                 }
+                else if (action == "unselectObject")
+                {
+                    object[] values = (object[])p[1];
+                    if ((string)values[0] == "tree")
+                    {
+                        Display3D.TreeManager.selectedTreeId = -1;
+                    }
+                    else if ((string)values[0] == "model")
+                    {
+                        Display3D.CModelManager.selectModelId = -1;
+                    }
+                }
                 else if (action == "selectObject")
                 {
                     object[] values = (object[])p[1];
@@ -413,14 +425,17 @@ namespace Engine.GameStates
                     {
                         if ((string)values[2] == "SelectButton")
                         {
+                            Display3D.TreeManager.selectedTreeId = (int)values[1];
                             Gizmos.posGizmo._modelPosition = Display3D.TreeManager._tTrees[(int)values[1]].Position;
                             Gizmos.shouldDrawPos = true;
                             Gizmos.shouldDrawRot = false;
                         }
-                    } else if((string)values[0] == "model")
+                    }
+                    else if ((string)values[0] == "model")
                     {
                         if ((string)values[2] == "SelectButton")
                         {
+                            Display3D.CModelManager.selectModelId = (int)values[1];
                             Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
                             Gizmos.shouldDrawPos = true;
                             Gizmos.shouldDrawRot = false;

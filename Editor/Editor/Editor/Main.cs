@@ -262,8 +262,9 @@ namespace Engine
                 case "moveCameraForward":
                 case "click":
                 case "selectObject":
+                case "unselectObject":
                 case "moveObject":
-
+                
                     return Game.CGameManagement.SendParam(new object[] { handle, value });
             }
             return true;
