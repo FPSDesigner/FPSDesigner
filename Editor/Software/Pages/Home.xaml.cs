@@ -34,7 +34,7 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
-        private List<TreeViewItem> listTree_Trees, listTree_Models;
+        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -179,6 +179,13 @@ namespace Software.Pages
                             m_game.WPFHandler("selectObject", new object[] { "model", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", (int)selectElt[1]);
                         }
+                        else if ((string)selectElt[0] == "pickup" && selectElt[1] is int)
+                        {
+                            listTree_Pickups[(int)selectElt[1]].IsSelected = true;
+
+                            m_game.WPFHandler("selectObject", new object[] { "pickup", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", (int)selectElt[1]);
+                        }
                     }
                     else if (GlobalVars.selectedToolButton.Name == "PositionButton" && GlobalVars.selectedElt != null)
                     {
@@ -213,16 +220,19 @@ namespace Software.Pages
             GameComponentsList.Items.Clear();
             listTree_Trees.Clear();
             listTree_Models.Clear();
+            listTree_Pickups.Clear();
 
             TreeViewItem Models = new TreeViewItem();
             TreeViewItem Trees = new TreeViewItem();
             TreeViewItem Water = new TreeViewItem();
             TreeViewItem Terrain = new TreeViewItem();
+            TreeViewItem Pickups = new TreeViewItem();
 
             Models.Header = "Models";
             Trees.Header = "Trees";
             Water.Header = "Water";
             Terrain.Header = "Terrain";
+            Pickups.Header = "Pick-Ups";
 
             // Trees
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Trees != null)
@@ -254,12 +264,30 @@ namespace Software.Pages
                 }
             }
 
+            // Pick-Ups
+            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Pickups != null)
+            {
+                foreach (Engine.Game.LevelInfo.MapModels_Pickups pickup in GlobalVars.gameInfo.MapModels.Pickups)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = pickup.WeaponName;
+                    if (treeItem.Header == null)
+                        treeItem.Header = "Pick-up";
+
+                    Pickups.Items.Add(treeItem);
+                    listTree_Pickups.Add(treeItem);
+                }
+            }
+
             // Add items to main tree view
-            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Models != null && GlobalVars.gameInfo.MapModels.Models.Count > 0)
+            if (Models.Items.Count > 0)
                 GameComponentsList.Items.Add(Models);
 
             if (Trees.Items.Count > 0)
                 GameComponentsList.Items.Add(Trees);
+
+            if (Pickups.Items.Count > 0)
+                GameComponentsList.Items.Add(Pickups);
 
             if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.UseWater)
                 GameComponentsList.Items.Add(Water);
@@ -297,6 +325,21 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "tree", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("tree", i);
+                    m_game.shouldUpdateOnce = true;
+                    return;
+                }
+            }
+
+            // Pickups
+            for (int i = 0; i < listTree_Pickups.Count; i++)
+            {
+                if (listTree_Pickups[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    m_game.WPFHandler("selectObject", new object[] { "pickup", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", i);
                     m_game.shouldUpdateOnce = true;
                     return;
                 }

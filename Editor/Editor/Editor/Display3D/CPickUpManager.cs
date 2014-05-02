@@ -15,9 +15,9 @@ namespace Engine.Display3D
     {
         public static List<CPickUp> _pickups = new List<CPickUp>();
 
-        public static void AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
+        public static void AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 rotation, Vector3 scale, string weaponName, int weaponBullets)
         {
-            _pickups.Add(new CPickUp(graphics, model, texture, position, scale, weaponName, weaponBullets));
+            _pickups.Add(new CPickUp(graphics, model, texture, position, rotation, scale, weaponName, weaponBullets));
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)
@@ -32,7 +32,7 @@ namespace Engine.Display3D
         {
             foreach(CPickUp pickup in _pickups)
             {
-                pickup._Rotation.Y += 0.01f;
+                pickup._Model._modelRotation = new Vector3(pickup._Model._modelRotation.X, pickup._Model._modelRotation.Y, pickup._Model._modelRotation.Z);
             }
         }
 
@@ -49,29 +49,37 @@ namespace Engine.Display3D
             EnteredPickup = null;
             return false;
         }
+
+        public static float? CheckRayIntersectsAnyPickup(Ray ray, out int idIntersected)
+        {
+            for (int i = 0; i < _pickups.Count; i++)
+            {
+                float? distance = _pickups[i].RayIntersectsPickup(ray);
+                if (distance.HasValue)
+                {
+                    idIntersected = i;
+                    return distance;
+                }
+            }
+            idIntersected = 0;
+            return null;
+        }
     }
 
     class CPickUp
     {
         public CModel _Model;
 
-        public Vector3 _Position;
-        public Vector3 _Scale;
-        public Vector3 _Rotation;
-
         public string _weaponName;
         public int _weaponBullets;
 
 
-        public CPickUp(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
+        public CPickUp(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 rotation, Vector3 scale, string weaponName, int weaponBullets)
         {
-            _Rotation = Vector3.Zero;
-            _Position = position;
-            _Scale = scale;
-
             Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
             textureList.Add("ApplyAllMesh", texture);
-            _Model = new CModel(model, _Position, _Rotation, _Scale, graphics, textureList, 0, 1);
+            _Model = new CModel(model, position, rotation, scale, graphics, textureList, 0, 1);
+            _Model.shouldNotUpdateTriangles = true;
 
             _weaponName = weaponName;
             _weaponBullets = weaponBullets;

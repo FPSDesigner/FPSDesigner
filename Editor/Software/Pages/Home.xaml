@@ -157,6 +157,7 @@
                         <TreeViewItem Header="TreeA"></TreeViewItem>
                     </TreeViewItem>
                     <TreeViewItem Header="Models"></TreeViewItem>
+                    <TreeViewItem Header="Pick-Ups"></TreeViewItem>
                     <TreeViewItem Header="Water"></TreeViewItem>
                     <TreeViewItem Header="Terrain"></TreeViewItem>
 

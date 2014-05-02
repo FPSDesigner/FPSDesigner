@@ -114,10 +114,10 @@ namespace Engine.Game.LevelInfo
     // 3D Models - Pickups
     public class MapModels_Pickups
     {
-        public string ModelFile { get; set; }
         public string WeaponName { get; set; }
         public int WeaponBullets { get; set; }
         public Coordinates Position { get; set; }
+        public Coordinates Rotation { get; set; }
         public Coordinates Scale { get; set; }
     }
 
