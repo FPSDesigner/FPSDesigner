@@ -83,6 +83,8 @@ namespace Software.Pages
             GlobalVars.selectedToolButton.Foreground = new SolidColorBrush(Color.FromArgb(255, 209, 209, 209));
             GlobalVars.selectedToolButton = ((ModernButton)sender);
             GlobalVars.selectedToolButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
+            m_game.WPFHandler("changeTool", new object[] { GlobalVars.selectedToolButton.Name });
+            m_game.shouldUpdateOnce = true;
 
             GlobalVars.AddConsoleMsg("Selected tool " + GlobalVars.selectedToolButton.Name, "info");
         }

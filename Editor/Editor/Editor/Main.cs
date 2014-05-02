@@ -264,6 +264,7 @@ namespace Engine
                 case "selectObject":
                 case "unselectObject":
                 case "moveObject":
+                case "changeTool":
                 
                     return Game.CGameManagement.SendParam(new object[] { handle, value });
             }

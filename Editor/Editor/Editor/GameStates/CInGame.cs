@@ -120,7 +120,7 @@ namespace Engine.GameStates
                 terrain.waterHeight = water.waterPosition.Y;
 
             /**** Weapons ****/
-            List<Model> modelsList = new List<Model>();
+            Dictionary<string, Model> modelsList = new Dictionary<string, Model>();
             List<Texture2D> textureList = new List<Texture2D>();
             List<object[]> objList = new List<object[]>();
             List<string[]> soundList = new List<string[]>();
@@ -129,7 +129,7 @@ namespace Engine.GameStates
 
             foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
             {
-                modelsList.Add(content.Load<Model>(wep.Model));
+                modelsList.Add(wep.Name, content.Load<Model>(wep.Model));
                 textureList.Add(content.Load<Texture2D>(wep.Texture));
                 objList.Add(
                     new object[] { wep.Type, wep.MaxClip, wep.MaxClip, 50, 1, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
@@ -149,6 +149,10 @@ namespace Engine.GameStates
 
             weapon = new Game.CWeapon();
             weapon.LoadContent(content, modelsList, textureList, objList, soundList, animList, animVelocityList);
+
+            /**** Pickups ****/
+            foreach (Game.LevelInfo.MapModels_Pickups pickup in levelData.MapModels.Pickups)
+                Display3D.CPickUpManager.AddPickup(modelsList[pickup.WeaponName], pickup.Position.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
 
             /*// We create array containing all informations about weapons.
             weapon = new Game.CWeapon();
@@ -427,7 +431,7 @@ namespace Engine.GameStates
                         {
                             Display3D.TreeManager.selectedTreeId = (int)values[1];
                             Gizmos.posGizmo._modelPosition = Display3D.TreeManager._tTrees[(int)values[1]].Position;
-                            Gizmos.shouldDrawPos = true;
+                            Gizmos.shouldDrawPos = false;
                             Gizmos.shouldDrawRot = false;
                         }
                     }
@@ -437,9 +441,30 @@ namespace Engine.GameStates
                         {
                             Display3D.CModelManager.selectModelId = (int)values[1];
                             Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
-                            Gizmos.shouldDrawPos = true;
+                            Gizmos.shouldDrawPos = false;
                             Gizmos.shouldDrawRot = false;
                         }
+                    }
+                }
+                else if (action == "changeTool")
+                {
+                    object[] values = (object[])p[1];
+                    string newTool = (string)values[0];
+
+                    if (newTool == "SelectButton")
+                    {
+                        Gizmos.shouldDrawPos = false;
+                        Gizmos.shouldDrawRot = false;
+                    }
+                    else if (newTool == "PositionButton")
+                    {
+                        Gizmos.shouldDrawPos = true;
+                        Gizmos.shouldDrawRot = false;
+                    }
+                    else if (newTool == "RotateButton")
+                    {
+                        Gizmos.shouldDrawPos = false;
+                        Gizmos.shouldDrawRot = true;
                     }
                 }
                 else if (action == "moveObject")

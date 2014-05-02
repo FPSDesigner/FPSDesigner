@@ -107,6 +107,18 @@ namespace Engine.Game.LevelInfo
         public List<MapModels_Model> Models { get; set; }
         [XmlElement("MapModels_Tree")]
         public List<MapModels_Tree> Trees { get; set; }
+        [XmlElement("MapModels_Pickups")]
+        public List<MapModels_Pickups> Pickups { get; set; }
+    }
+
+    // 3D Models - Pickups
+    public class MapModels_Pickups
+    {
+        public string ModelFile { get; set; }
+        public string WeaponName { get; set; }
+        public int WeaponBullets { get; set; }
+        public Coordinates Position { get; set; }
+        public Coordinates Scale { get; set; }
     }
 
     // 3D Models - Tree

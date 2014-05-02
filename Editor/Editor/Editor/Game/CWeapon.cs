@@ -123,7 +123,7 @@ namespace Engine.Game
 
         }
 
-        public void LoadContent(ContentManager content, List<Model> modelsList, List<Texture2D> weapTexture, List<object[]> weaponsInfo, List<string[]> weaponsSounds, List<string[]> weapAnim,
+        public void LoadContent(ContentManager content, Dictionary<string, Model> modelsList, List<Texture2D> weapTexture, List<object[]> weaponsInfo, List<string[]> weaponsSounds, List<string[]> weapAnim,
             List<float[]> animVelocity)
         {
             if ((modelsList.Count != weaponsInfo.Count || modelsList.Count != weaponsSounds.Count) && weapAnim.Count != modelsList.Count)
@@ -141,7 +141,7 @@ namespace Engine.Game
                 }
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[i], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[i]);
+                _weaponsArray[i] = new WeaponData(modelsList[(string)weaponsInfo[i][12]], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[i]);
             }
         }
 
