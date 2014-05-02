@@ -51,6 +51,9 @@ namespace Engine.Game
 
                 this._name = (string)weaponInfo[12];
 
+                this._recoilIntensity = (float)weaponInfo[13];
+                this._recoilBackIntensity = (float)weaponInfo[14];
+
                 this._animVelocity = animVelocity;
 
                 this._weapTexture = weapTexture;
@@ -80,6 +83,8 @@ namespace Engine.Game
             public int _maxClip; //Max bullets per magazine
             public int _bulletsAvailable; // Bullets left
             public int _magazinesAvailables;
+            public float _recoilIntensity;
+            public float _recoilBackIntensity;
 
             // Other Weapons Infos
             public bool _isAutomatic;

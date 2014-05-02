@@ -39,9 +39,9 @@ namespace Engine.Display3D
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles
-        public float _yaw { get; private set; }
-        public float _pitch { get; private set; }
-        public float _roll { get; private set; }
+        public float _yaw { get; set; }
+        public float _pitch { get; set; }
+        public float _roll { get; set; }
 
         private float _nearClip;
         private float _farClip;

@@ -45,6 +45,9 @@ namespace Engine.Game
         private bool _isSwitchingAnimPlaying = false; // Hands go down
         private bool _isSwitchingAnim2ndPartPlaying = false; // Hands go up
 
+        private float _isRecoilAffected = 0;
+        private float _recoilBackIntensity = 0;
+
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
         private bool _isCrouched = false;
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
@@ -159,6 +162,17 @@ namespace Engine.Game
 
             // Crouch
             Crouch(kbState, oldKbState, cam, gameTime);
+
+            if (_isRecoilAffected > 0)
+            {
+                float reduceIntensity = _isRecoilAffected;
+                if (_isRecoilAffected > 0.0001f)
+                    reduceIntensity = MathHelper.Lerp(_isRecoilAffected, 0, _recoilBackIntensity);
+                cam._pitch -= reduceIntensity;
+                _isRecoilAffected -= reduceIntensity;
+            }
+            else if (_isRecoilAffected < 0)
+                _isRecoilAffected = 0;
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gametime, Matrix view, Matrix projection, Vector3 camPos, CWeapon weap)
@@ -377,6 +391,10 @@ namespace Engine.Game
                         // If he does not use a machete AND if he has bullet in a magazine
                         if (weapon._weaponsArray[weapon._selectedWeapon]._actualClip != 0)
                         {
+                            _isRecoilAffected += weapon._weaponsArray[weapon._selectedWeapon]._recoilIntensity;
+                            _recoilBackIntensity = weapon._weaponsArray[weapon._selectedWeapon]._recoilBackIntensity;
+
+                            cam._pitch += _isRecoilAffected;
                             if (!_isAiming && !_isSniping)
                             {
                                 _handAnimation.ChangeAnimSpeed(weapon._weaponsArray[weapon._selectedWeapon]._animVelocity[1]);

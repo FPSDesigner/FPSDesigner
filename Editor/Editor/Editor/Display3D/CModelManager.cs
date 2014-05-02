@@ -46,10 +46,10 @@ namespace Engine.Display3D
                 }
             }
 
-            for (int i = 0; i < cam._physicsMap._triangleList.Count; i++) // Debug triangles collision
+            /*for (int i = 0; i < cam._physicsMap._triangleList.Count; i++) // Debug triangles collision
                 CSimpleShapes.AddTriangle(cam._physicsMap._triangleList[i].V0, cam._physicsMap._triangleList[i].V1, cam._physicsMap._triangleList[i].V2, Color.Blue);
             for (int i = 0; i < cam._physicsMap._triangleNormalsList.Count; i++) // Debug triangles collision
-                CSimpleShapes.AddLine(cam._physicsMap._triangleNormalsList[i], cam._physicsMap._triangleNormalsList[i] * 2, Color.Red);
+                CSimpleShapes.AddLine(cam._physicsMap._triangleNormalsList[i], cam._physicsMap._triangleNormalsList[i] * 2, Color.Red);*/
             
             /*Matrix modelMatrix = modelsList[0].GetModelMatrix();
             for (int i = 0; i < modelsList[0]._trianglesPositions.Count; i++)

@@ -134,7 +134,7 @@ namespace Engine.GameStates
                 objList.Add(
                     new object[] { wep.Type, wep.MaxClip, wep.MaxClip, 50, 1, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
                         Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
-                        wep.Offset.Vector3, wep.Scale, wep.Delay, wep.Name}
+                        wep.Offset.Vector3, wep.Scale, wep.Delay, wep.Name, wep.RecoilIntensity, wep.RecoilBackIntensity }
                     );
                 soundList.Add(
                     new string[] { wep.WeaponSound.Shot, wep.WeaponSound.DryShot, wep.WeaponSound.Reload }

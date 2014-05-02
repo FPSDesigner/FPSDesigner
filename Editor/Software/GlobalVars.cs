@@ -188,6 +188,8 @@ namespace Software
                             Scale = 1,
                             Delay = 0,
                             Name = "Machete",
+                            RecoilIntensity = 0,
+                            RecoilBackIntensity = 0,
                             WeaponSound = new Engine.Game.LevelInfo.WeaponSound
                             {
                                 Shot = "Sounds\\Weapons\\MACHET_ATTACK",
@@ -220,6 +222,8 @@ namespace Software
                             IsAutomatic = false,
                             ShotsPerSecs = 2,
                             Range = 1,
+                            RecoilIntensity = 0.07f,
+                            RecoilBackIntensity = 0.85f,
                             Rotation = new Engine.Game.LevelInfo.Coordinates
                             {
                                 X = -0.121999f,
@@ -269,6 +273,8 @@ namespace Software
                             IsAutomatic = true,
                             ShotsPerSecs = 10,
                             Range = 1,
+                            RecoilIntensity = 0.13f,
+                            RecoilBackIntensity = 0.83f,
                             Rotation = new Engine.Game.LevelInfo.Coordinates
                             {
                                 X = -0.11f,
@@ -333,6 +339,8 @@ namespace Software
                             Scale = 1,
                             Delay = 0,
                             Name = "Desert Eagle",
+                            RecoilIntensity = 0.19f,
+                            RecoilBackIntensity = 0.88f,
                             WeaponSound = new Engine.Game.LevelInfo.WeaponSound
                             {
                                 Shot = "Sounds\\Weapons\\M1911_SHOT",
@@ -382,6 +390,8 @@ namespace Software
                             Scale = 1,
                             Delay = 0,
                             Name = "M40A5",
+                            RecoilIntensity = 0.24f,
+                            RecoilBackIntensity = 0.90f,
                             WeaponSound = new Engine.Game.LevelInfo.WeaponSound
                             {
                                 Shot = "Sounds\\Weapons\\M1911_SHOT",
