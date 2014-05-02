@@ -159,6 +159,8 @@ namespace Engine.Display3D
 
                             if (_textures.ContainsKey(newName))
                                 effect.Texture = _textures[newName];
+                            else if (_textures.ContainsKey("ApplyAllMesh"))
+                                effect.Texture = _textures["ApplyAllMesh"];
 
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;
@@ -235,6 +237,8 @@ namespace Engine.Display3D
                         string newName = mesh.Name.Split('_')[0];
                         if (_textures.ContainsKey(newName))
                             bEffect.Texture = _textures[newName];
+                        else if (_textures.ContainsKey("ApplyAllMesh"))
+                            bEffect.Texture = _textures["ApplyAllMesh"];
 
                         bEffect.World = localWorld;
                         bEffect.View = view;

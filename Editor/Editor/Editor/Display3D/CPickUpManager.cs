@@ -15,9 +15,9 @@ namespace Engine.Display3D
     {
         public static List<CPickUp> _pickups = new List<CPickUp>();
 
-        public static void AddPickup(CModel model, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
+        public static void AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
         {
-            _pickups.Add(new CPickUp(model, position, scale, weaponName, weaponBullets));
+            _pickups.Add(new CPickUp(graphics, model, texture, position, scale, weaponName, weaponBullets));
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)
@@ -36,10 +36,18 @@ namespace Engine.Display3D
             }
         }
 
-        public static void LoadFromXML(CModel model, List<Game.LevelInfo.MapModels_Pickups> levelInfo)
+        public static bool CheckEnteredPickUp(Vector3 pos, out CPickUp EnteredPickup)
         {
-            foreach(Game.LevelInfo.MapModels_Pickups pickup in levelInfo)
-                AddPickup(model, pickup.Position.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
+            foreach (CPickUp pickup in _pickups)
+            {
+                if (pickup.PointTouchPickUp(pos))
+                {
+                    EnteredPickup = pickup;
+                    return true;
+                }
+            }
+            EnteredPickup = null;
+            return false;
         }
     }
 
@@ -54,27 +62,16 @@ namespace Engine.Display3D
         public string _weaponName;
         public int _weaponBullets;
 
-        private BoundingSphere _boundingSphere;
-        public BoundingSphere BoundingSphere
+
+        public CPickUp(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
         {
-            get
-            {
-                Matrix worldTransform = Matrix.CreateScale(_Scale) *
-                    Matrix.CreateFromYawPitchRoll(_Rotation.Y, _Rotation.X, _Rotation.Z) *
-                    Matrix.CreateTranslation(_Position);
-
-                BoundingSphere transformed = _boundingSphere;
-                transformed = transformed.Transform(worldTransform);
-
-                return transformed;
-            }
-        }
-
-        public CPickUp(CModel model, Vector3 position, Vector3 scale, string weaponName, int weaponBullets)
-        {
-            _Model = model;
+            _Rotation = Vector3.Zero;
             _Position = position;
             _Scale = scale;
+
+            Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
+            textureList.Add("ApplyAllMesh", texture);
+            _Model = new CModel(model, _Position, _Rotation, _Scale, graphics, textureList, 0, 1);
 
             _weaponName = weaponName;
             _weaponBullets = weaponBullets;
@@ -85,7 +82,7 @@ namespace Engine.Display3D
             _Model.Draw(cam._view, cam._projection, cam._cameraPos);
         }
 
-        public bool PointTouchWeapon(Vector3 position)
+        public bool PointTouchPickUp(Vector3 position)
         {
             return _Model.BoundingSphere.Contains(position) == ContainmentType.Contains;
         }

@@ -121,7 +121,7 @@ namespace Engine.GameStates
 
             /**** Weapons ****/
             Dictionary<string, Model> modelsList = new Dictionary<string, Model>();
-            List<Texture2D> textureList = new List<Texture2D>();
+            Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
             List<object[]> objList = new List<object[]>();
             List<string[]> soundList = new List<string[]>();
             List<string[]> animList = new List<string[]>();
@@ -130,7 +130,7 @@ namespace Engine.GameStates
             foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
             {
                 modelsList.Add(wep.Name, content.Load<Model>(wep.Model));
-                textureList.Add(content.Load<Texture2D>(wep.Texture));
+                textureList.Add(wep.Name, content.Load<Texture2D>(wep.Texture));
                 objList.Add(
                     new object[] { wep.Type, wep.MaxClip, wep.MaxClip, 50, 1, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
                         Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
@@ -152,7 +152,7 @@ namespace Engine.GameStates
 
             /**** Pickups ****/
             foreach (Game.LevelInfo.MapModels_Pickups pickup in levelData.MapModels.Pickups)
-                Display3D.CPickUpManager.AddPickup(modelsList[pickup.WeaponName], pickup.Position.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
+                Display3D.CPickUpManager.AddPickup(graphics, modelsList[pickup.WeaponName], textureList[pickup.WeaponName], pickup.Position.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
 
             /*// We create array containing all informations about weapons.
             weapon = new Game.CWeapon();
@@ -265,6 +265,13 @@ namespace Engine.GameStates
 
                 // ****** We get the weapon attribute to display it in console ****** //
                 Game.CConsole._Weapon = weapon;
+
+                // Check if player entered a pickup
+                Display3D.CPickUp EnteredPickup;
+                if (Display3D.CPickUpManager.CheckEnteredPickUp(cam._cameraPos, out EnteredPickup))
+                {
+                    // Add weapon etc.
+                }
             }
 
             //if (kbState.IsKeyDown(Keys.Left))
