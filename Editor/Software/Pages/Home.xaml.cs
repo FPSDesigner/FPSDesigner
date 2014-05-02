@@ -47,6 +47,7 @@ namespace Software.Pages
 
             listTree_Trees = new List<TreeViewItem>();
             listTree_Models = new List<TreeViewItem>();
+            listTree_Pickups = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;

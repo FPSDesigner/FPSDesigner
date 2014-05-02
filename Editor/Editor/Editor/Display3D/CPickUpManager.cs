@@ -14,6 +14,7 @@ namespace Engine.Display3D
     class CPickUpManager
     {
         public static List<CPickUp> _pickups = new List<CPickUp>();
+        public static int selectedPickupId = -1;
 
         public static void AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 rotation, Vector3 scale, string weaponName, int weaponBullets)
         {
@@ -22,9 +23,11 @@ namespace Engine.Display3D
 
         public static void Draw(CCamera cam, GameTime gameTime)
         {
-            foreach(CPickUp pickup in _pickups)
+            for (int i = 0; i < _pickups.Count; i++)
             {
-                pickup.Draw(cam, gameTime);
+                _pickups[i].Draw(cam, gameTime);
+                if (selectedPickupId == i)
+                    CSimpleShapes.AddBoundingSphere(_pickups[i]._Model.BoundingSphere, Color.Black);
             }
         }
 

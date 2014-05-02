@@ -387,6 +387,10 @@ namespace Engine.GameStates
                     {
                         Display3D.CModelManager.selectModelId = -1;
                     }
+                    else if ((string)values[0] == "pickup")
+                    {
+                        Display3D.CPickUpManager.selectedPickupId = -1;
+                    }
                 }
                 else if (action == "selectObject")
                 {
@@ -407,6 +411,16 @@ namespace Engine.GameStates
                         {
                             Display3D.CModelManager.selectModelId = (int)values[1];
                             Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
+                            Gizmos.shouldDrawPos = false;
+                            Gizmos.shouldDrawRot = false;
+                        }
+                    }
+                    else if ((string)values[0] == "pickup")
+                    {
+                        if ((string)values[2] == "SelectButton")
+                        {
+                            Display3D.CPickUpManager.selectedPickupId = (int)values[1];
+                            Gizmos.posGizmo._modelPosition = Display3D.CPickUpManager._pickups[(int)values[1]]._Model._modelPosition;
                             Gizmos.shouldDrawPos = false;
                             Gizmos.shouldDrawRot = false;
                         }
