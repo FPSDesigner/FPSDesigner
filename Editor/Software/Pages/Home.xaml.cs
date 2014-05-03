@@ -150,7 +150,7 @@ namespace Software.Pages
             if (isMovingGyzmoAxis)
             {
                 m_game.WPFHandler("moveObject", new object[] { "stop" });
-
+                ApplyPropertiesWindow();
                 isMovingGyzmoAxis = false;
             }
         }
@@ -164,7 +164,7 @@ namespace Software.Pages
                 {
                     if (GlobalVars.selectedToolButton.Name == "SelectButton")
                     {
-                        if(GlobalVars.selectedElt != null)
+                        if (GlobalVars.selectedElt != null)
                             m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
 
                         if ((string)selectElt[0] == "tree" && selectElt[1] is int)
@@ -176,7 +176,7 @@ namespace Software.Pages
                         else if ((string)selectElt[0] == "model" && selectElt[1] is int)
                         {
                             listTree_Models[(int)selectElt[1]].IsSelected = true;
-                            
+
                             m_game.WPFHandler("selectObject", new object[] { "model", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", (int)selectElt[1]);
                         }
@@ -188,11 +188,11 @@ namespace Software.Pages
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", (int)selectElt[1]);
                         }
                     }
-                    else if (GlobalVars.selectedToolButton.Name == "PositionButton" && GlobalVars.selectedElt != null)
+                    else if (GlobalVars.selectedElt != null)
                     {
                         if ((string)selectElt[0] == "gizmo" && selectElt[1] is int)
                         {
-                            m_game.WPFHandler("moveObject", new object[] { "pos", (int)selectElt[1], GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                            m_game.WPFHandler("moveObject", new object[] { "start", (int)selectElt[1], GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId, Mouse.GetPosition(ShowXNAImage1) });
 
                             isMovingGyzmoAxis = true;
                         }
@@ -311,6 +311,7 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "model", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", i);
+                    ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
                 }
@@ -326,6 +327,7 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "tree", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("tree", i);
+                    ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
                 }
@@ -341,12 +343,240 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "pickup", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", i);
+                    ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
                 }
             }
-            
+
         }
+
+        #region ApplyProperties
+        private void ApplyPropertiesWindow()
+        {
+            if (GlobalVars.selectedElt != null)
+            {
+                Properties.Children.Clear();
+                Dictionary<string, StackPanel> spElements = new Dictionary<string, StackPanel>();
+
+                // Position
+                spElements["Position"] = new StackPanel();
+
+                TextBox tbXPos = new TextBox();
+                TextBox tbYPos = new TextBox();
+                TextBox tbZPos = new TextBox();
+
+                tbXPos.Width = 70;
+                tbYPos.Width = 70;
+                tbZPos.Width = 70;
+
+                object[] pos = (object[])m_game.WPFHandler("getElementInfo", new object[] { "pos", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                tbXPos.Text = pos[0].ToString();
+                tbYPos.Text = pos[1].ToString();
+                tbZPos.Text = pos[2].ToString();
+
+                tbXPos.TextChanged += (s, e) => PropertyChanged(s, e, "pos");
+                tbYPos.TextChanged += (s, e) => PropertyChanged(s, e, "pos");
+                tbZPos.TextChanged += (s, e) => PropertyChanged(s, e, "pos");
+
+                tbYPos.Margin = new Thickness(5, 0, 0, 0);
+                tbZPos.Margin = new Thickness(5, 0, 0, 0);
+
+                Label titlePos = new Label();
+                titlePos.Content = "Position:";
+                titlePos.Target = tbXPos;
+
+                spElements["Position"].Children.Add(titlePos);
+                spElements["Position"].Children.Add(tbXPos);
+                spElements["Position"].Children.Add(tbYPos);
+                spElements["Position"].Children.Add(tbZPos);
+
+                // Rotation
+                spElements["Rotation"] = new StackPanel();
+
+                TextBox tbXRot = new TextBox();
+                TextBox tbYRot = new TextBox();
+                TextBox tbZRot = new TextBox();
+
+                tbXRot.Width = 70;
+                tbYRot.Width = 70;
+                tbZRot.Width = 70;
+
+                object[] rot = (object[])m_game.WPFHandler("getElementInfo", new object[] { "rot", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                tbXRot.Text = rot[0].ToString();
+                tbYRot.Text = rot[1].ToString();
+                tbZRot.Text = rot[2].ToString();
+
+                tbXRot.TextChanged += (s, e) => PropertyChanged(s, e, "rot");
+                tbYRot.TextChanged += (s, e) => PropertyChanged(s, e, "rot");
+                tbZRot.TextChanged += (s, e) => PropertyChanged(s, e, "rot");
+
+                tbYRot.Margin = new Thickness(5, 0, 0, 0);
+                tbZRot.Margin = new Thickness(5, 0, 0, 0);
+
+                Label titleRot = new Label();
+                titleRot.Content = "Rotation:";
+                titleRot.Target = tbXRot;
+
+                spElements["Rotation"].Children.Add(titleRot);
+                spElements["Rotation"].Children.Add(tbXRot);
+                spElements["Rotation"].Children.Add(tbYRot);
+                spElements["Rotation"].Children.Add(tbZRot);
+
+                // Scale
+                spElements["Scale"] = new StackPanel();
+
+                TextBox tbXScale = new TextBox();
+                TextBox tbYScale = new TextBox();
+                TextBox tbZScale = new TextBox();
+
+                tbXScale.Width = 70;
+                tbYScale.Width = 70;
+                tbZScale.Width = 70;
+
+                object[] scale = (object[])m_game.WPFHandler("getElementInfo", new object[] { "scale", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                tbXScale.Text = scale[0].ToString();
+                tbYScale.Text = scale[1].ToString();
+                tbZScale.Text = scale[2].ToString();
+
+                tbXScale.TextChanged += (s, e) => PropertyChanged(s, e, "scale");
+                tbYScale.TextChanged += (s, e) => PropertyChanged(s, e, "scale");
+                tbZScale.TextChanged += (s, e) => PropertyChanged(s, e, "scale");
+
+                tbYScale.Margin = new Thickness(5, 0, 0, 0);
+                tbZScale.Margin = new Thickness(5, 0, 0, 0);
+
+                Label titleScale = new Label();
+                titleScale.Content = "Scale:";
+                titleScale.Target = tbXScale;
+
+                spElements["Scale"].Children.Add(titleScale);
+                spElements["Scale"].Children.Add(tbXScale);
+                spElements["Scale"].Children.Add(tbYScale);
+                spElements["Scale"].Children.Add(tbZScale);
+
+                // Trees
+                if (GlobalVars.selectedElt.eltType == "tree")
+                {
+                    // Profile
+                    spElements["TreeProfile"] = new StackPanel();
+
+                    TextBox tbProfile = new TextBox();
+
+                    tbProfile.Width = 150;
+
+                    string treeprofile = (string)m_game.WPFHandler("getElementInfo", new object[] { "treeprofile", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbProfile.Text = System.IO.Path.GetFileName(treeprofile);
+                    tbProfile.Margin = new Thickness(5, 0, 0, 0);
+                    tbProfile.IsEnabled = false;
+
+                    Label titleTreeProfile = new Label();
+                    titleTreeProfile.Content = "Tree Profile:";
+                    titleTreeProfile.Target = tbProfile;
+
+                    spElements["TreeProfile"].Children.Add(titleTreeProfile);
+                    spElements["TreeProfile"].Children.Add(tbProfile);
+
+                    // Seed
+                    spElements["TreeSeed"] = new StackPanel();
+
+                    TextBox tbSeed = new TextBox();
+
+                    tbSeed.Width = 50;
+
+                    object treeseed = m_game.WPFHandler("getElementInfo", new object[] { "treeseed", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbSeed.Text = treeseed.ToString();
+
+                    tbSeed.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleTreeSeed = new Label();
+                    titleTreeSeed.Content = "Tree Seed:";
+                    titleTreeSeed.Target = tbSeed;
+
+                    spElements["TreeSeed"].Children.Add(titleTreeSeed);
+                    spElements["TreeSeed"].Children.Add(tbSeed);
+                }
+                else if (GlobalVars.selectedElt.eltType == "pickup")
+                {
+                    // WeaponName
+                    spElements["WeaponName"] = new StackPanel();
+
+                    TextBox tbWN = new TextBox();
+
+                    tbWN.Width = 150;
+
+                    object pickupname = m_game.WPFHandler("getElementInfo", new object[] { "pickupname", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbWN.Text = pickupname.ToString();
+
+                    tbWN.Margin = new Thickness(5, 0, 0, 0);
+                    tbWN.TextChanged += (s, e) => PropertyChanged(s, e, "pickupname");
+
+                    Label titlePickupName = new Label();
+                    titlePickupName.Content = "Weapon Name:";
+                    titlePickupName.Target = tbWN;
+
+                    spElements["WeaponName"].Children.Add(titlePickupName);
+                    spElements["WeaponName"].Children.Add(tbWN);
+
+
+                    // WeaponName
+                    spElements["WeaponBullet"] = new StackPanel();
+
+                    TextBox tbWB = new TextBox();
+                    tbWB.Width = 50;
+
+                    object pickupbullet = m_game.WPFHandler("getElementInfo", new object[] { "pickupbullet", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbWB.Text = pickupbullet.ToString();
+
+                    tbWB.TextChanged += (s, e) => PropertyChanged(s, e, "pickupbullets");
+
+                    tbWB.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titlePickupBullet = new Label();
+                    titlePickupBullet.Content = "Bullets :";
+                    titlePickupBullet.Target = tbWB;
+
+                    spElements["WeaponBullet"].Children.Add(titlePickupBullet);
+                    spElements["WeaponBullet"].Children.Add(tbWB);
+                }
+
+                // Add elements to the main StackPanel
+                foreach (KeyValuePair<string, StackPanel> pair in spElements)
+                {
+                    spElements[pair.Key].Name = "ppt_" + pair.Key;
+                    Properties.Children.Add(pair.Value);
+                }
+            }
+        }
+
+        private void PropertyChanged(object s, TextChangedEventArgs e, string propertyType)
+        {
+            if (propertyType == "pos" || propertyType == "rot" || propertyType == "scale")
+            {
+                List<string> vals = new List<string>();
+                foreach (UIElement elt in (((FrameworkElement)s).Parent as StackPanel).Children)
+                {
+                    if (elt is TextBox)
+                        vals.Add(((TextBox)elt).Text);
+                }
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, new object[] { vals[0], vals[1], vals[2] }, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+            }
+            else if (propertyType == "pickupname")
+            {
+                if ((bool)m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((TextBox)s).Text, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId }))
+                {
+                    foreach (TreeViewItem parentpu in GameComponentsList.Items)
+                        if ((string)parentpu.Header == "Pick-Ups")
+                            ((TreeViewItem)parentpu.Items[GlobalVars.selectedElt.eltId]).Header = (string)((TextBox)s).Text;
+                }
+                
+            }
+            else if (propertyType == "pickupbullets")
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((TextBox)s).Text, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+            m_game.shouldUpdateOnce = true;
+        }
+        #endregion
 
         #region "Windows Menu Helper"
         public void OnFragmentNavigation(FragmentNavigationEventArgs e)

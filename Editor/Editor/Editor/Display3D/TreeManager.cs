@@ -85,6 +85,7 @@ namespace Engine.Display3D
     class Tree
     {
         public string _profile;
+        public int _seed;
         public bool _useWind;
         public bool _useBranches;
         public Matrix _worldMatrix;
@@ -117,6 +118,7 @@ namespace Engine.Display3D
         public Tree(CCamera cam, string profile, Vector3 coordinates, Vector3 rotation, Vector3 scale, int seed = 0, bool wind = false, bool branches = true)
         {
             _profile = profile;
+            _seed = seed;
             _position = coordinates;
             _rotation = rotation;
             _scale = scale;

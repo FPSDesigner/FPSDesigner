@@ -256,7 +256,8 @@ namespace Engine
         public int posy = 0;
         public object WPFHandler(string handle, object value)
         {
-            switch (handle)
+            return Game.CGameManagement.SendParam(new object[] { handle, value });
+            /*switch (handle)
             {
                 case "changeCamFreeze":
                 case "moveCameraForward":
@@ -265,10 +266,12 @@ namespace Engine
                 case "unselectObject":
                 case "moveObject":
                 case "changeTool":
+                case "getElementInfo":
+                case "setElementInfo":
                 
-                    return Game.CGameManagement.SendParam(new object[] { handle, value });
+                    
             }
-            return true;
+            return true;*/
         }
 
         private void GameLoop(object sender, EventArgs e)

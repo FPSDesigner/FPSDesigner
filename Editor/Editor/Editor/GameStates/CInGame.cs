@@ -220,7 +220,7 @@ namespace Engine.GameStates
                 // ****** We get the weapon attribute to display it in console ****** //
                 Game.CConsole._Weapon = weapon;
 
-                
+
             }
 
             // Check if player entered a pickup
@@ -361,7 +361,13 @@ namespace Engine.GameStates
                     // Gyzmo is the priority click
                     if (Gizmos.shouldDrawPos)
                     {
-                        int? axisClicked = Gizmos.RayIntersectsAxis(ray);
+                        int? axisClicked = Gizmos.RayIntersectsAxis(ray, "pos");
+                        if (axisClicked != null)
+                            return new object[] { "gizmo", (int)axisClicked };
+                    }
+                    else if (Gizmos.shouldDrawRot)
+                    {
+                        int? axisClicked = Gizmos.RayIntersectsAxis(ray, "rot");
                         if (axisClicked != null)
                             return new object[] { "gizmo", (int)axisClicked };
                     }
@@ -408,36 +414,31 @@ namespace Engine.GameStates
                 else if (action == "selectObject")
                 {
                     object[] values = (object[])p[1];
+
+                    Vector3 newPos = Vector3.Zero;
                     if ((string)values[0] == "tree")
                     {
-                        if ((string)values[2] == "SelectButton")
-                        {
-                            Display3D.TreeManager.selectedTreeId = (int)values[1];
-                            Gizmos.posGizmo._modelPosition = Display3D.TreeManager._tTrees[(int)values[1]].Position;
-                            Gizmos.shouldDrawPos = false;
-                            Gizmos.shouldDrawRot = false;
-                        }
+                        Display3D.TreeManager.selectedTreeId = (int)values[1];
+                        newPos = Display3D.TreeManager._tTrees[(int)values[1]].Position;
                     }
                     else if ((string)values[0] == "model")
                     {
-                        if ((string)values[2] == "SelectButton")
-                        {
-                            Display3D.CModelManager.selectModelId = (int)values[1];
-                            Gizmos.posGizmo._modelPosition = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
-                            Gizmos.shouldDrawPos = false;
-                            Gizmos.shouldDrawRot = false;
-                        }
+                        Display3D.CModelManager.selectModelId = (int)values[1];
+                        newPos = Display3D.CModelManager.modelsList[(int)values[1]]._modelPosition;
                     }
                     else if ((string)values[0] == "pickup")
                     {
-                        if ((string)values[2] == "SelectButton")
-                        {
-                            Display3D.CPickUpManager.selectedPickupId = (int)values[1];
-                            Gizmos.posGizmo._modelPosition = Display3D.CPickUpManager._pickups[(int)values[1]]._Model._modelPosition;
-                            Gizmos.shouldDrawPos = false;
-                            Gizmos.shouldDrawRot = false;
-                        }
+                        Display3D.CPickUpManager.selectedPickupId = (int)values[1];
+                        newPos = Display3D.CPickUpManager._pickups[(int)values[1]]._Model._modelPosition;
                     }
+                    Gizmos.posGizmo._modelPosition = newPos;
+                    Gizmos.rotGizmo._modelPosition = newPos;
+                    Gizmos.shouldDrawPos = false;
+                    Gizmos.shouldDrawRot = false;
+                    if ((string)values[2] == "PositionButton")
+                        Gizmos.shouldDrawPos = true;
+                    else if ((string)values[2] == "RotateButton")
+                        Gizmos.shouldDrawRot = true;
                 }
                 else if (action == "changeTool")
                 {
@@ -465,9 +466,9 @@ namespace Engine.GameStates
                     object[] values = (object[])p[1];
                     string subaction = (string)values[0];
 
-                    if (subaction == "pos")
+                    if (subaction == "start")
                     {
-                        Gizmos.StartDrag((int)values[1], (string)values[2], (int)values[3]);
+                        Gizmos.StartDrag((int)values[1], (string)values[2], (int)values[3], (System.Windows.Point)values[4]);
                     }
                     else if (subaction == "drag")
                     {
@@ -479,8 +480,125 @@ namespace Engine.GameStates
                         Gizmos.StopDrag();
                     }
                 }
+                else if (action == "getElementInfo")
+                {
+                    object[] values = (object[])p[1];
+                    string info = (string)values[0];
+                    string eltType = (string)values[1];
+                    int eltId = (int)values[2];
+                    Vector3 pos = Vector3.Zero;
+
+                    if (info == "pos")
+                    {
+                        if (eltType == "tree")
+                            pos = Display3D.TreeManager._tTrees[eltId].Position;
+                        else if (eltType == "model")
+                            pos = Display3D.CModelManager.modelsList[eltId]._modelPosition;
+                        else if (eltType == "pickup")
+                            pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition;
+                    }
+                    else if (info == "rot")
+                    {
+                        if (eltType == "tree")
+                            pos = Display3D.TreeManager._tTrees[eltId].Rotation;
+                        else if (eltType == "model")
+                            pos = Display3D.CModelManager.modelsList[eltId]._modelRotation;
+                        else if (eltType == "pickup")
+                            pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation;
+                    }
+                    else if (info == "scale")
+                    {
+                        if (eltType == "tree")
+                            pos = Display3D.TreeManager._tTrees[eltId].Scale;
+                        else if (eltType == "model")
+                            pos = Display3D.CModelManager.modelsList[eltId]._modelScale;
+                        else if (eltType == "pickup")
+                            pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelScale;
+                    }
+                    else if (info == "treeseed")
+                        return Display3D.TreeManager._tTrees[eltId]._seed;
+                    else if (info == "treeprofile")
+                        return Display3D.TreeManager._tTrees[eltId]._profile;
+                    else if (info == "pickupname")
+                        return Display3D.CPickUpManager._pickups[eltId]._weaponName;
+                    else if (info == "pickupbullet")
+                        return Display3D.CPickUpManager._pickups[eltId]._weaponBullets;
+                    return new object[] { pos.X, pos.Y, pos.Z };
+                }
+                else if (action == "setElementInfo")
+                {
+                    object[] values = (object[])p[1];
+                    string info = (string)values[0];
+                    object val = values[1];
+                    string eltType = (string)values[2];
+                    int eltId = (int)values[3];
+
+                    if (info == "pos" || info == "rot" || info == "scale")
+                    {
+                        if (val is object[])
+                        {
+                            object[] val2 = (object[])val;
+                            Vector3 newPos = Vector3.Zero;
+                            if (float.TryParse(val2[0].ToString(), out newPos.X) && float.TryParse(val2[1].ToString(), out newPos.Y) && float.TryParse(val2[2].ToString(), out newPos.Z))
+                            {
+                                if (info == "pos")
+                                {
+                                    if (eltType == "tree")
+                                        Display3D.TreeManager._tTrees[eltId].Position = newPos;
+                                    else if (eltType == "model")
+                                        Display3D.CModelManager.modelsList[eltId]._modelPosition = newPos;
+                                    else if (eltType == "pickup")
+                                        Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition = newPos;
+                                }
+                                else if (info == "rot")
+                                {
+                                    if (eltType == "tree")
+                                        Display3D.TreeManager._tTrees[eltId].Rotation = newPos;
+                                    else if (eltType == "model")
+                                        Display3D.CModelManager.modelsList[eltId]._modelRotation = newPos;
+                                    else if (eltType == "pickup")
+                                        Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation = newPos;
+                                }
+                                else if (info == "scale")
+                                {
+                                    if (eltType == "tree")
+                                        Display3D.TreeManager._tTrees[eltId].Scale = newPos;
+                                    else if (eltType == "model")
+                                        Display3D.CModelManager.modelsList[eltId]._modelScale = newPos;
+                                    else if (eltType == "pickup")
+                                        Display3D.CPickUpManager._pickups[eltId]._Model._modelScale = newPos;
+                                }
+                            }
+                        }
+                    }
+                    else if (info == "pickupbullets")
+                    {
+                        int newBullet;
+                        if(Int32.TryParse(values[1].ToString(), out newBullet))
+                        {
+                            Display3D.CPickUpManager._pickups[eltId]._weaponBullets = newBullet;
+                        }
+                    }
+                    else if (info == "pickupname")
+                    {
+                        string newName = val.ToString();
+                        Display3D.CPickUpManager._pickups[eltId]._weaponName = newName;
+                        foreach (Game.CWeapon.WeaponData wpd in weapon._weaponsArray)
+                        {
+                            if (wpd._name == newName)
+                            {
+                                Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
+                                textureList.Add("ApplyAllMesh", wpd._weapTexture);
+                                Display3D.CPickUpManager._pickups[eltId]._Model = new Display3D.CModel(wpd._wepModel, Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition,
+                                    Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation, Display3D.CPickUpManager._pickups[eltId]._Model._modelScale,
+                                    _graphics, textureList, 0, 1);
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
-            return true;
+            return false;
         }
 
     }
