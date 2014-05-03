@@ -35,6 +35,9 @@ namespace Engine.GameStates
         Game.CWeapon weapon;
         GraphicsDevice _graphics;
 
+        // ENEMY TEST
+        private Game.Enemy _enemy;
+
         public void Initialize()
         {
             levelInfo = new Game.LevelInfo.CLevelInfo();
@@ -189,6 +192,10 @@ namespace Engine.GameStates
             x = levelData.Weapons.Weapon[1].Rotation.X;
             y = levelData.Weapons.Weapon[1].Rotation.Y;
             z = levelData.Weapons.Weapon[1].Rotation.Z;
+
+            // ENEMY TEST
+            _enemy = new Game.Enemy();
+            _enemy.LoadContent(content);
         }
 
         float x, y, z;
@@ -236,6 +243,9 @@ namespace Engine.GameStates
             //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
+            // ENEMY TEST
+            _enemy.Update(gameTime);
+
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
 
@@ -278,6 +288,9 @@ namespace Engine.GameStates
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             Display3D.CModelManager.Draw(cam, gameTime);
+
+            // ENEMY TEST
+            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection);
 
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);

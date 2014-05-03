@@ -587,6 +587,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = false;
                     _isReloading = false;
+                    _isAiming = false;
                     _isSniping = false;
 
                     _handAnimation.InverseMode("forward");
@@ -602,6 +603,7 @@ namespace Engine.Game
                     _isShoting = false;
                     _isWaitAnimPlaying = true;
                     _isReloading = false;
+                    _isAiming = false;
                     _isSniping = false;
 
                     _isReloading = false;
@@ -676,7 +678,8 @@ namespace Engine.Game
             }
 
             // If he presse the right mouse button
-            if (!_isAiming && !_isReloading && !_isShoting && !_isSniping)
+            if (!_isAiming && !_isReloading && !_isShoting && 
+                    !_isSniping && !_isSwitchingAnimPlaying & !_isSwitchingAnim2ndPartPlaying) 
             {
                 if (mstate.RightButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPAim)))
                 {
