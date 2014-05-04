@@ -36,6 +36,7 @@ namespace Software
 
         public static string defaultProjectInfoName = "projectInfo.fpsd";
         public static string defaultProjectGameName = "GameLevel.xml";
+        public static string defaultGameName = "Editor.exe";
 
         public static string GetUIString(string key)
         {

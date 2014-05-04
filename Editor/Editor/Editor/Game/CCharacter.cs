@@ -136,8 +136,15 @@ namespace Engine.Game
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
+
             _cam = cam;
+
             this._isUnderWater = isUnderWater;
+
+            if (_isSniping && cam.sensibilityMultiplier == 1)
+                cam.sensibilityMultiplier = 0.2f;
+            else if (!_isSniping && cam.sensibilityMultiplier != 1)
+                cam.sensibilityMultiplier = 1;
 
             // We place the hand like we want
             _handRotation = Matrix.CreateFromYawPitchRoll(_cam._yaw - MathHelper.Pi, -cam._pitch - MathHelper.PiOver2, 0);

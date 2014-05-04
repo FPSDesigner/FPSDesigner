@@ -48,6 +48,8 @@ namespace Engine.Display3D
         private float _aspectRatio;
         public float fieldOfView;
 
+        public float sensibilityMultiplier = 1;
+
         public float _playerHeight = 1.9f;
 
         public bool shouldUpdateMiddleScreen = false;
@@ -271,15 +273,15 @@ namespace Engine.Display3D
         {
             if (CGameSettings.useGamepad)
             {
-                this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * CGameSettings.gamepadState.ThumbSticks.Right.X;
-                this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * -CGameSettings.gamepadState.ThumbSticks.Right.Y;
+                this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * sensibilityMultiplier * CGameSettings.gamepadState.ThumbSticks.Right.X;
+                this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * sensibilityMultiplier *- CGameSettings.gamepadState.ThumbSticks.Right.Y;
             }
             float coefRotation = 1f;
             if (Display2D.C2DEffect.isSoftwareEmbedded)
                 coefRotation = 1.5f;
 
-            this._yaw -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.X - _middleScreen.X);
-            this._pitch -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * (mouseState.Y - _middleScreen.Y);
+            this._yaw -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * sensibilityMultiplier *(mouseState.X - _middleScreen.X);
+            this._pitch -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * sensibilityMultiplier * (mouseState.Y - _middleScreen.Y);
 
             if (this._pitch < lowestPitchAngle)
                 this._pitch = lowestPitchAngle;

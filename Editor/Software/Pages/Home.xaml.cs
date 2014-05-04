@@ -94,7 +94,7 @@ namespace Software.Pages
             GlobalVars.SaveGameLevel();
 
             Process previewProcess = new Process();
-            previewProcess.StartInfo.FileName = "Editor.exe";
+            previewProcess.StartInfo.FileName = GlobalVars.defaultGameName;
             previewProcess.EnableRaisingEvents = true;
 
             previewProcess.Exited += (s, e) =>
