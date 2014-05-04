@@ -36,7 +36,7 @@ namespace Engine.GameStates
         GraphicsDevice _graphics;
 
         // ENEMY TEST
-        private Game.Enemy _enemy;
+        private Game.CEnemy _enemy;
 
         public void Initialize()
         {
@@ -194,7 +194,7 @@ namespace Engine.GameStates
             z = levelData.Weapons.Weapon[1].Rotation.Z;
 
             // ENEMY TEST
-            _enemy = new Game.Enemy();
+            _enemy = new Game.CEnemy();
             _enemy.LoadContent(content);
         }
 

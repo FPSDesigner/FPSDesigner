@@ -59,7 +59,8 @@ namespace Engine.Display3D
             {
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
-                    effect.Texture = _textures[0];
+                    if(_textures != null)
+                        effect.Texture = _textures[0];
                     effect.EnableDefaultLighting();
 
                     effect.SpecularColor = new Vector3(_specColor);
