@@ -87,16 +87,16 @@ namespace Software.Pages
                 modelViewer.LoadNewTree("Trees/Trees/" + (string)((ComboBoxItem)TreeProfile.SelectedValue).Content, seed, (bool)BranchesButton.IsChecked, (bool)WindButton.IsChecked);
             }
 
-            if(GlobalVars.gameInfo.MapModels == null)
+            /*if(GlobalVars.gameInfo.MapModels == null)
                 GlobalVars.gameInfo.MapModels = new Engine.Game.LevelInfo.MapModels { };
             if (GlobalVars.gameInfo.MapModels.Trees == null)
-                GlobalVars.gameInfo.MapModels.Trees = new List<Engine.Game.LevelInfo.MapModels_Tree>();
+                GlobalVars.gameInfo.MapModels.Trees = new List<Engine.Game.LevelInfo.MapModels_Tree>();*/
             
 
-            GlobalVars.gameInfo.MapModels.Trees.Add(
+            Engine.Game.LevelInfo.MapModels_Tree treeInfo =
                 new Engine.Game.LevelInfo.MapModels_Tree
                 {
-                    Profile = TreeProfile.Text,
+                    Profile = "Trees/Trees/" + TreeProfile.Text,
                     Position = new Engine.Game.LevelInfo.Coordinates
                     {
                         X = 0,
@@ -118,9 +118,11 @@ namespace Software.Pages
                     Seed = (Int32.TryParse(TreeSeedTB.Text, out seed) ? seed : 1),
                     Wind = (bool)WindButton.IsChecked,
                     Branches = (bool)BranchesButton.IsChecked,
-                }
-            );
-            GlobalVars.SaveGameLevel();
+                };
+
+            GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "tree", treeInfo });
+            GlobalVars.RaiseEvent("ReloadGameComponentsTreeView");
+
             ShouldClose("TreeManager", null);
         }
 

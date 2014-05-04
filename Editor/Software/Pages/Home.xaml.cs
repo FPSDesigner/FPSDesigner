@@ -45,6 +45,7 @@ namespace Software.Pages
             MainWindowInstance = MainWindow.Instance;
 
             m_game = new Engine.MainGameEngine(true);
+            GlobalVars.embeddedGame = m_game;
 
             listTree_Trees = new List<TreeViewItem>();
             listTree_Models = new List<TreeViewItem>();
@@ -66,6 +67,8 @@ namespace Software.Pages
             resizeTimer.Tick += new EventHandler(disTimer_Tick);
 
             statusBarView1.Text = "Idle";
+
+            GlobalVars.ReloadGameComponentsTreeView += (s, e) => { LoadGameComponentsToTreeview(); };
 
             GameComponentsList.SelectedItemChanged += GameComponentsList_SelectedItemChanged;
 
@@ -99,6 +102,7 @@ namespace Software.Pages
 
             previewProcess.Exited += (s, e) =>
             {
+                Process proc = (Process)s;
                 m_game.shouldNotUpdate = false;
                 m_game.em_dispatcherTimer.Start();
                 m_game.em_dispatcherTimer.Interval = TimeSpan.FromSeconds(1 / 60);
@@ -244,9 +248,10 @@ namespace Software.Pages
             resizeTimer.Stop();
             resizeTimer.Start();
         }
-
+        
         private void LoadGameComponentsToTreeview()
         {
+            GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
             GameComponentsList.Items.Clear();
             listTree_Trees.Clear();
             listTree_Models.Clear();

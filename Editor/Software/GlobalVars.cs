@@ -21,6 +21,7 @@ namespace Software
     {
         public static event RoutedEventHandler LaunchNewWindow;
         public static event RoutedEventHandler NewConsoleMessage;
+        public static event RoutedEventHandler ReloadGameComponentsTreeView;
 
         public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
         public static List<string[]> LogList = new List<string[]>();
@@ -38,6 +39,8 @@ namespace Software
         public static string defaultProjectGameName = "GameLevel.xml";
         public static string defaultGameName = "Editor.exe";
 
+        public static Engine.MainGameEngine embeddedGame;
+
         public static string GetUIString(string key)
         {
             string uiString;
@@ -49,8 +52,14 @@ namespace Software
         public static void AddConsoleMsg(string msg, string icon)
         {
             LogList.Add(new string[] { msg, icon });
-            if(NewConsoleMessage != null)
+            if (NewConsoleMessage != null)
                 NewConsoleMessage(new string[] { msg, icon }, null);
+        }
+
+        public static void RaiseEvent(string eventName)
+        {
+            if (eventName == "ReloadGameComponentsTreeView")
+                ReloadGameComponentsTreeView(null, null);
         }
 
         public static void SaveGameLevel()

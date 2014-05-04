@@ -33,7 +33,8 @@ namespace Engine.GameStates
         List<Display3D.Particles.ParticleSystem> particlesList = new List<Display3D.Particles.ParticleSystem>();
 
         Game.CWeapon weapon;
-        GraphicsDevice _graphics;
+        private GraphicsDevice _graphics;
+        private ContentManager _content;
 
         // ENEMY TEST
         private Game.CEnemy _enemy;
@@ -53,6 +54,7 @@ namespace Engine.GameStates
             isSoftwareEmbedded = Display2D.C2DEffect.isSoftwareEmbedded;
             levelData = levelInfo.loadLevelData("GameLevel.xml");
             _graphics = graphics;
+            _content = content;
 
             Game.CSoundManager.LoadContent();
 
@@ -222,6 +224,9 @@ namespace Engine.GameStates
 
 
             }
+
+            if(!isSoftwareEmbedded)
+                Display3D.TreeManager.Update(gameTime);
 
             // Check if player entered a pickup
             Display3D.CPickUpManager.Update(gameTime);
@@ -529,6 +534,18 @@ namespace Engine.GameStates
                     else if (info == "pickupbullet")
                         return Display3D.CPickUpManager._pickups[eltId]._weaponBullets;
                     return new object[] { pos.X, pos.Y, pos.Z };
+                }
+                else if (action == "addElement")
+                {
+                    object[] values = (object[])p[1];
+                    string eltType = (string)values[0];
+
+                    if (eltType == "tree")
+                    {
+                        Game.LevelInfo.MapModels_Tree treeInfo = (Game.LevelInfo.MapModels_Tree)values[1];
+                        levelData.MapModels.Trees.Add(treeInfo);
+                        Display3D.TreeManager.AddTree(cam, _content, treeInfo);
+                    }
                 }
                 else if (action == "setElementInfo")
                 {

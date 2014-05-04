@@ -32,12 +32,15 @@ namespace Engine.Display3D
         public static void LoadXMLTrees(CCamera cam, ContentManager content, List<Game.LevelInfo.MapModels_Tree> trees)
         {
             foreach (Game.LevelInfo.MapModels_Tree tree in trees)
-            {
-                if (!_tProfiles.ContainsKey(tree.Profile))
-                    _tProfiles.Add(tree.Profile, content.Load<TreeProfile>(tree.Profile));
+                AddTree(cam, content, tree);
+        }
 
-                _tTrees.Add(new Tree(cam, tree.Profile, tree.Position.Vector3, tree.Rotation.Vector3, tree.Scale.Vector3, tree.Seed, tree.Wind, tree.Branches));
-            }
+        public static void AddTree(CCamera cam, ContentManager content, Game.LevelInfo.MapModels_Tree tree)
+        {
+            if (!_tProfiles.ContainsKey(tree.Profile))
+                _tProfiles.Add(tree.Profile, content.Load<TreeProfile>(tree.Profile));
+
+            _tTrees.Add(new Tree(cam, tree.Profile, tree.Position.Vector3, tree.Rotation.Vector3, tree.Scale.Vector3, tree.Seed, tree.Wind, tree.Branches));
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)
