@@ -24,7 +24,7 @@ namespace Engine
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        KeyboardState oldKeyboardState; //--| These 2 variables avec used to compare new state and old state (ex : Key pressed and released)
+        KeyboardState oldKeyboardState;
         MouseState oldMouseState;
 
         Display2D.CRenderCapture renderCapture;
@@ -219,7 +219,7 @@ namespace Engine
 
             // Capture the render
             renderCapture.Begin();
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Blue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
             // Draw "All" the State
             Game.CGameManagement.Draw(spriteBatch, gameTime);

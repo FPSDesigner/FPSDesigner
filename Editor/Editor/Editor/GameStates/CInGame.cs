@@ -14,7 +14,7 @@ namespace Engine.GameStates
 {
     class CInGame
     {
-        private Display3D.CCamera cam; // (TEST) One camera instancied
+        private Display3D.CCamera cam;
 
         private Game.CCharacter _character; //Character : can shoot, etc..
 
@@ -371,6 +371,12 @@ namespace Engine.GameStates
                         if (axisClicked != null)
                             return new object[] { "gizmo", (int)axisClicked };
                     }
+                    else if (Gizmos.shouldDrawScale)
+                    {
+                        int? axisClicked = Gizmos.RayIntersectsAxis(ray, "scale");
+                        if (axisClicked != null)
+                            return new object[] { "gizmo", (int)axisClicked };
+                    }
 
                     // Click distances
                     float? treeDistance = null, modelDistance = null, pickupDistance = null;
@@ -433,33 +439,32 @@ namespace Engine.GameStates
                     }
                     Gizmos.posGizmo._modelPosition = newPos;
                     Gizmos.rotGizmo._modelPosition = newPos;
+                    Gizmos.scaleGizmo._modelPosition = newPos;
                     Gizmos.shouldDrawPos = false;
                     Gizmos.shouldDrawRot = false;
+                    Gizmos.shouldDrawScale = false;
                     if ((string)values[2] == "PositionButton")
                         Gizmos.shouldDrawPos = true;
                     else if ((string)values[2] == "RotateButton")
                         Gizmos.shouldDrawRot = true;
+                    else if ((string)values[2] == "ScaleButton")
+                        Gizmos.shouldDrawScale = true;
                 }
                 else if (action == "changeTool")
                 {
                     object[] values = (object[])p[1];
                     string newTool = (string)values[0];
 
-                    if (newTool == "SelectButton")
-                    {
-                        Gizmos.shouldDrawPos = false;
-                        Gizmos.shouldDrawRot = false;
-                    }
-                    else if (newTool == "PositionButton")
-                    {
+                    Gizmos.shouldDrawPos = false;
+                    Gizmos.shouldDrawRot = false;
+                    Gizmos.shouldDrawScale = false;
+
+                    if (newTool == "PositionButton")
                         Gizmos.shouldDrawPos = true;
-                        Gizmos.shouldDrawRot = false;
-                    }
                     else if (newTool == "RotateButton")
-                    {
-                        Gizmos.shouldDrawPos = false;
                         Gizmos.shouldDrawRot = true;
-                    }
+                    else if (newTool == "ScaleButton")
+                        Gizmos.shouldDrawScale = true;
                 }
                 else if (action == "moveObject")
                 {
@@ -468,7 +473,7 @@ namespace Engine.GameStates
 
                     if (subaction == "start")
                     {
-                        Gizmos.StartDrag((int)values[1], (string)values[2], (int)values[3], (System.Windows.Point)values[4]);
+                        Gizmos.StartDrag((int)values[1], (string)values[2], (int)values[3], (System.Windows.Point)values[4], cam);
                     }
                     else if (subaction == "drag")
                     {

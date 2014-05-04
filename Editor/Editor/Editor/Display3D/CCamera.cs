@@ -58,6 +58,7 @@ namespace Engine.Display3D
         private KeyboardState _oldKeyState;
 
         private GraphicsDevice _graphics;
+        private Viewport _Viewport;
 
         public BoundingFrustum _Frustum { get; private set; }
 
@@ -78,6 +79,7 @@ namespace Engine.Display3D
         public CCamera(GraphicsDevice device, Vector3 cameraPos, Vector3 target, float nearClip, float farClip, bool isCamFrozen, bool freeCam = false, CTerrain map = null, bool[] componentUsages = null)
         {
             this._graphics = device;
+            _Viewport = device.Viewport;
             _aspectRatio = _graphics.Viewport.AspectRatio; // 16::9 - 4::3 etc
 
             this._nearClip = nearClip;
@@ -134,15 +136,16 @@ namespace Engine.Display3D
                 shouldUpdateMiddleScreen = false;
             }
 
-            /*if (_graphics.Viewport.Bounds != Display2D.C2DEffect.softwareViewport.Bounds)
+            if (_Viewport.Bounds != Display2D.C2DEffect.softwareViewport.Bounds)
             {
                 // Window size have changed
-                _graphics.Viewport = Display2D.C2DEffect.softwareViewport;
-                
-                _aspectRatio = _graphics.Viewport.AspectRatio;
+                _Viewport = Display2D.C2DEffect.softwareViewport;
+
+                _aspectRatio = _Viewport.AspectRatio;
                 _projection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, _nearClip, _farClip);
                 _nearProjection = Matrix.CreatePerspectiveFieldOfView(fieldOfView, _aspectRatio, 0.02f, 1f);
-            }*/
+                generateFrustum();
+            }
 
             if (!isCamFrozen)
             {

@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Threading;
 
 using Engine;
 
@@ -27,7 +28,10 @@ namespace Software.Pages
     /// </summary>
     public partial class Home : UserControl, IContent
     {
-        private MainGameEngine m_game;
+        private MainGameEngine m_game, m_preview;
+
+        private bool isPreviewPlaying = false;
+        private Thread previewThread;
 
         private DispatcherTimer resizeTimer = new DispatcherTimer();
         private MainWindow MainWindowInstance;
@@ -50,6 +54,7 @@ namespace Software.Pages
             listTree_Pickups = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
+
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;
             GameButton1.MouseWheel += GameButton1_MouseWheel;
             GameButton1.PreviewMouseMove += GameButton1_PreviewMouseMove;
@@ -67,8 +72,6 @@ namespace Software.Pages
 
             GameComponentsList.SelectedItemChanged += GameComponentsList_SelectedItemChanged;
 
-
-
             GlobalVars.selectedToolButton = SelectButton;
             SelectButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
             SelectButton.Click += ToolButton_Click;
@@ -76,7 +79,19 @@ namespace Software.Pages
             RotateButton.Click += ToolButton_Click;
             ScaleButton.Click += ToolButton_Click;
 
+            PlayButton.Click += PreviewButton_Click;
+
             LoadGameComponentsToTreeview();
+        }
+
+        void PreviewButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GenerateGame()
+        {
+            GlobalVars.SaveGameLevel();
         }
 
         void ToolButton_Click(object sender, RoutedEventArgs e)
@@ -204,7 +219,7 @@ namespace Software.Pages
 
         void disTimer_Tick(object sender, EventArgs e)
         {
-            m_game.ChangeEmbeddedViewport((int)ShowXNAImage1.RenderSize.Width, (int)ShowXNAImage1.RenderSize.Height);
+            m_game.ChangeEmbeddedViewport((int)GameButton1.RenderSize.Width, (int)GameButton1.RenderSize.Height);
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
             resizeTimer.Stop();
             m_game.shouldUpdateOnce = true;

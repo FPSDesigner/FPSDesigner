@@ -35,7 +35,7 @@ namespace Engine.Display3D
         {
             foreach(CPickUp pickup in _pickups)
             {
-                pickup._Model._modelRotation = new Vector3(pickup._Model._modelRotation.X, pickup._Model._modelRotation.Y, pickup._Model._modelRotation.Z);
+                //pickup._Model._modelRotation = new Vector3(pickup._Model._modelRotation.X, pickup._Model._modelRotation.Y, pickup._Model._modelRotation.Z);
             }
         }
 
