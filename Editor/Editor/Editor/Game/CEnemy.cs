@@ -21,11 +21,11 @@ namespace Engine.Game
         {
             _modelTextures = new Texture2D[1];
             _modelTextures[0] = content.Load<Texture2D>("Textures\\M40A5");
-            _model = new Display3D.MeshAnimation("StormTrooper", 1, 1, 1.0f, new Vector3(-165.2928f, 169f, 85f),
+            _model = new Display3D.MeshAnimation("StormTrooperAnimation", 1, 1, 1.0f, new Vector3(-165.2928f, 169f, 85f),
                 Matrix.CreateRotationX(-1 * MathHelper.PiOver2), 0.55f, _modelTextures, 10, 0.0f, true);
 
             _model.LoadContent(content);
-            _model.BeginAnimation("crouch", true);
+            _model.BeginAnimation("handgun_walk", true);
         }
 
         public void Update(GameTime gameTime)
