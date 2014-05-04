@@ -1033,17 +1033,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\StormTrooper.fbx">
-      <Name>StormTrooper</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Models\RotationGuizmo.fbx">
       <Name>RotationGuizmo</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\StormTrooperAnimation.fbx">
+      <Name>StormTrooperAnimation</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
