@@ -67,6 +67,20 @@ namespace Engine.Display3D
             idIntersected = 0;
             return null;
         }
+
+        public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
+        {
+            for (int i = 0; i < _pickups.Count; i++)
+            {
+                CPickUp pickup = _pickups[i];
+
+                lvl.MapModels.Pickups[i].Position = new Game.LevelInfo.Coordinates(pickup._Model._modelPosition);
+                lvl.MapModels.Pickups[i].Rotation = new Game.LevelInfo.Coordinates(pickup._Model._modelRotation);
+                lvl.MapModels.Pickups[i].Scale = new Game.LevelInfo.Coordinates(pickup._Model._modelScale);
+                lvl.MapModels.Pickups[i].WeaponBullets = pickup._weaponBullets;
+                lvl.MapModels.Pickups[i].WeaponName = pickup._weaponName;
+            }
+        }
     }
 
     class CPickUp

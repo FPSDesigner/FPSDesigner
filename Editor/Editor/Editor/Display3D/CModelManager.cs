@@ -58,6 +58,19 @@ namespace Engine.Display3D
                     Vector3.Transform(modelsList[0]._trianglesPositions[i].V2, modelMatrix), Color.Red);*/
         }
 
+        public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
+        {
+            for(int i = 0; i < modelsList.Count; i++)
+            {
+                CModel mdl = modelsList[i];
+
+                lvl.MapModels.Models[i].Position = new Game.LevelInfo.Coordinates(mdl._modelPosition);
+                lvl.MapModels.Models[i].Rotation = new Game.LevelInfo.Coordinates(mdl._modelRotation);
+                lvl.MapModels.Models[i].Scale = new Game.LevelInfo.Coordinates(mdl._modelScale);
+                lvl.MapModels.Models[i].Alpha = mdl.Alpha;
+            }
+        }
+
         public static void AddPhysicsInformations(CCamera cam)
         {
             foreach (CModel model in modelsList)

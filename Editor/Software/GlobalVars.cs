@@ -57,6 +57,7 @@ namespace Software
             try
             {
                 Codes.CXMLManager.serializeClass(projectGameInfoFile, gameInfo);
+                System.IO.File.Copy(projectGameInfoFile, defaultProjectGameName, true);
             }
             catch (Exception e)
             {

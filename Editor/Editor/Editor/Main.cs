@@ -37,7 +37,7 @@ namespace Engine
         private Point em_sizeViewport;
         private RenderTarget2D em_renderTarget2D;
         private byte[] em_bytes;
-        private DispatcherTimer em_dispatcherTimer;
+        public DispatcherTimer em_dispatcherTimer;
         private GameTime em_GameTime;
         private Stopwatch em_StopWatch;
         private TimeSpan em_LastTime;
@@ -55,7 +55,7 @@ namespace Engine
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = !launchedFromSoftware;
             Window.AllowUserResizing = true;
 
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -274,7 +274,7 @@ namespace Engine
             return true;*/
         }
 
-        private void GameLoop(object sender, EventArgs e)
+        public void GameLoop(object sender, EventArgs e)
         {
             if (!shouldNotUpdate || shouldUpdateOnce)
             {

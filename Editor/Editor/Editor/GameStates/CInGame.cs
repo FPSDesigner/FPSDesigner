@@ -579,7 +579,7 @@ namespace Engine.GameStates
                     else if (info == "pickupbullets")
                     {
                         int newBullet;
-                        if(Int32.TryParse(values[1].ToString(), out newBullet))
+                        if (Int32.TryParse(values[1].ToString(), out newBullet))
                         {
                             Display3D.CPickUpManager._pickups[eltId]._weaponBullets = newBullet;
                         }
@@ -602,9 +602,20 @@ namespace Engine.GameStates
                         }
                     }
                 }
+                else if (action == "getLevelData")
+                {
+                    SaveXMLFile();
+                    return levelData;
+                }
             }
             return false;
         }
 
+        public void SaveXMLFile()
+        {
+            Display3D.CModelManager.UpdateGameLevel(ref levelData);
+            Display3D.TreeManager.UpdateGameLevel(ref levelData);
+            Display3D.CPickUpManager.UpdateGameLevel(ref levelData);
+        }
     }
 }

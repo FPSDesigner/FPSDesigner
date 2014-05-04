@@ -80,6 +80,22 @@ namespace Engine.Display3D
             treeId = -1;
             return null;
         }
+
+        public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
+        {
+            for (int i = 0; i < _tTrees.Count; i++)
+            {
+                Tree tree = _tTrees[i];
+
+                lvl.MapModels.Trees[i].Position = new Game.LevelInfo.Coordinates(tree.Position);
+                lvl.MapModels.Trees[i].Rotation = new Game.LevelInfo.Coordinates(tree.Rotation);
+                lvl.MapModels.Trees[i].Scale = new Game.LevelInfo.Coordinates(tree.Scale);
+                lvl.MapModels.Trees[i].Seed = tree._seed;
+                lvl.MapModels.Trees[i].Wind = tree._useWind;
+                lvl.MapModels.Trees[i].Branches = tree._useBranches;
+                lvl.MapModels.Trees[i].Profile = tree._profile;
+            }
+        }
     }
 
     class Tree

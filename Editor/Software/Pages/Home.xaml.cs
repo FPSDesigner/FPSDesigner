@@ -17,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Threading;
+using System.Diagnostics;
 
 using Engine;
 
@@ -28,10 +28,7 @@ namespace Software.Pages
     /// </summary>
     public partial class Home : UserControl, IContent
     {
-        private MainGameEngine m_game, m_preview;
-
-        private bool isPreviewPlaying = false;
-        private Thread previewThread;
+        private MainGameEngine m_game;
 
         private DispatcherTimer resizeTimer = new DispatcherTimer();
         private MainWindow MainWindowInstance;
@@ -86,12 +83,29 @@ namespace Software.Pages
 
         void PreviewButton_Click(object sender, RoutedEventArgs e)
         {
-
+            GenerateGame();
         }
 
         private void GenerateGame()
         {
+            m_game.shouldNotUpdate = true;
+            m_game.em_dispatcherTimer.Stop();
+            GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
             GlobalVars.SaveGameLevel();
+
+            Process previewProcess = new Process();
+            previewProcess.StartInfo.FileName = "Editor.exe";
+            previewProcess.EnableRaisingEvents = true;
+
+            previewProcess.Exited += (s, e) =>
+            {
+                m_game.shouldNotUpdate = false;
+                m_game.em_dispatcherTimer.Start();
+                m_game.em_dispatcherTimer.Interval = TimeSpan.FromSeconds(1 / 60);
+                m_game.em_dispatcherTimer.Tick += new EventHandler(m_game.GameLoop);
+            };
+
+            previewProcess.Start();
         }
 
         void ToolButton_Click(object sender, RoutedEventArgs e)

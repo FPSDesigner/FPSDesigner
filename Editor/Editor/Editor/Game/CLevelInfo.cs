@@ -169,6 +169,9 @@ namespace Engine.Game.LevelInfo
     {
         [XmlIgnore]
         public Vector3 Vector3 { get { return new Vector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+        public Coordinates(float cX, float cY, float cZ) { X = cX; Y = cY; Z = cZ; }
+        public Coordinates(Vector3 coord) { X = coord.X; Y = coord.Y; Z = coord.Z; }
+        public Coordinates() { }
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
