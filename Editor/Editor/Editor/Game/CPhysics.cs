@@ -104,8 +104,6 @@ namespace Engine.Game
             if (_velocity.Y > 0)
                 jumpVelocity = _velocity.Y;
 
-            Console.WriteLine(_isGameUsing[0]);
-
             if (_isGameUsing[0] && assumedNewPosition.Y + jumpVelocity <= terrainHeight + _entityHeight + 0.001f)
             {
                 isVerticalIntersecting = true;

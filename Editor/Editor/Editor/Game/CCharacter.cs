@@ -434,6 +434,21 @@ namespace Engine.Game
                                 Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
                                 Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
+                                Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
+                                Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
+                                Vector3 direction = farSource - nearSource;
+
+                                direction.Normalize();
+
+                                Ray ray = new Ray(nearSource, direction);
+
+                                string enemyTest = CEnemyManager.RayIntersectsHitbox(ray);
+                                if (CEnemyManager.RayIntersectsHitbox(ray) != "")
+                                {
+                                    Console.WriteLine(enemyTest);
+                                    Game.CConsole.addMessage("Hit " + enemyTest);
+                                }
+
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 

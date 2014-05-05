@@ -214,6 +214,8 @@ namespace Engine.GameStates
                 , Matrix.CreateRotationX(-1 * MathHelper.PiOver2));
 
             _enemy.LoadContent(content, cam);
+
+            Game.CEnemyManager.AddEnemy(_enemy);
         }
 
         float x, y, z;

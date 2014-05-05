@@ -31,8 +31,10 @@ namespace Engine.Display3D
         public Vector3 _position;
         private Matrix _rotation;
 
-        private SkinnedModel skinnedModel;
+        public SkinnedModel skinnedModel;
         private AnimationController animationController;
+
+        public Matrix[] _modelTransforms;
 
         public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, Matrix rot,float scale,Texture2D[] text, int specPower, float specColor,bool isLooped)
         {
@@ -76,6 +78,9 @@ namespace Engine.Display3D
             animationController.OrientationInterpolation = InterpolationMode.Linear;
             animationController.ScaleInterpolation = InterpolationMode.Linear;
             animationController.LoopEnabled = _isLooped;
+
+            _modelTransforms = new Matrix[skinnedModel.Model.Bones.Count];
+            skinnedModel.Model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
 
         }
 
