@@ -56,6 +56,7 @@ namespace Engine.Game
         public static Keys _activationKeys = Keys.OemTilde;
         public static Display3D.CCamera _Camera;
         public static Game.CCharacter _Character;
+        public static Game.CEnemy _Enemy;
         public static Game.CWeapon _Weapon;
         public static Display3D.CTerrain _Terrain;
         public static Display3D.CWater _Water;
@@ -181,6 +182,22 @@ namespace Engine.Game
                     }
                     else
                         addMessage("USAGE: " + cmd[0] + " <X> <Y> <Z>");
+                    break;
+                case "moveAI":
+                    if (cmd.Length > 3 && float.TryParse(cmd[1], out runSpeed))
+                    {
+                        float x,y,z;
+                        if (float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
+                        {
+                            _Enemy.MoveTo(new Vector3(x, y, z));
+                        }
+                        else
+                        {
+                            addMessage("USAGE: " + cmd[0] + " <x> <y> <z>");
+                        }
+                    }
+                    else
+                        addMessage("USAGE: " + cmd[0] + " <x> <y> <z>");
                     break;
             }
         }

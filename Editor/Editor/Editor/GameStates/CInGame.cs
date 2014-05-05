@@ -196,8 +196,12 @@ namespace Engine.GameStates
             z = levelData.Weapons.Weapon[1].Rotation.Z;
 
             // ENEMY TEST
-            _enemy = new Game.CEnemy();
-            _enemy.LoadContent(content);
+            Texture2D[] ennemyTexture = new Texture2D[1];
+            ennemyTexture[0] = content.Load<Texture2D>("Textures\\M40A5");
+            _enemy = new Game.CEnemy("StormTrooperAnimation",ennemyTexture,new Vector3(-125f,168.95f,88)
+                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2));
+
+            _enemy.LoadContent(content, cam);
         }
 
         float x, y, z;
@@ -249,6 +253,7 @@ namespace Engine.GameStates
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
             // ENEMY TEST
+            //_enemy.MoveTo(cam._cameraPos);
             _enemy.Update(gameTime);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
