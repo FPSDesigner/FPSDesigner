@@ -19,7 +19,7 @@ namespace Engine.Game
         public static void AddEnemy(CEnemy enemy)
         {
             _enemyList.Add(enemy);
-        }
+    }
 
         public static string RayIntersectsHitbox(Ray ray)
         {
@@ -36,6 +36,7 @@ namespace Engine.Game
     class CEnemy
     {
         float _life;
+        float _runningVelocity; // Displacement velocity
 
         private Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
@@ -50,14 +51,17 @@ namespace Engine.Game
 
         private bool _isMoving;
 
+        // Animation Boolean
+        private bool _isWaitAnimPlaying;
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation)
+        public CEnemy(string ModelName, Texture2D[] Textures ,Vector3 Position, Matrix Rotation, float Velocity)
         {
             _position = Position;
             _rotation = Rotation;
             _scale = new Vector3(0.5f);
+
+            this._runningVelocity = Velocity;
 
             // We Create the Enemy, giving its textures, models...
 
@@ -93,6 +97,15 @@ namespace Engine.Game
             // Apply the physic on the character
             _position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
 
+            //Play Anims
+            if (!_isMoving && !_isWaitAnimPlaying)
+            {
+                _model.ChangeAnimSpeed(0.6f);
+                _model.ChangeAnimation("wait", true, 0.5f);
+                _isWaitAnimPlaying = true;
+                
+            }
+
             // We update the character pos, rot...
             _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
             _model.Update(gameTime, _position, _rotation);
@@ -106,11 +119,14 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 newPos)
         {
-            _targetPos = newPos + _position;
+            _targetPos = new Vector3(newPos.X - _position.X,
+                newPos.Y - _position.Y, newPos.Z - _position.Z);
             _targetPos.Normalize();
 
             rotationValue = (float)Math.Atan2(newPos.X - _position.X,
                 newPos.Z - _position.Z);
+
+            _position += _runningVelocity * _targetPos;
         }
 
         public Matrix GetModelMatrix()
