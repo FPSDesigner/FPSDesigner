@@ -168,6 +168,12 @@
                     <TreeViewItem Header="Terrain"></TreeViewItem>
                 </TreeView>
 
+                <TextBlock Grid.Row="1" Text="Available Components" Style="{StaticResource Heading2}" HorizontalAlignment="Center" Margin="10,2,0,0" />
+                <TreeView Grid.Row="1" x:Name="AvailableComponentsList" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,20,0,3">
+                    <TreeViewItem Header="Models"></TreeViewItem>
+                    <TreeViewItem Header="Pick-Ups"></TreeViewItem>
+                </TreeView>
+
 
             </Grid>
             <!-- Properties -->

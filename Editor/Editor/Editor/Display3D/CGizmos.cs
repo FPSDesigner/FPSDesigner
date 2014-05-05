@@ -56,7 +56,7 @@ namespace Engine.Display3D
 
             GenerateBoundingBoxes();
 
-            gizmoSize = new Vector3(0.15f);
+            gizmoSize = new Vector3(0.12f);
         }
 
         public void Draw(CCamera cam, GameTime gameTime)

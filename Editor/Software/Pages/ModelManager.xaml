@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="Software.Pages.ModelManager"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Software.Properties"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="750">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+       
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <TextBlock Text="Model manager" Style="{StaticResource Heading1}"/>
+            <TextBlock>
+                Sélectionnez un model 3D puis appliquez ses textures ci-dessous.<LineBreak />
+                Vous pouvez appliquer sur quel mesh la va s'appliquer en remplissant la case au dessus de la texture.<LineBreak />
+                Pour que la texture s'applique sur tous les meshs, rentrez "ApplyAllMesh".
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="6">
+            <TextBox Width="200" Grid.Row="1" x:Name="modelUrl"/>
+            <Button Content="Select" Margin="3,0,0,0" x:Name="selectModelUrl"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Margin="0,40,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center" Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Texture 1</TextBlock>
+                <TextBox x:Name="meshName0" Text="ApplyAllMesh" />
+                <Image Stretch="Uniform" Width="150" Height="150" Source="/Assets/placeholder.png" x:Name="imgTexture0"/>
+                <Button Content="select" x:Name="selectButton0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Texture 2</TextBlock>
+                <TextBox x:Name="meshName1" Text="ApplyAllMesh" />
+                <Image Stretch="Uniform" Width="150" Height="150" Source="/Assets/placeholder.png" x:Name="imgTexture1"/>
+                <Button Content="select" x:Name="selectButton1"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" HorizontalAlignment="Center" Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Texture 3</TextBlock>
+                <TextBox x:Name="meshName2" Text="ApplyAllMesh" />
+                <Image Stretch="Uniform" Width="150" Height="150" Source="/Assets/placeholder.png" x:Name="imgTexture2"/>
+                <Button Content="select" x:Name="selectButton2"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3" HorizontalAlignment="Center" Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Texture 4</TextBlock>
+                <TextBox x:Name="meshName3" Text="ApplyAllMesh" />
+                <Image Stretch="Uniform" Width="150" Height="150" Source="/Assets/placeholder.png" x:Name="imgTexture3"/>
+                <Button Content="select" x:Name="selectButton3"/>
+            </StackPanel>
+        </Grid>
+
+        <mui:ModernButton Grid.Row="3" x:Name="ValidateButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" EllipseDiameter="32" IconWidth="20" IconHeight="20" IconData="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " />
+    </Grid>
+</UserControl>

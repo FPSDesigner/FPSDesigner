@@ -248,6 +248,11 @@ namespace Software.Pages
             resizeTimer.Stop();
             resizeTimer.Start();
         }
+
+        private void LoadAvailableComponents()
+        {
+            AvailableComponentsList.Items.Clear();
+        }
         
         private void LoadGameComponentsToTreeview()
         {
@@ -572,6 +577,26 @@ namespace Software.Pages
 
                     spElements["WeaponBullet"].Children.Add(titlePickupBullet);
                     spElements["WeaponBullet"].Children.Add(tbWB);
+                }
+                else if (GlobalVars.selectedElt.eltType == "model")
+                {
+                    // WeaponName
+                    spElements["DuplicateButton"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                        {
+                            GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                            GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "model", GlobalVars.gameInfo.MapModels.Models[GlobalVars.selectedElt.eltId] });
+                            LoadGameComponentsToTreeview();
+                        };
+
+                    spElements["DuplicateButton"].Children.Add(duplicateButton);
+
                 }
 
                 // Add elements to the main StackPanel

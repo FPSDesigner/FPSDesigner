@@ -198,7 +198,7 @@ namespace Engine.GameStates
             // ENEMY TEST
             Texture2D[] ennemyTexture = new Texture2D[1];
             ennemyTexture[0] = content.Load<Texture2D>("Textures\\M40A5");
-            _enemy = new Game.CEnemy("StormTrooperAnimation",ennemyTexture,new Vector3(-125f,168.95f,88)
+            _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-125f, 168.95f, 88)
                 , Matrix.CreateRotationX(-1 * MathHelper.PiOver2));
 
             _enemy.LoadContent(content, cam);
@@ -229,7 +229,7 @@ namespace Engine.GameStates
 
             }
 
-            if(!isSoftwareEmbedded)
+            if (!isSoftwareEmbedded)
                 Display3D.TreeManager.Update(gameTime);
 
             // Check if player entered a pickup
@@ -550,6 +550,27 @@ namespace Engine.GameStates
                         Game.LevelInfo.MapModels_Tree treeInfo = (Game.LevelInfo.MapModels_Tree)values[1];
                         levelData.MapModels.Trees.Add(treeInfo);
                         Display3D.TreeManager.AddTree(cam, _content, treeInfo);
+                    }
+                    else if (eltType == "model")
+                    {
+                        Game.LevelInfo.MapModels_Model modelInfo = (Game.LevelInfo.MapModels_Model)values[1];
+                        levelData.MapModels.Models.Add(modelInfo);
+
+                        Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
+
+                        foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
+                            modelTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
+
+                        Display3D.CModelManager.addModel(new Display3D.CModel(
+                            _content.Load<Model>(modelInfo.ModelFile),
+                            modelInfo.Position.Vector3,
+                            modelInfo.Rotation.Vector3,
+                            modelInfo.Scale.Vector3,
+                            _graphics,
+                            modelTextures,
+                            modelInfo.SpecColor,
+                            modelInfo.Alpha));
+
                     }
                 }
                 else if (action == "setElementInfo")

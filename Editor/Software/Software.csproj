@@ -114,6 +114,9 @@
     <Compile Include="Pages\TerrainManager\TerrainManager.xaml.cs">
       <DependentUpon>TerrainManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ModelManager.xaml.cs">
+      <DependentUpon>ModelManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\TreeManager.xaml.cs">
       <DependentUpon>TreeManager.xaml</DependentUpon>
     </Compile>
@@ -198,6 +201,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\TerrainManager\TerrainManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ModelManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

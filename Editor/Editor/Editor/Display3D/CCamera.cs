@@ -161,6 +161,7 @@ namespace Engine.Display3D
 
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
+
             generateFrustum();
         }
 

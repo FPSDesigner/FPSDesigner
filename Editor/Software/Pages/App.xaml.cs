@@ -257,6 +257,32 @@ namespace Software
                 else
                     listExtWindows[windowName].Activate();
             }
+            else if (windowName == "ModelManager")
+            {
+                if (!listExtWindows.ContainsKey(windowName))
+                {
+                    listExtWindows[windowName] = new ModernWindow
+                    {
+                        Style = (Style)App.Current.Resources["EmptyWindow"],
+                        Content = new Pages.ModelManager
+                        {
+                            Margin = new Thickness(32)
+                        },
+                        Title = "Model Manager",
+                        Width = 750,
+                        Height = 560,
+                        MinWidth = 750,
+                        MinHeight = 560,
+                        Icon = GlobalVars.SoftwareIcon
+                    };
+
+                    listExtWindows[windowName].Show();
+                    listExtWindows[windowName].Closed += (send, args) => listExtWindows.Remove(windowName);
+                    ((Pages.ModelManager)listExtWindows[windowName].Content).ShouldClose += App_ShouldClose;
+                }
+                else
+                    listExtWindows[windowName].Activate();
+            }
         }
 
         void App_ShouldClose(object sender, RoutedEventArgs e)
