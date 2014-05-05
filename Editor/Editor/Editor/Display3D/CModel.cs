@@ -96,7 +96,11 @@ namespace Engine.Display3D
         public List<Vector3> _trianglesNormal = new List<Vector3>();
 
         private Dictionary<String, Texture2D> _textures;
+        private Dictionary<String, Texture2D> _bumpTextures;
+
         private CCamera _camera;
+
+        private Effect normalMapping;
 
         public bool shouldNotUpdateTriangles = false;
 
@@ -125,7 +129,8 @@ namespace Engine.Display3D
         /// <param name="modelRotation">Rotation of the model</param>
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
-        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null, float specColor = 0.0f, float alpha = 1.0f)
+        public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null,
+            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string,Texture2D> bumpTexture = null, Effect normalMapping = null)
         {
             this._model = model;
 
@@ -133,10 +138,12 @@ namespace Engine.Display3D
             this._modelRotation = modelRotation;
             this._modelScale = modelScale;
             this.Alpha = alpha;
+            this.normalMapping = normalMapping;
 
             this._specularColor = specColor;
 
             this._textures = textures;
+            this._bumpTextures = bumpTexture;
 
             _modelTransforms = new Matrix[model.Bones.Count];
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
@@ -161,6 +168,10 @@ namespace Engine.Display3D
                                 effect.Texture = _textures[newName];
                             else if (_textures.ContainsKey("ApplyAllMesh"))
                                 effect.Texture = _textures["ApplyAllMesh"];
+
+
+                            if (_bumpTextures != null && _bumpTextures.ContainsKey(newName))
+                                //effect.Parameters["NormalMap"].SetValue(bumpTexture[newName]);
 
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;

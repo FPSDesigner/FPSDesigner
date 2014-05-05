@@ -70,12 +70,22 @@ namespace Engine.GameStates
 
             /**** Models ****/
 
+            Display3D.CModelManager.LoadContent(content);
+
             foreach (Game.LevelInfo.MapModels_Model modelInfo in levelData.MapModels.Models)
             {
                 Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
 
                 foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
                     modelTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
+
+                Dictionary<string, Texture2D> bumpTextures = new Dictionary<string, Texture2D>();
+
+                if (modelInfo.BumpTextures != null)
+                {
+                    foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
+                        bumpTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
+                }
 
                 Display3D.CModelManager.addModel(new Display3D.CModel(
                     content.Load<Model>(modelInfo.ModelFile),
@@ -85,7 +95,9 @@ namespace Engine.GameStates
                     graphics,
                     modelTextures,
                     modelInfo.SpecColor,
-                    modelInfo.Alpha));
+                    modelInfo.Alpha,
+                    bumpTextures,
+                    Display3D.CModelManager.normalMappingEffect));
             }
 
             lensFlare = new Display3D.CLensFlare();
@@ -197,7 +209,7 @@ namespace Engine.GameStates
 
             // ENEMY TEST
             Texture2D[] ennemyTexture = new Texture2D[1];
-            ennemyTexture[0] = content.Load<Texture2D>("Textures\\M40A5");
+            ennemyTexture[0] = content.Load<Texture2D>("Textures\\StormTrooper");
             _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-125f, 168.95f, 88)
                 , Matrix.CreateRotationX(-1 * MathHelper.PiOver2));
 
@@ -561,6 +573,14 @@ namespace Engine.GameStates
                         foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.Textures.Texture)
                             modelTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
 
+                        Dictionary<string, Texture2D> bumpTextures = new Dictionary<string, Texture2D>();
+
+                if (modelInfo.BumpTextures != null)
+                {
+                    foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
+                        bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
+                }
+
                         Display3D.CModelManager.addModel(new Display3D.CModel(
                             _content.Load<Model>(modelInfo.ModelFile),
                             modelInfo.Position.Vector3,
@@ -569,7 +589,9 @@ namespace Engine.GameStates
                             _graphics,
                             modelTextures,
                             modelInfo.SpecColor,
-                            modelInfo.Alpha));
+                            modelInfo.Alpha,
+                            bumpTextures,
+                            Display3D.CModelManager.normalMappingEffect));
 
                     }
                 }
@@ -639,7 +661,7 @@ namespace Engine.GameStates
                                 textureList.Add("ApplyAllMesh", wpd._weapTexture);
                                 Display3D.CPickUpManager._pickups[eltId]._Model = new Display3D.CModel(wpd._wepModel, Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition,
                                     Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation, Display3D.CPickUpManager._pickups[eltId]._Model._modelScale,
-                                    _graphics, textureList, 0, 1);
+                                    _graphics, textureList, 0, 1,null, Display3D.CModelManager.normalMappingEffect);
                                 return true;
                             }
                         }

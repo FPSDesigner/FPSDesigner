@@ -12,9 +12,16 @@ namespace Engine.Display3D
     {
         public static List<CModel> modelsList = new List<CModel>();
 
+        public static Effect normalMappingEffect;
+
         public static bool DebugActivated = false;
 
         public static int selectModelId = -1;
+
+        public static void LoadContent(ContentManager content)
+        {
+            normalMappingEffect = content.Load<Effect>("Effects\\NormalMapping");
+        }
 
         public static void addModel(CModel model)
         {

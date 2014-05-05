@@ -143,6 +143,7 @@ namespace Engine.Game.LevelInfo
         public Coordinates Rotation { get; set; }
         public Coordinates Scale { get; set; }
         public MapModels_Textures Textures { get; set; }
+        public MapModels_Textures BumpTextures { get; set; }
     }
 
     // 3D Models - Textures node

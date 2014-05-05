@@ -95,7 +95,7 @@ namespace Engine.Display3D
         {
             Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
             textureList.Add("ApplyAllMesh", texture);
-            _Model = new CModel(model, position, rotation, scale, graphics, textureList, 0, 1);
+            _Model = new CModel(model, position, rotation, scale, graphics, textureList, 0, 1, null, CModelManager.normalMappingEffect);
             _Model.shouldNotUpdateTriangles = true;
 
             _weaponName = weaponName;

@@ -1040,6 +1040,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\StormTrooper.png">
+      <Name>StormTrooper</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Normal Textures\Brick001-B.tga">
+      <Name>Brick001-B</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Models\StormTrooperAnimation.fbx">
       <Name>StormTrooperAnimation</Name>
       <Importer>FbxImporter</Importer>

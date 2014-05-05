@@ -25,6 +25,8 @@ namespace Engine.Game
 
         private Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position
+
+        private float rotationValue; // We give this float to the rotation mat
         private Matrix _rotation; // Model rotation
 
         private Game.CPhysics _physicEngine; // Ennemy will be submitted to forces
@@ -79,10 +81,7 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 newPos)
         {
-            _targetPos = newPos;
-
-            _rotation = Matrix.CreateLookAt(_position, _targetPos, Vector3.Up);
-
+            _targetPos = _position + newPos;
 
             //_targetPos += _position;
 
