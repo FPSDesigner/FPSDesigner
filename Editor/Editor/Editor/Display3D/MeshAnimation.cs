@@ -101,7 +101,13 @@ namespace Engine.Display3D
                     effect.Projection = projection;
                 }
 
-                mesh.Draw();
+                string newName = mesh.Name.Split('_')[0];
+
+                // If the mesh is not a bounding box
+                if (newName != "Bb")
+                {
+                    mesh.Draw();
+                }
             }
 
         }

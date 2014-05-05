@@ -42,7 +42,7 @@ namespace Engine.Game
             // We Create the Enemy, giving its textures, models...
 
             _model = new Display3D.MeshAnimation(ModelName, 1, 1, 1.0f,_position,
-                Matrix.CreateRotationX(-1 * MathHelper.PiOver2), 2f, Textures, 10, 0.0f, true);
+                Matrix.CreateRotationX(-1 * MathHelper.PiOver2), 0.5f, Textures, 10, 0.0f, true);
 
             _isMoving = false;
 
@@ -58,7 +58,7 @@ namespace Engine.Game
 
             // We Create the forces application on the Ennemy
             _physicEngine = new CPhysics();
-            _physicEngine.LoadContent(2f, new bool[] { true,true});
+            _physicEngine.LoadContent(0.2f, new bool[] { true,true});
             _physicEngine._triangleList = cam._physicsMap._triangleList;
             _physicEngine._triangleNormalsList = cam._physicsMap._triangleNormalsList;
             _physicEngine._terrain = cam._physicsMap._terrain;
@@ -71,6 +71,7 @@ namespace Engine.Game
             _position = _physicEngine.GetNewPosition(gameTime, _position,Vector3.Zero,false);
 
             // We update the character pos, rot...
+            _rotation = Matrix.CreateRotationX(- MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
             _model.Update(gameTime, _position, _rotation);
         }
 
@@ -81,14 +82,13 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 newPos)
         {
-            _targetPos = _position + newPos;
+            _targetPos = newPos + _position;
+            _targetPos.Normalize();
 
-            //_targetPos += _position;
+            rotationValue = (float)Math.Atan2(newPos.X - _position.X,
+                newPos.Z - _position.Z);
 
-            //if (_targetPos != Vector3.Zero)
-            //{
 
-            //}
         }
     }
 }

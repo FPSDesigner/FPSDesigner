@@ -162,7 +162,7 @@ namespace Engine.Display3D
 
                             effect.TextureEnabled = true;
 
-                            string newName = mesh.Name.Split('_')[0]; ; // If there is no * : newName corresponds to the mesh.Name
+                            string newName = mesh.Name.Split('_')[0]; // If there is no * : newName corresponds to the mesh.Name
 
                             if (_textures.ContainsKey(newName))
                                 effect.Texture = _textures[newName];
