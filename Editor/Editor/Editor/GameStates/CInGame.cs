@@ -267,7 +267,7 @@ namespace Engine.GameStates
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
             // ENEMY TEST
-            _enemy.MoveTo(cam._cameraPos);
+            _enemy.MoveTo(cam._cameraPos, gameTime);
             _enemy.Update(gameTime);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);

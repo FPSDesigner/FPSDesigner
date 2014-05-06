@@ -189,7 +189,7 @@ namespace Engine.Game
                         float x,y,z;
                         if (float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
                         {
-                            _Enemy.MoveTo(new Vector3(x, y, z));
+                            _Enemy.MoveTo(new Vector3(x, y, z), gameTime);
                         }
                         else
                         {

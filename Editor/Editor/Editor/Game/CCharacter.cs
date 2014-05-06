@@ -199,7 +199,7 @@ namespace Engine.Game
             else
             {
                 spriteBatch.Begin();
-                spriteBatch.Draw(_lensTexture, Vector2.Zero, Color.White);
+                spriteBatch.Draw(_lensTexture, new Rectangle(0, 0, _graphicsDevice.PresentationParameters.BackBufferWidth, _graphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
                 spriteBatch.End();
             }
         }
@@ -442,9 +442,12 @@ namespace Engine.Game
 
                                 Ray ray = new Ray(nearSource, direction);
 
-                                string enemyTest = CEnemyManager.RayIntersectsHitbox(ray);
-                                if (CEnemyManager.RayIntersectsHitbox(ray) != "")
+                                float? distance;
+                                string enemyTest = CEnemyManager.RayIntersectsHitbox(ray, out distance);
+                                if (enemyTest != "")
                                 {
+                                    Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
+                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.5f), Color.Blue, 255f);
                                     Console.WriteLine(enemyTest);
                                     Game.CConsole.addMessage("Hit " + enemyTest);
                                 }

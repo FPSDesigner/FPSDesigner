@@ -21,14 +21,15 @@ namespace Engine.Game
             _enemyList.Add(enemy);
     }
 
-        public static string RayIntersectsHitbox(Ray ray)
+        public static string RayIntersectsHitbox(Ray ray, out float? distance)
         {
             foreach (CEnemy enemy in _enemyList)
             {
-                string enemytest = enemy.RayIntersectsHitbox(ray);
+                string enemytest = enemy.RayIntersectsHitbox(ray, out distance);
                 if (enemytest != "")
                     return enemytest;
             }
+            distance = null;
             return "";
         }
     }
@@ -88,6 +89,7 @@ namespace Engine.Game
             _physicEngine._triangleNormalsList = cam._physicsMap._triangleNormalsList;
             _physicEngine._terrain = cam._physicsMap._terrain;
             _physicEngine._waterHeight = cam._physicsMap._waterHeight;
+            _physicEngine.heightCorrection = 0.85f;
 
             GenerateHitBoxesTriangles();
         }
@@ -95,7 +97,7 @@ namespace Engine.Game
         public void Update(GameTime gameTime)
         {
             // Apply the physic on the character
-            _position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
+            //_position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
 
             //Play Anims
             if (!_isMoving && !_isWaitAnimPlaying)
@@ -113,11 +115,12 @@ namespace Engine.Game
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection)
         {
+            GenerateHitBoxesTriangles();
             GetRealTriangles();
             _model.Draw(gameTime, spriteBatch, view, projection);
         }
 
-        public void MoveTo(Vector3 newPos)
+        public void MoveTo(Vector3 newPos, GameTime gameTime)
         {
             _targetPos = new Vector3(newPos.X - _position.X,
                 newPos.Y - _position.Y, newPos.Z - _position.Z);
@@ -126,7 +129,12 @@ namespace Engine.Game
             rotationValue = (float)Math.Atan2(newPos.X - _position.X,
                 newPos.Z - _position.Z);
 
-            _position += _runningVelocity * _targetPos;
+            //_position += _runningVelocity * _targetPos;
+
+            Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+            translation.Normalize();
+
+            _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
         }
 
         public Matrix GetModelMatrix()
@@ -148,7 +156,7 @@ namespace Engine.Game
             return triangles;
         }
 
-        public string RayIntersectsHitbox(Ray ray)
+        public string RayIntersectsHitbox(Ray ray, out float? distance)
         {
             GenerateHitBoxesTriangles();
             foreach (Display3D.Triangle tri in GetRealTriangles())
@@ -156,8 +164,12 @@ namespace Engine.Game
                 Display3D.Triangle triangle = tri;
                 float? dist = Display3D.TriangleTest.Intersects(ref ray, ref triangle);
                 if (dist.HasValue)
+                {
+                    distance = dist;
                     return tri.TriName;
+                }
             }
+            distance = null;
             return "";
         }
 

@@ -20,6 +20,7 @@ namespace Engine.Game
         private bool _isUnderwater = false;
 
         public float _entityHeight;
+        public float heightCorrection = 0f;
 
         // Components usage  0: terrain, 1: water
         private bool[] _isGameUsing = new bool[2];
@@ -66,7 +67,7 @@ namespace Engine.Game
             translation *= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector3 assumedNewPosition = entityPos + translation;
-            Ray translationRay = new Ray(new Vector3(entityPos.X, entityPos.Y - _entityHeight / 2, entityPos.Z), translation);
+            Ray translationRay = new Ray(new Vector3(entityPos.X, entityPos.Y - _entityHeight / 2 + heightCorrection, entityPos.Z), translation);
 
             Vector3 horizontalNormalReaction = Vector3.Zero;
 
