@@ -82,18 +82,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="2D\Menu\MENU_Bckground.png">
-      <Name>MENU_Bckground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="2D\Menu\MENU_TitleGame.png">
-      <Name>MENU_TitleGame</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="2D\Menu\MENU_Sight.png">
       <Name>MENU_Sight</Name>
       <Importer>TextureImporter</Importer>
@@ -1086,6 +1074,13 @@
       <Name>ScalingGuizmo</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="2D\Menu\Menu_Bckground.png">
+      <Name>Menu_Bckground</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

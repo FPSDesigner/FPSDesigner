@@ -93,7 +93,7 @@ namespace Engine.Display3D
             animationController.Update(gameTime.ElapsedGameTime, Matrix.Identity);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, string[] unDrawable = null)
         {
             //draw the model (also the anim obviously)
             foreach (ModelMesh mesh in skinnedModel.Model.Meshes)
@@ -111,7 +111,11 @@ namespace Engine.Display3D
                 // If the mesh is not a bounding box
                 if (newName != "Bb")
                 {
-                    mesh.Draw();
+                    // If undrawable mesh is empty 
+                    if (unDrawable == null || !unDrawable.Contains<string>(newName))
+                    {
+                        mesh.Draw();
+                    }
                 }
             }
 

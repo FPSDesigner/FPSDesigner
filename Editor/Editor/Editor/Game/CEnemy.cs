@@ -126,7 +126,7 @@ namespace Engine.Game
             }
             if (!_isDied && _isMoving && !_isWalkAnimPlaying)
             {
-                _model.ChangeAnimSpeed(2.8f);
+                _model.ChangeAnimSpeed(2.0f);
                 _model.ChangeAnimation("walk", true, 0.7f);
 
                 _isWaitAnimPlaying = false;
@@ -147,8 +147,17 @@ namespace Engine.Game
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection)
         {
             GenerateHitBoxesTriangles();
-            GetRealTriangles();
-            _model.Draw(gameTime, spriteBatch, view, projection);
+            //GetRealTriangles();
+
+            // We draw the enemy entirely if he is alive
+            if (!_isDied && !_model.HasFinished())
+                _model.Draw(gameTime, spriteBatch, view, projection);
+            else if (_isDied || _model.HasFinished())
+            {
+                string[] undrawable = new string [1];
+                undrawable[0] = "Head";
+                _model.Draw(gameTime, spriteBatch, view, projection, undrawable);
+            }
         }
 
         public void MoveTo(Vector3 newPos, GameTime gameTime)
@@ -171,6 +180,27 @@ namespace Engine.Game
             }
             else
                 _isMoving = false;
+        }
+
+        // launch the appropriate def animation
+        public void ReceivedDamages(float damages, string animToPlay)
+        {
+            _life -= damages;
+            if (_life <= 0)
+            {
+                // The player is not 
+                if (!_isDyingAnimPlaying)
+                {
+                    // We save the death pos and rot
+                    _deathPosition = _position;
+                    _deathRotation = _rotation;
+
+                    _model.ChangeAnimSpeed(2f);
+                    _model.ChangeAnimation("death_headshot", false, 0.75f);
+                    _isDyingAnimPlaying = true;
+                    _isDied = true;
+                }
+            }
         }
 
         public Matrix GetModelMatrix()
@@ -299,27 +329,6 @@ namespace Engine.Game
             }
 
             indices.AddRange(tvi);
-        }
-
-        // launch the appropriate def animation
-        public void ReceivedDamages(float damages, string animToPlay)
-        {
-            _life -= damages;
-            if (_life <= 0)
-            {
-                // The player is not 
-                if (!_isDyingAnimPlaying)
-                {
-                    // We save the death pos and rot
-                    _deathPosition = _position;
-                    _deathRotation = _rotation;
-
-                    _model.ChangeAnimSpeed(2f);
-                    _model.ChangeAnimation("death_headshot", false, 0.75f);
-                    _isDyingAnimPlaying = true;
-                    _isDied = true;
-                }
-            }
         }
     }
 }

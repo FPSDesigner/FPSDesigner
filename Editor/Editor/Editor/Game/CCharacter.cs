@@ -88,6 +88,8 @@ namespace Engine.Game
             _entityHeight = cam._physicsMap._entityHeight; // We save the size of the player, to reuse it when he crouchs
             _entityCrouch = _entityHeight * 0.58f;
 
+            _futurSelectedWeapon = weap._selectedWeapon;
+
             _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
 
@@ -318,8 +320,11 @@ namespace Engine.Game
             if (_isSwitchingAnimPlaying && _handAnimation.HasFinished())
             {
                 // Inverse the sens of animation
+                weapon.ChangeWeapon(_futurSelectedWeapon);
+
                 _handAnimation.InverseMode("backward");
-                _handAnimation.BeginAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
+                _handAnimation.InverseMode("backward");
+                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false,0.5f);
 
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
@@ -501,11 +506,6 @@ namespace Engine.Game
                 Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
                     weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
 
-                if (_isSwitchingAnim2ndPartPlaying)
-                {
-                    weap.ChangeWeapon(_futurSelectedWeapon);
-                }
-
                 foreach (ModelMesh mesh in weap._weaponPossessed[weap._selectedWeapon]._wepModel.Meshes)
                 {
                     foreach (BasicEffect effect in mesh.Effects)
@@ -649,7 +649,7 @@ namespace Engine.Game
                         _isSniping = false;
 
                         _isReloading = false;
-                        _handAnimation.InverseMode("Forward");
+                        _handAnimation.InverseMode("forward");
                         _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
                         _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
                         _isSwitchingAnimPlaying = true;
