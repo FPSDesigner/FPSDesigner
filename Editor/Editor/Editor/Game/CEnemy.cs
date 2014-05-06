@@ -146,7 +146,7 @@ namespace Engine.Game
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection)
         {
-            GenerateHitBoxesTriangles();
+            //GenerateHitBoxesTriangles();
             //GetRealTriangles();
 
             // We draw the enemy entirely if he is alive
@@ -217,7 +217,7 @@ namespace Engine.Game
             foreach (KeyValuePair<string, Display3D.Triangle> tri in hitBoxesTriangles)
             {
                 triangles.Add(tri.Value.NewByMatrix(world));
-                Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Red);
+               // Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Red);
             }
             return triangles;
         }
