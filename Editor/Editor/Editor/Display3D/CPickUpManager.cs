@@ -85,6 +85,9 @@ namespace Engine.Display3D
                 lvl.MapModels.Pickups[i].WeaponBullets = pickup._weaponBullets;
                 lvl.MapModels.Pickups[i].WeaponName = pickup._weaponName;
             }
+
+            while (lvl.MapModels.Pickups.Count != _pickups.Count)
+                lvl.MapModels.Pickups.RemoveAt(lvl.MapModels.Pickups.Count - 1);
         }
     }
 

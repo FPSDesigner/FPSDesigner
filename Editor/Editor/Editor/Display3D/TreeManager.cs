@@ -98,6 +98,9 @@ namespace Engine.Display3D
                 lvl.MapModels.Trees[i].Branches = tree._useBranches;
                 lvl.MapModels.Trees[i].Profile = tree._profile;
             }
+
+            while (lvl.MapModels.Trees.Count != _tTrees.Count)
+                lvl.MapModels.Trees.RemoveAt(lvl.MapModels.Trees.Count - 1);
         }
     }
 

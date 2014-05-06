@@ -536,7 +536,7 @@ namespace Software.Pages
                     spElements["TreeSeed"].Children.Add(tbSeed);
 
                     // Duplicate Button
-                    spElements["DuplicateButton"] = new StackPanel();
+                    spElements["OptionsButtons"] = new StackPanel();
 
                     Button duplicateButton = new Button();
                     duplicateButton.Content = "Duplicate";
@@ -550,7 +550,28 @@ namespace Software.Pages
                         LoadGameComponentsToTreeview();
                     };
 
-                    spElements["DuplicateButton"].Children.Add(duplicateButton);
+                    // Remove Button
+
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "tree", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+                    
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
                 }
                 else if (GlobalVars.selectedElt.eltType == "pickup")
                 {
@@ -596,7 +617,7 @@ namespace Software.Pages
                     spElements["WeaponBullet"].Children.Add(tbWB);
 
                     // Duplicate Button
-                    spElements["DuplicateButton"] = new StackPanel();
+                    spElements["OptionsButtons"] = new StackPanel();
 
                     Button duplicateButton = new Button();
                     duplicateButton.Content = "Duplicate";
@@ -610,12 +631,32 @@ namespace Software.Pages
                         LoadGameComponentsToTreeview();
                     };
 
-                    spElements["DuplicateButton"].Children.Add(duplicateButton);
+                    // Remove Button
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "pickup", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
                 }
                 else if (GlobalVars.selectedElt.eltType == "model")
                 {
                     // Duplicate Button
-                    spElements["DuplicateButton"] = new StackPanel();
+                    spElements["OptionsButtons"] = new StackPanel();
 
                     Button duplicateButton = new Button();
                     duplicateButton.Content = "Duplicate";
@@ -629,8 +670,30 @@ namespace Software.Pages
                             LoadGameComponentsToTreeview();
                         };
 
-                    spElements["DuplicateButton"].Children.Add(duplicateButton);
 
+                    // Remove Button
+
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "model", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
                 }
 
                 // Add elements to the main StackPanel

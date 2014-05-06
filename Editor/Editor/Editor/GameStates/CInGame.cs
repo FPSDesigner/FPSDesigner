@@ -36,6 +36,9 @@ namespace Engine.GameStates
         private GraphicsDevice _graphics;
         private ContentManager _content;
 
+        private Dictionary<string, Model> modelsListWeapons = new Dictionary<string, Model>();
+        private Dictionary<string, Texture2D> textureListWeapons = new Dictionary<string, Texture2D>();
+
         // ENEMY TEST
         private Game.CEnemy _enemy;
 
@@ -141,8 +144,7 @@ namespace Engine.GameStates
                 terrain.waterHeight = water.waterPosition.Y;
 
             /**** Weapons ****/
-            Dictionary<string, Model> modelsList = new Dictionary<string, Model>();
-            Dictionary<string, Texture2D> textureList = new Dictionary<string, Texture2D>();
+            
             List<object[]> objList = new List<object[]>();
             List<string[]> soundList = new List<string[]>();
             List<string[]> animList = new List<string[]>();
@@ -150,8 +152,8 @@ namespace Engine.GameStates
 
             foreach (Game.LevelInfo.Weapon wep in levelData.Weapons.Weapon)
             {
-                modelsList.Add(wep.Name, content.Load<Model>(wep.Model));
-                textureList.Add(wep.Name, content.Load<Texture2D>(wep.Texture));
+                modelsListWeapons.Add(wep.Name, content.Load<Model>(wep.Model));
+                textureListWeapons.Add(wep.Name, content.Load<Texture2D>(wep.Texture));
                 objList.Add(
                     new object[] { wep.Type, wep.MaxClip, wep.MaxClip, 50, 1, wep.IsAutomatic, wep.ShotsPerSecs, wep.Range,
                         Matrix.CreateRotationX(wep.Rotation.X) * Matrix.CreateRotationY(wep.Rotation.Y) * Matrix.CreateRotationZ(wep.Rotation.Z),
@@ -169,11 +171,11 @@ namespace Engine.GameStates
             };
 
             weapon = new Game.CWeapon();
-            weapon.LoadContent(content, modelsList, textureList, objList, soundList, animList, animVelocityList);
+            weapon.LoadContent(content, modelsListWeapons, textureListWeapons, objList, soundList, animList, animVelocityList);
 
             /**** Pickups ****/
             foreach (Game.LevelInfo.MapModels_Pickups pickup in levelData.MapModels.Pickups)
-                Display3D.CPickUpManager.AddPickup(graphics, modelsList[pickup.WeaponName], textureList[pickup.WeaponName], pickup.Position.Vector3, pickup.Rotation.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
+                Display3D.CPickUpManager.AddPickup(graphics, modelsListWeapons[pickup.WeaponName], textureListWeapons[pickup.WeaponName], pickup.Position.Vector3, pickup.Rotation.Vector3, pickup.Scale.Vector3, pickup.WeaponName, pickup.WeaponBullets);
 
 
             /**** Particles ****/
@@ -563,6 +565,29 @@ namespace Engine.GameStates
                         return Display3D.CPickUpManager._pickups[eltId]._weaponBullets;
                     return new object[] { pos.X, pos.Y, pos.Z };
                 }
+                else if (action == "removeElement")
+                {
+                    object[] values = (object[])p[1];
+                    string eltType = (string)values[0];
+                    int eltId  = (int)values[1];
+
+                    if (eltType == "tree")
+                    {
+                        Display3D.TreeManager.selectedTreeId = -1;
+                        Display3D.TreeManager._tTrees.RemoveAt(eltId);
+                    }
+                    else if (eltType == "pickup")
+                    {
+                        Display3D.CPickUpManager.selectedPickupId = -1;
+                        Display3D.CPickUpManager._pickups.RemoveAt(eltId);
+                    }
+                    else if (eltType == "model")
+                    {
+                        Display3D.CModelManager.selectModelId = -1;
+                        Display3D.CModelManager.modelsList.RemoveAt(eltId);
+                    }
+                    SaveXMLFile();
+                }
                 else if (action == "addElement")
                 {
                     object[] values = (object[])p[1];
@@ -586,11 +611,11 @@ namespace Engine.GameStates
 
                         Dictionary<string, Texture2D> bumpTextures = new Dictionary<string, Texture2D>();
 
-                if (modelInfo.BumpTextures != null)
-                {
-                    foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
-                        bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
-                }
+                        if (modelInfo.BumpTextures != null)
+                        {
+                            foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
+                                bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
+                        }
 
                         Display3D.CModelManager.addModel(new Display3D.CModel(
                             _content.Load<Model>(modelInfo.ModelFile),
@@ -604,6 +629,11 @@ namespace Engine.GameStates
                             bumpTextures,
                             Display3D.CModelManager.normalMappingEffect));
 
+                    }
+                    if (eltType == "pickup")
+                    {
+                        Game.LevelInfo.MapModels_Pickups pickupVal = (Game.LevelInfo.MapModels_Pickups)values[1];
+                        Display3D.CPickUpManager.AddPickup(_graphics, modelsListWeapons[pickupVal.WeaponName], textureListWeapons[pickupVal.WeaponName], pickupVal.Position.Vector3, pickupVal.Rotation.Vector3, pickupVal.Scale.Vector3, pickupVal.WeaponName, pickupVal.WeaponBullets);
                     }
                 }
                 else if (action == "setElementInfo")
@@ -672,7 +702,7 @@ namespace Engine.GameStates
                                 textureList.Add("ApplyAllMesh", wpd._weapTexture);
                                 Display3D.CPickUpManager._pickups[eltId]._Model = new Display3D.CModel(wpd._wepModel, Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition,
                                     Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation, Display3D.CPickUpManager._pickups[eltId]._Model._modelScale,
-                                    _graphics, textureList, 0, 1,null, Display3D.CModelManager.normalMappingEffect);
+                                    _graphics, textureList, 0, 1, null, Display3D.CModelManager.normalMappingEffect);
                                 return true;
                             }
                         }

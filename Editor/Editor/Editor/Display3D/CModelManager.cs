@@ -76,6 +76,8 @@ namespace Engine.Display3D
                 lvl.MapModels.Models[i].Scale = new Game.LevelInfo.Coordinates(mdl._modelScale);
                 lvl.MapModels.Models[i].Alpha = mdl.Alpha;
             }
+            while(lvl.MapModels.Models.Count != modelsList.Count)
+                lvl.MapModels.Models.RemoveAt(lvl.MapModels.Models.Count - 1);
         }
 
         public static void AddPhysicsInformations(CCamera cam)
