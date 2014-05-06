@@ -58,6 +58,10 @@ namespace Engine.GameStates
 
             Game.CSoundManager.LoadContent();
 
+            // We Add some useful sounds
+            SoundEffect sound = content.Load<SoundEffect>("Sounds\\GRASSSTEP");
+            Game.CSoundManager.AddSound("GRASSSTEP", sound, true, 10.0f);
+
             /**** Character ****/
             _character = new Game.CCharacter();
             _character.Initialize();
@@ -219,7 +223,7 @@ namespace Engine.GameStates
         }
 
         float x, y, z;
-
+        float xpos = 0.0f, ypos = -0.80f, zpos = 0.5f;
 
         public void UnloadContent(ContentManager content)
         {
@@ -249,9 +253,12 @@ namespace Engine.GameStates
             // Check if player entered a pickup
             Display3D.CPickUpManager.Update(gameTime);
             Display3D.CPickUp EnteredPickup;
-            if (Display3D.CPickUpManager.CheckEnteredPickUp(cam._cameraPos, out EnteredPickup))
+
+            if (Display3D.CPickUpManager.CheckEnteredPickUp(cam._cameraPos - Vector3.Up, out EnteredPickup))
             {
-                // Add weapon etc.
+                weapon.GiveWeapon(EnteredPickup._weaponName); // Give the weapon
+                Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f);
+                Display3D.CPickUpManager.DelPickup(EnteredPickup);
             }
 
             //if (kbState.IsKeyDown(Keys.Left))
@@ -263,7 +270,8 @@ namespace Engine.GameStates
             //else if (kbState.IsKeyDown(Keys.Down))
             //    x += 0.005f;
 
-            //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z);
+            //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z)
+            //    * Matrix.CreateTranslation(new Vector3(xpos, ypos, zpos));
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
             // ENEMY TEST

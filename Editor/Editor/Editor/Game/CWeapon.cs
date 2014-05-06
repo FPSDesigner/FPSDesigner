@@ -22,7 +22,8 @@ namespace Engine.Game
         public int _selectedWeapon;
         private bool _dryFirePlayed;
 
-        public WeaponData[] _weaponsArray;
+        public List<WeaponData> _weaponsArray; // All weapons
+        public List<WeaponData> _weaponPossessed; // Weapons Possessed by the player
 
         #region "WeaponData Class"
         public class WeaponData
@@ -130,7 +131,7 @@ namespace Engine.Game
                 throw new Exception("Weapons Loading Error - Arrays of different lengths");
 
             _weaponsAmount = modelsList.Count;
-            _weaponsArray = new WeaponData[_weaponsAmount];
+            _weaponsArray = new List<WeaponData>();
 
             // Initializing sounds
             for (int i = 0; i < weaponsSounds.Count; i++)
@@ -141,8 +142,21 @@ namespace Engine.Game
                 }
             for (int i = 0; i < _weaponsAmount; i++)
             {
-                _weaponsArray[i] = new WeaponData(modelsList[(string)weaponsInfo[i][12]], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[(string)weaponsInfo[i][12]]);
+                _weaponsArray.Add(new WeaponData(modelsList[(string)weaponsInfo[i][12]], weaponsInfo[i], weaponsSounds[i], weapAnim[i], animVelocity[i], weapTexture[(string)weaponsInfo[i][12]]));
             }
+
+            // We add the switching sounds
+            SoundEffect changeWeapSound, changeWeapSound2, pickup;
+            changeWeapSound = content.Load<SoundEffect>("Sounds\\Weapons\\CHANGEWEAPON1");
+            changeWeapSound2 = content.Load<SoundEffect>("Sounds\\Weapons\\CHANGEWEAPON2");
+            pickup = content.Load<SoundEffect>("Sounds\\Weapons\\PICKUPWEAPON");
+            CSoundManager.AddSound("SWITCHWEAPON1", changeWeapSound, false, 0.0f);
+            CSoundManager.AddSound("SWITCHWEAPON2", changeWeapSound2, false, 0.0f);
+            CSoundManager.AddSound("PICKUPWEAPON", pickup, false, 0.0f);
+
+            // Initialize the weapon possessed
+            _weaponPossessed = new List<WeaponData>();
+            _weaponPossessed.Add(_weaponsArray[0]);
         }
 
         public void ChangeWeapon(int newWeapon)
@@ -223,6 +237,43 @@ namespace Engine.Game
             return isRealoadingDone;
         }
 
+        // Add weapon to weaponPossessed list
+        public void GiveWeapon(string weaponName)
+        {
+            bool exist = false;
+            int index = 0; // We store the weapon index if the weapon is already possessed
+            int i = 0; // Just used as a counter
+
+            foreach (WeaponData weap in _weaponPossessed)
+            {
+                if (weap._name == weaponName)
+                {
+                    exist = true;
+                    index = i;
+
+                    break;
+                }
+                i++;
+            }
+
+            // If the weapon is not possessed
+            if (!exist)
+            {
+                foreach (WeaponData weap in _weaponsArray)
+                {
+                    if (weap._name == weaponName)
+                    {
+                        _weaponPossessed.Add(weap);
+                        break;
+                    }
+                }
+                
+            }
+            else // We give bullets
+            {
+                _weaponPossessed[index]._bulletsAvailable += 50;
+            }
+        }
 
     }
 }

@@ -70,7 +70,7 @@ namespace Engine.Game
             soundList = new Dictionary<string, CSound>();
         }
 
-        public static void AddSound(string soundName, SoundEffect sound, bool isLooped, float delay, AudioListener listener = null, AudioEmitter emitter = null)
+        public static void AddSound(string soundName, SoundEffect sound, bool isLooped, float delay,SoundEffectInstance soundInstance = null,AudioListener listener = null, AudioEmitter emitter = null)
         {
             if (!soundList.ContainsKey(soundName))
                 soundList.Add(soundName, new CSound(sound, isLooped, listener, emitter, delay));

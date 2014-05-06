@@ -48,6 +48,9 @@ namespace Engine.Display3D
         private float _aspectRatio;
         public float fieldOfView;
 
+        // Float use to play the step sound
+        private float _elapsedStepTime; // We play after a time the new step sound
+
         public float sensibilityMultiplier = 1;
 
         public float _playerHeight = 1.9f;
@@ -93,6 +96,8 @@ namespace Engine.Display3D
             this._pitch = 0f;
             this._yaw = 0f;
             this._roll = 0f;
+
+            this._elapsedStepTime = 0;
 
             this.isCamFrozen = isCamFrozen;
             this.isFreeCam = freeCam;
@@ -161,6 +166,14 @@ namespace Engine.Display3D
 
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
+            // PLAY THE STEP SOUND
+            if (_elapsedStepTime > 100)
+            {
+                Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
+                _elapsedStepTime = 0;
+            }
+
+            _elapsedStepTime += gametime.ElapsedGameTime.Milliseconds;
 
             generateFrustum();
         }

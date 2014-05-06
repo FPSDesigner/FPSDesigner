@@ -21,6 +21,11 @@ namespace Engine.Display3D
             _pickups.Add(new CPickUp(graphics, model, texture, position, rotation, scale, weaponName, weaponBullets));
         }
 
+        public static void DelPickup(CPickUp pickup)
+        {
+            _pickups.Remove(pickup);
+        }
+
         public static void Draw(CCamera cam, GameTime gameTime)
         {
             for (int i = 0; i < _pickups.Count; i++)
@@ -35,7 +40,7 @@ namespace Engine.Display3D
         {
             foreach(CPickUp pickup in _pickups)
             {
-                //pickup._Model._modelRotation = new Vector3(pickup._Model._modelRotation.X, pickup._Model._modelRotation.Y, pickup._Model._modelRotation.Z);
+                pickup._Model._modelRotation = new Vector3(pickup._Model._modelRotation.X, pickup._Model._modelRotation.Y + (float)(0.2f * gameTime.ElapsedGameTime.TotalSeconds), pickup._Model._modelRotation.Z);
             }
         }
 
