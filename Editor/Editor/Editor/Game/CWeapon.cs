@@ -206,7 +206,7 @@ namespace Engine.Game
                     _dryFirePlayed = true;
                 }
             }
-            Console.WriteLine("Weapon : " + _weaponPossessed[_selectedWeapon]._name + " Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
+            Console.WriteLine("Weapon : " + _weaponPossessed[_selectedWeapon]._name + " Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponPossessed[_selectedWeapon]._actualClip);
         }
 
         public bool Reloading()
@@ -220,7 +220,7 @@ namespace Engine.Game
                     if (_weaponPossessed[_selectedWeapon]._bulletsAvailable >=
                             (_weaponPossessed[_selectedWeapon]._maxClip - _weaponPossessed[_selectedWeapon]._actualClip))
                     {
-                        _weaponPossessed[_selectedWeapon]._bulletsAvailable -= (_weaponPossessed[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
+                        _weaponPossessed[_selectedWeapon]._bulletsAvailable -= (_weaponPossessed[_selectedWeapon]._maxClip - _weaponPossessed[_selectedWeapon]._actualClip);
                         _weaponPossessed[_selectedWeapon]._actualClip = _weaponPossessed[_selectedWeapon]._maxClip;
                         isRealoadingDone = true;
                     }
@@ -238,7 +238,7 @@ namespace Engine.Game
         }
 
         // Add weapon to weaponPossessed list
-        public void GiveWeapon(string weaponName)
+        public void GiveWeapon(string weaponName, int bullets)
         {
             bool exist = false;
             int index = 0; // We store the weapon index if the weapon is already possessed
@@ -271,7 +271,7 @@ namespace Engine.Game
             }
             else // We give bullets
             {
-                _weaponPossessed[index]._bulletsAvailable += 50;
+                _weaponPossessed[index]._bulletsAvailable += bullets;
             }
         }
 

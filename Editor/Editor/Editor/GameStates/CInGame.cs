@@ -257,7 +257,7 @@ namespace Engine.GameStates
 
             if (Display3D.CPickUpManager.CheckEnteredPickUp(new BoundingSphere(cam._cameraPos, 1.5f), out EnteredPickup))
             {
-                weapon.GiveWeapon(EnteredPickup._weaponName); // Give the weapon
+                weapon.GiveWeapon(EnteredPickup._weaponName, EnteredPickup._weaponBullets); // Give the weapon
                 Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f);
                 Display3D.CPickUpManager.DelPickup(EnteredPickup);
                 _character.ChangeWeapon(weapon, mouseState, true);
