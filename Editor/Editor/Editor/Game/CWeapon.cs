@@ -166,15 +166,15 @@ namespace Engine.Game
 
         public void Shot(bool firstShot, bool isCutAnimPlaying, GameTime gameTime)
         {
-            if (_weaponsArray[_selectedWeapon]._wepType != 2)
+            if (_weaponPossessed[_selectedWeapon]._wepType != 2)
             {
                 if (firstShot)
                     _dryFirePlayed = false;
-                if (firstShot && !_weaponsArray[_selectedWeapon]._isAutomatic)
+                if (firstShot && !_weaponPossessed[_selectedWeapon]._isAutomatic)
                     InternFire();
-                else if (_weaponsArray[_selectedWeapon]._isAutomatic)
+                else if (_weaponPossessed[_selectedWeapon]._isAutomatic)
                 {
-                    if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponsArray[_selectedWeapon]._shotPerSeconds)
+                    if (gameTime.TotalGameTime.TotalMilliseconds - _lastShotMs >= _weaponPossessed[_selectedWeapon]._shotPerSeconds)
                     {
                         InternFire();
                         _lastShotMs = gameTime.TotalGameTime.TotalMilliseconds;
@@ -186,49 +186,49 @@ namespace Engine.Game
 
                 if (isCutAnimPlaying)
                 {
-                    CSoundManager.PlayInstance("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+                    CSoundManager.PlayInstance("WEP." + _weaponPossessed[_selectedWeapon]._shotSound);
                 }
             }
         }
 
         private void InternFire()
         {
-            if (_weaponsArray[_selectedWeapon]._actualClip > 0)
+            if (_weaponPossessed[_selectedWeapon]._actualClip > 0)
             {
-                _weaponsArray[_selectedWeapon]._actualClip--;
-                CSoundManager.PlaySound("WEP." + _weaponsArray[_selectedWeapon]._shotSound);
+                _weaponPossessed[_selectedWeapon]._actualClip--;
+                CSoundManager.PlaySound("WEP." + _weaponPossessed[_selectedWeapon]._shotSound);
             }
             else
             {
                 if (!_dryFirePlayed)
                 {
-                    CSoundManager.PlaySound("WEP." + _weaponsArray[_selectedWeapon]._dryShotSound);
+                    CSoundManager.PlaySound("WEP." + _weaponPossessed[_selectedWeapon]._dryShotSound);
                     _dryFirePlayed = true;
                 }
             }
-            Console.WriteLine(" Bullet avaible : " + _weaponsArray[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
+            Console.WriteLine(" Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponsArray[_selectedWeapon]._actualClip);
         }
 
         public bool Reloading()
         {
             bool isRealoadingDone = false;
-            if (_weaponsArray[_selectedWeapon]._wepType != 2)
+            if (_weaponPossessed[_selectedWeapon]._wepType != 2)
             {
-                if (_weaponsArray[_selectedWeapon]._actualClip != _weaponsArray[_selectedWeapon]._maxClip)
+                if (_weaponPossessed[_selectedWeapon]._actualClip != _weaponPossessed[_selectedWeapon]._maxClip)
                 {
                     // If he has bullets available
-                    if (_weaponsArray[_selectedWeapon]._bulletsAvailable >=
-                            (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip))
+                    if (_weaponPossessed[_selectedWeapon]._bulletsAvailable >=
+                            (_weaponPossessed[_selectedWeapon]._maxClip - _weaponPossessed[_selectedWeapon]._actualClip))
                     {
-                        _weaponsArray[_selectedWeapon]._bulletsAvailable -= (_weaponsArray[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
-                        _weaponsArray[_selectedWeapon]._actualClip = _weaponsArray[_selectedWeapon]._maxClip;
+                        _weaponPossessed[_selectedWeapon]._bulletsAvailable -= (_weaponPossessed[_selectedWeapon]._maxClip - _weaponsArray[_selectedWeapon]._actualClip);
+                        _weaponPossessed[_selectedWeapon]._actualClip = _weaponPossessed[_selectedWeapon]._maxClip;
                         isRealoadingDone = true;
                     }
 
-                    else if (_weaponsArray[_selectedWeapon]._bulletsAvailable > 0
-                        && (_weaponsArray[_selectedWeapon]._actualClip + _weaponsArray[_selectedWeapon]._bulletsAvailable) <= _weaponsArray[_selectedWeapon]._maxClip)
+                    else if (_weaponPossessed[_selectedWeapon]._bulletsAvailable > 0
+                        && (_weaponPossessed[_selectedWeapon]._actualClip + _weaponPossessed[_selectedWeapon]._bulletsAvailable) <= _weaponPossessed[_selectedWeapon]._maxClip)
                     {
-                        _weaponsArray[_selectedWeapon]._actualClip += _weaponsArray[_selectedWeapon]._bulletsAvailable;
+                        _weaponPossessed[_selectedWeapon]._actualClip += _weaponPossessed[_selectedWeapon]._bulletsAvailable;
                     }
                 }
 

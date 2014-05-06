@@ -19,17 +19,19 @@ namespace Engine.Game
         public static void AddEnemy(CEnemy enemy)
         {
             _enemyList.Add(enemy);
-    }
+        }
 
-        public static string RayIntersectsHitbox(Ray ray, out float? distance)
+        public static string RayIntersectsHitbox(Ray ray, out float? distance, out CEnemy enemyVal)
         {
             foreach (CEnemy enemy in _enemyList)
             {
                 string enemytest = enemy.RayIntersectsHitbox(ray, out distance);
+                enemyVal = enemy;
                 if (enemytest != "")
                     return enemytest;
             }
             distance = null;
+            enemyVal = null;
             return "";
         }
     }
@@ -45,23 +47,33 @@ namespace Engine.Game
         private Vector3 _targetPos; // The target position
         private Vector3 _scale;
 
-        private float rotationValue; // We give this float to the rotation mat
+        private Vector3 _deathPosition; // The coordinates where the enemy died
+        private Matrix _deathRotation;
+
         private Matrix _rotation; // Model rotation
+        private float rotationValue; // We give this float to the rotation mat
 
         private Game.CPhysics _physicEngine; // Ennemy will be submitted to forces
 
         private bool _isMoving;
+        private bool _isDied;
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
         private bool _isWalkAnimPlaying;
+        private bool _isDyingAnimPlaying;
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures ,Vector3 Position, Matrix Rotation, float Velocity)
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity)
         {
             _position = Position;
-            _rotation = Rotation;
             _scale = new Vector3(0.5f);
+            _deathPosition = Vector3.Zero;
+
+            _rotation = Rotation;
+            _rotation = Matrix.Identity;
+
+            this._life = Life;
 
             this._runningVelocity = Velocity;
 
@@ -71,6 +83,8 @@ namespace Engine.Game
                 Matrix.CreateRotationX(-1 * MathHelper.PiOver2), _scale.X, Textures, 10, 0.0f, true);
 
             _isMoving = false;
+            _isDyingAnimPlaying = false;
+            _isDied = false;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
         }
@@ -101,23 +115,28 @@ namespace Engine.Game
             //_position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
 
             //Play Anims
-            if (!_isMoving && !_isWaitAnimPlaying)
+            if (!_isDied && !_isMoving && !_isWaitAnimPlaying)
             {
                 _model.ChangeAnimSpeed(0.6f);
                 _model.ChangeAnimation("wait", true, 0.5f);
 
                 _isWalkAnimPlaying = false;
                 _isWaitAnimPlaying = true;
-                
-            }
 
-            if (_isMoving && !_isWalkAnimPlaying)
+            }
+            if (!_isDied && _isMoving && !_isWalkAnimPlaying)
             {
                 _model.ChangeAnimSpeed(2.8f);
                 _model.ChangeAnimation("walk", true, 0.7f);
 
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = true;
+            }
+
+            if (_isDied)
+            {
+                _position = _deathPosition;
+                _rotation = _deathRotation;
             }
 
             // We update the character pos, rot...
@@ -210,7 +229,7 @@ namespace Engine.Game
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
 
-                            hitBoxesTriangles.Add(mesh.Name+"_"+x, new Display3D.Triangle(v0, v1, v2, mesh.Name));
+                            hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
                         }
                     }
@@ -280,6 +299,27 @@ namespace Engine.Game
             }
 
             indices.AddRange(tvi);
+        }
+
+        // launch the appropriate def animation
+        public void ReceivedDamages(float damages, string animToPlay)
+        {
+            _life -= damages;
+            if (_life <= 0)
+            {
+                // The player is not 
+                if (!_isDyingAnimPlaying)
+                {
+                    // We save the death pos and rot
+                    _deathPosition = _position;
+                    _deathRotation = _rotation;
+
+                    _model.ChangeAnimSpeed(2f);
+                    _model.ChangeAnimation("death_headshot", false, 0.75f);
+                    _isDyingAnimPlaying = true;
+                    _isDied = true;
+                }
+            }
         }
     }
 }

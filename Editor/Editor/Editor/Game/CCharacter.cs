@@ -444,13 +444,16 @@ namespace Engine.Game
                                 Ray ray = new Ray(nearSource, direction);
 
                                 float? distance;
-                                string enemyTest = CEnemyManager.RayIntersectsHitbox(ray, out distance);
-                                if (enemyTest != "")
+                                CEnemy enemy;
+                                string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
+                                if (boxTouched == "Bb_Head")
                                 {
                                     Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
                                     Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.5f), Color.Blue, 255f);
-                                    Console.WriteLine(enemyTest);
-                                    Game.CConsole.addMessage("Hit " + enemyTest);
+                                    Game.CConsole.addMessage("Hit " + boxTouched);
+
+                                    // We send the damages
+                                    enemy.ReceivedDamages(150f, "death_headshot");
                                 }
 
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
