@@ -38,8 +38,8 @@ namespace Engine.Game
 
     class CEnemy
     {
-        float _life;
-        float _runningVelocity; // Displacement velocity
+        public float _life;
+        private float _runningVelocity; // Displacement velocity
 
         private Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
@@ -55,16 +55,21 @@ namespace Engine.Game
 
         private Game.CPhysics _physicEngine; // Ennemy will be submitted to forces
 
+        public bool _isAgressive; // Pacifiste or not
+
         private bool _isMoving;
         private bool _isDied;
+        public bool _isFrozen; // Use to stop translation
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
         private bool _isWalkAnimPlaying;
         private bool _isDyingAnimPlaying;
+        private bool _isFrozenAnimPlaying;
+
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity)
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,bool isAgressive)
         {
             _position = Position;
             _scale = new Vector3(0.5f);
@@ -81,6 +86,8 @@ namespace Engine.Game
 
             _model = new Display3D.MeshAnimation(ModelName, 1, 1, 1.0f, _position,
                 Matrix.CreateRotationX(-1 * MathHelper.PiOver2), _scale.X, Textures, 10, 0.0f, true);
+
+            this._isAgressive = isAgressive;
 
             _isMoving = false;
             _isDyingAnimPlaying = false;
@@ -115,28 +122,38 @@ namespace Engine.Game
             //_position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
 
             //Play Anims
-            if (!_isDied && !_isMoving && !_isWaitAnimPlaying)
+            if (!_isFrozen) // Player is not frozen by the administrator
             {
-                _model.ChangeAnimSpeed(0.6f);
-                _model.ChangeAnimation("wait", true, 0.5f);
+                if (!_isDied && !_isMoving && !_isWaitAnimPlaying)
+                {
+                    _model.ChangeAnimSpeed(0.6f);
+                    _model.ChangeAnimation("wait", true, 0.5f);
 
-                _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = true;
+                    _isWalkAnimPlaying = false;
+                    _isWaitAnimPlaying = true;
 
+                }
+                if (!_isDied && _isMoving && !_isWalkAnimPlaying)
+                {
+                    _model.ChangeAnimSpeed(2.0f);
+                    _model.ChangeAnimation("walk", true, 0.7f);
+
+                    _isWaitAnimPlaying = false;
+                    _isWalkAnimPlaying = true;
+                }
+
+                if (_isDied)
+                {
+                    _position = _deathPosition;
+                    _rotation = _deathRotation;
+                }
+
+                _isFrozenAnimPlaying = false;
             }
-            if (!_isDied && _isMoving && !_isWalkAnimPlaying)
+            else if(_isFrozen && !_isFrozenAnimPlaying)
             {
-                _model.ChangeAnimSpeed(2.0f);
-                _model.ChangeAnimation("walk", true, 0.7f);
-
-                _isWaitAnimPlaying = false;
-                _isWalkAnimPlaying = true;
-            }
-
-            if (_isDied)
-            {
-                _position = _deathPosition;
-                _rotation = _deathRotation;
+                _model.ChangeAnimation("crouch", true, 0.8f);
+                _isFrozenAnimPlaying = true;
             }
 
             // We update the character pos, rot...
@@ -162,24 +179,27 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 newPos, GameTime gameTime)
         {
-            _targetPos = new Vector3(newPos.X - _position.X,
-                newPos.Y - _position.Y, newPos.Z - _position.Z);
-            _targetPos.Normalize();
-
-            rotationValue = (float)Math.Atan2(newPos.X - _position.X,
-                newPos.Z - _position.Z);
-
-            Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
-            translation.Normalize();
-
-            if (Vector3.DistanceSquared(_position, newPos) > 10.0f)
+            if (!_isFrozen && !_isDied)
             {
-                translation *= _runningVelocity;
-                _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
-                _isMoving = true;
+                _targetPos = new Vector3(newPos.X - _position.X,
+                    newPos.Y - _position.Y, newPos.Z - _position.Z);
+                _targetPos.Normalize();
+
+                rotationValue = (float)Math.Atan2(newPos.X - _position.X,
+                    newPos.Z - _position.Z);
+
+                Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+                translation.Normalize();
+
+                if (Vector3.DistanceSquared(_position, newPos) > 10.0f)
+                {
+                    translation *= _runningVelocity;
+                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                    _isMoving = true;
+                }
+                else
+                    _isMoving = false;
             }
-            else
-                _isMoving = false;
         }
 
         // launch the appropriate def animation
@@ -200,6 +220,7 @@ namespace Engine.Game
                     _isDyingAnimPlaying = true;
                     _isDied = true;
                 }
+                _life = 0;
             }
         }
 

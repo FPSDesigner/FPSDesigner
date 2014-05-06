@@ -215,7 +215,7 @@ namespace Engine.GameStates
             Texture2D[] ennemyTexture = new Texture2D[1];
             ennemyTexture[0] = content.Load<Texture2D>("Textures\\StormTrooper");
             _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-125f, 168.95f, 88)
-                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2), 100.0f ,3f);
+                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2), 100.0f ,3f, false);
 
             _enemy.LoadContent(content, cam);
 

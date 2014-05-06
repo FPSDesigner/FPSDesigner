@@ -56,7 +56,7 @@ namespace Engine.Game
         public static Keys _activationKeys = Keys.OemTilde;
         public static Display3D.CCamera _Camera;
         public static Game.CCharacter _Character;
-        public static Game.CEnemy _Enemy;
+        public static Game.CEnemyManager _EnemyManager;
         public static Game.CWeapon _Weapon;
         public static Display3D.CTerrain _Terrain;
         public static Display3D.CWater _Water;
@@ -183,21 +183,15 @@ namespace Engine.Game
                     else
                         addMessage("USAGE: " + cmd[0] + " <X> <Y> <Z>");
                     break;
-                case "moveAI":
-                    if (cmd.Length > 3 && float.TryParse(cmd[1], out runSpeed))
+                case "freezeEnemy":
+                    if (cmd.Length > 0)
                     {
-                        float x,y,z;
-                        if (float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
-                        {
-                            _Enemy.MoveTo(new Vector3(x, y, z), gameTime);
-                        }
-                        else
-                        {
-                            addMessage("USAGE: " + cmd[0] + " <x> <y> <z>");
-                        }
+                        CEnemyManager._enemyList[0]._isFrozen = !CEnemyManager._enemyList[0]._isFrozen;
                     }
-                    else
-                        addMessage("USAGE: " + cmd[0] + " <x> <y> <z>");
+                    break;
+                case "enemyInfo":
+                    addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : "+
+                        CEnemyManager._enemyList[0]._life + " %");
                     break;
             }
         }

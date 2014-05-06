@@ -461,9 +461,6 @@ namespace Engine.Game
                                         enemy.ReceivedDamages(150f, "death_headshot");
                                     }
                                 }
-
-                               
-
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 
