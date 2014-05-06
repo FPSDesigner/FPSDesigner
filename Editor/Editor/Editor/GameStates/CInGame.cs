@@ -77,8 +77,6 @@ namespace Engine.GameStates
 
             /**** Models ****/
 
-            Display3D.CModelManager.LoadContent(content);
-
             foreach (Game.LevelInfo.MapModels_Model modelInfo in levelData.MapModels.Models)
             {
                 Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
@@ -103,9 +101,9 @@ namespace Engine.GameStates
                     modelTextures,
                     modelInfo.SpecColor,
                     modelInfo.Alpha,
-                    bumpTextures,
-                    Display3D.CModelManager.normalMappingEffect));
+                    bumpTextures));
             }
+            Display3D.CModelManager.LoadContent(content);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -625,8 +623,7 @@ namespace Engine.GameStates
                             modelTextures,
                             modelInfo.SpecColor,
                             modelInfo.Alpha,
-                            bumpTextures,
-                            Display3D.CModelManager.normalMappingEffect));
+                            bumpTextures));
 
                     }
                     if (eltType == "pickup")
@@ -701,7 +698,7 @@ namespace Engine.GameStates
                                 textureList.Add("ApplyAllMesh", wpd._weapTexture);
                                 Display3D.CPickUpManager._pickups[eltId]._Model = new Display3D.CModel(wpd._wepModel, Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition,
                                     Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation, Display3D.CPickUpManager._pickups[eltId]._Model._modelScale,
-                                    _graphics, textureList, 0, 1, null, Display3D.CModelManager.normalMappingEffect);
+                                    _graphics, textureList, 0, 1, null);
                                 return true;
                             }
                         }

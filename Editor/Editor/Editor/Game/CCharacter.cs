@@ -323,7 +323,6 @@ namespace Engine.Game
                 weapon.ChangeWeapon(_futurSelectedWeapon);
 
                 _handAnimation.InverseMode("backward");
-                _handAnimation.InverseMode("backward");
                 _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false,0.5f);
 
                 _isWaitAnimPlaying = false;

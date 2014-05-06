@@ -21,6 +21,10 @@ namespace Engine.Display3D
         public static void LoadContent(ContentManager content)
         {
             normalMappingEffect = content.Load<Effect>("Effects\\NormalMapping");
+            foreach (CModel model in modelsList)
+            {
+                model.LoadContent(content, normalMappingEffect);
+            }
         }
 
         public static void addModel(CModel model)

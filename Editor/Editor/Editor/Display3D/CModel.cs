@@ -100,7 +100,8 @@ namespace Engine.Display3D
 
         private CCamera _camera;
 
-        private Effect normalMapping;
+        private Effect _normalMapping;
+        private EffectParameter _normalMappingParam;
 
         public bool shouldNotUpdateTriangles = false;
 
@@ -130,7 +131,7 @@ namespace Engine.Display3D
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
         public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null,
-            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string,Texture2D> bumpTexture = null, Effect normalMapping = null)
+            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string,Texture2D> bumpTexture = null)
         {
             this._model = model;
 
@@ -138,7 +139,6 @@ namespace Engine.Display3D
             this._modelRotation = modelRotation;
             this._modelScale = modelScale;
             this.Alpha = alpha;
-            this.normalMapping = normalMapping;
 
             this._specularColor = specColor;
 
@@ -169,10 +169,6 @@ namespace Engine.Display3D
                             else if (_textures.ContainsKey("ApplyAllMesh"))
                                 effect.Texture = _textures["ApplyAllMesh"];
 
-
-                            if (_bumpTextures != null && _bumpTextures.ContainsKey(newName))
-                                //effect.Parameters["NormalMap"].SetValue(bumpTexture[newName]);
-
                             effect.SpecularColor = new Vector3(_specularColor);
                             effect.SpecularPower = 32;
                         }
@@ -189,6 +185,12 @@ namespace Engine.Display3D
             this.Material = new Materials.Material();
         }
 
+        public void LoadContent(ContentManager content, Effect normalMapping)
+        {
+            this._normalMapping = normalMapping;
+            _normalMappingParam = normalMapping. Parameters["NormalMap"];
+        }
+
         /// <summary>
         /// Draw the model in the world
         /// </summary>
@@ -200,38 +202,6 @@ namespace Engine.Display3D
             Matrix world = Matrix.CreateScale(_modelScale) *
                 Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
                 Matrix.CreateTranslation(_modelPosition);
-
-            /*Matrix world = Matrix.CreateScale(_modelScale) *
-            Matrix.CreateRotationX( - MathHelper.PiOver2)*
-            Matrix.CreateTranslation(_modelPosition);*/
-
-            //if (_textures != null)
-            //{
-            //    foreach (ModelMesh mesh in _model.Meshes)
-            //    {
-            //        foreach (BasicEffect effect in mesh.Effects)
-            //        {
-            //            if (mesh.Name != collisionShapeName)
-            //            {
-            //                effect.EnableDefaultLighting();
-
-            //                effect.TextureEnabled = true;
-
-            //                string newName = mesh.Name; // If there is no * : newName corresponds to the mesh.Name
-
-            //                if (mesh.Name.Contains('_'))
-            //                    newName = mesh.Name.Split('_')[0];
-
-            //                if (_textures.ContainsKey(newName))
-            //                    effect.Texture = _textures[newName];
-
-            //                effect.SpecularColor = new Vector3(_specularColor);
-            //                effect.SpecularPower = 32;
-
-            //            }
-            //        }
-            //    }
-            //}
 
             foreach (ModelMesh mesh in _model.Meshes)
             {
@@ -262,6 +232,11 @@ namespace Engine.Display3D
                         setEffectParameter(effect, "View", view);
                         setEffectParameter(effect, "Projection", projection);
                         setEffectParameter(effect, "CameraPosition", cameraPosition);
+
+                        if (_bumpTextures != null && _bumpTextures.ContainsKey(mesh.Name))
+                        {
+                            _normalMappingParam.SetValue(_bumpTextures[mesh.Name]);
+                        }
 
                         Material.SetEffectParameters(effect);
                     }
