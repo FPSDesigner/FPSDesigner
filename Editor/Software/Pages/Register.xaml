@@ -33,7 +33,7 @@
         <!-- Description -->
         <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0">
             <TextBlock TextWrapping="Wrap" TextAlignment="Left" Width="500">
-                Veuillez remplir les champs ci-dessous afin de vous inscrire à FPSDesigner.
+                Please fill in the forms in order to sign up to FPSDesigner.
             </TextBlock>
         </StackPanel>
 
@@ -54,25 +54,25 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Nom d'utilisateur" HorizontalAlignment="Right" Target="{Binding ElementName=userName}"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="Username" HorizontalAlignment="Right" Target="{Binding ElementName=userName}"/>
             <TextBox Grid.Row="0" Grid.Column="2" x:Name="userName" Margin="0,0,0,10" Text="{Binding UserName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="Mot de passe" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox}"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="Password" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox}"/>
             <PasswordBox Grid.Row="1" Grid.Column="2" x:Name="passwordBox" Margin="0,0,0,10"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="Mot de passe (Vérification)" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox2}"/>
+            <Label Grid.Row="2" Grid.Column="0" Content="Password (Confirmation)" HorizontalAlignment="Right" Target="{Binding ElementName=passwordBox2}"/>
             <PasswordBox Grid.Row="2" Grid.Column="2" x:Name="passwordBox2" Margin="0,0,0,10"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Content="Adresse E-Mail" HorizontalAlignment="Right" Target="{Binding ElementName=emailAddress}"/>
+            <Label Grid.Row="3" Grid.Column="0" Content="Email Address" HorizontalAlignment="Right" Target="{Binding ElementName=emailAddress}"/>
             <TextBox Grid.Row="3" Grid.Column="2" x:Name="emailAddress" Margin="0,0,0,10" Text="{Binding Email, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="Prénom" HorizontalAlignment="Right" Target="{Binding ElementName=firstname}"/>
+            <Label Grid.Row="4" Grid.Column="0" Content="Firstname" HorizontalAlignment="Right" Target="{Binding ElementName=firstname}"/>
             <TextBox Grid.Row="4" Grid.Column="2" x:Name="firstname" Margin="0,0,0,10" Text="{Binding FirstName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <Label Grid.Row="5" Grid.Column="0" Content="Nom" HorizontalAlignment="Right" Target="{Binding ElementName=name}"/>
+            <Label Grid.Row="5" Grid.Column="0" Content="Lastname" HorizontalAlignment="Right" Target="{Binding ElementName=name}"/>
             <TextBox Grid.Row="5" Grid.Column="2" x:Name="name" Margin="0,0,0,10" Text="{Binding LastName, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
 
-            <Label Grid.Row="6" Grid.Column="0" Content="Date de naissance" HorizontalAlignment="Right" Target="{Binding ElementName=birthday}"/>
+            <Label Grid.Row="6" Grid.Column="0" Content="Birthday" HorizontalAlignment="Right" Target="{Binding ElementName=birthday}"/>
             <DatePicker Grid.Row="6" Grid.Column="2" x:Name="birthday" Margin="0,0,0,10" SelectedDateFormat="Long" FirstDayOfWeek="Monday" />
             
         </Grid>

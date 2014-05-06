@@ -33,7 +33,7 @@
         <!-- Description -->
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
             <TextBlock TextWrapping="Wrap" TextAlignment="Left" Width="500">
-                Veuillez entrer votre nom d'utilisateur ainsi que votre mot de passe ci-dessous pour vous connecter.
+               Please enter your username and your password to log in.
             </TextBlock>
         </StackPanel>
 
