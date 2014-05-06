@@ -534,6 +534,23 @@ namespace Software.Pages
 
                     spElements["TreeSeed"].Children.Add(titleTreeSeed);
                     spElements["TreeSeed"].Children.Add(tbSeed);
+
+                    // Duplicate Button
+                    spElements["DuplicateButton"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "tree", GlobalVars.gameInfo.MapModels.Trees[GlobalVars.selectedElt.eltId] });
+                        LoadGameComponentsToTreeview();
+                    };
+
+                    spElements["DuplicateButton"].Children.Add(duplicateButton);
                 }
                 else if (GlobalVars.selectedElt.eltType == "pickup")
                 {
@@ -577,10 +594,27 @@ namespace Software.Pages
 
                     spElements["WeaponBullet"].Children.Add(titlePickupBullet);
                     spElements["WeaponBullet"].Children.Add(tbWB);
+
+                    // Duplicate Button
+                    spElements["DuplicateButton"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "pickup", GlobalVars.gameInfo.MapModels.Pickups[GlobalVars.selectedElt.eltId] });
+                        LoadGameComponentsToTreeview();
+                    };
+
+                    spElements["DuplicateButton"].Children.Add(duplicateButton);
                 }
                 else if (GlobalVars.selectedElt.eltType == "model")
                 {
-                    // WeaponName
+                    // Duplicate Button
                     spElements["DuplicateButton"] = new StackPanel();
 
                     Button duplicateButton = new Button();

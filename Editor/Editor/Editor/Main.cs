@@ -171,7 +171,7 @@ namespace Engine
                 Game.CConsole.WriteLogs(e.ToString());
             }
             /*Game.Script.CLuaVM.Initialize();
-            Game.Script.CLuaVM.LoadScript("GuiManager.lua");*/
+            Game.Script.CLuaVM.LoadScript("Scripts/test.lua");*/
         }
 
 
