@@ -107,7 +107,7 @@ namespace Engine.Display3D
                 }
 
                 string newName = mesh.Name.Split('_')[0];
-
+                
                 // If the mesh is not a bounding box
                 if (newName != "Bb")
                 {

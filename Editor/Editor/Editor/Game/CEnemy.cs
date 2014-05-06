@@ -54,6 +54,7 @@ namespace Engine.Game
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
+        private bool _isWalkAnimPlaying;
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
         public CEnemy(string ModelName, Texture2D[] Textures ,Vector3 Position, Matrix Rotation, float Velocity)
@@ -104,8 +105,19 @@ namespace Engine.Game
             {
                 _model.ChangeAnimSpeed(0.6f);
                 _model.ChangeAnimation("wait", true, 0.5f);
+
+                _isWalkAnimPlaying = false;
                 _isWaitAnimPlaying = true;
                 
+            }
+
+            if (_isMoving && !_isWalkAnimPlaying)
+            {
+                _model.ChangeAnimSpeed(2.8f);
+                _model.ChangeAnimation("walk", true, 0.7f);
+
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = true;
             }
 
             // We update the character pos, rot...
@@ -129,12 +141,17 @@ namespace Engine.Game
             rotationValue = (float)Math.Atan2(newPos.X - _position.X,
                 newPos.Z - _position.Z);
 
-            //_position += _runningVelocity * _targetPos;
-
             Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
             translation.Normalize();
 
-            _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+            if (Vector3.DistanceSquared(_position, newPos) > 10.0f)
+            {
+                translation *= _runningVelocity;
+                _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                _isMoving = true;
+            }
+            else
+                _isMoving = false;
         }
 
         public Matrix GetModelMatrix()
