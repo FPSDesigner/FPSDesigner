@@ -255,7 +255,7 @@ namespace Engine.GameStates
             Display3D.CPickUpManager.Update(gameTime);
             Display3D.CPickUp EnteredPickup;
 
-            if (Display3D.CPickUpManager.CheckEnteredPickUp(cam._cameraPos - Vector3.Up, out EnteredPickup))
+            if (Display3D.CPickUpManager.CheckEnteredPickUp(new BoundingSphere(cam._cameraPos, 1.5f), out EnteredPickup))
             {
                 weapon.GiveWeapon(EnteredPickup._weaponName); // Give the weapon
                 Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f);

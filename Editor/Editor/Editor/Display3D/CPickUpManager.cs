@@ -58,6 +58,20 @@ namespace Engine.Display3D
             return false;
         }
 
+        public static bool CheckEnteredPickUp(BoundingSphere sphere, out CPickUp EnteredPickup)
+        {
+            foreach (CPickUp pickup in _pickups)
+            {
+                if (pickup.PointTouchPickUp(sphere))
+                {
+                    EnteredPickup = pickup;
+                    return true;
+                }
+            }
+            EnteredPickup = null;
+            return false;
+        }
+
         public static float? CheckRayIntersectsAnyPickup(Ray ray, out int idIntersected)
         {
             for (int i = 0; i < _pickups.Count; i++)
@@ -118,6 +132,11 @@ namespace Engine.Display3D
         public bool PointTouchPickUp(Vector3 position)
         {
             return _Model.BoundingSphere.Contains(position) == ContainmentType.Contains;
+        }
+
+        public bool PointTouchPickUp(BoundingSphere sphere)
+        {
+            return _Model.BoundingSphere.Intersects(sphere);
         }
 
         public float? RayIntersectsPickup(Ray ray)

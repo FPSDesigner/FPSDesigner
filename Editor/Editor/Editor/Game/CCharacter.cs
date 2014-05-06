@@ -446,15 +446,19 @@ namespace Engine.Game
                                 float? distance;
                                 CEnemy enemy;
                                 string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
-                                if (boxTouched == "Bb_Head")
+                                if (boxTouched != "")
                                 {
                                     Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.5f), Color.Blue, 255f);
+                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
                                     Game.CConsole.addMessage("Hit " + boxTouched);
 
-                                    // We send the damages
-                                    enemy.ReceivedDamages(150f, "death_headshot");
+                                    if (boxTouched == "Bb_Head")
+                                    {
+                                        enemy.ReceivedDamages(150f, "death_headshot");
+                                    }
                                 }
+
+                               
 
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
