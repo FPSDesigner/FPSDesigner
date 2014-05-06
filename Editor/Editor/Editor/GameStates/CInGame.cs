@@ -60,7 +60,7 @@ namespace Engine.GameStates
 
             // We Add some useful sounds
             SoundEffect sound = content.Load<SoundEffect>("Sounds\\GRASSSTEP");
-            Game.CSoundManager.AddSound("GRASSSTEP", sound, true, 10.0f);
+            Game.CSoundManager.AddSound("GRASSSTEP", sound, false, 10.0f);
 
             /**** Character ****/
             _character = new Game.CCharacter();
@@ -259,6 +259,7 @@ namespace Engine.GameStates
                 weapon.GiveWeapon(EnteredPickup._weaponName); // Give the weapon
                 Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f);
                 Display3D.CPickUpManager.DelPickup(EnteredPickup);
+                _character.ChangeWeapon(weapon, mouseState, true);
             }
 
             //if (kbState.IsKeyDown(Keys.Left))

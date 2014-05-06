@@ -32,7 +32,7 @@ namespace Engine.Display3D
         public Vector3 _right;
 
         public Point _middleScreen;
-        
+
         private bool hasPlayerUwEffect = false;
         public bool isFreeCam = false;
         public bool isCamFrozen = false;
@@ -50,7 +50,7 @@ namespace Engine.Display3D
 
         // Float use to play the step sound
         private float _elapsedStepTime; // We play after a time the new step sound
-
+        private bool _isPitchShiftedStepSound;
         public float sensibilityMultiplier = 1;
 
         public float _playerHeight = 1.9f;
@@ -98,6 +98,7 @@ namespace Engine.Display3D
             this._roll = 0f;
 
             this._elapsedStepTime = 0;
+            this._isPitchShiftedStepSound = false;
 
             this.isCamFrozen = isCamFrozen;
             this.isFreeCam = freeCam;
@@ -167,9 +168,14 @@ namespace Engine.Display3D
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
             // PLAY THE STEP SOUND
-            if (_elapsedStepTime > 100)
+            if (_isMoving && _elapsedStepTime > 450 * (14 / camVelocity))
             {
-                Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
+                if (!_isPitchShiftedStepSound)
+                    Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
+                else
+                    Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f, 0.65f, 0.8f);
+
+                _isPitchShiftedStepSound = !_isPitchShiftedStepSound;
                 _elapsedStepTime = 0;
             }
 
@@ -189,7 +195,7 @@ namespace Engine.Display3D
             // Just used for the animation in Character
             _isMoving = false;
 
-            if(!Display2D.C2DEffect.isSoftwareEmbedded)
+            if (!Display2D.C2DEffect.isSoftwareEmbedded)
                 Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
 
             Rotation(mouseState, gametime);
@@ -227,7 +233,7 @@ namespace Engine.Display3D
                     _translation += Vector3.Forward;
 
                 if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MBackward))
-                    _translation += 0.48f*Vector3.Backward;
+                    _translation += 0.48f * Vector3.Backward;
 
                 if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MLeft))
                     _translation += Vector3.Left;
@@ -246,7 +252,7 @@ namespace Engine.Display3D
             {
                 if (_translation.X != 0)
                     _roll = MathHelper.Lerp(_roll, -_translation.X * 0.05f, 0.2f);
-                else if(_roll != 0)
+                else if (_roll != 0)
                     _roll = MathHelper.Lerp(_roll, 0, 0.1f);
             }
             //_physicsMap.Swin(isUnderWater);
@@ -288,13 +294,13 @@ namespace Engine.Display3D
             if (CGameSettings.useGamepad)
             {
                 this._yaw -= CGameSettings._gameSettings.KeyMapping.GPSensibility * sensibilityMultiplier * CGameSettings.gamepadState.ThumbSticks.Right.X;
-                this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * sensibilityMultiplier *- CGameSettings.gamepadState.ThumbSticks.Right.Y;
+                this._pitch -= CGameSettings._gameSettings.KeyMapping.GPSensibility * sensibilityMultiplier * -CGameSettings.gamepadState.ThumbSticks.Right.Y;
             }
             float coefRotation = 1f;
             if (Display2D.C2DEffect.isSoftwareEmbedded)
                 coefRotation = 1.5f;
 
-            this._yaw -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * sensibilityMultiplier *(mouseState.X - _middleScreen.X);
+            this._yaw -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * sensibilityMultiplier * (mouseState.X - _middleScreen.X);
             this._pitch -= coefRotation * CGameSettings._gameSettings.KeyMapping.MouseSensibility * sensibilityMultiplier * (mouseState.Y - _middleScreen.Y);
 
             if (this._pitch < lowestPitchAngle)

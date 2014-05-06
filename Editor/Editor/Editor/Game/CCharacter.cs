@@ -599,10 +599,10 @@ namespace Engine.Game
         }
 
         // Check the key entered to change the weapon
-        private void ChangeWeapon(CWeapon weapon, MouseState mouseState)
+        public void ChangeWeapon(CWeapon weapon, MouseState mouseState, bool isPickingWeap = false)
         {
             // To avoid bugs, we let the player change weapon only if he has more than one
-            if (weapon._weaponPossessed.Count > 1)
+            if (weapon._weaponPossessed.Count > 1 && !isPickingWeap)
             {
                 if ((!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying) && !_isReloading && !_isShoting && !_isSwimAnimationPlaying)
                 {
@@ -657,6 +657,24 @@ namespace Engine.Game
                     //}
                 }
 
+            }
+
+            // THE PLAYER IS PICKING A WEAPON
+            if (isPickingWeap)
+            {
+                _futurSelectedWeapon = weapon._selectedWeapon + 1;
+
+                // Change the futur animation speed
+                _isShoting = false;
+                _isWaitAnimPlaying = false;
+                _isReloading = false;
+                _isAiming = false;
+                _isSniping = false;
+
+                _handAnimation.InverseMode("forward");
+                _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
+                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
+                _isSwitchingAnimPlaying = true;
             }
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
         }
