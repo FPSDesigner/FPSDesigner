@@ -102,6 +102,9 @@
     <Compile Include="Pages\ConsoleLogs.xaml.cs">
       <DependentUpon>ConsoleLogs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ProjectProperties.xaml.cs">
+      <DependentUpon>ProjectProperties.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SelectProject.xaml.cs">
       <DependentUpon>SelectProject.xaml</DependentUpon>
     </Compile>
@@ -116,6 +119,9 @@
     </Compile>
     <Compile Include="Pages\ModelManager.xaml.cs">
       <DependentUpon>ModelManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HandsTextures.xaml.cs">
+      <DependentUpon>HandsTextures.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\TreeManager.xaml.cs">
       <DependentUpon>TreeManager.xaml</DependentUpon>
@@ -188,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\ProjectProperties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\SelectProject.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -205,6 +215,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\ModelManager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HandsTextures.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -24,6 +24,12 @@
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
 
+        <mui:LinkGroup DisplayName="project properties">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="properties" Source="/Pages/ProjectProperties.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
+
         <mui:LinkGroup DisplayName="settings">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="software" Source="/Pages/Settings.xaml" />

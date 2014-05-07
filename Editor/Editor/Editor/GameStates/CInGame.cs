@@ -198,7 +198,7 @@ namespace Engine.GameStates
 
             // ******* All the console informations ******* //
 
-            _character.LoadContent(content, graphics, weapon, cam);
+            _character.LoadContent(content, graphics, weapon, cam, levelData.SpawnInfo.HandTexture);
             Display3D.CModelManager.AddPhysicsInformations(cam);
 
             Game.CConsole._Camera = cam;
@@ -637,8 +637,13 @@ namespace Engine.GameStates
                     object[] values = (object[])p[1];
                     string info = (string)values[0];
                     object val = values[1];
-                    string eltType = (string)values[2];
-                    int eltId = (int)values[3];
+                    string eltType = (values.Length > 2) ? (string)values[2] : "";
+                    int eltId = (values.Length > 3) ? (int)values[3] : 0;
+
+                    if (info == "handsTexture")
+                    {
+                        levelData.SpawnInfo.HandTexture = (string)val;
+                    }
 
                     if (info == "pos" || info == "rot" || info == "scale")
                     {

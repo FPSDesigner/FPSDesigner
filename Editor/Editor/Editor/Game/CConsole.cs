@@ -250,7 +250,7 @@ namespace Engine.Game
             }
             catch (Exception e)
             {
-                addMessage("Cannot open console logs: " + e, true);
+                //addMessage("Cannot open console logs: " + e.Message, true);
                 _isConsoleFileLoaded = false;
             }
 

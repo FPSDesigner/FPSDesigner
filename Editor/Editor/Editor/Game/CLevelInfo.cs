@@ -52,6 +52,7 @@ namespace Engine.Game.LevelInfo
         public float AimSpeed { get; set; }
         public Coordinates SpawnPosition { get; set; }
         public Coordinates SpawnRotation { get; set; }
+        public string HandTexture { get; set; }
     }
     #endregion
 

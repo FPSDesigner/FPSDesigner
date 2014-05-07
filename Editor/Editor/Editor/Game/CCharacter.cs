@@ -81,7 +81,7 @@ namespace Engine.Game
             _previousScrollWheelValue = 0;
         }
 
-        public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap, Display3D.CCamera cam)
+        public void LoadContent(ContentManager content, GraphicsDevice graphics, Game.CWeapon weap, Display3D.CCamera cam, string handTexture)
         {
             _graphicsDevice = graphics;
 
@@ -90,7 +90,7 @@ namespace Engine.Game
 
             _futurSelectedWeapon = weap._selectedWeapon;
 
-            _handTexture[0] = content.Load<Texture2D>("Textures\\Uv_Hand");
+            _handTexture[0] = content.Load<Texture2D>(handTexture);
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
 
             _handRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));

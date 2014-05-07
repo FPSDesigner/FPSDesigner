@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Software.Pages.HandsTextures"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:p="clr-namespace:Software.Properties"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="Software"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="411.94">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <TextBlock Text="Hands Texture" Style="{StaticResource Heading1}"/>
+            <TextBlock>
+                To change hands texture, select below their UV texture.
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Margin="0, 20, 0, 0" Grid.Row="1" HorizontalAlignment="Center" Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Hand texture</TextBlock>
+            <Image Stretch="Uniform" Width="150" Height="150" x:Name="imagePH" Source="/Assets/placeholder.png"/>
+            <Button Content="select" x:Name="selectButton"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
