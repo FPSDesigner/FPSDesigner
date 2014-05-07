@@ -74,6 +74,11 @@ namespace Software
 
             Software.MainWindow.LoadMainWindow();
 
+            ShowLoginPage();
+        }
+
+        private void ShowLoginPage()
+        {
             LoginPage = new ModernWindow
             {
                 Style = (Style)App.Current.Resources["EmptyWindow"],
@@ -125,7 +130,10 @@ namespace Software
                 Application.Current.Shutdown();
 
             else if (!IsLogged && windowClosed.Content is Pages.Register && !LoginPage.IsActive)
-                Application.Current.Shutdown();
+            {
+                // We reshow the login page
+                ShowLoginPage();
+            }
         }
 
         void App_LoginSucceed(object sender, RoutedEventArgs e)

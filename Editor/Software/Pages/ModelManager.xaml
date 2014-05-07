@@ -22,9 +22,9 @@
         <StackPanel Orientation="Vertical" Grid.Row="0">
             <TextBlock Text="Model manager" Style="{StaticResource Heading1}"/>
             <TextBlock>
-                Sélectionnez un model 3D puis appliquez ses textures ci-dessous.<LineBreak />
-                Vous pouvez appliquer sur quel mesh la va s'appliquer en remplissant la case au dessus de la texture.<LineBreak />
-                Pour que la texture s'applique sur tous les meshs, rentrez "ApplyAllMesh".
+                Select a 3D model then apply textures on it using the boxes below.<LineBreak />
+                You can set on what mesh the textures will apply by filling the text box above the texture image<LineBreak />
+                If you want the texture to apply on all meshes, type "ApplyAllMesh"
             </TextBlock>
         </StackPanel>
 
