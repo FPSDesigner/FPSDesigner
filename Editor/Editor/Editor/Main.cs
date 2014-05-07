@@ -162,7 +162,7 @@ namespace Engine
             try
             {
                 if(!isSoftwareEmbedded)
-                    Game.CGameManagement.ChangeState("CMenu");
+                    Game.CGameManagement.ChangeState("CInGame");
                 Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
             }
             catch (Exception e)
@@ -171,8 +171,8 @@ namespace Engine
                 Game.CGameManagement.SendParam("Error encountered\n\nCheck logs for more information");
                 Game.CConsole.WriteLogs(e.ToString());
             }
-            Game.Script.CLuaVM.Initialize();
-            Game.Script.CLuaVM.LoadScript("Scripts/GuiManager.lua");
+            //Game.Script.CLuaVM.Initialize();
+            //Game.Script.CLuaVM.LoadScript("Scripts/GuiManager.lua");
         }
 
 
