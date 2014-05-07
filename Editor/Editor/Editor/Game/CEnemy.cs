@@ -162,7 +162,7 @@ namespace Engine.Game
             _model.Update(gameTime, _position, _rotation);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)
         {
             //GenerateHitBoxesTriangles();
             //GetRealTriangles();
@@ -176,6 +176,9 @@ namespace Engine.Game
                 undrawable[0] = "Head";
                 _model.Draw(gameTime, spriteBatch, view, projection, undrawable);
             }
+
+            if (drawHitbox)
+                GetRealTriangles(true);
         }
 
         public void MoveTo(Vector3 newPos, GameTime gameTime)
@@ -232,14 +235,15 @@ namespace Engine.Game
                Matrix.CreateTranslation(_position);
         }
 
-        public List<Display3D.Triangle> GetRealTriangles()
+        public List<Display3D.Triangle> GetRealTriangles(bool drawHitbox = false)
         {
             Matrix world = GetModelMatrix();
             List<Display3D.Triangle> triangles = new List<Display3D.Triangle>();
             foreach (KeyValuePair<string, Display3D.Triangle> tri in hitBoxesTriangles)
             {
                 triangles.Add(tri.Value.NewByMatrix(world));
-               // Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Red);
+                if(drawHitbox)
+                    Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Black);
             }
             return triangles;
         }

@@ -322,7 +322,7 @@ namespace Engine.GameStates
             Display3D.CModelManager.Draw(cam, gameTime);
 
             // ENEMY TEST
-            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection);
+            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection, isSoftwareEmbedded);
 
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);

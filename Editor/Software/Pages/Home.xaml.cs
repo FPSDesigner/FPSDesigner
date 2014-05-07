@@ -267,12 +267,14 @@ namespace Software.Pages
             TreeViewItem Water = new TreeViewItem();
             TreeViewItem Terrain = new TreeViewItem();
             TreeViewItem Pickups = new TreeViewItem();
+            TreeViewItem Characters = new TreeViewItem();
 
             Models.Header = "Models";
             Trees.Header = "Trees";
             Water.Header = "Water";
             Terrain.Header = "Terrain";
             Pickups.Header = "Pick-Ups";
+            Characters.Header = "Characters";
 
             // Trees
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Trees != null)
@@ -334,6 +336,8 @@ namespace Software.Pages
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
                 GameComponentsList.Items.Add(Terrain);
+
+            GameComponentsList.Items.Add(Characters);
         }
 
         void GameComponentsList_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
