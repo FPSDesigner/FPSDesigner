@@ -92,6 +92,7 @@ namespace Engine.Game
             _isMoving = false;
             _isDyingAnimPlaying = false;
             _isDied = false;
+            _isFrozen = true;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
         }

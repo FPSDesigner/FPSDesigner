@@ -191,7 +191,7 @@ namespace Engine.Game
                     break;
                 case "enemyInfo":
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : "+
-                        CEnemyManager._enemyList[0]._life + " %");
+                        CEnemyManager._enemyList[0]._life + " %\n");
                     break;
             }
         }
