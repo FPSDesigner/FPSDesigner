@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
@@ -19,12 +20,16 @@ namespace Software
 {
     static class GlobalVars
     {
+        #region Variables
         public static event RoutedEventHandler LaunchNewWindow;
         public static event RoutedEventHandler NewConsoleMessage;
         public static event RoutedEventHandler ReloadGameComponentsTreeView;
+        public static event RoutedEventHandler SoftwareShouldForceClose;
 
         public static string[] extensionsProjectFile = new string[] { ".fpsd", ".fspdesigner" };
         public static List<string[]> LogList = new List<string[]>();
+
+        public static string messageToDisplayInDialog = "";
 
         public static ModernButton selectedToolButton;
         public static string projectFile = "";
@@ -38,9 +43,57 @@ namespace Software
         public static string defaultProjectInfoName = "projectInfo.fpsd";
         public static string defaultProjectGameName = "GameLevel.xml";
         public static string defaultGameName = "Editor.exe";
-        public static string contentRootFolder = "./Content";
+        public static string contentRootFolder = "Content/";
+        public static string rootProjectFolder = "/Docs/";
+        public static string[] requiredResourceFiles = new string[]
+        {
+            "Textures/uw_effect", 
+            "2D/consoleFont",
+            "2D/ErrorSmiley",
+            "Sounds/GRASSSTEP",
+            "Textures/LensFlare/glow",
+            "Textures/LensFlare/flare1",
+            "Textures/LensFlare/flare2",
+            "Textures/LensFlare/flare3",
+            "Textures/Clouds",
+            "Textures/water_normal",
+            "3D/Skysphere",
+            "Effects/Skysphere",
+            "Effects/Terrain",
+            "Effects/PPLight",
+            "Effects/NormalMapping",
+            "Effects/WaterEffect",
+            "3D/plane",
+            "Sounds/Weapons/CHANGEWEAPON1",
+            "Sounds/Weapons/CHANGEWEAPON2",
+            "Sounds/Weapons/PICKUPWEAPON",
+            "Particles/ParticleEffect",
+            "Particles/smoke",
+            "Trees/Textures/GrayBark",
+            "Trees/Textures/BirchLeaf",
+            "Trees/Textures/BirchBark",
+            "Trees/LTreeShaders/Trunk",
+            "Trees/LTreeShaders/Leaves",
+            "Trees/Textures/BirchBark",
+            "Trees/Textures/WillowLeaf",
+            "Trees/Textures/PineBark",
+            "Trees/Textures/PineLeaf",
+            "Textures/Guizmo",
+            "Models/Guizmo",
+            "Textures/RotationGuizmo",
+            "Models/RotationGuizmo",
+            "Textures/ScalingGuizmo",
+            "Models/ScalingGuizmo",
+            "Models/Arm_Animation(Smoothed)",
+            "Models/Plane",
+            "Textures/PistolFlash001",
+            "Textures/Lens",
+            "Textures/StormTrooper",
+            "Models/StormTrooperAnimation",
+        };
 
         public static Engine.MainGameEngine embeddedGame;
+        #endregion
 
         public static string GetUIString(string key)
         {
@@ -61,6 +114,8 @@ namespace Software
         {
             if (eventName == "ReloadGameComponentsTreeView")
                 ReloadGameComponentsTreeView(null, null);
+            else if (eventName == "SoftwareShouldForceClose")
+                SoftwareShouldForceClose(null, null);
         }
 
         public static void SaveGameLevel()
@@ -68,12 +123,123 @@ namespace Software
             try
             {
                 Codes.CXMLManager.serializeClass(projectGameInfoFile, gameInfo);
-                System.IO.File.Copy(projectGameInfoFile, defaultProjectGameName, true);
+                File.Copy(projectGameInfoFile, defaultProjectGameName, true);
             }
             catch (Exception e)
             {
                 AddConsoleMsg("Couldn't save game level informations. Data: " + e.Message, "error");
             }
+        }
+
+        public static void InitializeProject()
+        {
+            if (File.Exists("./Editor.exe"))
+                File.Copy("Editor.exe", GlobalVars.rootProjectFolder + GlobalVars.projectData.Properties.ExeName.Replace(".exe", "") + ".exe", true);
+
+            if (!Directory.Exists(GlobalVars.rootProjectFolder + GlobalVars.rootProjectFolder))
+                Directory.CreateDirectory(GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder);
+
+            CheckContentFilesExists();
+        }
+
+        public static void CheckContentFilesExists()
+        {
+            List<string> filesToCheck = new List<string>();
+
+            foreach (string reqFile in requiredResourceFiles)
+                filesToCheck.Add(reqFile);
+
+            filesToCheck.Add(gameInfo.SpawnInfo.HandTexture);
+
+            if (gameInfo.Terrain != null && gameInfo.Terrain.UseTerrain)
+            {
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.BaseTexture);
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.BTexture);
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.GTexture);
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.RTexture);
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.HeightmapFile);
+                filesToCheck.Add(gameInfo.Terrain.TerrainTextures.TextureFile);
+            }
+
+            if (gameInfo.MapModels != null)
+            {
+                if (gameInfo.MapModels.Models != null)
+                {
+                    foreach (Engine.Game.LevelInfo.MapModels_Model mdl in gameInfo.MapModels.Models)
+                    {
+                        filesToCheck.Add(mdl.ModelFile);
+                        if (mdl.Textures != null && mdl.Textures.Texture != null)
+                            foreach (Engine.Game.LevelInfo.MapModels_Texture texture in mdl.Textures.Texture)
+                                filesToCheck.Add(texture.Texture);
+
+                        if (mdl.BumpTextures != null && mdl.BumpTextures.Texture != null)
+                            foreach (Engine.Game.LevelInfo.MapModels_Texture texture in mdl.BumpTextures.Texture)
+                                filesToCheck.Add(texture.Texture);
+                    }
+                }
+                if (gameInfo.MapModels.Trees != null)
+                {
+                    foreach (Engine.Game.LevelInfo.MapModels_Tree tree in gameInfo.MapModels.Trees)
+                        filesToCheck.Add(tree.Profile);
+                }
+            }
+
+            if (gameInfo.Weapons != null && gameInfo.Weapons.Weapon != null)
+            {
+                foreach (Engine.Game.LevelInfo.Weapon wep in gameInfo.Weapons.Weapon)
+                {
+                    filesToCheck.Add(wep.Model);
+                    filesToCheck.Add(wep.Texture);
+                    filesToCheck.Add(wep.WeaponSound.DryShot);
+                    filesToCheck.Add(wep.WeaponSound.Reload);
+                    filesToCheck.Add(wep.WeaponSound.Shot);
+                }
+            }
+
+            // Format the list
+            filesToCheck = filesToCheck.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList(); // Remove duplicats/empties/whitespaces
+            filesToCheck[0] = "/" + filesToCheck[0];
+            filesToCheck = filesToCheck.Select(f => f.TrimStart('/', '\\')).ToList(); // Remove first slashes
+
+            List<string> errorFiles = new List<string>();
+
+            string[] resourcesExt = new string[] { ".xnb", ".png", ".jpg", ".jpeg", ".gif", ".tga", ".raw", ".bmp", ".fbx", ".spritefont", ".fx", ".wav", ".ogg", ".mp3", ".aac", ".wma", ".dds", ".x" };
+            foreach (string file in filesToCheck)
+            {
+                DirectoryInfo root = new DirectoryInfo(GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + Path.GetDirectoryName(file));
+                if (!root.Exists || root.GetFiles(Path.GetFileName(file) + ".*").Length == 0)
+                {
+                    if (!File.Exists(GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + "/" + file))
+                    {
+                        bool found = false;
+                        foreach (string ext in resourcesExt)
+                        {
+                            if (File.Exists("./Content/" + file + ext))
+                            {
+                                string directory = Path.GetDirectoryName(GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + "/" + file);
+                                if (!Directory.Exists(directory))
+                                    Directory.CreateDirectory(directory);
+
+                                File.Copy("./Content/" + file + ext, GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + "/" + file + ext);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                            errorFiles.Add(file);
+                    }
+                }
+            }
+
+            if (errorFiles.Count > 0)
+            {
+                string totalErrorFiles = "";
+                foreach (string err in errorFiles)
+                    totalErrorFiles += err + "\n";
+
+                messageToDisplayInDialog = "Multiple game files couldn't be loaded from your project content folder:\n\n" + totalErrorFiles;
+            }
+
         }
 
 
@@ -140,7 +306,8 @@ namespace Software
                         X = 0,
                         Y = 0,
                         Z = 0,
-                    }
+                    },
+                    HandTexture = "Textures\\Uv_Hand",
                 },
                 Terrain = new Engine.Game.LevelInfo.Terrain
                 {

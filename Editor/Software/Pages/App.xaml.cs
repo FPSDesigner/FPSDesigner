@@ -31,6 +31,7 @@ namespace Software
 
             GlobalVars.AddConsoleMsg(GlobalVars.GetUIString("Logs_Initializing_Editor"), "info");
             GlobalVars.LaunchNewWindow += GlobalVars_LaunchNewWindow;
+            GlobalVars.SoftwareShouldForceClose += (s, e) => { Application.Current.Shutdown(); };
 
             Startup += App_Startup;
 
@@ -56,6 +57,10 @@ namespace Software
                             // Load the gameinfo
                             GlobalVars.projectGameInfoFile = System.IO.Path.GetDirectoryName(e.Args[0]) + "\\" + GlobalVars.defaultProjectGameName;
                             GlobalVars.gameInfo = Codes.CXMLManager.deserializeClass<Engine.Game.LevelInfo.LevelData>(GlobalVars.projectGameInfoFile);
+
+                            GlobalVars.rootProjectFolder = System.IO.Path.GetDirectoryName(e.Args[0]) + "\\";
+
+                            GlobalVars.InitializeProject();
                         }
                     }
                     catch

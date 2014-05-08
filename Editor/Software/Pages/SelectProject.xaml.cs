@@ -68,10 +68,15 @@ namespace Software.Pages
                         else
                             GlobalVars.CreateDefaultGameLevel();
 
+                        GlobalVars.rootProjectFolder = System.IO.Path.GetDirectoryName(projectDialog.FileName) + "\\";
+
+                        GlobalVars.InitializeProject();
+
                         ProjectSelected(projectDialog.FileName, null);
                     }
-                    catch
+                    catch (Exception exc)
                     {
+                        Console.WriteLine(exc.Message);
                         loadErrorText.Visibility = System.Windows.Visibility.Visible;
                     }
                 }
@@ -114,14 +119,18 @@ namespace Software.Pages
                             Author = System.Security.Principal.WindowsIdentity.GetCurrent().Name,
                             LastEditionDate = DateTime.Now.ToString("M/d/yyyy"),
                             GameName = textboxSelectName.Text,
+                            ExeName = "FPSDesigner.exe",
                         }
                     };
 
                     Codes.CXMLManager.serializeClass(textboxSelectNewFolder.Text + '\\' + GlobalVars.defaultProjectInfoName, GlobalVars.projectData);
 
                     GlobalVars.projectGameInfoFile = textboxSelectNewFolder.Text + "\\" + GlobalVars.defaultProjectGameName;
+                    GlobalVars.rootProjectFolder = textboxSelectNewFolder.Text + "\\";
                     GlobalVars.CreateDefaultGameLevel();
                     GlobalVars.SaveGameLevel();
+
+                    GlobalVars.InitializeProject();
 
                     ProjectSelected(textboxSelectNewFolder.Text, null);
                 }

@@ -62,7 +62,7 @@ namespace Engine.Display2D
         // Underwater effect
         private static Texture2D uwWaterfallTexture;
 
-        private static Texture2D _pixelTexture;
+        //private static Texture2D _pixelTexture;
 
         // Private
         private static Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
@@ -87,7 +87,7 @@ namespace Engine.Display2D
             _postProcessor = postProcessor;
             _renderCapture = renderCapture;
 
-            _pixelTexture = content.Load<Texture2D>("Textures/pixel");
+            //_pixelTexture = content.Load<Texture2D>("Textures/pixel");
 
             uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
         }

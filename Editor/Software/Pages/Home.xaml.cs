@@ -44,7 +44,10 @@ namespace Software.Pages
             InitializeComponent();
             MainWindowInstance = MainWindow.Instance;
 
-            m_game = new Engine.MainGameEngine(true);
+            if (GlobalVars.messageToDisplayInDialog != "")
+                ModernDialog.ShowMessage(GlobalVars.messageToDisplayInDialog, "Message", MessageBoxButton.OK);
+
+            m_game = new Engine.MainGameEngine(true, GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder);
             GlobalVars.embeddedGame = m_game;
 
             listTree_Trees = new List<TreeViewItem>();
@@ -97,7 +100,7 @@ namespace Software.Pages
             GlobalVars.SaveGameLevel();
 
             Process previewProcess = new Process();
-            previewProcess.StartInfo.FileName = GlobalVars.defaultGameName;
+            previewProcess.StartInfo.FileName = GlobalVars.rootProjectFolder + GlobalVars.projectData.Properties.ExeName.Replace(".exe", "") + ".exe";
             previewProcess.EnableRaisingEvents = true;
 
             previewProcess.Exited += (s, e) =>
@@ -256,7 +259,14 @@ namespace Software.Pages
         
         private void LoadGameComponentsToTreeview()
         {
-            GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+            object gameInfo = m_game.WPFHandler("getLevelData", true);
+            if (gameInfo is Engine.Game.LevelInfo.LevelData)
+                GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)gameInfo;
+            else
+            {
+                ModernDialog.ShowMessage("Error loading project game level.", "Error", MessageBoxButton.OK);
+                GlobalVars.RaiseEvent("SoftwareShouldForceClose");
+            }
             GameComponentsList.Items.Clear();
             listTree_Trees.Clear();
             listTree_Models.Clear();

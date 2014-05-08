@@ -45,13 +45,13 @@ namespace Engine
         public bool shouldNotUpdate = false;
         public bool shouldUpdateOnce = false;
 
-        public MainGameEngine(bool launchedFromSoftware = false)
+        public MainGameEngine(bool launchedFromSoftware = false, string ContentRootDirectoy = "Content")
         {
             isSoftwareEmbedded = launchedFromSoftware;
 
             graphics = new GraphicsDeviceManager(this);
             //graphics.PreferMultiSampling = false; // Lags!!!
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = ContentRootDirectoy;
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;

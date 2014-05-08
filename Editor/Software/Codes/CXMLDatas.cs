@@ -19,6 +19,7 @@ namespace Software.Codes
         public string Author { get; set; }
         public string LastEditionDate { get; set; }
         public string GameName { get; set; }
+        public string ExeName { get; set; }
     }
     #endregion
 
