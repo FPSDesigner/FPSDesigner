@@ -197,7 +197,6 @@ namespace Engine.GameStates
                 Gizmos = new Display3D.CGizmos(content, graphics, cam);
 
             // ******* All the console informations ******* //
-
             _character.LoadContent(content, graphics, weapon, cam, levelData.SpawnInfo.HandTexture);
             Display3D.CModelManager.AddPhysicsInformations(cam);
 
@@ -255,10 +254,15 @@ namespace Engine.GameStates
 
             if (Display3D.CPickUpManager.CheckEnteredPickUp(new BoundingSphere(cam._cameraPos, 1.5f), out EnteredPickup))
             {
+                int futurIndex = weapon._weaponPossessed.Count;
+
                 weapon.GiveWeapon(EnteredPickup._weaponName, EnteredPickup._weaponBullets); // Give the weapon
-                Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f);
-                Display3D.CPickUpManager.DelPickup(EnteredPickup);
-                _character.ChangeWeapon(weapon, mouseState, true);
+
+                Game.CSoundManager.PlayInstance("PICKUPWEAPON", 1f); // Play the sound
+
+                _character.ChangeWeapon(weapon, mouseState, true, futurIndex);
+
+                Display3D.CPickUpManager.DelPickup(EnteredPickup); // Destroy the pickup
             }
 
             //if (kbState.IsKeyDown(Keys.Left))

@@ -184,6 +184,15 @@ namespace Engine.Game
             return assumedNewPosition + _velocity;
         }
 
+        // Give a director vector of a plane near a position (Used for example to rotate dead enemy)
+        public Vector3 GetPlaneVector(Vector3 position)
+        {
+            float steep;
+
+            return 
+                (new Vector3(position.X,_terrain.GetHeightAtPosition(position.X,position.Z,out steep),position.Z));
+        }
+
         /// <summary>
         /// Jump function
         /// </summary>

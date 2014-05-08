@@ -206,7 +206,7 @@ namespace Engine.Game
                     _dryFirePlayed = true;
                 }
             }
-            Console.WriteLine("Weapon : " + _weaponPossessed[_selectedWeapon]._name + " Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponPossessed[_selectedWeapon]._actualClip);
+            //Console.WriteLine("Weapon : " + _weaponPossessed[_selectedWeapon]._name + " Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponPossessed[_selectedWeapon]._actualClip);
         }
 
         public bool Reloading()
@@ -214,9 +214,9 @@ namespace Engine.Game
             bool isRealoadingDone = false;
             if (_weaponPossessed[_selectedWeapon]._wepType != 2)
             {
-                if (_weaponPossessed[_selectedWeapon]._actualClip != _weaponPossessed[_selectedWeapon]._maxClip)
+                if (_weaponPossessed[_selectedWeapon]._actualClip < _weaponPossessed[_selectedWeapon]._maxClip)
                 {
-                    // If he has bullets available
+                    // If he has bullets available to fill a mag
                     if (_weaponPossessed[_selectedWeapon]._bulletsAvailable >=
                             (_weaponPossessed[_selectedWeapon]._maxClip - _weaponPossessed[_selectedWeapon]._actualClip))
                     {

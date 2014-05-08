@@ -58,7 +58,7 @@ namespace Engine.Game
         public bool _isAgressive; // Pacifiste or not
 
         private bool _isMoving;
-        private bool _isDied;
+        private bool _isDead;
         public bool _isFrozen; // Use to stop translation
 
         // Animation Boolean
@@ -91,7 +91,7 @@ namespace Engine.Game
 
             _isMoving = false;
             _isDyingAnimPlaying = false;
-            _isDied = false;
+            _isDead = false;
             _isFrozen = true;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
@@ -102,8 +102,6 @@ namespace Engine.Game
 
             // We load the ennemy content
             _model.LoadContent(content);
-            _model.ChangeAnimSpeed(2f);
-            _model.BeginAnimation("walk", true);
 
             // We Create the forces application on the Ennemy
             _physicEngine = new CPhysics();
@@ -119,13 +117,21 @@ namespace Engine.Game
 
         public void Update(GameTime gameTime)
         {
-            // Apply the physic on the character
-            //_position = _physicEngine.GetNewPosition(gameTime, _position, Vector3.Zero, false);
+            if (_isDead)
+            {
+                _position = _deathPosition;
+                _rotation = _deathRotation * Matrix.CreateRotationX(GetTerrainNormalRotation(_position));
+
+                _isMoving = false;
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+            }
 
             //Play Anims
-            if (!_isFrozen) // Player is not frozen by the administrator
+            if (!_isFrozen && !_isDead && !_isDyingAnimPlaying) // Player is not frozen by the administrator
             {
-                if (!_isDied && !_isMoving && !_isWaitAnimPlaying)
+                // The character is running
+                if (!_isMoving && !_isWaitAnimPlaying)
                 {
                     _model.ChangeAnimSpeed(0.6f);
                     _model.ChangeAnimation("wait", true, 0.5f);
@@ -134,7 +140,9 @@ namespace Engine.Game
                     _isWaitAnimPlaying = true;
 
                 }
-                if (!_isDied && _isMoving && !_isWalkAnimPlaying)
+
+                // The Character is running
+                if (_isMoving && !_isWalkAnimPlaying)
                 {
                     _model.ChangeAnimSpeed(2.0f);
                     _model.ChangeAnimation("walk", true, 0.7f);
@@ -143,18 +151,21 @@ namespace Engine.Game
                     _isWalkAnimPlaying = true;
                 }
 
-                if (_isDied)
-                {
-                    _position = _deathPosition;
-                    _rotation = _deathRotation;
-                }
-
                 _isFrozenAnimPlaying = false;
             }
+
             else if(_isFrozen && !_isFrozenAnimPlaying)
             {
-                _model.ChangeAnimation("crouch", true, 0.8f);
+                _model.ChangeAnimation("frozen", true, 0.8f);
                 _isFrozenAnimPlaying = true;
+            }
+
+            // He was playing the anim, now the character is really dead
+            if (_isDyingAnimPlaying && _model.HasFinished())
+            {
+                _position = _deathPosition;
+                _rotation = _deathRotation * Matrix.CreateRotationY(GetTerrainNormalRotation(_position));
+                _isDead = true;
             }
 
             // We update the character pos, rot...
@@ -168,9 +179,9 @@ namespace Engine.Game
             //GetRealTriangles();
 
             // We draw the enemy entirely if he is alive
-            if (!_isDied && !_model.HasFinished())
+            if (!_isDead)
                 _model.Draw(gameTime, spriteBatch, view, projection);
-            else if (_isDied || _model.HasFinished())
+            else
             {
                 string[] undrawable = new string [1];
                 undrawable[0] = "Head";
@@ -183,7 +194,7 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 newPos, GameTime gameTime)
         {
-            if (!_isFrozen && !_isDied)
+            if (!_isFrozen && !_isDead)
             {
                 _targetPos = new Vector3(newPos.X - _position.X,
                     newPos.Y - _position.Y, newPos.Z - _position.Z);
@@ -206,25 +217,37 @@ namespace Engine.Game
             }
         }
 
+        // This function allows us to find the good rotation to apply on the enemy when it is died
+        // With this, we can rotate the mesh to make it aligned with the terrain.
+        private float GetTerrainNormalRotation(Vector3 position)
+        {
+            Vector3 planeVector = _physicEngine.GetPlaneVector(position);
+
+            return (float)Math.Acos(1 / planeVector.Y);
+        }
+
         // launch the appropriate def animation
         public void ReceivedDamages(float damages, string animToPlay)
         {
-            _life -= damages;
-            if (_life <= 0)
+            // If the player is not already dead
+            if (!_isDead)
             {
-                // The player is not 
-                if (!_isDyingAnimPlaying)
+                _life -= damages;
+                if (_life <= 0)
                 {
-                    // We save the death pos and rot
-                    _deathPosition = _position;
-                    _deathRotation = _rotation;
+                    // The player is not 
+                    if (!_isDyingAnimPlaying)
+                    {
+                        // We save the death pos and rot
+                        _deathPosition = _position;
+                        _deathRotation = _rotation;
 
-                    _model.ChangeAnimSpeed(2f);
-                    _model.ChangeAnimation("death_headshot", false, 0.75f);
-                    _isDyingAnimPlaying = true;
-                    _isDied = true;
+                        _model.ChangeAnimSpeed(2f);
+                        _model.ChangeAnimation(animToPlay, false, 0.75f);
+                        _isDyingAnimPlaying = true;
+                    }
+                    _life = 0;
                 }
-                _life = 0;
             }
         }
 

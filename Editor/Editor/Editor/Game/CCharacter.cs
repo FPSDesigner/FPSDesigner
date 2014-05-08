@@ -258,7 +258,7 @@ namespace Engine.Game
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _crouchSpeed, 0.7f);
 
                     if(!_isShoting && !_isAiming && !_isReloading
-                        && !_isSwimAnimationPlaying && !_isSwitchingAnim2ndPartPlaying)
+                        && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
                     _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[0] * 0.65f);
                 }
             }
@@ -289,7 +289,7 @@ namespace Engine.Game
                 (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying) && !_isAiming)
             {
                 _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[0]);
-                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[0], true);
+                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[0], true, 0.75f);
 
                 //just the walk animation is playing
                 _isWaitAnimPlaying = false;
@@ -323,7 +323,8 @@ namespace Engine.Game
                 weapon.ChangeWeapon(_futurSelectedWeapon);
 
                 _handAnimation.InverseMode("backward");
-                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false,0.5f);
+                _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
+                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false,0.99f);
 
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
@@ -392,6 +393,23 @@ namespace Engine.Game
                 _isShoting = false;
             }
 
+            // We Call the shot function
+            Shot(mouseState, oldMouseState, weapon, cam, gameTime);
+
+            // ***** If he has shot : We play vibrations **** //
+            if (CGameSettings.useGamepad)
+            {
+                if (_isShoting)
+                    GamePad.SetVibration(PlayerIndex.One, 0.9f, 0.1f);
+                else
+                    GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
+            }
+
+            _elapsedSnipeShot += gameTime.ElapsedGameTime.Milliseconds;
+        }
+
+        private void Shot(MouseState mouseState, MouseState oldMouseState, CWeapon weapon, Display3D.CCamera cam, GameTime gameTime)
+        {
             // If the player shot
             if (mouseState.LeftButton == ButtonState.Pressed ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
@@ -400,8 +418,12 @@ namespace Engine.Game
                 {
                     if (weapon._weaponPossessed[weapon._selectedWeapon]._isAutomatic || oldMouseState.LeftButton == ButtonState.Released)
                     {
-                        // If he does not use a machete AND if he has bullet in a magazine
-                        if (weapon._weaponPossessed[weapon._selectedWeapon]._actualClip != 0)
+                        // We choose where is the gun sight
+                        Point shotPosScreen = 
+                            new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
+
+                        // The Player can shot : enought bullets
+                        if (weapon._weaponPossessed[weapon._selectedWeapon]._actualClip > 0)
                         {
                             _isRecoilAffected += weapon._weaponPossessed[weapon._selectedWeapon]._recoilIntensity;
                             _recoilBackIntensity = weapon._weaponPossessed[weapon._selectedWeapon]._recoilBackIntensity;
@@ -413,6 +435,7 @@ namespace Engine.Game
                                 _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[1], false, 0.12f);
                                 _isShoting = true;
                             }
+
                             // Player has no sniper
                             else if (_isAiming && !_isSniping
                                 && weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 1)
@@ -425,6 +448,30 @@ namespace Engine.Game
                             _isWalkAnimPlaying = false;
                             _isWaitAnimPlaying = false;
 
+                            // RAY DETECTION : KNOW IF SOMEONE IS TOUCHED
+                            
+                            Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
+                            Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
+                            Vector3 direction = farSource - nearSource;
+
+                            direction.Normalize();
+
+                            Ray ray = new Ray(nearSource, direction);
+
+                            float? distance;
+                            CEnemy enemy;
+                            string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
+                            if (boxTouched != "")
+                            {
+                                Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
+                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
+                                Game.CConsole.addMessage("Hit " + boxTouched);
+
+                                if (boxTouched == "Bb_Head")
+                                {
+                                    enemy.ReceivedDamages(150f, "death_headshot");
+                                }
+                            }
                         }
 
                         // Draw particles
@@ -435,32 +482,9 @@ namespace Engine.Game
                                 bool IsTerrainShot = false;
                                 bool IsWaterShot = false;
 
-                                Point shotPosScreen = new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
                                 Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
                                 Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
-                                Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
-                                Vector3 direction = farSource - nearSource;
-
-                                direction.Normalize();
-
-                                Ray ray = new Ray(nearSource, direction);
-
-                                float? distance;
-                                CEnemy enemy;
-                                string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
-                                if (boxTouched != "")
-                                {
-                                    Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
-                                    Game.CConsole.addMessage("Hit " + boxTouched);
-
-                                    if (boxTouched == "Bb_Head")
-                                    {
-                                        enemy.ReceivedDamages(150f, "death_headshot");
-                                    }
-                                }
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 
@@ -480,17 +504,6 @@ namespace Engine.Game
                     }
                 }
             }
-
-            // ***** If he has shot : We play vibrations **** //
-            if (CGameSettings.useGamepad)
-            {
-                if (_isShoting)
-                    GamePad.SetVibration(PlayerIndex.One, 0.9f, 0.1f);
-                else
-                    GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
-            }
-
-            _elapsedSnipeShot += gameTime.ElapsedGameTime.Milliseconds;
         }
 
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
@@ -602,8 +615,8 @@ namespace Engine.Game
         }
 
         // Check the key entered to change the weapon
-        public void ChangeWeapon(CWeapon weapon, MouseState mouseState, bool isPickingWeap = false)
-        {
+        public void ChangeWeapon(CWeapon weapon, MouseState mouseState, bool isPickingWeap = false, int futurIndex = 0)
+        { // futurIndex is just used when we give a weapon
             // To avoid bugs, we let the player change weapon only if he has more than one
             if (weapon._weaponPossessed.Count > 1 && !isPickingWeap)
             {
@@ -665,7 +678,7 @@ namespace Engine.Game
             // THE PLAYER IS PICKING A WEAPON
             if (isPickingWeap)
             {
-                _futurSelectedWeapon = weapon._selectedWeapon + 1;
+                _futurSelectedWeapon = futurIndex;
 
                 // Change the futur animation speed
                 _isShoting = false;
@@ -692,6 +705,9 @@ namespace Engine.Game
                 {
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = false;
+                    _isSwimAnimationPlaying = false;
+                    _isSwitchingAnim2ndPartPlaying = false;
+                    _isSwitchingAnimPlaying = false;
 
                     _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[3]);
                     if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 1 || !_isSniping)
