@@ -55,6 +55,8 @@ namespace Engine.Game
                 this._recoilIntensity = (float)weaponInfo[13];
                 this._recoilBackIntensity = (float)weaponInfo[14];
 
+                this._damagesPerBullet = (float)weaponInfo[15];
+
                 this._animVelocity = animVelocity;
 
                 this._weapTexture = weapTexture;
@@ -90,6 +92,7 @@ namespace Engine.Game
             // Other Weapons Infos
             public bool _isAutomatic;
             public int _shotPerSeconds; // 0 if non automatic
+            public float _damagesPerBullet; // Each bullet gives some damages
             public int _range; // 0 if unlimited range
             public float _delay; // the delay used to play the sound
             public string _name; // The weapon name

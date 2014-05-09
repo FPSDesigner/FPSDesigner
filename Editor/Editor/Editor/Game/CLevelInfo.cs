@@ -220,6 +220,7 @@ namespace Engine.Game.LevelInfo
         public float Delay { get; set; }
         public float RecoilIntensity { get; set; }
         public float RecoilBackIntensity { get; set; }
+        public float DamagesPerBullet { get; set; }
         public string Name { get; set; }
         public WeaponSound WeaponSound { get; set; }
         public WeaponAnim WeaponAnim { get; set; }

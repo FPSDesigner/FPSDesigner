@@ -62,7 +62,7 @@ namespace Engine.Display2D
         // Underwater effect
         private static Texture2D uwWaterfallTexture;
 
-        //private static Texture2D _pixelTexture;
+        private static Texture2D _pixelTexture;
 
         // Private
         private static Dictionary<string, Effect> loadedEffects = new Dictionary<string, Effect>();
@@ -87,7 +87,7 @@ namespace Engine.Display2D
             _postProcessor = postProcessor;
             _renderCapture = renderCapture;
 
-            //_pixelTexture = content.Load<Texture2D>("Textures/pixel");
+            _pixelTexture = content.Load<Texture2D>("Textures/pixel");
 
             uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
         }
@@ -295,7 +295,7 @@ namespace Engine.Display2D
                 _spriteBatch.Draw(_fadeTexture, _fadePositionRect, null, new Color(_fadeToColor.R, _fadeToColor.G, _fadeToColor.B, _fadeOpacity/255), 0f, Vector2.Zero, _fadeSizeRect, SpriteEffects.None, 0);
             }
 
-            //_spriteBatch.Draw(_pixelTexture, new Rectangle(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2, 4, 4), Color.White);
+            _spriteBatch.Draw(_pixelTexture, new Rectangle(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2, 4, 4), Color.White);
 
         }
 

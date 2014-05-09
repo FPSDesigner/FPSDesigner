@@ -461,15 +461,24 @@ namespace Engine.Game
                             float? distance;
                             CEnemy enemy;
                             string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
-                            if (boxTouched != "")
-                            {
-                                Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
-                                Game.CConsole.addMessage("Hit " + boxTouched);
 
-                                if (boxTouched == "Bb_Head")
+                            if (distance < weapon._weaponPossessed[weapon._selectedWeapon]._range)
+                            {
+                                if (boxTouched != "")
                                 {
-                                    enemy.ReceivedDamages(150f, "death_headshot");
+                                    Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
+                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
+                                    Game.CConsole.addMessage("Hit " + boxTouched);
+
+                                    switch(boxTouched)
+                                    {
+                                        case "Bb_Head":
+                                        enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
+                                            break;
+                                        case "Bb_Body":
+                                            enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
+                                            break;
+                                    }
                                 }
                             }
                         }
