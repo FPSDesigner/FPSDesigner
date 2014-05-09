@@ -231,6 +231,23 @@ namespace Software
                 }
             }
 
+            // Check necessary game files (libraries, etc.)
+            string[] requiredLibs = new string[]
+            {
+                "LTreesLibrary.dll", "XNAnimation.dll",
+            };
+
+            foreach (string lib in requiredLibs)
+            {
+                if (!File.Exists(GlobalVars.rootProjectFolder + "/" + lib))
+                {
+                    if(File.Exists("./"+lib))
+                        File.Copy("./" + lib, GlobalVars.rootProjectFolder + "/" + lib);
+                    else
+                        errorFiles.Add(lib);
+                }
+            }
+
             if (errorFiles.Count > 0)
             {
                 string totalErrorFiles = "";

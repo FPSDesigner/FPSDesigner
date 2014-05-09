@@ -21,9 +21,15 @@ namespace WinServer
     /// </summary>
     public partial class MainWindow : ModernWindow
     {
-        public MainWindow()
+        public static MainWindow Instance { get; private set; }
+
+        //public static string 
+
+        public static void LoadMainWindow()
         {
-            InitializeComponent();
+            Instance = new MainWindow();
+            Instance.InitializeComponent();
+            Instance.Icon = GlobalVars.SoftwareIcon;
         }
     }
 }

@@ -4,7 +4,7 @@
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
         Title="SERVER" IsTitleVisible="True"
         ContentSource="/Pages/Home.xaml"
-                  Height="100" Width="800">
+        Height="400" Width="800">
 
     <mui:ModernWindow.MenuLinkGroups>
         <mui:LinkGroup DisplayName="console">

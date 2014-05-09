@@ -23,6 +23,8 @@ namespace WinServer.Pages
         public Home()
         {
             InitializeComponent();
+
+            GlobalVars.consoleElement = MainLogs;
         }
     }
 }

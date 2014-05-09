@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="WinServer.Pages.Properties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="254" d:DesignWidth="359">
+    <Grid Style="{StaticResource ContentRoot}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="SERVER PROPERTIES" Style="{StaticResource Heading2}" Margin="0,0,0,15"/>
+        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Labels -->
+            <Label Grid.Column="0" Grid.Row="0" Content="Hostname: " Margin="0,10,10,0" />
+            <Label Grid.Column="0" Grid.Row="1" Content="Server port: " Margin="0,10,10,0" />
+            <Label Grid.Column="0" Grid.Row="2" Content="Server password: " Margin="0,10,10,0" />
+            <Label Grid.Column="0" Grid.Row="3" Content="Maximum players: " Margin="0,10,10,0" />
+
+            <!-- Texts -->
+            <TextBox Grid.Column="1" Grid.Row="0" Margin="0,10,10,0" x:Name="tbHostname" Width="200" />
+            <TextBox Grid.Column="1" Grid.Row="1" Margin="0,10,10,0" x:Name="tbPort" Width="200" />
+            <TextBox Grid.Column="1" Grid.Row="2" Margin="0,10,10,0" x:Name="tbPassword" Width="200" />
+            <TextBox Grid.Column="1" Grid.Row="3" Margin="0,10,10,0" x:Name="tbMaxplayer" Width="200" />
+
+        </Grid>
+        <!-- Button-->
+        <mui:ModernButton Grid.Row="2" x:Name="btnValidate" HorizontalAlignment="Right" VerticalAlignment="Bottom" EllipseDiameter="38" EllipseStrokeThickness="2" IconWidth="25" IconHeight="25" IsDefault="True"  IconData="F1 M 19.0002,34L 19.0002,42L 43.7502,42L 33.7502,52L 44.2502,52L 58.2502,38L 44.2502,24L 33.7502,24L 43.7502,34L 19.0002,34 Z " />
+    </Grid>
+</UserControl>
