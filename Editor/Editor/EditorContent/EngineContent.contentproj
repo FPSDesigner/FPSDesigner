@@ -1084,29 +1084,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sounds\Menu\BACKGROUND_MDWARGAME.wav">
-      <Name>BACKGROUND_MDWARGAME</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sounds\Menu\BACKGROUND_HORRORGAME.wav">
       <Name>BACKGROUND_HORRORGAME</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sounds\Menu\BACKGROUND_MEDIEVALGAME.wav">
-      <Name>BACKGROUND_MEDIEVALGAME</Name>
+    <Compile Include="Sounds\Menu\BACKGROUND_MDWARGAME.wav">
+      <Name>BACKGROUND_MDWARGAME</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sounds\MODERNWAR_COMBAT.wav">
-      <Name>MODERNWAR_COMBAT</Name>
+    <Compile Include="Sounds\Menu\BACKGROUND_MEDIEVALGAME.wav">
+      <Name>BACKGROUND_MEDIEVALGAME</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>

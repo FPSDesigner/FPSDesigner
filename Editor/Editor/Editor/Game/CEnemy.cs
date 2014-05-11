@@ -117,16 +117,6 @@ namespace Engine.Game
 
         public void Update(GameTime gameTime)
         {
-            if (_isDead)
-            {
-                _position = _deathPosition;
-                _rotation = _deathRotation * Matrix.CreateRotationX(GetTerrainNormalRotation(_position));
-
-                _isMoving = false;
-                _isWaitAnimPlaying = false;
-                _isWalkAnimPlaying = false;
-            }
-
             //Play Anims
             if (!_isFrozen && !_isDead && !_isDyingAnimPlaying) // Player is not frozen by the administrator
             {
@@ -160,16 +150,28 @@ namespace Engine.Game
                 _isFrozenAnimPlaying = true;
             }
 
+            // We update the character pos, rot...
+            _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
+
             // He was playing the anim, now the character is really dead
             if (_isDyingAnimPlaying && _model.HasFinished())
             {
                 _position = _deathPosition;
-                _rotation = _deathRotation * Matrix.CreateRotationY(GetTerrainNormalRotation(_position));
+                _rotation = _deathRotation;
                 _isDead = true;
             }
 
-            // We update the character pos, rot...
-            _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
+            if (_isDead)
+            {
+                _position = _deathPosition;
+                Matrix world = Matrix.CreateWorld(_position, Vector3.Right, Vector3.Up);
+                _rotation = _deathRotation;
+
+                _isMoving = false;
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+            }
+
             _model.Update(gameTime, _position, _rotation);
         }
 
@@ -219,11 +221,21 @@ namespace Engine.Game
 
         // This function allows us to find the good rotation to apply on the enemy when it is died
         // With this, we can rotate the mesh to make it aligned with the terrain.
-        private float GetTerrainNormalRotation(Vector3 position)
+        private Matrix GetTerrainNormalRotation(Vector3 position)
         {
-            Vector3 planeVector = _physicEngine.GetPlaneVector(position);
+            // Get the normal of the plane
+            Vector3 normal = _physicEngine.GetNormal(position);
+            Vector3 currentNormal = _rotation.Up;
 
-            return (float)Math.Acos(1 / planeVector.Y);
+            Vector3 axis = Vector3.Normalize(Vector3.Cross(currentNormal, normal));
+
+            //float xRot = (float)Math.Acos((Vector3.Dot(new Vector3(1f,0f,0f), normal)) / normal.Length());
+            //float yRot = (float)Math.Acos((Vector3.Dot(new Vector3(0f, 1f, 0f), normal)) / normal.Length());
+            //float zRot = (float)Math.Acos((Vector3.Dot(new Vector3(0f, 0f, 1f), normal)) / normal.Length());
+
+            float angle = (float)Math.Acos(Vector3.Dot(currentNormal, normal));
+
+            return Matrix.CreateFromAxisAngle(axis, angle);
         }
 
         // launch the appropriate def animation
@@ -240,7 +252,8 @@ namespace Engine.Game
                     {
                         // We save the death pos and rot
                         _deathPosition = _position;
-                        _deathRotation = _rotation;
+                        _deathRotation = 
+                            Matrix.CreateRotationX(MathHelper.PiOver2) * _rotation * GetTerrainNormalRotation(_position);
 
                         _model.ChangeAnimSpeed(2f);
                         _model.ChangeAnimation(animToPlay, false, 0.75f);
