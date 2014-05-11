@@ -55,8 +55,8 @@ namespace Engine
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-            //graphics.IsFullScreen = !launchedFromSoftware;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = !launchedFromSoftware;
+            //graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;
 
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -158,8 +158,8 @@ namespace Engine
             Display3D.Particles.ParticlesManager.LoadContent(GraphicsDevice);
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
-           // Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
-            Game.CConsole._activationKeys = Keys.P;
+            Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
+            //Game.CConsole._activationKeys = Keys.P;
             try
             {
                 if(!isSoftwareEmbedded)

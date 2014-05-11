@@ -193,6 +193,11 @@ namespace Engine.Game
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : "+
                         CEnemyManager._enemyList[0]._life + " %\n");
                     break;
+                case "lightModels":
+                    int lightEffect = 0;
+                    if (Int32.TryParse(cmd[1], out lightEffect))
+                        Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
+                    break;
             }
         }
 

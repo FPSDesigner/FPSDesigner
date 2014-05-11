@@ -1083,23 +1083,6 @@
       <Processor>SkinnedModelProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sounds\Menu\BACKGROUND_HORRORGAME.wav">
-      <Name>BACKGROUND_HORRORGAME</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-    <Compile Include="Sounds\Menu\BACKGROUND_MDWARGAME.wav">
-      <Name>BACKGROUND_MDWARGAME</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-    <Compile Include="Sounds\Menu\BACKGROUND_MEDIEVALGAME.wav">
-      <Name>BACKGROUND_MEDIEVALGAME</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

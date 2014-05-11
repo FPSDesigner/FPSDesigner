@@ -20,11 +20,16 @@ namespace WinServer.Pages
     /// </summary>
     public partial class Home : UserControl
     {
+        private Codes.CServer server;
+
         public Home()
         {
             InitializeComponent();
 
             GlobalVars.consoleElement = MainLogs;
+
+            server = new Codes.CServer(GlobalVars.serverInfo.Properties.Port);
+            server.Run();
         }
     }
 }

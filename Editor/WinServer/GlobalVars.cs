@@ -21,16 +21,23 @@ namespace WinServer
     static class GlobalVars
     {
         public static List<string> consoleListMessage = new List<string>();
-        public static TextBox consoleElement;
+        public static BBCodeBlock consoleElement;
         public static string SettingsFile = "serverSettings.xml";
+        public static string ConnectionKey = "LA45T6";
         public static Codes.ServerInfo serverInfo;
         public static BitmapFrame SoftwareIcon = BitmapFrame.Create(new Uri("pack://application:,,,/Assets/Icon.ico", UriKind.RelativeOrAbsolute));
 
         public static void AddNewMessage(string msg)
         {
             consoleListMessage.Add(msg);
+
             if (consoleElement != null)
-                consoleElement.Text += msg.Replace("\n","") + "\n";
+            {
+                if (consoleElement.Dispatcher.CheckAccess())
+                    consoleElement.BBCode += "> " + msg.Replace("\n", "") + "\n";
+                else
+                    consoleElement.Dispatcher.Invoke((Action)(() => consoleElement.BBCode += "> " + msg.Replace("\n", "") + "\n"));
+            }
         }
 
         public static Codes.ServerInfo defaultServerInfo()

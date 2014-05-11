@@ -61,6 +61,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Codes\CClient.cs" />
+    <Compile Include="Codes\CServer.cs" />
     <Compile Include="Codes\CXMLDatas.cs" />
     <Compile Include="Codes\CXMLManager.cs" />
     <Compile Include="GlobalVars.cs" />

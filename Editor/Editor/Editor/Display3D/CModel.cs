@@ -90,6 +90,8 @@ namespace Engine.Display3D
         public BoundingSphere _boundingSphere;
         public BoundingBox _boundingBox;
 
+        public LightingMode lightMode = LightingMode.ThreePixelLights;
+
         public Materials.Material Material { get; set; }
 
         public List<Triangle> _trianglesPositions = new List<Triangle>();
@@ -224,7 +226,30 @@ namespace Engine.Display3D
                         bEffect.World = localWorld;
                         bEffect.View = view;
                         bEffect.Projection = projection;
-                        bEffect.EnableDefaultLighting();
+
+                        switch (lightMode)
+                        {
+                            case LightingMode.NoLighting:
+                                bEffect.LightingEnabled = false;
+                                break;
+
+                            case LightingMode.OneVertexLight:
+                                bEffect.EnableDefaultLighting();
+                                bEffect.PreferPerPixelLighting = false;
+                                bEffect.DirectionalLight1.Enabled = false;
+                                bEffect.DirectionalLight2.Enabled = false;
+                                break;
+
+                            case LightingMode.ThreeVertexLights:
+                                bEffect.EnableDefaultLighting();
+                                bEffect.PreferPerPixelLighting = false;
+                                break;
+
+                            case LightingMode.ThreePixelLights:
+                                bEffect.EnableDefaultLighting();
+                                bEffect.PreferPerPixelLighting = true;
+                                break;
+                        }
                     }
                     else
                     {
@@ -620,6 +645,15 @@ namespace Engine.Display3D
             }
             return false;
         }
+    }
+
+
+    public enum LightingMode
+    {
+        NoLighting,
+        OneVertexLight,
+        ThreeVertexLights,
+        ThreePixelLights,
     }
 
     public class MeshTag

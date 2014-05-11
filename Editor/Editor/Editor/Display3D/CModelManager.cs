@@ -124,5 +124,16 @@ namespace Engine.Display3D
             return closest.Value;
         }
 
+        public static void ChangeModelsLightingEffect(LightingMode mode, int modelId = -1)
+        {
+            if (modelId == -1)
+            {
+                foreach (CModel mdl in modelsList)
+                    mdl.lightMode = mode;
+            }
+            else
+                modelsList[modelId].lightMode = mode;
+        }
+
     }
 }
