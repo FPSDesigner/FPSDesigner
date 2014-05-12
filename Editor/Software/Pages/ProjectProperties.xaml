@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Style="{StaticResource ContentRoot}">
-        <mui:ModernTab Layout="List" SelectedSource="/Pages/HandsTextures.xaml">
+        <mui:ModernTab Layout="List" SelectedSource="/Pages/Project Properties/HandsTextures.xaml">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="hands" Source="/Pages/HandsTextures.xaml" />
-                <mui:Link DisplayName="weapons" Source="/Pages/WeaponsProperties.xaml" />
+                <mui:Link DisplayName="hands" Source="/Pages/Project Properties/HandsTextures.xaml" />
+                <mui:Link DisplayName="weapons" Source="/Pages/Project Properties/WeaponsProperties.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

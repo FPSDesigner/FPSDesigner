@@ -87,7 +87,7 @@ namespace Engine.Display2D
             _postProcessor = postProcessor;
             _renderCapture = renderCapture;
 
-            _pixelTexture = content.Load<Texture2D>("Textures/pixel");
+            _pixelTexture = content.Load<Texture2D>("Textures/Pixel");
 
             uwWaterfallTexture = content.Load<Texture2D>("Textures/uw_effect");
         }

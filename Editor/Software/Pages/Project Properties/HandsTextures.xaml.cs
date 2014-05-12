@@ -34,7 +34,16 @@ namespace Software.Pages
 
             selectButton.Click += selectButton_Click;
 
-            imagePH.Source = new BitmapImage(new Uri(GlobalVars.contentRootFolder + "/" +GlobalVars.gameInfo.SpawnInfo.HandTexture, UriKind.Relative));
+            string[] imageExt = new string[] { ".png", ".jpg", ".jpeg", ".gif", ".tga", ".raw", ".bmp", ".dds" };
+
+            DirectoryInfo root = new DirectoryInfo(GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + Path.GetDirectoryName(GlobalVars.gameInfo.SpawnInfo.HandTexture));
+
+            if (root.Exists)
+            {
+                FileInfo[] filesFound = root.GetFiles(Path.GetFileName(GlobalVars.gameInfo.SpawnInfo.HandTexture) + ".*");
+                if(filesFound.Length > 0 && imageExt.Contains(filesFound[0].Extension))
+                    imagePH.Source = new BitmapImage(new Uri(filesFound[0].FullName, UriKind.Absolute));
+            }
         }
 
         void selectButton_Click(object sender, RoutedEventArgs e)
@@ -52,9 +61,9 @@ namespace Software.Pages
             if (imageDialog.ShowDialog() == true)
             {
                 // Copy file to texture path
-                string destImage = "./Textures/" + Path.GetFileName(imageDialog.FileName);
+                string destImage = GlobalVars.rootProjectFolder + GlobalVars.contentRootFolder + "/Textures/" + Path.GetFileName(imageDialog.FileName);
                 System.IO.File.Copy(imageDialog.FileName, destImage, true);
-                destImage = "Textures/" + Path.GetFileName(imageDialog.FileName);
+                destImage = "Textures/" + Path.GetFileName(destImage);
                 GlobalVars.gameInfo.SpawnInfo.HandTexture = destImage;
                 GlobalVars.embeddedGame.WPFHandler("setElementInfo", new object[] { "handsTexture", GlobalVars.gameInfo.SpawnInfo.HandTexture });
 

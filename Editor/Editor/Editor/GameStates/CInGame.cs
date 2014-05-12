@@ -254,7 +254,7 @@ namespace Engine.GameStates
             Display3D.CPickUpManager.Update(gameTime);
             Display3D.CPickUp EnteredPickup;
 
-            if (Display3D.CPickUpManager.CheckEnteredPickUp(new BoundingSphere(cam._cameraPos, 1.5f), out EnteredPickup))
+            if (!isSoftwareEmbedded && Display3D.CPickUpManager.CheckEnteredPickUp(new BoundingSphere(cam._cameraPos, 1.5f), out EnteredPickup))
             {
                 int futurIndex = weapon._weaponPossessed.Count;
 

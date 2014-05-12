@@ -23,7 +23,7 @@
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Margin="0, 20, 0, 0" Grid.Row="1" HorizontalAlignment="Center" Orientation="Vertical">
+        <StackPanel Margin="0, 20, 0, 0" Grid.Row="1" HorizontalAlignment="Left" Orientation="Vertical">
             <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10">Hand texture</TextBlock>
             <Image Stretch="Uniform" Width="150" Height="150" x:Name="imagePH" Source="/Assets/placeholder.png"/>
             <Button Content="select" x:Name="selectButton"/>

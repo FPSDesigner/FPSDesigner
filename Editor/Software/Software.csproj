@@ -120,7 +120,7 @@
     <Compile Include="Pages\ModelManager.xaml.cs">
       <DependentUpon>ModelManager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HandsTextures.xaml.cs">
+    <Compile Include="Pages\Project Properties\HandsTextures.xaml.cs">
       <DependentUpon>HandsTextures.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\TreeManager.xaml.cs">
@@ -218,7 +218,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HandsTextures.xaml">
+    <Page Include="Pages\Project Properties\HandsTextures.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
