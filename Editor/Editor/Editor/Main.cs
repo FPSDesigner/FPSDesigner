@@ -55,8 +55,8 @@ namespace Engine
 
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-            graphics.IsFullScreen = !launchedFromSoftware;
-            //graphics.IsFullScreen = false;
+            //graphics.IsFullScreen = !launchedFromSoftware;
+            graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;
 
             graphics.SynchronizeWithVerticalRetrace = false;
@@ -241,7 +241,7 @@ namespace Engine
             postProcessor.Draw(gameTime);
 
             base.Draw(gameTime);
-
+            
             // WPF
             if (isSoftwareEmbedded)
             {

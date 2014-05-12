@@ -59,6 +59,8 @@ namespace Engine.GameStates
             _graphics = graphics;
             _content = content;
 
+            Display3D.CModelManager.Initialize(content, graphics);
+
             Game.CSoundManager.LoadContent();
 
             // We Add some useful sounds
@@ -103,7 +105,7 @@ namespace Engine.GameStates
                     modelInfo.Alpha,
                     bumpTextures));
             }
-            Display3D.CModelManager.LoadContent(content);
+            Display3D.CModelManager.LoadContent(content, graphics);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -189,6 +191,8 @@ namespace Engine.GameStates
                 nearClip = 0.6f;
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
 
+            //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
+            //Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
 
@@ -241,8 +245,6 @@ namespace Engine.GameStates
 
                 // ****** We get the weapon attribute to display it in console ****** //
                 Game.CConsole._Weapon = weapon;
-
-
             }
 
             if (!isSoftwareEmbedded)
@@ -287,7 +289,8 @@ namespace Engine.GameStates
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-
+            //_graphics.BlendState = BlendState.Opaque;
+            //Display3D.CModelManager.renderer.Draw();
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
@@ -315,7 +318,7 @@ namespace Engine.GameStates
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             water.Draw(cam._view, cam._projection, cam._cameraPos);
-
+            
             // Draw the trees
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
@@ -342,7 +345,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
-
+                
                 water.DrawDebug(spriteBatch);
             }
 

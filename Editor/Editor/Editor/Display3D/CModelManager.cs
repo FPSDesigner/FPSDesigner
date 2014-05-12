@@ -13,29 +13,69 @@ namespace Engine.Display3D
         public static List<CModel> modelsList = new List<CModel>();
 
         public static Effect normalMappingEffect;
+        public static Effect shadowEffect;
+        public static Effect lightEffect;
+        public static Materials.PrelightingRenderer renderer;
 
         public static bool DebugActivated = false;
 
         public static int selectModelId = -1;
 
-        public static void LoadContent(ContentManager content)
+        public static void Initialize(ContentManager content, GraphicsDevice graphics)
         {
+            renderer = new Materials.PrelightingRenderer(graphics, content);
+            renderer.Models = new List<CModel>();
+
             normalMappingEffect = content.Load<Effect>("Effects\\NormalMapping");
+            lightEffect = content.Load<Effect>("Effects/PPModel");
+        }
+
+        public static void LoadContent(ContentManager content, GraphicsDevice graphics)
+        {
             foreach (CModel model in modelsList)
             {
-                model.LoadContent(content, normalMappingEffect);
+                model.LoadContent(content);
             }
+        }
+
+        public static void ApplyRendererShadow(ContentManager content, GraphicsDevice graphics, CCamera camera)
+        {
+            shadowEffect = content.Load<Effect>("Effects\\ShadowMapping");
+            foreach (CModel model in modelsList)
+            {
+                model.SetModelEffect(shadowEffect, true);
+            }
+
+            ApplyLights(content, graphics, camera);
+
+            /*renderer.ShadowLightPosition = new Vector3(-120, 195, 88);
+            renderer.ShadowLightTarget = new Vector3(-120, 150, 88);
+            renderer.DoShadowMapping = true;
+            renderer.ShadowMult = 0.3f;*/
+        }
+
+        public static void ApplyRendererLight(ContentManager content, GraphicsDevice graphics, CCamera camera)
+        {
+            ApplyLights(content, graphics, camera);
+        }
+
+        public static void ApplyLights(ContentManager content, GraphicsDevice graphics, CCamera camera)
+        {
+            renderer.Camera = camera;
+            renderer.Lights = new List<Materials.PPPointLight>() {
+                new Materials.PPPointLight(new Vector3(-130, 180, 82.45f), Color.Red, 100),
+                new Materials.PPPointLight(new Vector3(-120, 175, 86), Color.Green, 100),
+            };
         }
 
         public static void addModel(CModel model)
         {
             modelsList.Add(model);
+            renderer.Models.Add(model);
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)
         {
-            /*modelsList[0]._modelPosition = new Vector3(modelsList[0]._modelPosition.X, modelsList[0]._modelPosition.Y + 0.01f, modelsList[0]._modelPosition.Z);
-            modelsList[0]._modelRotation = new Vector3(modelsList[0]._modelRotation.X, modelsList[0]._modelRotation.Y + 0.01f, modelsList[0]._modelRotation.Z);*/
             foreach (CModel model in modelsList)
             {
                 if (cam.BoundingVolumeIsInView(model.BoundingSphere))

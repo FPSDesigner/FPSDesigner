@@ -514,7 +514,7 @@ namespace Engine.Game
                 }
             }
         }
-
+        
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
         {
             // We draw the weapon only if the player is not looking in the lens

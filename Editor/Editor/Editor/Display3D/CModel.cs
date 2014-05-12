@@ -133,7 +133,7 @@ namespace Engine.Display3D
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
         public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null,
-            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string,Texture2D> bumpTexture = null)
+            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string, Texture2D> bumpTexture = null)
         {
             this._model = model;
 
@@ -187,10 +187,12 @@ namespace Engine.Display3D
             this.Material = new Materials.Material();
         }
 
-        public void LoadContent(ContentManager content, Effect normalMapping)
+        public void LoadContent(ContentManager content)
         {
-            this._normalMapping = normalMapping;
-            _normalMappingParam = normalMapping. Parameters["NormalMap"];
+            this._normalMapping = CModelManager.normalMappingEffect;
+            _normalMappingParam = CModelManager.normalMappingEffect.Parameters["NormalMap"];
+
+            //SetModelEffect(CModelManager.lightEffect, true);
         }
 
         /// <summary>
@@ -471,7 +473,7 @@ namespace Engine.Display3D
 
                 _camera._physicsMap._triangleNormalsList.RemoveAll(normal => _trianglesNormal.Contains(normal));
             }
-            else if(!beforeUpdate)
+            else if (!beforeUpdate)
             {
                 List<Vector3> totalPoints = new List<Vector3>();
                 for (int i = 0; i < _trianglesPositions.Count; i++)

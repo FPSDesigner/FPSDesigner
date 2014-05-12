@@ -21,30 +21,45 @@ namespace Engine.Display3D.Materials
 
         // Point light (sphere) mesh
         Model lightMesh;
-        
+
         // List of models, lights, and the camera
         public List<CModel> Models { get; set; }
         public List<PPPointLight> Lights { get; set; }
-        public Display3D.CCamera Camera { get; set; }
-
-        Display3D.CTerrain terrain;
+        public CCamera Camera { get; set; }
 
         GraphicsDevice graphicsDevice;
         int viewWidth = 0, viewHeight = 0;
-        bool DebugMode;
 
-        public PrelightingRenderer(GraphicsDevice GraphicsDevice, ContentManager Content, Display3D.CTerrain terrain, bool DebugMode = false)
+        // Position and target of the shadowing light
+        public Vector3 ShadowLightPosition { get; set; }
+        public Vector3 ShadowLightTarget { get; set; }
+
+        // Shadow depth target and depth-texture effect
+        RenderTarget2D shadowDepthTarg;
+        Effect shadowDepthEffect;
+
+        // Depth texture parameters
+        int shadowMapSize = 2048;
+        int shadowFarPlane = 10000;
+
+        // Shadow light view and projection
+        Matrix shadowView, shadowProjection;
+
+        // Shadow properties
+        public bool DoShadowMapping { get; set; }
+        public float ShadowMult { get; set; }
+
+        public PrelightingRenderer(GraphicsDevice GraphicsDevice,
+            ContentManager Content)
         {
             viewWidth = GraphicsDevice.Viewport.Width;
             viewHeight = GraphicsDevice.Viewport.Height;
 
-            GraphicsDevice.BlendState = BlendState.Opaque;
-
             // Create the three render targets
-            depthTarg = new RenderTarget2D(GraphicsDevice, viewWidth, 
+            depthTarg = new RenderTarget2D(GraphicsDevice, viewWidth,
                 viewHeight, false, SurfaceFormat.Single, DepthFormat.Depth24);
 
-            normalTarg = new RenderTarget2D(GraphicsDevice, viewWidth, 
+            normalTarg = new RenderTarget2D(GraphicsDevice, viewWidth,
                 viewHeight, false, SurfaceFormat.Color, DepthFormat.Depth24);
 
             lightTarg = new RenderTarget2D(GraphicsDevice, viewWidth,
@@ -59,14 +74,15 @@ namespace Engine.Display3D.Materials
             lightingEffect.Parameters["viewportHeight"].SetValue(viewHeight);
 
             // Load point light mesh and set light mapping effect to it
-            lightMesh = Content.Load<Model>("3D/PPLightMesh");
+            lightMesh = Content.Load<Model>("Effects/PPLightMesh");
             lightMesh.Meshes[0].MeshParts[0].Effect = lightingEffect;
 
-            if (DebugMode)
-                Display3D.CSimpleShapes.Initialize(GraphicsDevice);
+            shadowDepthTarg = new RenderTarget2D(GraphicsDevice, shadowMapSize,
+                shadowMapSize, false, SurfaceFormat.Single, DepthFormat.Depth24);
 
-            this.DebugMode = DebugMode;
-            this.terrain = terrain;
+            shadowDepthEffect = Content.Load<Effect>("Effects/ShadowDepthEffect");
+            shadowDepthEffect.Parameters["FarPlane"].SetValue(shadowFarPlane);
+
             this.graphicsDevice = GraphicsDevice;
         }
 
@@ -74,22 +90,19 @@ namespace Engine.Display3D.Materials
         {
             drawDepthNormalMap();
             drawLightMap();
+            if (DoShadowMapping) drawShadowDepthMap();
             prepareMainPass();
-            
         }
 
         void drawDepthNormalMap()
         {
-            graphicsDevice.BlendState = BlendState.Opaque;
             // Set the render targets to 'slots' 1 and 2
             graphicsDevice.SetRenderTargets(normalTarg, depthTarg);
 
-            
             // Clear the render target to 1 (infinite depth)
             graphicsDevice.Clear(Color.White);
 
             // Draw each model with the PPDepthNormal effect
-            
             foreach (CModel model in Models)
             {
                 model.CacheEffects();
@@ -98,16 +111,41 @@ namespace Engine.Display3D.Materials
                 model.RestoreEffects();
             }
 
-            terrain.Draw(Camera._view, Camera._projection, Camera._cameraPos);
             // Un-set the render targets
             graphicsDevice.SetRenderTargets(null);
+        }
 
+        void drawShadowDepthMap()
+        {
+            // Calculate view and projection matrices for the "light"
+            // shadows are being calculated for
+            shadowView = Matrix.CreateLookAt(ShadowLightPosition,
+                ShadowLightTarget, Vector3.Up);
 
+            shadowProjection = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.ToRadians(45), 1, 1, shadowFarPlane);
+
+            // Set render target
+            graphicsDevice.SetRenderTarget(shadowDepthTarg);
+
+            // Clear the render target to 1 (infinite depth)
+            graphicsDevice.Clear(Color.White);
+
+            // Draw each model with the ShadowDepthEffect effect
+            foreach (CModel model in Models)
+            {
+                model.CacheEffects();
+                model.SetModelEffect(shadowDepthEffect, false);
+                model.Draw(shadowView, shadowProjection, ShadowLightPosition);
+                model.RestoreEffects();
+            }
+
+            // Un-set the render targets
+            graphicsDevice.SetRenderTarget(null);
         }
 
         void drawLightMap()
         {
-            
             // Set the depth and normal map info to the effect
             lightingEffect.Parameters["DepthTexture"].SetValue(depthTarg);
             lightingEffect.Parameters["NormalTexture"].SetValue(normalTarg);
@@ -141,31 +179,31 @@ namespace Engine.Display3D.Materials
                     * Matrix.CreateTranslation(light.Position)) * viewProjection;
 
                 lightingEffect.Parameters["WorldViewProjection"].SetValue(wvp);
+
                 // Determine the distance between the light and camera
-                float dist = Vector3.Distance(Camera._cameraPos, light.Position);
+                float dist = Vector3.Distance(Camera._cameraPos,
+                    light.Position);
 
                 // If the camera is inside the light-sphere, invert the cull mode
                 // to draw the inside of the sphere instead of the outside
                 if (dist < light.Attenuation)
-                    graphicsDevice.RasterizerState = 
+                    graphicsDevice.RasterizerState =
                         RasterizerState.CullClockwise;
 
                 // Draw the point-light-sphere
                 lightMesh.Meshes[0].Draw();
 
                 // Revert the cull mode
-                graphicsDevice.RasterizerState = 
+                graphicsDevice.RasterizerState =
                     RasterizerState.CullCounterClockwise;
             }
-             
+
             // Revert the blending and depth render states
-            graphicsDevice.BlendState = BlendState.NonPremultiplied;
-             
-            graphicsDevice.DepthStencilState = DepthStencilState.None;
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             // Un-set the render target
             graphicsDevice.SetRenderTarget(null);
-            
         }
 
         void prepareMainPass()
@@ -183,17 +221,30 @@ namespace Engine.Display3D.Materials
 
                         if (part.Effect.Parameters["viewportHeight"] != null)
                             part.Effect.Parameters["viewportHeight"].SetValue(viewHeight);
-                    }
-        }
 
-        public void DrawDebugBoxes(GameTime gameTime, Matrix view, Matrix projection)
-        {
-            for (int i = 0; i < Lights.Count; i++)
-            {
-                BoundingSphere lightSphere = new BoundingSphere(Lights[i].Position, 0.8f);
-                Display3D.CSimpleShapes.AddBoundingSphere(lightSphere, Lights[i].Color);
-            }
-            Display3D.CSimpleShapes.Draw(gameTime, view, projection);
+                        if (part.Effect.Parameters["DoShadowMapping"] != null)
+                            part.Effect.Parameters["DoShadowMapping"].SetValue(DoShadowMapping);
+
+                        if (!DoShadowMapping) continue;
+
+                        if (part.Effect.Parameters["ShadowMap"] != null)
+                            part.Effect.Parameters["ShadowMap"].SetValue(shadowDepthTarg);
+
+                        if (part.Effect.Parameters["ShadowView"] != null)
+                            part.Effect.Parameters["ShadowView"].SetValue(shadowView);
+
+                        if (part.Effect.Parameters["ShadowProjection"] != null)
+                            part.Effect.Parameters["ShadowProjection"].SetValue(shadowProjection);
+
+                        if (part.Effect.Parameters["ShadowLightPosition"] != null)
+                            part.Effect.Parameters["ShadowLightPosition"].SetValue(ShadowLightPosition);
+
+                        if (part.Effect.Parameters["ShadowFarPlane"] != null)
+                            part.Effect.Parameters["ShadowFarPlane"].SetValue(shadowFarPlane);
+
+                        if (part.Effect.Parameters["ShadowMult"] != null)
+                            part.Effect.Parameters["ShadowMult"].SetValue(ShadowMult);
+                    }
         }
     }
 }
