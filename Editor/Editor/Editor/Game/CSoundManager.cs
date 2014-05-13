@@ -124,14 +124,27 @@ namespace Engine.Game
         {
             soundList[soundName]._soundInstance.Stop();
         }
+
+        #region "Sound Area Class"
+
+        public class SoundArea
+        {
+            private BoundingBox _area;
+
+            private CSound _sound;
+
+            private string _name;
+
+            public SoundArea(BoundingBox Area, CSound Sound,string Name)
+            {
+                this._area = Area;
+                this._name = Name;
+                this._sound = Sound;
+            }
+
+        }
+
+        #endregion
     }
 
-    #region "Sound Area Class"
-
-    public class SoundArea
-    {
-
-    }
-
-    #endregion
 }
