@@ -29,7 +29,6 @@ namespace Engine.GameStates
         Display3D.CSkybox skybox;
         Display3D.CTerrain terrain;
         Display3D.CLensFlare lensFlare;
-        Display3D.CWater water;
         List<Display3D.Particles.ParticleSystem> particlesList = new List<Display3D.Particles.ParticleSystem>();
 
         Game.CWeapon weapon;
@@ -123,28 +122,33 @@ namespace Engine.GameStates
             }
 
             /**** Water ****/
-            if (levelData.Water.UseWater)
+            if (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0)
             {
-                water = new Display3D.CWater(
-                    content, graphics, new Vector3(levelData.Water.Coordinates.X, levelData.Water.Coordinates.Y, levelData.Water.Coordinates.Z),
-                    new Vector2(levelData.Water.SizeX, levelData.Water.SizeY), levelData.Water.Alpha
-                );
+                foreach (Game.LevelInfo.Water water in levelData.Water.Water)
+                {
+                    Display3D.CWater waterInstance = new Display3D.CWater(
+                        content, graphics, water.Coordinates.Vector3, water.DeepestPoint.Vector3,
+                        new Vector2(water.SizeX, water.SizeY), water.Alpha
+                    );
 
-                water.Objects.Add(skybox);
 
-                if (levelData.Terrain.UseTerrain)
-                    water.Objects.Add(terrain);
+                    waterInstance.Objects.Add(skybox);
 
-                Game.CSoundManager.Water = water;
-                Game.CConsole._Water = water;
-                _character._water = water;
+                    if (levelData.Terrain.UseTerrain)
+                        waterInstance.Objects.Add(terrain);
+
+                    Display3D.CWaterManager.AddWater(waterInstance);
+
+                    Game.CSoundManager.Water = waterInstance;
+                    Game.CConsole._Water = waterInstance;
+                    _character._water = waterInstance;
+                }
+
+                terrain.waterHeight = Display3D.CWaterManager.listWater[0].waterPosition.Y;
             }
 
-            if (levelData.Terrain.UseTerrain && levelData.Water.UseWater)
-                terrain.waterHeight = water.waterPosition.Y;
-
             /**** Weapons ****/
-            
+
             List<object[]> objList = new List<object[]>();
             List<string[]> soundList = new List<string[]>();
             List<string[]> animList = new List<string[]>();
@@ -218,7 +222,7 @@ namespace Engine.GameStates
             Texture2D[] ennemyTexture = new Texture2D[1];
             ennemyTexture[0] = content.Load<Texture2D>("Textures\\StormTrooper");
             _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-142.7562f, 168.2f, 100.6888f)
-                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi), 100.0f ,6f, false);
+                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi), 100.0f, 6f, false);
 
             _enemy.LoadContent(content, cam);
 
@@ -298,7 +302,7 @@ namespace Engine.GameStates
             if (isPlayerUnderwater != water.isPositionUnderWater(playerPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
-                water.isUnderWater = isPlayerUnderwater;
+                Display3D.CWaterManager.SetUnderwater(isPlayerUnderwater);
                 terrain.isUnderWater = isPlayerUnderwater;
             }
 
@@ -307,7 +311,7 @@ namespace Engine.GameStates
             if (!isSoftwareEmbedded)
             {
                 skybox.ColorIntensity = 0.8f;
-                water.PreDraw(cam, gameTime);
+                Display3D.CWaterManager.PreDraw(cam, gameTime);
                 skybox.ColorIntensity = 1;
             }
             else
@@ -317,8 +321,8 @@ namespace Engine.GameStates
 
             terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            water.Draw(cam._view, cam._projection, cam._cameraPos);
-            
+            Display3D.CWaterManager.Draw(cam._view, cam._projection, cam._cameraPos);
+
             // Draw the trees
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
@@ -345,7 +349,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
-                
+
                 water.DrawDebug(spriteBatch);
             }
 
@@ -573,7 +577,7 @@ namespace Engine.GameStates
                 {
                     object[] values = (object[])p[1];
                     string eltType = (string)values[0];
-                    int eltId  = (int)values[1];
+                    int eltId = (int)values[1];
 
                     if (eltType == "tree")
                     {

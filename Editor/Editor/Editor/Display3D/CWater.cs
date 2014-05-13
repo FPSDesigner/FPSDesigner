@@ -12,6 +12,35 @@ namespace Engine.Display3D
         void SetClipPlane(Vector4? Plane);
     }
 
+    class CWaterManager
+    {
+        public static List<CWater> listWater = new List<CWater>();
+
+        public static void AddWater(CWater water)
+        {
+            listWater.Add(water);
+        }
+
+        public static void PreDraw(CCamera camera, GameTime gameTime)
+        {
+            foreach(CWater water in listWater)
+                water.PreDraw(camera, gameTime);
+        }
+
+        public static void Draw(Matrix View, Matrix Projection, Vector3 camPos)
+        {
+            foreach(CWater water in listWater)
+                water.Draw(View, Projection, camPos);
+        }
+
+        public static void SetUnderwater(bool underwater)
+        {
+            foreach (CWater water in listWater)
+                water.isUnderWater = underwater;
+        }
+
+    }
+
     class CWater
     {
         CModel waterMesh;
@@ -30,13 +59,14 @@ namespace Engine.Display3D
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
 
         private BoundingBox BoundingBoxChunk;
+        private BoundingBox RealBoundingBox;
         private bool isInView = true;
 
         private Matrix pickWorld;
 
         public bool debugActivated = false;
 
-        
+
         public float _waveSpeed = 0.04f;
 
         private bool _isUnderWater = false;
@@ -67,7 +97,7 @@ namespace Engine.Display3D
             }
         }
 
-        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector2 size, float alpha)
+        public CWater(ContentManager content, GraphicsDevice graphics, Vector3 position, Vector3 deepestPoint, Vector2 size, float alpha)
         {
             this.content = content;
             this.graphics = graphics;
@@ -96,6 +126,8 @@ namespace Engine.Display3D
             list.Add(new Vector3(position.X - size.X, position.Y, position.Z + size.Y));
             list.Add(new Vector3(position.X + size.X, position.Y, position.Z + size.Y));
             BoundingBoxChunk = BoundingBox.CreateFromPoints(list);
+            list.Add(deepestPoint);
+            RealBoundingBox = BoundingBox.CreateFromPoints(list);
 
             pickWorld = Matrix.CreateTranslation(Vector3.Zero);
         }
@@ -138,7 +170,7 @@ namespace Engine.Display3D
 
                 renderable.SetClipPlane(null);
             }
-            
+
             graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);
 
             // Set the reflected scene to its effect parameter in
@@ -197,13 +229,15 @@ namespace Engine.Display3D
         /// <returns>True if the position is underwater, false otherwise</returns>
         public bool isPositionUnderWater(Vector3 Position, bool checkY = true)
         {
+            return RealBoundingBox.Contains(Position) == ContainmentType.Contains;
+            /*
             if (checkY && Position.Y > waterPosition.Y)
                 return false;
 
             if ((Position.X >= waterPosition.X - waterSize.X && Position.X <= waterPosition.X + waterSize.X) &&
                 (Position.Z >= waterPosition.Z - waterSize.Y && Position.Z <= waterPosition.Z + waterSize.Y))
                 return true;
-            return false;
+            return false;*/
         }
 
         public Vector3 Pick(Matrix view, Matrix projection, int X, int Y, out bool isValid)

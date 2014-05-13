@@ -36,7 +36,7 @@ namespace Engine.Game.LevelInfo
         public Properties Properties { get; set; }
         public SpawnInfo SpawnInfo { get; set; }
         public Terrain Terrain { get; set; }
-        public Water Water { get; set; }
+        public WaterList Water { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
         public Weapons Weapons { get; set; }
@@ -89,11 +89,16 @@ namespace Engine.Game.LevelInfo
     #endregion
 
     #region "Node - Water"
+    public class WaterList
+    {
+        [XmlElement("Water")]
+        public List<Water> Water { get; set; }
+    }
     public class Water
     {
-        public bool UseWater { get; set; }
         public float SizeX { get; set; }
         public float SizeY { get; set; }
+        public Coordinates DeepestPoint { get; set; }
         public float Alpha { get; set; }
         public Coordinates Coordinates { get; set; }
     }
