@@ -149,13 +149,15 @@ namespace Engine.Game
             }
 
             // We add the switching sounds
-            SoundEffect changeWeapSound, changeWeapSound2, pickup;
+            SoundEffect changeWeapSound, changeWeapSound2, changeWeapSound3, pickup;
             changeWeapSound = content.Load<SoundEffect>("Sounds\\Weapons\\CHANGEWEAPON1");
             changeWeapSound2 = content.Load<SoundEffect>("Sounds\\Weapons\\CHANGEWEAPON2");
+            changeWeapSound3 = content.Load<SoundEffect>("Sounds\\Weapons\\SWITCH_MACHETE");
             pickup = content.Load<SoundEffect>("Sounds\\Weapons\\PICKUPWEAPON");
             CSoundManager.AddSound("SWITCHWEAPON1", changeWeapSound, false, 0.0f);
             CSoundManager.AddSound("SWITCHWEAPON2", changeWeapSound2, false, 0.0f);
             CSoundManager.AddSound("PICKUPWEAPON", pickup, false, 0.0f);
+            CSoundManager.AddSound("SWITCH_MACHETE", changeWeapSound3, false, 0.0f);
 
             // Initialize the weapon possessed
             _weaponPossessed = new List<WeaponData>();

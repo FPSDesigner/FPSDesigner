@@ -40,6 +40,7 @@ namespace Engine.Game
     {
         public float _life;
         private float _runningVelocity; // Displacement velocity
+        private float _collisionHeight; // Collision Height between terrain and the AI
 
         private Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
@@ -59,6 +60,7 @@ namespace Engine.Game
 
         private bool _isMoving;
         private bool _isDead;
+        private bool _isHeadShot; // The character took an headshot
         public bool _isFrozen; // Use to stop translation
 
         // Animation Boolean
@@ -74,6 +76,7 @@ namespace Engine.Game
             _position = Position;
             _scale = new Vector3(0.5f);
             _deathPosition = Vector3.Zero;
+            _collisionHeight = 0.2f;
 
             _rotation = Rotation;
             _rotation = Matrix.Identity;
@@ -93,6 +96,7 @@ namespace Engine.Game
             _isDyingAnimPlaying = false;
             _isDead = false;
             _isFrozen = true;
+            _isHeadShot = false;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
         }
@@ -181,7 +185,7 @@ namespace Engine.Game
             //GetRealTriangles();
 
             // We draw the enemy entirely if he is alive
-            if (!_isDead)
+            if (!_isHeadShot)
                 _model.Draw(gameTime, spriteBatch, view, projection);
             else
             {
@@ -225,17 +229,13 @@ namespace Engine.Game
         {
             // Get the normal of the plane
             Vector3 normal = _physicEngine.GetNormal(position);
-            Vector3 currentNormal = _rotation.Up;
+            Vector3 currentNormal = new Vector3(0f,1f,0f);
 
             Vector3 axis = Vector3.Normalize(Vector3.Cross(currentNormal, normal));
 
-            //float xRot = (float)Math.Acos((Vector3.Dot(new Vector3(1f,0f,0f), normal)) / normal.Length());
-            //float yRot = (float)Math.Acos((Vector3.Dot(new Vector3(0f, 1f, 0f), normal)) / normal.Length());
-            //float zRot = (float)Math.Acos((Vector3.Dot(new Vector3(0f, 0f, 1f), normal)) / normal.Length());
-
             float angle = (float)Math.Acos(Vector3.Dot(currentNormal, normal));
 
-            return Matrix.CreateFromAxisAngle(axis, angle);
+            return Matrix.CreateFromAxisAngle(axis, angle) * Matrix.CreateRotationX(MathHelper.Pi);
         }
 
         // launch the appropriate def animation
@@ -250,10 +250,15 @@ namespace Engine.Game
                     // The player is not 
                     if (!_isDyingAnimPlaying)
                     {
+                        if (animToPlay == "death_headshot")
+                            _isHeadShot = true;
+
+                        _collisionHeight = 0.05f;
+
                         // We save the death pos and rot
                         _deathPosition = _position;
-                        _deathRotation = 
-                            Matrix.CreateRotationX(MathHelper.PiOver2) * _rotation * GetTerrainNormalRotation(_position);
+                        _deathRotation =
+                            _rotation * GetTerrainNormalRotation(_position);
 
                         _model.ChangeAnimSpeed(2f);
                         _model.ChangeAnimation(animToPlay, false, 0.75f);

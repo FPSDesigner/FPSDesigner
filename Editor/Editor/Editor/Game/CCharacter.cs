@@ -62,12 +62,12 @@ namespace Engine.Game
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
         private float _elapsedSnipeShot; // Time between two shots when the player is aiming with a sniper
 
-        public float _sprintSpeed = 13f;
-        public float _walkSpeed = 9f;
+        public float _sprintSpeed = 3f;
+        public float _walkSpeed = 1.6f;
         public float _aimSpeed = 3f;
         public float _freeCamSpeed = 30f;
         public float _crouchSpeed = 3f;
-        public float _movementsLerp = 0.1f;
+        public float _movementsLerp = 0.25f;
 
         private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
         private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
@@ -637,8 +637,11 @@ namespace Engine.Game
                     {
                         _futurSelectedWeapon = (weapon._selectedWeapon + 1) % weapon._weaponPossessed.Count;
 
-                        // Play the sound
-                        CSoundManager.PlaySound("SWITCHWEAPON1");
+                        // Play the sound If the weapon is not something like a machete
+                        if(weapon._weaponPossessed[_futurSelectedWeapon]._wepType != 2)
+                            CSoundManager.PlaySound("SWITCHWEAPON1");
+                        else // Play a special sound
+                            CSoundManager.PlaySound("SWITCH_MACHETE");
 
                         // Change the futur animation speed
                         _isShoting = false;
@@ -656,8 +659,11 @@ namespace Engine.Game
                     {
                         _futurSelectedWeapon = (weapon._selectedWeapon <= 0) ? weapon._weaponPossessed.Count - 1 : weapon._selectedWeapon - 1;
 
-                        // PLAY SOUND
-                        CSoundManager.PlaySound("SWITCHWEAPON2");
+                        // Play the sound If the weapon is not something like a machete
+                        if (weapon._weaponPossessed[_futurSelectedWeapon]._wepType != 2)
+                            CSoundManager.PlaySound("SWITCHWEAPON2");
+                        else // Play a special sound
+                            CSoundManager.PlaySound("SWITCH_MACHETE");
 
                         // Change the futur animation speed
                         _isShoting = false;

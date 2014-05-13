@@ -19,6 +19,8 @@ namespace Engine.Game
 
         public static Dictionary<string, CSound> soundList;
 
+        public static Dictionary<string, CSound> soundArea;
+
         #region CSound class
         public class CSound
         {
@@ -125,4 +127,13 @@ namespace Engine.Game
             soundList[soundName]._soundInstance.Stop();
         }
     }
+
+    #region "Sound Area Class"
+
+    public class SoundArea
+    {
+
+    }
+
+    #endregion
 }

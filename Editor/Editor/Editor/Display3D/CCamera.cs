@@ -168,7 +168,7 @@ namespace Engine.Display3D
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
             // PLAY THE STEP SOUND
-            if (_isMoving && _elapsedStepTime > 450 * (14 / camVelocity))
+            if (_isMoving && _elapsedStepTime > 350 * (14 / camVelocity))
             {
                 if (!_isPitchShiftedStepSound)
                     Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
