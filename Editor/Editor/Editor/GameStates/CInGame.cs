@@ -138,10 +138,6 @@ namespace Engine.GameStates
                         waterInstance.Objects.Add(terrain);
 
                     Display3D.CWaterManager.AddWater(waterInstance);
-
-                    Game.CSoundManager.Water = waterInstance;
-                    Game.CConsole._Water = waterInstance;
-                    _character._water = waterInstance;
                 }
 
                 terrain.waterHeight = Display3D.CWaterManager.listWater[0].waterPosition.Y;
@@ -193,7 +189,7 @@ namespace Engine.GameStates
             float nearClip = levelData.SpawnInfo.NearClip;
             if (isSoftwareEmbedded)
                 nearClip = 0.6f;
-            cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, levelData.Water.UseWater });
+            cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0) });
 
             //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
             //Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
@@ -211,8 +207,12 @@ namespace Engine.GameStates
             Game.CConsole._Camera = cam;
             Game.CConsole._Weapon = weapon;
 
-            if (levelData.Water.UseWater)
-                cam._physicsMap._waterHeight = water.waterPosition.Y;
+            List<float> totalWaterHeight = new List<float>();
+            foreach (Display3D.CWater wat in Display3D.CWaterManager.listWater)
+                totalWaterHeight.Add(wat.waterPosition.Y);
+
+            if (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0)
+                cam._physicsMap._waterHeight = totalWaterHeight;
 
             x = levelData.Weapons.Weapon[1].Rotation.X;
             y = levelData.Weapons.Weapon[1].Rotation.Y;
@@ -239,7 +239,7 @@ namespace Engine.GameStates
         public void Update(GameTime gameTime, KeyboardState kbState, MouseState mouseState, MouseState oldMouseState)
         {
             // Update camera - _charac.Run is a functions allows player to run, look at the param
-            cam.Update(gameTime, _character.SpeedModification(kbState, cam._physicsMap._fallingVelocity, weapon, cam), isPlayerUnderwater, water.waterPosition.Y, kbState, mouseState, _oldKeyState);
+            cam.Update(gameTime, _character.SpeedModification(kbState, cam._physicsMap._fallingVelocity, weapon, cam), isPlayerUnderwater, Display3D.CWaterManager.GetWaterHeight(cam._cameraPos), kbState, mouseState, _oldKeyState);
 
             // Update all character actions
             if (!isSoftwareEmbedded)
@@ -299,10 +299,10 @@ namespace Engine.GameStates
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
 
-            if (isPlayerUnderwater != water.isPositionUnderWater(playerPos))
+            if (isPlayerUnderwater != Display3D.CWaterManager.IsPositionUnderwater(playerPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
-                Display3D.CWaterManager.SetUnderwater(isPlayerUnderwater);
+                Display3D.CWaterManager.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
 
@@ -349,10 +349,9 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
-
-                water.DrawDebug(spriteBatch);
             }
 
+            Display3D.CWaterManager.DrawDebug(spriteBatch);
 
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
 
@@ -459,6 +458,10 @@ namespace Engine.GameStates
                     {
                         Display3D.CPickUpManager.selectedPickupId = -1;
                     }
+                    else if ((string)values[0] == "water")
+                    {
+                        Display3D.CWaterManager.selectedWater = -1;
+                    }
                 }
                 else if (action == "selectObject")
                 {
@@ -479,6 +482,11 @@ namespace Engine.GameStates
                     {
                         Display3D.CPickUpManager.selectedPickupId = (int)values[1];
                         newPos = Display3D.CPickUpManager._pickups[(int)values[1]]._Model._modelPosition;
+                    }
+                    else if ((string)values[0] == "water")
+                    {
+                        Display3D.CWaterManager.selectedWater = (int)values[1];
+                        newPos = Display3D.CWaterManager.listWater[(int)values[1]].waterPosition;
                     }
                     Gizmos.posGizmo._modelPosition = newPos;
                     Gizmos.rotGizmo._modelPosition = newPos;
@@ -544,6 +552,8 @@ namespace Engine.GameStates
                             pos = Display3D.CModelManager.modelsList[eltId]._modelPosition;
                         else if (eltType == "pickup")
                             pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition;
+                        else if (eltType == "water")
+                            pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
                     }
                     else if (info == "rot")
                     {
@@ -562,6 +572,8 @@ namespace Engine.GameStates
                             pos = Display3D.CModelManager.modelsList[eltId]._modelScale;
                         else if (eltType == "pickup")
                             pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelScale;
+                        else if (eltType == "water")
+                            pos = Display3D.CWaterManager.listWater[eltId].waterMesh._modelScale;
                     }
                     else if (info == "treeseed")
                         return Display3D.TreeManager._tTrees[eltId]._seed;
@@ -593,6 +605,11 @@ namespace Engine.GameStates
                     {
                         Display3D.CModelManager.selectModelId = -1;
                         Display3D.CModelManager.modelsList.RemoveAt(eltId);
+                    }
+                    else if (eltType == "water")
+                    {
+                        Display3D.CWaterManager.selectedWater = -1;
+                        Display3D.CWaterManager.listWater.RemoveAt(eltId);
                     }
                     SaveXMLFile();
                 }
@@ -637,10 +654,15 @@ namespace Engine.GameStates
                             bumpTextures));
 
                     }
-                    if (eltType == "pickup")
+                    else if (eltType == "pickup")
                     {
                         Game.LevelInfo.MapModels_Pickups pickupVal = (Game.LevelInfo.MapModels_Pickups)values[1];
                         Display3D.CPickUpManager.AddPickup(_graphics, modelsListWeapons[pickupVal.WeaponName], textureListWeapons[pickupVal.WeaponName], pickupVal.Position.Vector3, pickupVal.Rotation.Vector3, pickupVal.Scale.Vector3, pickupVal.WeaponName, pickupVal.WeaponBullets);
+                    }
+                    else if (eltType == "water")
+                    {
+                        Game.LevelInfo.Water waterVal = (Game.LevelInfo.Water)values[1];
+                        Display3D.CWaterManager.AddWater(new Display3D.CWater(_content, _graphics, waterVal.Coordinates.Vector3, waterVal.DeepestPoint.Vector3, new Vector2(waterVal.SizeX, waterVal.SizeY), waterVal.Alpha));
                     }
                 }
                 else if (action == "setElementInfo")
@@ -672,6 +694,8 @@ namespace Engine.GameStates
                                         Display3D.CModelManager.modelsList[eltId]._modelPosition = newPos;
                                     else if (eltType == "pickup")
                                         Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition = newPos;
+                                    else if (eltType == "water")
+                                        Display3D.CWaterManager.listWater[eltId].waterPosition = newPos;
                                 }
                                 else if (info == "rot")
                                 {
@@ -690,6 +714,8 @@ namespace Engine.GameStates
                                         Display3D.CModelManager.modelsList[eltId]._modelScale = newPos;
                                     else if (eltType == "pickup")
                                         Display3D.CPickUpManager._pickups[eltId]._Model._modelScale = newPos;
+                                    else if (eltType == "water")
+                                        Display3D.CWaterManager.listWater[eltId].waterSize = new Vector2(newPos.X, newPos.Z);
                                 }
                             }
                         }

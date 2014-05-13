@@ -59,7 +59,6 @@ namespace Engine.Game
         public static Game.CEnemyManager _EnemyManager;
         public static Game.CWeapon _Weapon;
         public static Display3D.CTerrain _Terrain;
-        public static Display3D.CWater _Water;
 
         /// <summary>
         /// Process new commands
@@ -129,21 +128,21 @@ namespace Engine.Game
                         if (debugType == 0)
                         {
                             _Terrain.debugActivated = false;
-                            _Water.debugActivated = false;
+                            Display3D.CWaterManager.SetDebugActivated(false);
                             Display3D.CModelManager.DebugActivated = false;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
                         }
                         if (debugType == 1)
                         {
                             _Terrain.debugActivated = true;
-                            _Water.debugActivated = true;
+                            Display3D.CWaterManager.SetDebugActivated(true);
                             Display3D.CModelManager.DebugActivated = true;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.TriangleList;
                         }
                         if (debugType == 2)
                         {
                             _Terrain.debugActivated = true;
-                            _Water.debugActivated = true;
+                            Display3D.CWaterManager.SetDebugActivated(true);
                             Display3D.CModelManager.DebugActivated = true;
                             _Terrain.terrainDrawPrimitive = PrimitiveType.LineList;
                         }

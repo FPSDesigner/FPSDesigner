@@ -203,6 +203,12 @@ namespace Engine.Display3D
                 initialRotValue = CPickUpManager._pickups[eltIdDragging]._Model._modelRotation;
                 initialScaleValue = CPickUpManager._pickups[eltIdDragging]._Model._modelScale;
             }
+            else if (eltType == "pickup")
+            {
+                initialPosValue = CWaterManager.listWater[eltIdDragging].waterPosition;
+                initialRotValue = Vector3.Zero;
+                initialScaleValue = new Vector3(CWaterManager.listWater[eltIdDragging].waterSize.X, 1, CWaterManager.listWater[eltIdDragging].waterSize.Y);
+            }
         }
 
         public void Drag(int posX, int posY, CCamera cam)
@@ -352,6 +358,32 @@ namespace Engine.Display3D
                             CPickUpManager._pickups[eltIdDragging]._Model._modelScale = new Vector3(oldPos.X, initialScaleValue.Y + diff.Y, oldPos.Z);
                         else if (axisDragging == 0)
                             CPickUpManager._pickups[eltIdDragging]._Model._modelScale = new Vector3(oldPos.X, oldPos.Y, initialScaleValue.Z - diff.Z);
+                    }
+                }
+                else if (eltTypeDragging == "water")
+                {
+                    if (shouldDrawPos)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 oldPos = CWaterManager.listWater[eltIdDragging].waterPosition;
+                        if (axisDragging == 1)
+                            CWaterManager.listWater[eltIdDragging].waterPosition = new Vector3(initialPosValue.X + diff.X, oldPos.Y, oldPos.Z);
+                        else if (axisDragging == 2)
+                            CWaterManager.listWater[eltIdDragging].waterPosition = new Vector3(oldPos.X, initialPosValue.Y + diff.Y, oldPos.Z);
+                        else if (axisDragging == 0)
+                            CWaterManager.listWater[eltIdDragging].waterPosition = new Vector3(oldPos.X, oldPos.Y, initialPosValue.Z + diff.Z);
+                        posGizmo._modelPosition = CWaterManager.listWater[eltIdDragging].waterPosition;
+                        rotGizmo._modelPosition = CWaterManager.listWater[eltIdDragging].waterPosition;
+                        scaleGizmo._modelPosition = CWaterManager.listWater[eltIdDragging].waterPosition;
+                    }
+                    else if (shouldDrawScale)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        Vector2 oldPos = CWaterManager.listWater[eltIdDragging].waterSize;
+                        if (axisDragging == 1)
+                            CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(initialScaleValue.X - diff.X, oldPos.Y);
+                        else if (axisDragging == 0)
+                            CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(oldPos.X, initialScaleValue.Z - diff.Y);
                     }
                 }
             }

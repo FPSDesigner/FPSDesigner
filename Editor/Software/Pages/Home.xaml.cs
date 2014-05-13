@@ -35,7 +35,7 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
-        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups;
+        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -53,6 +53,7 @@ namespace Software.Pages
             listTree_Trees = new List<TreeViewItem>();
             listTree_Models = new List<TreeViewItem>();
             listTree_Pickups = new List<TreeViewItem>();
+            listTree_Waters = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
 
@@ -256,7 +257,7 @@ namespace Software.Pages
         {
             AvailableComponentsList.Items.Clear();
         }
-        
+
         private void LoadGameComponentsToTreeview()
         {
             object gameInfo = m_game.WPFHandler("getLevelData", true);
@@ -271,6 +272,7 @@ namespace Software.Pages
             listTree_Trees.Clear();
             listTree_Models.Clear();
             listTree_Pickups.Clear();
+            listTree_Waters.Clear();
 
             TreeViewItem Models = new TreeViewItem();
             TreeViewItem Trees = new TreeViewItem();
@@ -331,6 +333,20 @@ namespace Software.Pages
                 }
             }
 
+            // Water
+            if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.Water != null && GlobalVars.gameInfo.Water.Water.Count > 0)
+            {
+                foreach (Engine.Game.LevelInfo.Water water in GlobalVars.gameInfo.Water.Water)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = "Water";
+
+                    Water.Items.Add(treeItem);
+                    listTree_Waters.Add(treeItem);
+                }
+
+            }
+
             // Add items to main tree view
             if (Models.Items.Count > 0)
                 GameComponentsList.Items.Add(Models);
@@ -341,7 +357,7 @@ namespace Software.Pages
             if (Pickups.Items.Count > 0)
                 GameComponentsList.Items.Add(Pickups);
 
-            if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.UseWater)
+            if (Water.Items.Count > 0)
                 GameComponentsList.Items.Add(Water);
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
@@ -396,6 +412,22 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "pickup", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", i);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    return;
+                }
+            }
+
+            // Water
+            for (int i = 0; i < listTree_Waters.Count; i++)
+            {
+                if (listTree_Waters[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    m_game.WPFHandler("selectObject", new object[] { "water", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("water", i);
                     ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
@@ -583,7 +615,7 @@ namespace Software.Pages
                         LoadGameComponentsToTreeview();
                         m_game.shouldUpdateOnce = true;
                     };
-                    
+
                     spElements["OptionsButtons"].Children.Add(duplicateButton);
                     spElements["OptionsButtons"].Children.Add(removeButton);
                 }
@@ -710,6 +742,48 @@ namespace Software.Pages
                     spElements["OptionsButtons"].Children.Add(removeButton);
                 }
 
+                else if (GlobalVars.selectedElt.eltType == "water")
+                {
+                    // Duplicate Button
+                    spElements["OptionsButtons"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "water", GlobalVars.gameInfo.Water.Water[GlobalVars.selectedElt.eltId] });
+                        LoadGameComponentsToTreeview();
+                    };
+
+
+                    // Remove Button
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "water", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
+                }
+
                 // Add elements to the main StackPanel
                 foreach (KeyValuePair<string, StackPanel> pair in spElements)
                 {
@@ -739,7 +813,7 @@ namespace Software.Pages
                         if ((string)parentpu.Header == "Pick-Ups")
                             ((TreeViewItem)parentpu.Items[GlobalVars.selectedElt.eltId]).Header = (string)((TextBox)s).Text;
                 }
-                
+
             }
             else if (propertyType == "pickupbullets")
                 m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((TextBox)s).Text, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });

@@ -73,7 +73,6 @@ namespace Engine.Game
         private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
 
         public Display3D.CTerrain _terrain;
-        public Display3D.CWater _water;
 
         public void Initialize()
         {
@@ -492,7 +491,7 @@ namespace Engine.Game
                                 bool IsWaterShot = false;
 
                                 Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+                                //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
                                 //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);

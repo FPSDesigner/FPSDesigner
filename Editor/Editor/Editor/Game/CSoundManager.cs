@@ -15,8 +15,6 @@ namespace Engine.Game
 {
     static class CSoundManager
     {
-        public static Display3D.CWater Water = null;
-
         public static Dictionary<string, CSound> soundList;
 
         public static Dictionary<string, CSound> soundArea;
@@ -83,7 +81,7 @@ namespace Engine.Game
         {
             if (soundList.ContainsKey(soundName))
             {
-                if (Water != null && Water.isUnderWater)
+                if (Display3D.CWaterManager.isUnderWater)
                 {
                     pitch = -1f; // Underwater effect
                     pan = 1f;
@@ -99,7 +97,7 @@ namespace Engine.Game
         {
             if (soundList.ContainsKey(soundName))
             {
-                if (Water != null &&  Water.isUnderWater)
+                if (Display3D.CWaterManager.isUnderWater)
                 {
                     pitch = -1f; // Underwater effect
                     pan = 1f;

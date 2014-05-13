@@ -34,7 +34,7 @@ namespace Engine.Game
         public float _gravityConstantWater = -9.81f / 80f;
         public float _maxFallingVelocity = -3.5f; // The maximum velocity of an entity during its fall
         public float _maxFallingVelocityWater = -0.05f;
-        public float _waterHeight = 0f;
+        public List<float> _waterHeight = new List<float>();
         public bool _isOnWaterSurface = false;
         public float _fallingVelocity { get { return _velocity.Y; } }
         public float _slippingResistance = -0.8f;
@@ -72,11 +72,16 @@ namespace Engine.Game
             Vector3 horizontalNormalReaction = Vector3.Zero;
 
             // Water surface check
-            if (_isGameUsing[1] && (_isUnderwater || _isOnWaterSurface) && entityPos.Y + translation.Y > _waterHeight)
+            float waterHeight = -1;
+            foreach (float waterH in _waterHeight)
+                if (entityPos.Y + translation.Y > waterHeight)
+                    waterHeight = waterH;
+
+            if (_isGameUsing[1] && (_isUnderwater || _isOnWaterSurface) && waterHeight != -1)
             {
                 _isOnWaterSurface = true;
                 _velocity.Y = 0;
-                assumedNewPosition.Y = _waterHeight + translation.Y;
+                assumedNewPosition.Y = waterHeight + translation.Y;
             }
             else if (_isOnWaterSurface)
                 _isOnWaterSurface = false;

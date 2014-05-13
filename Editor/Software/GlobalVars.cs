@@ -241,7 +241,7 @@ namespace Software
             {
                 if (!File.Exists(GlobalVars.rootProjectFolder + "/" + lib))
                 {
-                    if(File.Exists("./"+lib))
+                    if (File.Exists("./" + lib))
                         File.Copy("./" + lib, GlobalVars.rootProjectFolder + "/" + lib);
                     else
                         errorFiles.Add(lib);
@@ -342,17 +342,28 @@ namespace Software
                         BaseTexture = "",
                     }
                 },
-                Water = new Engine.Game.LevelInfo.Water
+                Water = new Engine.Game.LevelInfo.WaterList
                 {
-                    UseWater = false,
-                    SizeX = 1000,
-                    SizeY = 1000,
-                    Alpha = 0,
-                    Coordinates = new Engine.Game.LevelInfo.Coordinates
+                    Water = new List<Engine.Game.LevelInfo.Water>
                     {
-                        X = 0,
-                        Y = 0,
-                        Z = 0,
+                        new Engine.Game.LevelInfo.Water
+                        {
+                            SizeX = 1000,
+                            SizeY = 1000,
+                            Alpha = 0,
+                            DeepestPoint = new Engine.Game.LevelInfo.Coordinates
+                            {
+                                X = 0,
+                                Y = -1000,
+                                Z = 0,
+                            },
+                            Coordinates = new Engine.Game.LevelInfo.Coordinates
+                            {
+                                X = 0,
+                                Y = 0,
+                                Z = 0,
+                            }
+                        }
                     }
                 },
                 MapModels = new Engine.Game.LevelInfo.MapModels { },

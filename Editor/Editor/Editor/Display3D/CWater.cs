@@ -15,6 +15,23 @@ namespace Engine.Display3D
     class CWaterManager
     {
         public static List<CWater> listWater = new List<CWater>();
+        public static int selectedWater = -1;
+
+        private static bool _isUnderWater = false;
+
+        public static bool isUnderWater
+        {
+            set
+            {
+                foreach (CWater water in listWater)
+                    water.isUnderWater = value;
+                _isUnderWater = value;
+            }
+            get
+            {
+                return _isUnderWater;
+            }
+        }
 
         public static void AddWater(CWater water)
         {
@@ -29,21 +46,67 @@ namespace Engine.Display3D
 
         public static void Draw(Matrix View, Matrix Projection, Vector3 camPos)
         {
-            foreach(CWater water in listWater)
-                water.Draw(View, Projection, camPos);
+            for (int i = 0; i < listWater.Count; i++)
+            {
+                listWater[i].Draw(View, Projection, camPos);
+                if (selectedWater == i)
+                    CSimpleShapes.AddBoundingBox(listWater[i].RealBoundingBox, Color.Black);
+            }
         }
 
-        public static void SetUnderwater(bool underwater)
+        public static void SetDebugActivated(bool toggle)
         {
             foreach (CWater water in listWater)
-                water.isUnderWater = underwater;
+                water.debugActivated = toggle;
+        }
+
+        public static bool IsPositionUnderwater(Vector3 pos)
+        {
+            foreach (CWater water in listWater)
+                if (water.isPositionUnderWater(pos))
+                    return true;
+
+            return false;
+        }
+
+        public static float GetWaterHeight(Vector3 pos)
+        {
+            if (!isUnderWater)
+                return 0f;
+            else
+                foreach (CWater water in listWater)
+                    if (water.isPositionUnderWater(pos))
+                        return water.waterPosition.Y;
+
+            return 0f;
+        }
+
+        public static void DrawDebug(SpriteBatch spriteBatch)
+        {
+            foreach (CWater water in listWater)
+                water.DrawDebug(spriteBatch);
+        }
+
+        public static float? CheckRayIntersectsAnyPickup(Ray ray, out int idIntersected)
+        {
+            for (int i = 0; i < listWater.Count; i++)
+            {
+                float? distance = listWater[i].RayIntersectsPickup(ray);
+                if (distance.HasValue)
+                {
+                    idIntersected = i;
+                    return distance;
+                }
+            }
+            idIntersected = 0;
+            return null;
         }
 
     }
 
     class CWater
     {
-        CModel waterMesh;
+        public CModel waterMesh;
         Effect waterEffect;
 
         ContentManager content;
@@ -52,14 +115,35 @@ namespace Engine.Display3D
         public RenderTarget2D reflectionTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
-        public Vector3 waterPosition;
-        public Vector2 waterSize;
+        private Vector3 _waterPosition;
+        public Vector3 waterPosition
+        {
+            get { return _waterPosition; }
+            set
+            {
+                _waterPosition = value;
+                waterMesh._modelPosition = _waterPosition;
+            }
+        }
+
+        private Vector2 _waterSize;
+        public Vector2 waterSize
+        {
+            get { return _waterSize; }
+            set
+            {
+                _waterSize = value;
+                waterMesh._modelScale = new Vector3(_waterSize.X, 1, _waterSize.Y);
+            }
+        }
+
+
         public CCamera reflectionCamera;
 
         private Vector3 modelRotationUnderwater = new Vector3(0, 0, MathHelper.Pi);
 
         private BoundingBox BoundingBoxChunk;
-        private BoundingBox RealBoundingBox;
+        public BoundingBox RealBoundingBox;
         private bool isInView = true;
 
         private Matrix pickWorld;
@@ -102,8 +186,8 @@ namespace Engine.Display3D
             this.content = content;
             this.graphics = graphics;
 
-            this.waterPosition = position;
-            this.waterSize = size;
+            this._waterPosition = position;
+            this._waterSize = size;
 
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
@@ -270,6 +354,16 @@ namespace Engine.Display3D
             }
             isValid = false;
             return Vector3.Zero;
+        }
+
+        /// <summary>
+        /// Check if the ray intersects the water
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        public float? RayIntersectsPickup(Ray ray)
+        {
+            return ray.Intersects(RealBoundingBox);
         }
     }
 }
