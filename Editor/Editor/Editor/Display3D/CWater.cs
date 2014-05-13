@@ -102,6 +102,22 @@ namespace Engine.Display3D
             return null;
         }
 
+        public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
+        {
+            for (int i = 0; i < listWater.Count; i++)
+            {
+                CWater water = listWater[i];
+
+                lvl.Water.Water[i].Alpha = water.WaterAlpha;
+                lvl.Water.Water[i].Coordinates = new Game.LevelInfo.Coordinates(water.waterPosition);
+                lvl.Water.Water[i].SizeX = water.waterSize.X;
+                lvl.Water.Water[i].SizeY = water.waterSize.Y;
+            }
+
+            while (lvl.Water.Water.Count != listWater.Count)
+                lvl.Water.Water.RemoveAt(lvl.Water.Water.Count - 1);
+        }
+
     }
 
     class CWater

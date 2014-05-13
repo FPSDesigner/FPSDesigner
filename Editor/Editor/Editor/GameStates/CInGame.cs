@@ -760,6 +760,7 @@ namespace Engine.GameStates
             Display3D.CModelManager.UpdateGameLevel(ref levelData);
             Display3D.TreeManager.UpdateGameLevel(ref levelData);
             Display3D.CPickUpManager.UpdateGameLevel(ref levelData);
+            Display3D.CWaterManager.UpdateGameLevel(ref levelData);
         }
     }
 }

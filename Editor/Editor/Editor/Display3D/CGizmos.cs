@@ -203,7 +203,7 @@ namespace Engine.Display3D
                 initialRotValue = CPickUpManager._pickups[eltIdDragging]._Model._modelRotation;
                 initialScaleValue = CPickUpManager._pickups[eltIdDragging]._Model._modelScale;
             }
-            else if (eltType == "pickup")
+            else if (eltType == "water")
             {
                 initialPosValue = CWaterManager.listWater[eltIdDragging].waterPosition;
                 initialRotValue = Vector3.Zero;
@@ -383,7 +383,7 @@ namespace Engine.Display3D
                         if (axisDragging == 1)
                             CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(initialScaleValue.X - diff.X, oldPos.Y);
                         else if (axisDragging == 0)
-                            CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(oldPos.X, initialScaleValue.Z - diff.Y);
+                            CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(oldPos.X, initialScaleValue.Z - diff.Z);
                     }
                 }
             }
