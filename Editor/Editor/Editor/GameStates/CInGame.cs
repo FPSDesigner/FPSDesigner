@@ -192,7 +192,7 @@ namespace Engine.GameStates
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0) });
 
             //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
-            //Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
+            Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
 
@@ -293,8 +293,8 @@ namespace Engine.GameStates
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            //_graphics.BlendState = BlendState.Opaque;
-            //Display3D.CModelManager.renderer.Draw();
+            _graphics.BlendState = BlendState.Opaque;
+            Display3D.CModelManager.renderer.Draw();
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;

@@ -48,10 +48,10 @@ namespace Engine.Display3D
 
             ApplyLights(content, graphics, camera);
 
-            /*renderer.ShadowLightPosition = new Vector3(-120, 195, 88);
+            renderer.ShadowLightPosition = new Vector3(-120, 195, 88);
             renderer.ShadowLightTarget = new Vector3(-120, 150, 88);
             renderer.DoShadowMapping = true;
-            renderer.ShadowMult = 0.3f;*/
+            renderer.ShadowMult = 0.3f;
         }
 
         public static void ApplyRendererLight(ContentManager content, GraphicsDevice graphics, CCamera camera)

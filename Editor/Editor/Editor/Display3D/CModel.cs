@@ -192,7 +192,7 @@ namespace Engine.Display3D
             this._normalMapping = CModelManager.normalMappingEffect;
             _normalMappingParam = CModelManager.normalMappingEffect.Parameters["NormalMap"];
 
-            //SetModelEffect(CModelManager.lightEffect, true);
+            SetModelEffect(CModelManager.lightEffect, true);
         }
 
         /// <summary>
@@ -325,6 +325,7 @@ namespace Engine.Display3D
         /// <param name="CopyEffect">Wether or not we copy the effect</param>
         public void SetModelEffect(Effect effect, bool CopyEffect)
         {
+            List<Texture2D> list = new List<Texture2D>();
             foreach (ModelMesh mesh in _model.Meshes)
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
@@ -339,8 +340,15 @@ namespace Engine.Display3D
                     // If this ModelMeshPart has a texture, set it to the effect
                     if (tag.Texture != null)
                     {
+                        string newName = mesh.Name.Split('_')[0];
+                        if (_textures.ContainsKey(newName))
+                            tag.Texture = _textures[newName];
+                        else if (_textures.ContainsKey("ApplyAllMesh"))
+                            tag.Texture = _textures["ApplyAllMesh"];
+
                         setEffectParameter(toSet, "BasicTexture", tag.Texture);
                         setEffectParameter(toSet, "TextureEnabled", true);
+                        list.Add(tag.Texture);
                     }
                     else
                         setEffectParameter(toSet, "TextureEnabled", false);

@@ -248,7 +248,7 @@ namespace Engine.Game.Script
 
         public void SetCameraPosition(float x, float y, float z)
         {
-            CConsole._Camera._cameraPos = new Vector3(x,y,z,);
+            CConsole._Camera._cameraPos = new Vector3(x,y,z);
         }
     }
 }
