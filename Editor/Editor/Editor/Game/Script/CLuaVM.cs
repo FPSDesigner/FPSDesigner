@@ -120,6 +120,7 @@ namespace Engine.Game.Script
 
             // Camera function
             RegisterFunction("getCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCameraPosition"));
+            RegisterFunction("setCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("SetCameraPosition"));
 
         }
     }

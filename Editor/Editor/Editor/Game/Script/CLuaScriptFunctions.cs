@@ -245,5 +245,10 @@ namespace Engine.Game.Script
             else
                 return Vector3.Zero;
         }
+
+        public void SetCameraPosition(float x, float y, float z)
+        {
+            CConsole._Camera._cameraPos = new Vector3(x,y,z,);
+        }
     }
 }
