@@ -298,14 +298,12 @@ namespace Engine.GameStates
             //renderer.Draw();
             Vector3 playerPos = cam._cameraPos;
             //playerPos.Y -= cam._playerHeight;
-
             if (isPlayerUnderwater != Display3D.CWaterManager.IsPositionUnderwater(playerPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
                 Display3D.CWaterManager.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
-
             terrain.frustum = cam._Frustum;
 
             if (!isSoftwareEmbedded)
@@ -327,7 +325,7 @@ namespace Engine.GameStates
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
             _graphics.DepthStencilState = DepthStencilState.Default;
-
+            
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             Display3D.CModelManager.Draw(cam, gameTime);
@@ -348,7 +346,7 @@ namespace Engine.GameStates
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-                lensFlare.Draw(gameTime);
+                //lensFlare.Draw(gameTime);
             }
 
             Display3D.CWaterManager.DrawDebug(spriteBatch);
@@ -360,7 +358,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
             }
-
+            
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
         }

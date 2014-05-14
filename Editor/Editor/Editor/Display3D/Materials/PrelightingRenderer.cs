@@ -112,7 +112,7 @@ namespace Engine.Display3D.Materials
             }
 
             // Un-set the render targets
-            graphicsDevice.SetRenderTargets(null);
+            graphicsDevice.SetRenderTargets(Display2D.C2DEffect.renderTarget);
         }
 
         void drawShadowDepthMap()
@@ -141,7 +141,7 @@ namespace Engine.Display3D.Materials
             }
 
             // Un-set the render targets
-            graphicsDevice.SetRenderTarget(null);
+            graphicsDevice.SetRenderTarget(Display2D.C2DEffect.renderTarget);
         }
 
         void drawLightMap()
@@ -203,7 +203,7 @@ namespace Engine.Display3D.Materials
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             // Un-set the render target
-            graphicsDevice.SetRenderTarget(null);
+            graphicsDevice.SetRenderTarget(Display2D.C2DEffect.renderTarget);
         }
 
         void prepareMainPass()
