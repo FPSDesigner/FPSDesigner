@@ -60,6 +60,7 @@ namespace Software.Pages
             GameButton1.SizeChanged += ShowXNAImage_SizeChanged;
             GameButton1.MouseWheel += GameButton1_MouseWheel;
             GameButton1.PreviewMouseMove += GameButton1_PreviewMouseMove;
+            GameButton1.KeyDown += GameButton1_KeyDown;
 
             GameButton1.GotFocus += ShowXNAImage1_GotFocus;
             GameButton1.LostFocus += ShowXNAImage1_LostFocus;
@@ -86,6 +87,13 @@ namespace Software.Pages
             PlayButton.Click += PreviewButton_Click;
 
             LoadGameComponentsToTreeview();
+        }
+
+        void GameButton1_KeyDown(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine(e.Key.ToString());
+            if(e.Key == Key.F && GlobalVars.selectedElt != null)
+                m_game.WPFHandler("centerCamOnObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
         }
 
         void PreviewButton_Click(object sender, RoutedEventArgs e)

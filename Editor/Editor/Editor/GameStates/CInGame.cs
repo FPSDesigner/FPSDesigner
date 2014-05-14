@@ -378,6 +378,28 @@ namespace Engine.GameStates
                     cam.isCamFrozen = (bool)p[1];
                     cam.shouldUpdateMiddleScreen = true;
                 }
+                else if (action == "centerCamOnObject")
+                {
+                    Vector3 pos = Vector3.Zero;
+                    object[] values = (object[])p[1];
+
+                    string type = (string)values[0];
+                    int eltId = (int)values[1];
+
+                    if (type == "tree")
+                        pos = Display3D.TreeManager._tTrees[eltId].Position;
+                    else if (type == "model")
+                        pos = Display3D.CModelManager.modelsList[eltId]._modelPosition;
+                    else if (type == "pickup")
+                        pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition;
+                    else if (type == "water")
+                        pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
+
+                    cam._cameraTarget = pos;
+
+                    cam._yaw = (float)Math.Atan2(cam._cameraPos.X - pos.X, cam._cameraPos.Z - pos.Z);
+                    cam._pitch = (float)Math.Atan2(pos.Y - cam._cameraPos.Y, Math.Sqrt(Math.Pow(cam._cameraPos.X - pos.X, 2) + Math.Pow(cam._cameraPos.Z - pos.Z, 2)));
+                }
                 else if (action == "moveCameraForward")
                 {
                     Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, cam._roll);
