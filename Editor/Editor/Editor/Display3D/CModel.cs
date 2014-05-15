@@ -154,28 +154,29 @@ namespace Engine.Display3D
 
             if (_textures != null)
             {
-                foreach (ModelMesh mesh in model.Meshes)
-                {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        if (mesh.Name != collisionShapeName)
+                foreach (ModelMesh mesh in _model.Meshes)
+                    if(mesh.Name != collisionShapeName)
+                        foreach (ModelMeshPart part in mesh.MeshParts)
                         {
-                            effect.EnableDefaultLighting();
+                            Effect effect = part.Effect;
+                            if (effect is BasicEffect)
+                            {
+                                BasicEffect bEffect = (BasicEffect)effect;
+                                bEffect.EnableDefaultLighting();
 
-                            effect.TextureEnabled = true;
+                                bEffect.TextureEnabled = true;
 
-                            string newName = mesh.Name.Split('_')[0]; // If there is no * : newName corresponds to the mesh.Name
+                                string newName = mesh.Name.Split('_')[0]; // If there is no * : newName corresponds to the mesh.Name
 
-                            if (_textures.ContainsKey(newName))
-                                effect.Texture = _textures[newName];
-                            else if (_textures.ContainsKey("ApplyAllMesh"))
-                                effect.Texture = _textures["ApplyAllMesh"];
+                                if (_textures.ContainsKey(newName))
+                                    bEffect.Texture = _textures[newName];
+                                else if (_textures.ContainsKey("ApplyAllMesh"))
+                                    bEffect.Texture = _textures["ApplyAllMesh"];
 
-                            effect.SpecularColor = new Vector3(_specularColor);
-                            effect.SpecularPower = 32;
+                                bEffect.SpecularColor = new Vector3(_specularColor);
+                                bEffect.SpecularPower = 32;
+                            }
                         }
-                    }
-                }
             }
 
             buildBoundingSphere();

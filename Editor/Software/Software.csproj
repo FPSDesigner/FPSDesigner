@@ -80,6 +80,9 @@
     <Reference Include="XAMLMarkupExtensions">
       <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>A:\Dropbox\Dropbox\FPSDesigner\Codes\References\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="Pages\App.xaml">
@@ -325,7 +328,6 @@
   <ItemGroup>
     <Resource Include="Assets\Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

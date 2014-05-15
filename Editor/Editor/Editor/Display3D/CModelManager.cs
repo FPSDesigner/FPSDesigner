@@ -30,14 +30,6 @@ namespace Engine.Display3D
             lightEffect = content.Load<Effect>("Effects/PPModel");
         }
 
-        public static void LoadContent(ContentManager content, GraphicsDevice graphics)
-        {
-            foreach (CModel model in modelsList)
-            {
-                model.LoadContent(content);
-            }
-        }
-
         public static void ApplyRendererShadow(ContentManager content, GraphicsDevice graphics, CCamera camera)
         {
             shadowEffect = content.Load<Effect>("Effects\\ShadowMapping");
@@ -64,10 +56,11 @@ namespace Engine.Display3D
             renderer.Camera = camera;
         }
 
-        public static void addModel(CModel model)
+        public static void addModel(ContentManager content, CModel model)
         {
             modelsList.Add(model);
             renderer.Models.Add(model);
+            model.LoadContent(content);
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)

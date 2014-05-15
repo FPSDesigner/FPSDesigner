@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Diagnostics;
 
+using Xceed.Wpf.Toolkit;
 using Engine;
 
 namespace Software.Pages
@@ -35,7 +36,7 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
-        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters;
+        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters, listTree_Lights;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -54,6 +55,7 @@ namespace Software.Pages
             listTree_Models = new List<TreeViewItem>();
             listTree_Pickups = new List<TreeViewItem>();
             listTree_Waters = new List<TreeViewItem>();
+            listTree_Lights = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
 
@@ -232,6 +234,13 @@ namespace Software.Pages
                             m_game.WPFHandler("selectObject", new object[] { "pickup", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", (int)selectElt[1]);
                         }
+                        else if ((string)selectElt[0] == "light" && selectElt[1] is int)
+                        {
+                            listTree_Lights[(int)selectElt[1]].IsSelected = true;
+
+                            m_game.WPFHandler("selectObject", new object[] { "light", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("light", (int)selectElt[1]);
+                        }
                     }
                     else if (GlobalVars.selectedElt != null)
                     {
@@ -281,6 +290,7 @@ namespace Software.Pages
             listTree_Models.Clear();
             listTree_Pickups.Clear();
             listTree_Waters.Clear();
+            listTree_Lights.Clear();
 
             TreeViewItem Models = new TreeViewItem();
             TreeViewItem Trees = new TreeViewItem();
@@ -288,6 +298,7 @@ namespace Software.Pages
             TreeViewItem Terrain = new TreeViewItem();
             TreeViewItem Pickups = new TreeViewItem();
             TreeViewItem Characters = new TreeViewItem();
+            TreeViewItem Lights = new TreeViewItem();
 
             Models.Header = "Models";
             Trees.Header = "Trees";
@@ -295,6 +306,7 @@ namespace Software.Pages
             Terrain.Header = "Terrain";
             Pickups.Header = "Pick-Ups";
             Characters.Header = "Characters";
+            Lights.Header = "Lights";
 
             // Trees
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Trees != null)
@@ -355,6 +367,20 @@ namespace Software.Pages
 
             }
 
+            // Lights
+            if (GlobalVars.gameInfo.Lights != null && GlobalVars.gameInfo.Lights.LightsList != null && GlobalVars.gameInfo.Lights.LightsList.Count > 0)
+            {
+                foreach (Engine.Game.LevelInfo.Light light in GlobalVars.gameInfo.Lights.LightsList)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = "Light #" + light.Color;
+
+                    Lights.Items.Add(treeItem);
+                    listTree_Lights.Add(treeItem);
+                }
+
+            }
+
             // Add items to main tree view
             if (Models.Items.Count > 0)
                 GameComponentsList.Items.Add(Models);
@@ -367,6 +393,9 @@ namespace Software.Pages
 
             if (Water.Items.Count > 0)
                 GameComponentsList.Items.Add(Water);
+
+            if (Lights.Items.Count > 0)
+                GameComponentsList.Items.Add(Lights);
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
                 GameComponentsList.Items.Add(Terrain);
@@ -436,6 +465,22 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "water", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("water", i);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    return;
+                }
+            }
+
+            // Lights
+            for (int i = 0; i < listTree_Lights.Count; i++)
+            {
+                if (listTree_Lights[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    m_game.WPFHandler("selectObject", new object[] { "light", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("light", i);
                     ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
@@ -726,7 +771,6 @@ namespace Software.Pages
 
 
                     // Remove Button
-
                     Button removeButton = new Button();
                     removeButton.Content = "Remove";
                     removeButton.Width = 150;
@@ -791,6 +835,87 @@ namespace Software.Pages
                     spElements["OptionsButtons"].Children.Add(duplicateButton);
                     spElements["OptionsButtons"].Children.Add(removeButton);
                 }
+                else if (GlobalVars.selectedElt.eltType == "light")
+                {
+                    // Duplicate Button
+                    spElements["OptionsButtons"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "light", GlobalVars.gameInfo.Lights.LightsList[GlobalVars.selectedElt.eltId] });
+                        LoadGameComponentsToTreeview();
+                    };
+
+
+                    // Remove Button
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "light", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
+
+                    // Light color button
+                    spElements["LightColor"] = new StackPanel();
+
+                    object lightColor = m_game.WPFHandler("getElementInfo", new object[] { "lightcolor", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    ColorPicker colorPicker = new ColorPicker();
+                    colorPicker.ColorMode = ColorMode.ColorCanvas;
+                    colorPicker.UsingAlphaChannel = false;
+                    colorPicker.ShowDropDownButton = false;
+                    colorPicker.SelectedColor = (Color)ColorConverter.ConvertFromString("#FF" + lightColor.ToString());
+                    colorPicker.SelectedColorChanged += (s, e) => ColorChanged(s, e, "lightcolor");
+
+                    Label titleColor = new Label();
+                    titleColor.Content = "Color :";
+                    titleColor.Target = colorPicker;
+
+                    spElements["LightColor"].Children.Add(titleColor);
+                    spElements["LightColor"].Children.Add(colorPicker);
+
+                    // Attenuation
+                    // WeaponName
+                    spElements["Attenuation"] = new StackPanel();
+
+                    TextBox tbWB = new TextBox();
+                    tbWB.Width = 50;
+
+                    object attenuation = m_game.WPFHandler("getElementInfo", new object[] { "lightrange", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbWB.Text = attenuation.ToString();
+
+                    tbWB.TextChanged += (s, e) => PropertyChanged(s, e, "lightrange");
+
+                    tbWB.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleAttenuation = new Label();
+                    titleAttenuation.Content = "Attenuation :";
+                    titleAttenuation.Target = tbWB;
+
+                    spElements["Attenuation"].Children.Add(titleAttenuation);
+                    spElements["Attenuation"].Children.Add(tbWB);
+                }
 
                 // Add elements to the main StackPanel
                 foreach (KeyValuePair<string, StackPanel> pair in spElements)
@@ -798,6 +923,16 @@ namespace Software.Pages
                     spElements[pair.Key].Name = "ppt_" + pair.Key;
                     Properties.Children.Add(pair.Value);
                 }
+            }
+        }
+
+        private void ColorChanged(object s, RoutedPropertyChangedEventArgs<Color> e, string propertyType)
+        {
+            if (propertyType == "lightcolor")
+            {
+                string newColor = e.NewValue.R.ToString("X") + e.NewValue.G.ToString("X") + e.NewValue.B.ToString("X");
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, newColor, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                m_game.shouldUpdateOnce = true;
             }
         }
 
@@ -823,7 +958,7 @@ namespace Software.Pages
                 }
 
             }
-            else if (propertyType == "pickupbullets")
+            else if (propertyType == "pickupbullets" || propertyType == "lightrange")
                 m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((TextBox)s).Text, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
 
             m_game.shouldUpdateOnce = true;

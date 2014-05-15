@@ -121,30 +121,7 @@ namespace Engine.Game.LevelInfo
         public float Attenuation { get; set; }
 
         [XmlIgnore]
-        public Color Col { get { return GetColorFromHex(Color); } }
-        private Color GetColorFromHex(string hexString)
-        {
-            if (hexString == null)
-                return Microsoft.Xna.Framework.Color.White;
-            if (hexString.StartsWith("#"))
-                hexString = hexString.Substring(1);
-            uint hex = uint.Parse(hexString, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
-            Color color = Microsoft.Xna.Framework.Color.White;
-            if (hexString.Length == 8)
-            {
-                color.A = (byte)(hex >> 24);
-                color.R = (byte)(hex >> 16);
-                color.G = (byte)(hex >> 8);
-                color.B = (byte)(hex);
-            }
-            else if (hexString.Length == 6)
-            {
-                color.R = (byte)(hex >> 16);
-                color.G = (byte)(hex >> 8);
-                color.B = (byte)(hex);
-            }
-            return color;
-        }
+        public Color Col { get { return Display3D.CLightsManager.GetColorFromHex(Color); } }
     }
     #endregion
 

@@ -93,7 +93,8 @@ namespace Engine.GameStates
                         bumpTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
                 }
 
-                Display3D.CModelManager.addModel(new Display3D.CModel(
+                Display3D.CModelManager.addModel(_content,
+                    new Display3D.CModel(
                     content.Load<Model>(modelInfo.ModelFile),
                     modelInfo.Position.Vector3,
                     modelInfo.Rotation.Vector3,
@@ -104,7 +105,6 @@ namespace Engine.GameStates
                     modelInfo.Alpha,
                     bumpTextures));
             }
-            Display3D.CModelManager.LoadContent(content, graphics);
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
@@ -131,7 +131,6 @@ namespace Engine.GameStates
                         new Vector2(water.SizeX, water.SizeY), water.Alpha
                     );
 
-
                     waterInstance.Objects.Add(skybox);
 
                     if (levelData.Terrain.UseTerrain)
@@ -144,7 +143,6 @@ namespace Engine.GameStates
             }
 
             /**** Weapons ****/
-
             List<object[]> objList = new List<object[]>();
             List<string[]> soundList = new List<string[]>();
             List<string[]> animList = new List<string[]>();
@@ -193,6 +191,7 @@ namespace Engine.GameStates
 
             /**** Lights ****/
             //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
+            Display3D.CLightsManager.LoadContent(content);
             if (levelData.Lights != null)
             {
                 foreach (Game.LevelInfo.Light light in levelData.Lights.LightsList)
@@ -302,9 +301,9 @@ namespace Engine.GameStates
         {
             _graphics.BlendState = BlendState.Opaque;
             Display3D.CModelManager.renderer.Draw();
-            //renderer.Draw();
+
             Vector3 playerPos = cam._cameraPos;
-            //playerPos.Y -= cam._playerHeight;
+
             if (isPlayerUnderwater != Display3D.CWaterManager.IsPositionUnderwater(playerPos))
             {
                 isPlayerUnderwater = !isPlayerUnderwater;
@@ -353,7 +352,7 @@ namespace Engine.GameStates
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-                //lensFlare.Draw(gameTime);
+                lensFlare.Draw(gameTime);
             }
 
             Display3D.CWaterManager.DrawDebug(spriteBatch);
@@ -362,6 +361,7 @@ namespace Engine.GameStates
 
             if (isSoftwareEmbedded)
             {
+                Display3D.CLightsManager.DrawSelect(spriteBatch, cam);
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
             }
@@ -399,6 +399,8 @@ namespace Engine.GameStates
                         pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition;
                     else if (type == "water")
                         pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
+                    else if (type == "light")
+                        pos = Display3D.CLightsManager.lights[eltId].Position;
 
                     cam._cameraTarget = pos;
 
@@ -447,6 +449,11 @@ namespace Engine.GameStates
                             return new object[] { "gizmo", (int)axisClicked };
                     }
 
+                    // Light check
+                    int selectedLight;
+                    if(Display3D.CLightsManager.PointClicksLight(new Vector2((float)cursorPos.X, (float)cursorPos.Y), cam, out selectedLight))
+                        return new object[] { "light", selectedLight }; 
+
                     // Click distances
                     float? treeDistance = null, modelDistance = null, pickupDistance = null;
 
@@ -474,21 +481,15 @@ namespace Engine.GameStates
                 {
                     object[] values = (object[])p[1];
                     if ((string)values[0] == "tree")
-                    {
                         Display3D.TreeManager.selectedTreeId = -1;
-                    }
                     else if ((string)values[0] == "model")
-                    {
                         Display3D.CModelManager.selectModelId = -1;
-                    }
                     else if ((string)values[0] == "pickup")
-                    {
                         Display3D.CPickUpManager.selectedPickupId = -1;
-                    }
                     else if ((string)values[0] == "water")
-                    {
                         Display3D.CWaterManager.selectedWater = -1;
-                    }
+                    else if ((string)values[0] == "light")
+                        Display3D.CLightsManager.selectedLight = -1;
                 }
                 else if (action == "selectObject")
                 {
@@ -514,6 +515,11 @@ namespace Engine.GameStates
                     {
                         Display3D.CWaterManager.selectedWater = (int)values[1];
                         newPos = Display3D.CWaterManager.listWater[(int)values[1]].waterPosition;
+                    }
+                    else if ((string)values[0] == "light")
+                    {
+                        Display3D.CLightsManager.selectedLight = (int)values[1];
+                        newPos = Display3D.CLightsManager.lights[(int)values[1]].Position;
                     }
                     Gizmos.posGizmo._modelPosition = newPos;
                     Gizmos.rotGizmo._modelPosition = newPos;
@@ -581,6 +587,8 @@ namespace Engine.GameStates
                             pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition;
                         else if (eltType == "water")
                             pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
+                        else if (eltType == "light")
+                            pos = Display3D.CLightsManager.lights[eltId].Position;
                     }
                     else if (info == "rot")
                     {
@@ -610,6 +618,13 @@ namespace Engine.GameStates
                         return Display3D.CPickUpManager._pickups[eltId]._weaponName;
                     else if (info == "pickupbullet")
                         return Display3D.CPickUpManager._pickups[eltId]._weaponBullets;
+                    else if (info == "lightrange")
+                        return Display3D.CLightsManager.lights[eltId].Attenuation;
+                    else if (info == "lightcolor")
+                    {
+                        Color col = Display3D.CLightsManager.lights[eltId].Color;
+                        return col.R.ToString("X") + col.G.ToString("X") + col.B.ToString("X");
+                    }
                     return new object[] { pos.X, pos.Y, pos.Z };
                 }
                 else if (action == "removeElement")
@@ -638,6 +653,11 @@ namespace Engine.GameStates
                         Display3D.CWaterManager.selectedWater = -1;
                         Display3D.CWaterManager.listWater.RemoveAt(eltId);
                     }
+                    else if (eltType == "light")
+                    {
+                        Display3D.CLightsManager.selectedLight = -1;
+                        Display3D.CLightsManager.RemoveLight(eltId);
+                    }
                     SaveXMLFile();
                 }
                 else if (action == "addElement")
@@ -654,7 +674,17 @@ namespace Engine.GameStates
                     else if (eltType == "model")
                     {
                         Game.LevelInfo.MapModels_Model modelInfo = (Game.LevelInfo.MapModels_Model)values[1];
-                        levelData.MapModels.Models.Add(modelInfo);
+                        levelData.MapModels.Models.Add(new Game.LevelInfo.MapModels_Model
+                        {
+                            Alpha = modelInfo.Alpha,
+                            BumpTextures = modelInfo.BumpTextures,
+                            ModelFile = modelInfo.ModelFile,
+                            Position = modelInfo.Position,
+                            Rotation = modelInfo.Rotation,
+                            Textures = modelInfo.Textures,
+                            Scale = modelInfo.Scale,
+                            SpecColor = modelInfo.SpecColor
+                        });
 
                         Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
 
@@ -669,7 +699,8 @@ namespace Engine.GameStates
                                 bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
                         }
 
-                        Display3D.CModelManager.addModel(new Display3D.CModel(
+                        Display3D.CModelManager.addModel(_content, 
+                            new Display3D.CModel(
                             _content.Load<Model>(modelInfo.ModelFile),
                             modelInfo.Position.Vector3,
                             modelInfo.Rotation.Vector3,
@@ -684,12 +715,20 @@ namespace Engine.GameStates
                     else if (eltType == "pickup")
                     {
                         Game.LevelInfo.MapModels_Pickups pickupVal = (Game.LevelInfo.MapModels_Pickups)values[1];
+                        levelData.MapModels.Pickups.Add(pickupVal);
                         Display3D.CPickUpManager.AddPickup(_graphics, modelsListWeapons[pickupVal.WeaponName], textureListWeapons[pickupVal.WeaponName], pickupVal.Position.Vector3, pickupVal.Rotation.Vector3, pickupVal.Scale.Vector3, pickupVal.WeaponName, pickupVal.WeaponBullets);
                     }
                     else if (eltType == "water")
                     {
                         Game.LevelInfo.Water waterVal = (Game.LevelInfo.Water)values[1];
+                        levelData.Water.Water.Add(waterVal);
                         Display3D.CWaterManager.AddWater(new Display3D.CWater(_content, _graphics, waterVal.Coordinates.Vector3, waterVal.DeepestPoint.Vector3, new Vector2(waterVal.SizeX, waterVal.SizeY), waterVal.Alpha));
+                    }
+                    else if (eltType == "light")
+                    {
+                        Game.LevelInfo.Light lightVal = (Game.LevelInfo.Light)values[1];
+                        levelData.Lights.LightsList.Add(lightVal);
+                        Display3D.CLightsManager.AddLight(lightVal.Position.Vector3, lightVal.Col, lightVal.Attenuation);
                     }
                 }
                 else if (action == "setElementInfo")
@@ -723,6 +762,8 @@ namespace Engine.GameStates
                                         Display3D.CPickUpManager._pickups[eltId]._Model._modelPosition = newPos;
                                     else if (eltType == "water")
                                         Display3D.CWaterManager.listWater[eltId].waterPosition = newPos;
+                                    else if (eltType == "light")
+                                        Display3D.CLightsManager.lights[eltId].Position = newPos;
                                 }
                                 else if (info == "rot")
                                 {
@@ -772,6 +813,21 @@ namespace Engine.GameStates
                             }
                         }
                     }
+                    else if (info == "lightcolor")
+                    {
+                        string colorVal = values[1].ToString().Trim().Replace("#","");
+                        if ((colorVal.Length == 6 || colorVal.Length == 8) && System.Text.RegularExpressions.Regex.IsMatch(colorVal, @"\A\b[0-9a-fA-F]+\b\Z"))
+                        {
+                            Display3D.CLightsManager.lights[eltId].Color = Display3D.CLightsManager.GetColorFromHex(colorVal);
+                            return true;
+                        }
+                    }
+                    else if (info == "lightrange")
+                    {
+                        int attenuation;
+                        if (Int32.TryParse(values[1].ToString(), out attenuation))
+                            Display3D.CLightsManager.lights[eltId].Attenuation = attenuation;
+                    }
                 }
                 else if (action == "getLevelData")
                 {
@@ -788,6 +844,7 @@ namespace Engine.GameStates
             Display3D.TreeManager.UpdateGameLevel(ref levelData);
             Display3D.CPickUpManager.UpdateGameLevel(ref levelData);
             Display3D.CWaterManager.UpdateGameLevel(ref levelData);
+            Display3D.CLightsManager.UpdateGameLevel(ref levelData);
         }
     }
 }

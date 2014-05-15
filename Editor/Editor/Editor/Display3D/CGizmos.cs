@@ -209,6 +209,12 @@ namespace Engine.Display3D
                 initialRotValue = Vector3.Zero;
                 initialScaleValue = new Vector3(CWaterManager.listWater[eltIdDragging].waterSize.X, 1, CWaterManager.listWater[eltIdDragging].waterSize.Y);
             }
+            else if (eltType == "light")
+            {
+                initialPosValue = CLightsManager.lights[eltIdDragging].Position;
+                initialRotValue = Vector3.Zero;
+                initialScaleValue = Vector3.Zero;
+            }
         }
 
         public void Drag(int posX, int posY, CCamera cam)
@@ -384,6 +390,23 @@ namespace Engine.Display3D
                             CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(initialScaleValue.X - diff.X, oldPos.Y);
                         else if (axisDragging == 0)
                             CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(oldPos.X, initialScaleValue.Z - diff.Z);
+                    }
+                }
+                else if (eltTypeDragging == "light")
+                {
+                    if (shouldDrawPos)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 oldPos = CLightsManager.lights[eltIdDragging].Position;
+                        if (axisDragging == 1)
+                            CLightsManager.lights[eltIdDragging].Position = new Vector3(initialPosValue.X + diff.X, oldPos.Y, oldPos.Z);
+                        else if (axisDragging == 2)
+                            CLightsManager.lights[eltIdDragging].Position = new Vector3(oldPos.X, initialPosValue.Y + diff.Y, oldPos.Z);
+                        else if (axisDragging == 0)
+                            CLightsManager.lights[eltIdDragging].Position = new Vector3(oldPos.X, oldPos.Y, initialPosValue.Z + diff.Z);
+                        posGizmo._modelPosition = CLightsManager.lights[eltIdDragging].Position;
+                        rotGizmo._modelPosition = CLightsManager.lights[eltIdDragging].Position;
+                        scaleGizmo._modelPosition = CLightsManager.lights[eltIdDragging].Position;
                     }
                 }
             }
