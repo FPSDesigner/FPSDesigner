@@ -191,8 +191,15 @@ namespace Engine.GameStates
                 nearClip = 0.6f;
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0) });
 
+            /**** Lights ****/
             //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
-            Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
+            if (levelData.Lights != null)
+            {
+                foreach (Game.LevelInfo.Light light in levelData.Lights.LightsList)
+                    Display3D.CLightsManager.AddLight(light.Position.Vector3, light.Col, light.Attenuation);
+                Display3D.CLightsManager.AddToRenderer();
+                Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
+            }
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
 

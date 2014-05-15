@@ -37,6 +37,7 @@ namespace Engine.Game.LevelInfo
         public SpawnInfo SpawnInfo { get; set; }
         public Terrain Terrain { get; set; }
         public WaterList Water { get; set; }
+        public Lights Lights { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
         public Weapons Weapons { get; set; }
@@ -101,6 +102,49 @@ namespace Engine.Game.LevelInfo
         public Coordinates DeepestPoint { get; set; }
         public float Alpha { get; set; }
         public Coordinates Coordinates { get; set; }
+    }
+    #endregion
+
+    #region "Node - Lights"
+    // Lights
+    public class Lights
+    {
+        public Lights() { LightsList = new List<Light>(); }
+        [XmlElement("Light")]
+        public List<Light> LightsList { get; set; }
+    }
+
+    public class Light
+    {
+        public Coordinates Position { get; set; }
+        public string Color { get; set; }
+        public float Attenuation { get; set; }
+
+        [XmlIgnore]
+        public Color Col { get { return GetColorFromHex(Color); } }
+        private Color GetColorFromHex(string hexString)
+        {
+            if (hexString == null)
+                return Microsoft.Xna.Framework.Color.White;
+            if (hexString.StartsWith("#"))
+                hexString = hexString.Substring(1);
+            uint hex = uint.Parse(hexString, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+            Color color = Microsoft.Xna.Framework.Color.White;
+            if (hexString.Length == 8)
+            {
+                color.A = (byte)(hex >> 24);
+                color.R = (byte)(hex >> 16);
+                color.G = (byte)(hex >> 8);
+                color.B = (byte)(hex);
+            }
+            else if (hexString.Length == 6)
+            {
+                color.R = (byte)(hex >> 16);
+                color.G = (byte)(hex >> 8);
+                color.B = (byte)(hex);
+            }
+            return color;
+        }
     }
     #endregion
 
@@ -260,7 +304,7 @@ namespace Engine.Game.LevelInfo
     }
     #endregion
 
-
+    
     // TODO: Add all the nodes to the example
     #region Examples
     /*

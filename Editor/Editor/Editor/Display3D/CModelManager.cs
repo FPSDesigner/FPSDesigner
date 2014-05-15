@@ -62,10 +62,6 @@ namespace Engine.Display3D
         public static void ApplyLights(ContentManager content, GraphicsDevice graphics, CCamera camera)
         {
             renderer.Camera = camera;
-            renderer.Lights = new List<Materials.PPPointLight>() {
-                new Materials.PPPointLight(new Vector3(-130, 180, 82.45f), Color.Red, 100),
-                new Materials.PPPointLight(new Vector3(-120, 175, 86), Color.Green, 100),
-            };
         }
 
         public static void addModel(CModel model)
