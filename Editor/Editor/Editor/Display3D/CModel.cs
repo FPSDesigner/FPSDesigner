@@ -193,7 +193,7 @@ namespace Engine.Display3D
             this._normalMapping = CModelManager.normalMappingEffect;
             _normalMappingParam = CModelManager.normalMappingEffect.Parameters["NormalMap"];
 
-            SetModelEffect(CModelManager.lightEffect, true);
+            //SetModelEffect(CModelManager.lightEffect, true);
         }
 
         /// <summary>

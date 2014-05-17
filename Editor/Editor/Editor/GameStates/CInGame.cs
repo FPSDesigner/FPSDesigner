@@ -190,15 +190,18 @@ namespace Engine.GameStates
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0) });
 
             /**** Lights ****/
-            //Display3D.CModelManager.ApplyRendererShadow(content, graphics, cam);
+            if (levelData.Lights.UseShadow != null && levelData.Lights.UseShadow)
+                Display3D.CModelManager.ApplyRendererShadow(content, levelData.Lights.ShadowLightPos.Vector3, levelData.Lights.ShadowLightTarget.Vector3);
+            else
+                Display3D.CModelManager.ApplyLightEffect(content);
             Display3D.CLightsManager.LoadContent(content);
             if (levelData.Lights != null)
             {
                 foreach (Game.LevelInfo.Light light in levelData.Lights.LightsList)
                     Display3D.CLightsManager.AddLight(light.Position.Vector3, light.Col, light.Attenuation);
                 Display3D.CLightsManager.AddToRenderer();
-                Display3D.CModelManager.ApplyRendererLight(content, graphics, cam);
             }
+            Display3D.CModelManager.renderer.Camera = cam;
             /**** Trees ****/
             Display3D.TreeManager.LoadXMLTrees(cam, content, levelData.MapModels.Trees);
 
@@ -323,7 +326,7 @@ namespace Engine.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+            //terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             Display3D.CWaterManager.Draw(cam._view, cam._projection, cam._cameraPos);
 
@@ -331,7 +334,7 @@ namespace Engine.GameStates
             Display3D.TreeManager.Draw(cam, gameTime);
             _graphics.BlendState = BlendState.Opaque;
             _graphics.DepthStencilState = DepthStencilState.Default;
-            
+
             // Draw all the models
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             Display3D.CModelManager.Draw(cam, gameTime);
@@ -365,7 +368,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
             }
-            
+
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
         }
@@ -451,8 +454,8 @@ namespace Engine.GameStates
 
                     // Light check
                     int selectedLight;
-                    if(Display3D.CLightsManager.PointClicksLight(new Vector2((float)cursorPos.X, (float)cursorPos.Y), cam, out selectedLight))
-                        return new object[] { "light", selectedLight }; 
+                    if (Display3D.CLightsManager.PointClicksLight(new Vector2((float)cursorPos.X, (float)cursorPos.Y), cam, out selectedLight))
+                        return new object[] { "light", selectedLight };
 
                     // Click distances
                     float? treeDistance = null, modelDistance = null, pickupDistance = null;
@@ -699,7 +702,7 @@ namespace Engine.GameStates
                                 bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
                         }
 
-                        Display3D.CModelManager.addModel(_content, 
+                        Display3D.CModelManager.addModel(_content,
                             new Display3D.CModel(
                             _content.Load<Model>(modelInfo.ModelFile),
                             modelInfo.Position.Vector3,
@@ -815,7 +818,7 @@ namespace Engine.GameStates
                     }
                     else if (info == "lightcolor")
                     {
-                        string colorVal = values[1].ToString().Trim().Replace("#","");
+                        string colorVal = values[1].ToString().Trim().Replace("#", "");
                         if ((colorVal.Length == 6 || colorVal.Length == 8) && System.Text.RegularExpressions.Regex.IsMatch(colorVal, @"\A\b[0-9a-fA-F]+\b\Z"))
                         {
                             Display3D.CLightsManager.lights[eltId].Color = Display3D.CLightsManager.GetColorFromHex(colorVal);

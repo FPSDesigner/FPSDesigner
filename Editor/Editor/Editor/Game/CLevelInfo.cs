@@ -112,6 +112,9 @@ namespace Engine.Game.LevelInfo
         public Lights() { LightsList = new List<Light>(); }
         [XmlElement("Light")]
         public List<Light> LightsList { get; set; }
+        public bool UseShadow { get; set; }
+        public Coordinates ShadowLightPos { get; set; }
+        public Coordinates ShadowLightTarget { get; set; }
     }
 
     public class Light

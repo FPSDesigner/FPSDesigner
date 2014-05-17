@@ -30,30 +30,26 @@ namespace Engine.Display3D
             lightEffect = content.Load<Effect>("Effects/PPModel");
         }
 
-        public static void ApplyRendererShadow(ContentManager content, GraphicsDevice graphics, CCamera camera)
+        public static void ApplyRendererShadow(ContentManager content, Vector3 pos, Vector3 target)
         {
-            shadowEffect = content.Load<Effect>("Effects\\ShadowMapping");
+            shadowEffect = content.Load<Effect>("Effects\\ShadowVSM");
             foreach (CModel model in modelsList)
             {
                 model.SetModelEffect(shadowEffect, true);
             }
 
-            ApplyLights(content, graphics, camera);
-
-            renderer.ShadowLightPosition = new Vector3(-120, 195, 88);
-            renderer.ShadowLightTarget = new Vector3(-120, 150, 88);
+            renderer.ShadowLightPosition = pos;
+            renderer.ShadowLightTarget = target;
             renderer.DoShadowMapping = true;
             renderer.ShadowMult = 0.3f;
         }
 
-        public static void ApplyRendererLight(ContentManager content, GraphicsDevice graphics, CCamera camera)
+        public static void ApplyLightEffect(ContentManager content)
         {
-            ApplyLights(content, graphics, camera);
-        }
-
-        public static void ApplyLights(ContentManager content, GraphicsDevice graphics, CCamera camera)
-        {
-            renderer.Camera = camera;
+            foreach (CModel model in modelsList)
+            {
+                model.SetModelEffect(CModelManager.lightEffect, true);
+            }
         }
 
         public static void addModel(ContentManager content, CModel model)
@@ -65,6 +61,8 @@ namespace Engine.Display3D
 
         public static void Draw(CCamera cam, GameTime gameTime)
         {
+            //renderer.ShadowLightPosition = CLightsManager.lights[0].Position;
+            //renderer.ShadowLightTarget = new Vector3(renderer.ShadowLightTarget.X, renderer.ShadowLightTarget.Y - 0.1f, renderer.ShadowLightTarget.Z);
             foreach (CModel model in modelsList)
             {
                 if (cam.BoundingVolumeIsInView(model.BoundingSphere))

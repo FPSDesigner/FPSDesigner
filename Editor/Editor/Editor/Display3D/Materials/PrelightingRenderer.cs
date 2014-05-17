@@ -39,8 +39,8 @@ namespace Engine.Display3D.Materials
         Effect shadowDepthEffect;
 
         // Depth texture parameters
-        int shadowMapSize = 2048;
-        int shadowFarPlane = 10000;
+        int shadowMapSize = 1024;
+        int shadowFarPlane = 1000;
 
         // Shadow light view and projection
         Matrix shadowView, shadowProjection;
@@ -48,6 +48,10 @@ namespace Engine.Display3D.Materials
         // Shadow properties
         public bool DoShadowMapping { get; set; }
         public float ShadowMult { get; set; }
+
+        SpriteBatch spriteBatch;
+        RenderTarget2D shadowBlurTarg;
+        Effect shadowBlurEffect;
 
         public PrelightingRenderer(GraphicsDevice GraphicsDevice,
             ContentManager Content)
@@ -78,10 +82,16 @@ namespace Engine.Display3D.Materials
             lightMesh.Meshes[0].MeshParts[0].Effect = lightingEffect;
 
             shadowDepthTarg = new RenderTarget2D(GraphicsDevice, shadowMapSize,
-                shadowMapSize, false, SurfaceFormat.Single, DepthFormat.Depth24);
+                shadowMapSize, false, SurfaceFormat.HalfVector2, DepthFormat.Depth24);
 
             shadowDepthEffect = Content.Load<Effect>("Effects/ShadowDepthEffect");
             shadowDepthEffect.Parameters["FarPlane"].SetValue(shadowFarPlane);
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            shadowBlurEffect = Content.Load<Effect>("Effects/ShadowGaussianBlur");
+
+            shadowBlurTarg = new RenderTarget2D(GraphicsDevice, shadowMapSize,
+                shadowMapSize, false, SurfaceFormat.HalfVector2, DepthFormat.Depth24);
 
             this.graphicsDevice = GraphicsDevice;
         }
@@ -90,7 +100,14 @@ namespace Engine.Display3D.Materials
         {
             drawDepthNormalMap();
             drawLightMap();
-            if (DoShadowMapping) drawShadowDepthMap();
+
+            if (DoShadowMapping)
+            {
+                drawShadowDepthMap();
+                blurShadow(shadowBlurTarg, shadowDepthTarg, 0);
+                blurShadow(shadowDepthTarg, shadowBlurTarg, 1);
+            }
+
             prepareMainPass();
         }
 
@@ -141,7 +158,7 @@ namespace Engine.Display3D.Materials
             }
 
             // Un-set the render targets
-            graphicsDevice.SetRenderTarget(Display2D.C2DEffect.renderTarget);
+            graphicsDevice.SetRenderTarget(null);
         }
 
         void drawLightMap()
@@ -181,8 +198,7 @@ namespace Engine.Display3D.Materials
                 lightingEffect.Parameters["WorldViewProjection"].SetValue(wvp);
 
                 // Determine the distance between the light and camera
-                float dist = Vector3.Distance(Camera._cameraPos,
-                    light.Position);
+                float dist = Vector3.Distance(Camera._cameraPos, light.Position);
 
                 // If the camera is inside the light-sphere, invert the cull mode
                 // to draw the inside of the sphere instead of the outside
@@ -245,6 +261,32 @@ namespace Engine.Display3D.Materials
                         if (part.Effect.Parameters["ShadowMult"] != null)
                             part.Effect.Parameters["ShadowMult"].SetValue(ShadowMult);
                     }
+        }
+
+        void blurShadow(RenderTarget2D to, RenderTarget2D from, int dir)
+        {
+            // Set the target render target
+            graphicsDevice.SetRenderTarget(to);
+
+            graphicsDevice.Clear(Color.Black);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
+            // Start the Gaussian blur effect
+            shadowBlurEffect.CurrentTechnique.Passes[dir].Apply();
+
+            // Draw the contents of the source render target so they can
+            // be blurred by the gaussian blur pixel shader
+            spriteBatch.Draw(from, Vector2.Zero, Color.White);
+
+            spriteBatch.End();
+
+            // Clean up after the sprite batch
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            // Remove the render target
+            graphicsDevice.SetRenderTarget(null);
         }
     }
 }
