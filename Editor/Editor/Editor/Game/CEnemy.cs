@@ -42,7 +42,11 @@ namespace Engine.Game
         private float _runningVelocity; // Displacement velocity
         private float _collisionHeight; // Collision Height between terrain and the AI
 
+        private float _rangeAttack; // AI : Minimal distance to attack
+
         private Display3D.MeshAnimation _model; //The 3Dmodel and all animations
+
+        private List<CWeapon> _weaponPossessed;
 
         private Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position
@@ -71,12 +75,15 @@ namespace Engine.Game
 
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,bool isAgressive)
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false)
         {
             _position = Position;
             _scale = new Vector3(0.5f);
             _deathPosition = Vector3.Zero;
             _collisionHeight = 0.2f;
+            this._rangeAttack = RangeToAttack;
+
+            //this._weaponPossessed = weap;
 
             _rotation = Rotation;
             _rotation = Matrix.Identity;
@@ -196,6 +203,18 @@ namespace Engine.Game
 
             if (drawHitbox)
                 GetRealTriangles(true);
+        }
+
+        public void Shot()
+        {
+            
+
+        }
+
+        public bool IsAnyPlayerInSight()
+        {
+
+            return false;
         }
 
         public void MoveTo(Vector3 newPos, GameTime gameTime)
