@@ -106,6 +106,9 @@ namespace Engine.Display3D
         private EffectParameter _normalMappingParam;
 
         public bool shouldNotUpdateTriangles = false;
+        public bool _Explodable;
+
+        private float _ModelLife = 50f;
 
         private string collisionShapeName = "collision_shape";
 
@@ -133,7 +136,7 @@ namespace Engine.Display3D
         /// <param name="modelScale">Scale of the model (size)</param>
         /// <param name="device">GraphicsDevice class</param>
         public CModel(Model model, Vector3 modelPos, Vector3 modelRotation, Vector3 modelScale, GraphicsDevice device, Dictionary<String, Texture2D> textures = null,
-            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string, Texture2D> bumpTexture = null)
+            float specColor = 0.0f, float alpha = 1.0f, Dictionary<string, Texture2D> bumpTexture = null, bool explodable = false)
         {
             this._model = model;
 
@@ -146,6 +149,8 @@ namespace Engine.Display3D
 
             this._textures = textures;
             this._bumpTextures = bumpTexture;
+
+            this._Explodable = explodable;
 
             _modelTransforms = new Matrix[model.Bones.Count];
             _model.CopyAbsoluteBoneTransformsTo(_modelTransforms);
@@ -655,6 +660,22 @@ namespace Engine.Display3D
                 }
             }
             return false;
+        }
+
+        public void SetDamageToModel(float damage)
+        {
+            if (_ModelLife > 0)
+            {
+                _ModelLife -= damage;
+                if (_ModelLife <= 0)
+                {
+                    _ModelLife = 25f;
+                    Display3D.Particles.ParticlesManager.AddParticle("explosion", _modelPosition, 20);
+                    //Game.CSoundManager.soundList["Explosion"]._sound.
+                    Game.CSoundManager.soundList["Explosion"]._audioEmitter.Position = _modelPosition;
+                    Game.CSoundManager.PlayInstance("Explosion", 1);
+                }
+            }
         }
     }
 

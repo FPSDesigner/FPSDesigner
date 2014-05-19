@@ -86,6 +86,9 @@ namespace Engine.Game
                     _drawGyzmo = !_drawGyzmo;
                     addMessage("Gyzmo " + ((_drawGyzmo) ? "activated" : "disabled") + " !");
                     break;
+                case "soundScale":
+                    SoundEffect.DistanceScale = float.Parse(cmd[1]);
+                    break;
                 case "effect":
                     if (cmd.Length > 1)
                     {

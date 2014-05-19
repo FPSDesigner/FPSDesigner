@@ -792,6 +792,26 @@ namespace Software.Pages
 
                     spElements["OptionsButtons"].Children.Add(duplicateButton);
                     spElements["OptionsButtons"].Children.Add(removeButton);
+
+                    // Explodable
+                    spElements["Explodable"] = new StackPanel();
+
+                    CheckBox explodableBox = new CheckBox();
+                    explodableBox.Width = 50;
+
+                    object isexpdbl = m_game.WPFHandler("getElementInfo", new object[] { "explodable", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    explodableBox.IsChecked = (bool)isexpdbl;
+
+                    explodableBox.Checked += (s, e) => PropertyChecked(s, e, "explodable");
+
+                    explodableBox.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleXpd = new Label();
+                    titleXpd.Content = "Explodable :";
+                    titleXpd.Target = explodableBox;
+
+                    spElements["Explodable"].Children.Add(titleXpd);
+                    spElements["Explodable"].Children.Add(explodableBox);
                 }
 
                 else if (GlobalVars.selectedElt.eltType == "water")
@@ -933,6 +953,14 @@ namespace Software.Pages
                 string newColor = e.NewValue.R.ToString("X") + e.NewValue.G.ToString("X") + e.NewValue.B.ToString("X");
                 m_game.WPFHandler("setElementInfo", new object[] { propertyType, newColor, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
                 m_game.shouldUpdateOnce = true;
+            }
+        }
+
+        private void PropertyChecked(object s, RoutedEventArgs e, string propertyType)
+        {
+            if (propertyType == "explodable")
+            {
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((CheckBox)s).IsChecked, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
             }
         }
 

@@ -20,6 +20,9 @@ namespace Engine.Display3D.Particles
         // Determine whether a new particle should be created each frame
         public bool constantRecreation = true;
 
+        // Determine how many frames should create a new particle
+        public int numberOfCreation = 0;
+
         // Particle Position & Velocity
         public Vector3 particlePosition;
         public Vector3 particleVelocity;

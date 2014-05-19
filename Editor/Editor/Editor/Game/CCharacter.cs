@@ -98,7 +98,7 @@ namespace Engine.Game
             _handAnimation.LoadContent(content);
 
             _handAnimation.ChangeAnimSpeed(0.7f);
-            if(weap._weaponPossessed != null)
+            if (weap._weaponPossessed != null)
                 _handAnimation.BeginAnimation(weap._weaponPossessed[weap._selectedWeapon]._weapAnim[2], true);
 
             // Initialize the weapon attributes
@@ -256,9 +256,9 @@ namespace Engine.Game
                 {
                     _horizontalVelocity = MathHelper.Lerp(_horizontalVelocity, _crouchSpeed, 0.7f);
 
-                    if(!_isShoting && !_isAiming && !_isReloading
+                    if (!_isShoting && !_isAiming && !_isReloading
                         && !_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying)
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[0] * 0.65f);
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[0] * 0.65f);
                 }
             }
 
@@ -323,7 +323,7 @@ namespace Engine.Game
 
                 _handAnimation.InverseMode("backward");
                 _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
-                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false,0.99f);
+                _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false, 0.99f);
 
                 _isWaitAnimPlaying = false;
                 _isWalkAnimPlaying = false;
@@ -418,7 +418,7 @@ namespace Engine.Game
                     if (weapon._weaponPossessed[weapon._selectedWeapon]._isAutomatic || oldMouseState.LeftButton == ButtonState.Released)
                     {
                         // We choose where is the gun sight
-                        Point shotPosScreen = 
+                        Point shotPosScreen =
                             new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
 
                         // The Player can shot : enought bullets
@@ -448,7 +448,7 @@ namespace Engine.Game
                             _isWaitAnimPlaying = false;
 
                             // RAY DETECTION : KNOW IF SOMEONE IS TOUCHED
-                            
+
                             Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
                             Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
                             Vector3 direction = farSource - nearSource;
@@ -469,10 +469,10 @@ namespace Engine.Game
                                     Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
                                     Game.CConsole.addMessage("Hit " + boxTouched);
 
-                                    switch(boxTouched)
+                                    switch (boxTouched)
                                     {
                                         case "Bb_Head":
-                                        enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
+                                            enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
                                             break;
                                         case "Bb_Body":
                                             enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
@@ -480,30 +480,33 @@ namespace Engine.Game
                                     }
                                 }
                             }
-                        }
 
-                        // Draw particles
-                        if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 2 && weapon._weaponPossessed[weapon._selectedWeapon]._actualClip > 0)
-                        {
-                            if (_terrain != null)
+                            if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 2)
                             {
-                                bool IsTerrainShot = false;
-                                bool IsWaterShot = false;
+                                int modelId = -1;
+                                if (Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelId, weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet) != null)
+                                {
+                                }
+                                else if (_terrain != null)
+                                {
+                                    bool IsTerrainShot = false;
+                                    bool IsWaterShot = false;
 
-                                Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+                                    Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                                    //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
 
-                                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
+                                    //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                    //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 
-                                Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
-                                    Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                                    0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
-                                Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+                                    Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                        0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                                    Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
 
 
-                                Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
-                                Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
+                                    Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                                    Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
+                                }
                             }
                         }
 
@@ -513,7 +516,7 @@ namespace Engine.Game
                 }
             }
         }
-        
+
         private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
         {
             // We draw the weapon only if the player is not looking in the lens
@@ -637,7 +640,7 @@ namespace Engine.Game
                         _futurSelectedWeapon = (weapon._selectedWeapon + 1) % weapon._weaponPossessed.Count;
 
                         // Play the sound If the weapon is not something like a machete
-                        if(weapon._weaponPossessed[_futurSelectedWeapon]._wepType != 2)
+                        if (weapon._weaponPossessed[_futurSelectedWeapon]._wepType != 2)
                             CSoundManager.PlaySound("SWITCHWEAPON1");
                         else // Play a special sound
                             CSoundManager.PlaySound("SWITCH_MACHETE");
@@ -765,8 +768,8 @@ namespace Engine.Game
             }
 
             // If he presse the right mouse button
-            if (!_isAiming && !_isReloading && !_isShoting && 
-                    !_isSniping && !_isSwitchingAnimPlaying & !_isSwitchingAnim2ndPartPlaying) 
+            if (!_isAiming && !_isReloading && !_isShoting &&
+                    !_isSniping && !_isSwitchingAnimPlaying & !_isSwitchingAnim2ndPartPlaying)
             {
                 if (mstate.RightButton == ButtonState.Pressed || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPAim)))
                 {

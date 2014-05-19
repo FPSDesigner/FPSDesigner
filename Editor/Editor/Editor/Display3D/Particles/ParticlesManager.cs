@@ -76,20 +76,26 @@ namespace Engine.Display3D.Particles
             {
                 if (particle.Value.displayParticle)
                 {
-                    if (particle.Value.constantRecreation)
+                    if (particle.Value.constantRecreation || particle.Value.numberOfCreation > 0)
+                    {
                         particle.Value.AddParticle();
+                        if (particle.Value.numberOfCreation > 0)
+                            particle.Value.numberOfCreation--;
+                    }
+
                     particle.Value.Update(gameTime);
                 }
             }
         }
 
-        public static void AddParticle(string particleName, Vector3? position = null)
+        public static void AddParticle(string particleName, Vector3? position = null, int amountOfParticles = 0)
         {
             if (particlesList.ContainsKey(particleName))
             {
                 if (position != null)
                     SetParticlePosition(particleName, (Vector3)position);
 
+                particlesList[particleName].numberOfCreation = amountOfParticles;
                 particlesList[particleName].AddParticle();
             }
         }

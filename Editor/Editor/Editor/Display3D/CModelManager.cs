@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Engine.Display3D
 {
@@ -17,6 +18,8 @@ namespace Engine.Display3D
         public static Effect lightEffect;
         public static Materials.PrelightingRenderer renderer;
 
+        public static SoundEffect sound;
+
         public static bool DebugActivated = false;
 
         public static int selectModelId = -1;
@@ -28,6 +31,9 @@ namespace Engine.Display3D
 
             normalMappingEffect = content.Load<Effect>("Effects\\NormalMapping");
             lightEffect = content.Load<Effect>("Effects/PPModel");
+
+            sound = content.Load<SoundEffect>("Sounds\\Explosion");
+            Game.CSoundManager.AddSound("Explosion", sound, false, 10.0f, new AudioListener(), new AudioEmitter());
         }
 
         public static void ApplyRendererShadow(ContentManager content, Vector3 pos, Vector3 target)
@@ -106,6 +112,7 @@ namespace Engine.Display3D
                 lvl.MapModels.Models[i].Rotation = new Game.LevelInfo.Coordinates(mdl._modelRotation);
                 lvl.MapModels.Models[i].Scale = new Game.LevelInfo.Coordinates(mdl._modelScale);
                 lvl.MapModels.Models[i].Alpha = mdl.Alpha;
+                lvl.MapModels.Models[i].Explodable = mdl._Explodable;
             }
             while(lvl.MapModels.Models.Count != modelsList.Count)
                 lvl.MapModels.Models.RemoveAt(lvl.MapModels.Models.Count - 1);
@@ -119,7 +126,7 @@ namespace Engine.Display3D
             }
         }
 
-        public static float? CheckRayIntersectsModel(Ray ray, out int modelId)
+        public static float? CheckRayIntersectsModel(Ray ray, out int modelId, float damage = -1)
         {
             Dictionary<int, float> modelsClicked = new Dictionary<int, float>();
             for(int i = 0; i < modelsList.Count; i++)
@@ -148,6 +155,10 @@ namespace Engine.Display3D
                         select pair).First();
 
             modelId = closest.Key;
+
+            if (modelsList[modelId]._Explodable && damage > -1)
+                modelsList[modelId].SetDamageToModel(damage);
+
             return closest.Value;
         }
 

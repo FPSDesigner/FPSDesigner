@@ -169,6 +169,7 @@ namespace Engine.Game.LevelInfo
         public string ModelFile { get; set; }
         public float Alpha { get; set; }
         public float SpecColor { get; set; }
+        public bool Explodable { get; set; }
         public Coordinates Position { get; set; }
         public Coordinates Rotation { get; set; }
         public Coordinates Scale { get; set; }

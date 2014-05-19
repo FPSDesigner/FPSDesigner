@@ -26,8 +26,8 @@ namespace Engine.Game
             public SoundEffectInstance _soundInstance;
             public float _delay; // Used to play the song when after an elapsed time
 
-            private AudioListener _audioListener;
-            private AudioEmitter _audioEmitter;
+            public AudioListener _audioListener;
+            public AudioEmitter _audioEmitter;
 
             public CSound(SoundEffect sound, bool isLooped, AudioListener listener = null, AudioEmitter emitter = null, float delay = 0f, float volume = 1f, float pitch = 0f, float pan = 0f)
             {
@@ -70,7 +70,7 @@ namespace Engine.Game
             soundList = new Dictionary<string, CSound>();
         }
 
-        public static void AddSound(string soundName, SoundEffect sound, bool isLooped, float delay,SoundEffectInstance soundInstance = null,AudioListener listener = null, AudioEmitter emitter = null)
+        public static void AddSound(string soundName, SoundEffect sound, bool isLooped, float delay, AudioListener listener = null, AudioEmitter emitter = null)
         {
             if (!soundList.ContainsKey(soundName))
                 soundList.Add(soundName, new CSound(sound, isLooped, listener, emitter, delay));

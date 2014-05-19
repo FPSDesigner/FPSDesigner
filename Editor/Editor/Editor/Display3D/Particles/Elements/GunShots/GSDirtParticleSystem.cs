@@ -26,6 +26,8 @@ namespace Engine.Display3D.Particles.Elements
 
             settings.DurationRandomness = 1;
 
+            settings.EndVelocity = 0;
+
             settings.MinHorizontalVelocity = 0;
             settings.MaxHorizontalVelocity = 0.2f;
 
@@ -36,7 +38,7 @@ namespace Engine.Display3D.Particles.Elements
             settings.Gravity = new Vector3(0, 15, 0);
 
             settings.MinColor = new Color(131, 104, 64);
-            settings.MaxColor = new Color(131, 104, 64);
+            settings.MaxColor = Color.White;
 
             settings.MinStartSize = 0.5f;
             settings.MaxStartSize = 1;

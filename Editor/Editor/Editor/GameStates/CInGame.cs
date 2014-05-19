@@ -58,9 +58,9 @@ namespace Engine.GameStates
             _graphics = graphics;
             _content = content;
 
-            Display3D.CModelManager.Initialize(content, graphics);
-
             Game.CSoundManager.LoadContent();
+
+            Display3D.CModelManager.Initialize(content, graphics);
 
             // We Add some useful sounds
             SoundEffect sound = content.Load<SoundEffect>("Sounds\\GRASSSTEP");
@@ -92,7 +92,7 @@ namespace Engine.GameStates
                     foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
                         bumpTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
                 }
-
+                
                 Display3D.CModelManager.addModel(_content,
                     new Display3D.CModel(
                     content.Load<Model>(modelInfo.ModelFile),
@@ -103,7 +103,8 @@ namespace Engine.GameStates
                     modelTextures,
                     modelInfo.SpecColor,
                     modelInfo.Alpha,
-                    bumpTextures));
+                    bumpTextures,
+                    (modelInfo.Explodable != null && modelInfo.Explodable)));
             }
 
             lensFlare = new Display3D.CLensFlare();
@@ -180,6 +181,8 @@ namespace Engine.GameStates
             //Display3D.Particles.ParticlesManager.AddNewParticle("fire", new Display3D.Particles.Elements.FireParticleSystem(content), true, new Vector3(-165.2928f, 179f, 80.45f));
             Display3D.Particles.ParticlesManager.AddNewParticle("gunshot_dirt", new Display3D.Particles.Elements.GSDirtParticleSystem(content), true, Vector3.Zero, null, false);
             Display3D.Particles.ParticlesManager.AddNewParticle("gun_smoke", new Display3D.Particles.Elements.GunSmokeParticleSystem(content), true, Vector3.Zero, null, false);
+            Display3D.Particles.ParticlesManager.AddNewParticle("explosion", new Display3D.Particles.Elements.ExplosionParticleSystem(content), true, Vector3.Zero, null, false);
+            Display3D.Particles.ParticlesManager.AddParticle("explosion", new Vector3(-115, 172, 80), 10);
 
             /**** Camera ****/
             Vector3 camPosition = new Vector3(levelData.SpawnInfo.SpawnPosition.X, levelData.SpawnInfo.SpawnPosition.Y, levelData.SpawnInfo.SpawnPosition.Z);
@@ -623,6 +626,8 @@ namespace Engine.GameStates
                         return Display3D.CPickUpManager._pickups[eltId]._weaponBullets;
                     else if (info == "lightrange")
                         return Display3D.CLightsManager.lights[eltId].Attenuation;
+                    else if (info == "explodable")
+                        return Display3D.CModelManager.modelsList[eltId]._Explodable;
                     else if (info == "lightcolor")
                     {
                         Color col = Display3D.CLightsManager.lights[eltId].Color;
@@ -830,6 +835,11 @@ namespace Engine.GameStates
                         int attenuation;
                         if (Int32.TryParse(values[1].ToString(), out attenuation))
                             Display3D.CLightsManager.lights[eltId].Attenuation = attenuation;
+                    }
+                    else if (info == "explodable")
+                    {
+                        if (values[1] is bool)
+                            Display3D.CModelManager.modelsList[eltId]._Explodable = (bool)values[1];
                     }
                 }
                 else if (action == "getLevelData")

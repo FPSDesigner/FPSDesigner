@@ -1227,36 +1227,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Model textures\House-O_MAge.png">
-      <Name>House-O_MAge</Name>
+    <Compile Include="Textures\Model textures\House-O_AAge.png">
+      <Name>House-O_AAge</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\House-O_MAge.fbx">
-      <Name>House-O_MAge</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\MetalFence.fbx">
-      <Name>MetalFence</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Model textures\MetalFence001-ALPHA.png">
-      <Name>MetalFence001-ALPHA</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\Prefab_Prison.fbx">
-      <Name>Prefab_Prison</Name>
+    <Compile Include="Models\House-O_AAge.fbx">
+      <Name>House-O_AAge</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
@@ -1269,24 +1248,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\ShadowGaussianBlur.fx">
-      <Name>ShadowGaussianBlur</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Effects\ShadowVSM.fx">
-      <Name>ShadowVSM</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\Bow.fbx">
-      <Name>Bow</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+    <Compile Include="Sounds\Explosion.wav">
+      <Name>Explosion</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

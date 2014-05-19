@@ -18,32 +18,32 @@ namespace Engine.Display3D.Particles.Elements
 
         protected override void InitializeSettings(ParticleSettings settings)
         {
-            settings.TextureName = "explosion";
+            settings.TextureName = "Particles/explosion";
 
             settings.MaxParticles = 100;
 
-            settings.Duration = TimeSpan.FromSeconds(2);
+            settings.Duration = TimeSpan.FromSeconds(3);
             settings.DurationRandomness = 1;
 
-            settings.MinHorizontalVelocity = 20;
-            settings.MaxHorizontalVelocity = 30;
+            settings.MinHorizontalVelocity = 5;
+            settings.MaxHorizontalVelocity = 7;
 
-            settings.MinVerticalVelocity = -20;
-            settings.MaxVerticalVelocity = 20;
+            settings.MinVerticalVelocity = -10;
+            settings.MaxVerticalVelocity = 10;
 
             settings.EndVelocity = 0;
 
             settings.MinColor = Color.DarkGray;
-            settings.MaxColor = Color.Gray;
+            settings.MaxColor = Color.White;
 
             settings.MinRotateSpeed = -1;
             settings.MaxRotateSpeed = 1;
 
-            settings.MinStartSize = 7;
-            settings.MaxStartSize = 7;
+            settings.MinStartSize = 3;
+            settings.MaxStartSize = 3;
 
-            settings.MinEndSize = 70;
-            settings.MaxEndSize = 140;
+            settings.MinEndSize = 35;
+            settings.MaxEndSize = 70;
 
             settings.DelayBetweenParticles = 10;
 
