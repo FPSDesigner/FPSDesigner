@@ -50,7 +50,7 @@ namespace Engine.Game
         private static Vector2 _backgroundPosition;
         private static Vector2 _backgroundSize;
         private static Color _backgroundColor;
-        private static SpriteFont _consoleFont;
+        public static SpriteFont _consoleFont;
         private static Vector2 _inputLinePos;
 
         public static Keys _activationKeys = Keys.OemTilde;

@@ -329,7 +329,7 @@ namespace Engine.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            //terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             Display3D.CWaterManager.Draw(cam._view, cam._projection, cam._cameraPos);
 
@@ -343,7 +343,8 @@ namespace Engine.GameStates
             Display3D.CModelManager.Draw(cam, gameTime);
 
             // ENEMY TEST
-            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection, isSoftwareEmbedded);
+            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection, true);
+            
 
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);
@@ -359,6 +360,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
+                _enemy.AddEnemyHUD(spriteBatch, cam);
             }
 
             Display3D.CWaterManager.DrawDebug(spriteBatch);

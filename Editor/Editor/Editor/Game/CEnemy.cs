@@ -73,6 +73,8 @@ namespace Engine.Game
         private bool _isDyingAnimPlaying;
         private bool _isFrozenAnimPlaying;
 
+        private float _height = 1.9f;
+
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
         public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false)
@@ -306,6 +308,16 @@ namespace Engine.Game
                     Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Black);
             }
             return triangles;
+        }
+
+
+        public void AddEnemyHUD(SpriteBatch sb, Display3D.CCamera cam)
+        {
+            Vector3 Pos = Display2D.C2DEffect._graphicsDevice.Viewport.Project(new Vector3(_position.X, _position.Y + _height, _position.Z), cam._projection, cam._view, Matrix.Identity);
+            sb.Begin();
+            if(Pos.Z < 1)
+                sb.DrawString(CConsole._consoleFont, "COUCOU MDR", new Vector2(Pos.X - CConsole._consoleFont.MeasureString("COUCOU MDR").X/2, Pos.Y), Color.Red);
+            sb.End();
         }
 
         public string RayIntersectsHitbox(Ray ray, out float? distance)

@@ -30,8 +30,8 @@ namespace Engine.Game
         public List<Display3D.Triangle> _triangleList = new List<Display3D.Triangle>();
         public List<Vector3> _triangleNormalsList = new List<Vector3>();
         public Display3D.CTerrain _terrain;
-        public float _gravityConstant = -9.81f / 10f;
-        public float _gravityConstantWater = -9.81f / 80f;
+        public float _gravityConstant = -9.81f / 30f;
+        public float _gravityConstantWater = -9.81f / 240f;
         public float _maxFallingVelocity = -3.5f; // The maximum velocity of an entity during its fall
         public float _maxFallingVelocityWater = -0.05f;
         public List<float> _waterHeight = new List<float>();
@@ -126,7 +126,8 @@ namespace Engine.Game
             else
             {
                 isVerticalIntersecting = false;
-                float dt = (float)(gameTime.TotalGameTime.TotalSeconds - _lastFreeFall) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //float dt = (float)(gameTime.TotalGameTime.TotalMilliseconds - _lastFreeFall) * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_isUnderwater && translation == Vector3.Zero)
                     _velocity.Y += _gravityConstantWater * dt;
                 else

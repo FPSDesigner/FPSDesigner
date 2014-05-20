@@ -123,7 +123,8 @@ namespace Engine.Display3D.Materials
             foreach (CModel model in Models)
             {
                 model.CacheEffects();
-                model.SetModelEffect(depthNormalEffect, false);
+                if (model._ModelLife > 0) 
+                    model.SetModelEffect(depthNormalEffect, false);
                 model.Draw(Camera._view, Camera._projection, Camera._cameraPos);
                 model.RestoreEffects();
             }

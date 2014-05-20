@@ -108,7 +108,7 @@ namespace Engine.Display3D
         public bool shouldNotUpdateTriangles = false;
         public bool _Explodable;
 
-        private float _ModelLife = 50f;
+        public float _ModelLife = 50f;
 
         private string collisionShapeName = "collision_shape";
 
@@ -669,7 +669,7 @@ namespace Engine.Display3D
                 _ModelLife -= damage;
                 if (_ModelLife <= 0)
                 {
-                    _ModelLife = 25f;
+                    //_ModelLife = 25f;
                     Display3D.Particles.ParticlesManager.AddParticle("explosion", _modelPosition, 20);
                     //Game.CSoundManager.soundList["Explosion"]._sound.
                     Game.CSoundManager.soundList["Explosion"]._audioEmitter.Position = _modelPosition;

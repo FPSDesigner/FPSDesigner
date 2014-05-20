@@ -22,7 +22,7 @@ namespace Engine.Display3D.Particles.Elements
 
             settings.MaxParticles = 100;
 
-            settings.Duration = TimeSpan.FromSeconds(3);
+            settings.Duration = TimeSpan.FromSeconds(2);
             settings.DurationRandomness = 1;
 
             settings.MinHorizontalVelocity = 5;
@@ -33,7 +33,7 @@ namespace Engine.Display3D.Particles.Elements
 
             settings.EndVelocity = 0;
 
-            settings.MinColor = Color.DarkGray;
+            settings.MinColor = Color.White;
             settings.MaxColor = Color.White;
 
             settings.MinRotateSpeed = -1;
@@ -42,10 +42,10 @@ namespace Engine.Display3D.Particles.Elements
             settings.MinStartSize = 3;
             settings.MaxStartSize = 3;
 
-            settings.MinEndSize = 35;
-            settings.MaxEndSize = 70;
+            settings.MinEndSize = 15;
+            settings.MaxEndSize = 30;
 
-            settings.DelayBetweenParticles = 10;
+            settings.DelayBetweenParticles = 5;
 
             // Use additive blending.
             settings.BlendState = BlendState.Additive;
