@@ -693,7 +693,8 @@ namespace Engine.GameStates
                             Rotation = modelInfo.Rotation,
                             Textures = modelInfo.Textures,
                             Scale = modelInfo.Scale,
-                            SpecColor = modelInfo.SpecColor
+                            SpecColor = modelInfo.SpecColor,
+                            Explodable = modelInfo.Explodable
                         });
 
                         Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
@@ -719,7 +720,8 @@ namespace Engine.GameStates
                             modelTextures,
                             modelInfo.SpecColor,
                             modelInfo.Alpha,
-                            bumpTextures));
+                            bumpTextures,
+                            modelInfo.Explodable));
 
                     }
                     else if (eltType == "pickup")

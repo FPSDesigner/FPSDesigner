@@ -674,6 +674,26 @@ namespace Engine.Display3D
                     //Game.CSoundManager.soundList["Explosion"]._sound.
                     Game.CSoundManager.soundList["Explosion"]._audioEmitter.Position = _modelPosition;
                     Game.CSoundManager.PlayInstance("Explosion", 1);
+
+                    // Check for nearby explodable models
+                    CModel closestModel = null;
+                    float closestDist = -1;
+                    foreach (CModel mdl in Display3D.CModelManager.modelsList)
+                    {
+                        if (mdl != this && mdl._Explodable && mdl._ModelLife > 0)
+                        {
+                            float dist = Vector3.Distance(mdl._modelPosition, _modelPosition);
+                            if (closestDist == -1 || closestDist > dist)
+                            {
+                                closestDist = dist;
+                                closestModel = mdl;
+                            }
+                        }
+                    }
+                    if (closestDist <= 5 && closestModel != null)
+                    {
+                        closestModel.SetDamageToModel(150);
+                    }
                 }
             }
         }
