@@ -61,6 +61,7 @@ namespace Engine.GameStates
             Game.CSoundManager.LoadContent();
 
             Display3D.CModelManager.Initialize(content, graphics);
+            Game.CEnemyManager.LoadContent(content);
 
             // We Add some useful sounds
             SoundEffect sound = content.Load<SoundEffect>("Sounds\\GRASSSTEP");

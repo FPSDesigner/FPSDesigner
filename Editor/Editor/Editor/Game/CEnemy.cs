@@ -16,6 +16,13 @@ namespace Engine.Game
     {
         public static List<CEnemy> _enemyList = new List<CEnemy>();
 
+        public static SpriteFont _hudFont;
+
+        public static void LoadContent(ContentManager content)
+        {
+            _hudFont = content.Load<SpriteFont>("2D/consoleFont");
+        }
+
         public static void AddEnemy(CEnemy enemy)
         {
             _enemyList.Add(enemy);
@@ -55,6 +62,9 @@ namespace Engine.Game
         private Vector3 _deathPosition; // The coordinates where the enemy died
         private Matrix _deathRotation;
 
+        private float _hudTestSizeX;
+        private string _hudText;
+
         private Matrix _rotation; // Model rotation
         private float rotationValue; // We give this float to the rotation mat
 
@@ -77,7 +87,7 @@ namespace Engine.Game
 
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false)
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false, string name = "Enemy")
         {
             _position = Position;
             _scale = new Vector3(0.5f);
@@ -108,6 +118,14 @@ namespace Engine.Game
             _isHeadShot = false;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
+
+            SetEnemyName(name);
+        }
+
+        public void SetEnemyName(string name)
+        {
+            _hudText = name;
+            _hudTestSizeX = CEnemyManager._hudFont.MeasureString(name).X / 2;
         }
 
         public void LoadContent(ContentManager content, Display3D.CCamera cam)
@@ -313,11 +331,19 @@ namespace Engine.Game
 
         public void AddEnemyHUD(SpriteBatch sb, Display3D.CCamera cam)
         {
-            Vector3 Pos = Display2D.C2DEffect._graphicsDevice.Viewport.Project(new Vector3(_position.X, _position.Y + _height, _position.Z), cam._projection, cam._view, Matrix.Identity);
-            sb.Begin();
-            if(Pos.Z < 1)
-                sb.DrawString(CConsole._consoleFont, "COUCOU MDR", new Vector2(Pos.X - CConsole._consoleFont.MeasureString("COUCOU MDR").X/2, Pos.Y), Color.Red);
-            sb.End();
+            Ray ray = new Ray(cam._cameraPos, _position - cam._cameraPos);
+            int mdlid;
+            if (Display3D.CModelManager.CheckRayIntersectsModel(ray, out mdlid) == null)
+            {
+                if (Vector3.Distance(cam._cameraPos, _position) < 50)
+                {
+                    Vector3 Pos = Display2D.C2DEffect._graphicsDevice.Viewport.Project(new Vector3(_position.X, _position.Y + _height, _position.Z), cam._projection, cam._view, Matrix.Identity);
+                    sb.Begin();
+                    if (Pos.Z < 1)
+                        sb.DrawString(CEnemyManager._hudFont, _hudText, new Vector2(Pos.X - _hudTestSizeX, Pos.Y), Color.Red);
+                    sb.End();
+                }
+            }
         }
 
         public string RayIntersectsHitbox(Ray ray, out float? distance)
