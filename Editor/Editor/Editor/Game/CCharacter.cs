@@ -522,9 +522,19 @@ namespace Engine.Game
             // We draw the weapon only if the player is not looking in the lens
             if (!_isSniping)
             {
-                // Get the hand position attached to the bone
-                Matrix world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
+                // Get the hand position attached to the bone for any weapons which is not a special weapon
+                Matrix world;
+
+                if (weap._weaponPossessed[weap._selectedWeapon]._wepType != 3)
+                {
+                   world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
                     weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
+                }
+                else
+                {
+                    world = _handAnimation.GetBoneMatrix("hand_L", weap._weaponPossessed[weap._selectedWeapon]._rotation,
+                    weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
+                }
 
                 foreach (ModelMesh mesh in weap._weaponPossessed[weap._selectedWeapon]._wepModel.Meshes)
                 {
@@ -535,7 +545,7 @@ namespace Engine.Game
                         effect.Texture = weap._weaponPossessed[weap._selectedWeapon]._weapTexture;
 
                         // If the mesh is the slide, we anim it
-                        if (mesh.Name == "Slide" && (_isShoting || _isReloading))
+                        if ((_isShoting || _isReloading) && mesh.Name == "Slide")
                         {
                             // Move the slide of a shot by shot weapon
                             switch (weap._weaponPossessed[weap._selectedWeapon]._name)
@@ -556,8 +566,17 @@ namespace Engine.Game
                         }
                         else
                         {
-                            world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
+                            // Choose the good position according to the wepTy
+                            if (weap._weaponPossessed[weap._selectedWeapon]._wepType != 3)
+                            {
+                                world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
+                                    weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
+                            }
+                            else
+                            {
+                                world = _handAnimation.GetBoneMatrix("hand_L", weap._weaponPossessed[weap._selectedWeapon]._rotation,
                                 weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
+                            }
                         }
 
                         effect.World = world;
