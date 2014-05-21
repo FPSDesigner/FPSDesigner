@@ -40,6 +40,7 @@ namespace Engine.Game.LevelInfo
         public Lights Lights { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
+        public Bots Bots { get; set; }
         public Weapons Weapons { get; set; }
     }
 
@@ -193,6 +194,17 @@ namespace Engine.Game.LevelInfo
         public string Texture { get; set; }
         [XmlAttribute]
         public string Mesh { get; set; }
+    }
+    #endregion
+
+    #region "Node - Bots"
+    public class Bots
+    {
+        public float NearClip { get; set; }
+        public Coordinates SpawnPosition { get; set; }
+        public Coordinates SpawnRotation { get; set; }
+        public string ModelName { get; set; }
+        public MapModels_Textures ModelTexture { get; set; }
     }
     #endregion
 
