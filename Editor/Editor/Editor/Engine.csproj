@@ -101,6 +101,7 @@
     <Compile Include="Display3D\CLightsManager.cs" />
     <Compile Include="Display3D\CModelManager.cs" />
     <Compile Include="Display3D\CPickUpManager.cs" />
+    <Compile Include="Display3D\CProjectileManager.cs" />
     <Compile Include="Display3D\CTerrain.cs" />
     <Compile Include="Display3D\CWater.cs" />
     <Compile Include="Display3D\CModel.cs" />

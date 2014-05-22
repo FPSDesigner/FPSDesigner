@@ -81,7 +81,7 @@
       <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\XAMLMarkupExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\..\..\..\..\Dropbox\Dropbox\FPSDesigner\Codes\References\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>C:\Users\Games\Dropbox\FPSDesigner\Codes\References\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
