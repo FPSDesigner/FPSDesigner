@@ -29,6 +29,11 @@ namespace Engine.Game
 
         private Model _muzzleFlash; // The plane containing the muzzle flash texture
 
+        // All variables useful to create an arrow
+        private Model _arrowModel;
+        private Texture2D _arrowTexture;
+        private CProjectile _arrowProjectile; // Before shoting, we have an arrow in the hand 
+
         private Random _muzzleRandom; // Randomize muzzle flashes
 
         private int _previousScrollWheelValue; // Help us to determine if he is changing weapon

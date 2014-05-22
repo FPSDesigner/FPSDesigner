@@ -12,21 +12,20 @@ namespace Engine.Display3D
 {
     static class CProjectileManager
     {
-        CProjectile _currentProjectile; // Store the current projectle, when thrown, we add it to the list
-        List<CProjectile> _thrownProjectiles; // All the projectiles that have been thrown
+        static List<CProjectile> _thrownProjectiles; // All the projectiles that have been thrown
 
-        public void AddProjectile(CProjectile projectile)
+        public static void AddProjectile(CProjectile projectile)
         {
             _thrownProjectiles.Add(projectile);
         }
 
-        public void updateProjectileList()
+        public static void updateProjectileList()
         {
 
         }
 
         // Delete a projectile with its index or after a time span on the terrain
-        public void DeleteProjectile(int index = -1)
+        public static void DeleteProjectile(int index = -1)
         {
             if (index >= 0)
             {
@@ -51,8 +50,6 @@ namespace Engine.Display3D
 
             this._model = Model;
 
-            this._modelTexture = Texture;
-
             this._isThrown = false;
         }
 
@@ -63,9 +60,9 @@ namespace Engine.Display3D
 
         }
 
-        public void Draw()
+        public void Draw(Matrix view, Matrix projection, Vector3 camPos)
         {
-
+            _model.Draw(view, projection, camPos);
         }
 
         public void ThrowProjectile()
