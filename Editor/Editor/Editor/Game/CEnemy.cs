@@ -23,9 +23,36 @@ namespace Engine.Game
             _hudFont = content.Load<SpriteFont>("2D/consoleFont");
         }
 
-        public static void AddEnemy(CEnemy enemy)
+        public static void AddEnemy(ContentManager content, Display3D.CCamera cam, CEnemy enemy)
         {
             _enemyList.Add(enemy);
+            enemy.LoadContent(content, cam);
+        }
+
+        public static void Draw(GameTime gameTime, SpriteBatch spriteBatch, Display3D.CCamera cam)
+        {
+            foreach (CEnemy enemy in _enemyList)
+            {
+                enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection);
+            }
+
+        }
+
+        public static void Update(GameTime gameTime)
+        {
+            foreach (CEnemy enemy in _enemyList)
+            {
+                enemy.Update(gameTime);
+            }
+
+        }
+
+        public static void AddEnemyHud(SpriteBatch sb, Display3D.CCamera cam)
+        {
+            foreach (CEnemy enemy in _enemyList)
+            {
+                enemy.AddEnemyHUD(sb, cam);
+            }
         }
 
         public static string RayIntersectsHitbox(Ray ray, out float? distance, out CEnemy enemyVal)
@@ -321,6 +348,7 @@ namespace Engine.Game
             List<Display3D.Triangle> triangles = new List<Display3D.Triangle>();
             foreach (KeyValuePair<string, Display3D.Triangle> tri in hitBoxesTriangles)
             {
+                world = tri.Value.transformMatrix;
                 triangles.Add(tri.Value.NewByMatrix(world));
                 if(drawHitbox)
                     Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Black);
@@ -383,7 +411,7 @@ namespace Engine.Game
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
 
-                            hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name));
+                            hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name, mesh.ParentBone.Transform));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
                         }
                     }

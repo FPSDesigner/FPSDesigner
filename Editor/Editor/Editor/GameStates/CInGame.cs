@@ -38,9 +38,6 @@ namespace Engine.GameStates
         private Dictionary<string, Model> modelsListWeapons = new Dictionary<string, Model>();
         private Dictionary<string, Texture2D> textureListWeapons = new Dictionary<string, Texture2D>();
 
-        // ENEMY TEST
-        private Game.CEnemy _enemy;
-
         public void Initialize()
         {
             levelInfo = new Game.LevelInfo.CLevelInfo();
@@ -93,7 +90,7 @@ namespace Engine.GameStates
                     foreach (Game.LevelInfo.MapModels_Texture textureInfo in modelInfo.BumpTextures.Texture)
                         bumpTextures.Add(textureInfo.Mesh, content.Load<Texture2D>(textureInfo.Texture));
                 }
-                
+
                 Display3D.CModelManager.addModel(_content,
                     new Display3D.CModel(
                     content.Load<Model>(modelInfo.ModelFile),
@@ -227,19 +224,23 @@ namespace Engine.GameStates
             if (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0)
                 cam._physicsMap._waterHeight = totalWaterHeight;
 
-            x = levelData.Weapons.Weapon[1].Rotation.X;
-            y = levelData.Weapons.Weapon[1].Rotation.Y;
-            z = levelData.Weapons.Weapon[1].Rotation.Z;
+            /**** Enemies ****/
 
-            // ENEMY TEST
+            foreach (Game.LevelInfo.Bot bots in levelData.Bots.Bots)
+            {
+                List<Texture2D> enemyTexture = new List<Texture2D>();
+
+                foreach (Game.LevelInfo.MapModels_Texture textureInfo in bots.ModelTexture.Texture)
+                    enemyTexture.Add(content.Load<Texture2D>(textureInfo.Texture));
+
+                Game.CEnemyManager.AddEnemy(content, cam, new Game.CEnemy(bots.ModelName, enemyTexture.ToArray(), bots.SpawnPosition.Vector3, bots.SpawnPosition.RotMatrix, bots.Life, bots.Velocity, bots.RangeOfAttack, bots.IsAggressive, bots.Name));
+            }
+
+            /*// ENEMY TEST
             Texture2D[] ennemyTexture = new Texture2D[1];
             ennemyTexture[0] = content.Load<Texture2D>("Textures\\StormTrooper");
             _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-142.7562f, 168.2f, 100.6888f)
-                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi),100.0f, 6f,100.0f,false);
-
-            _enemy.LoadContent(content, cam);
-
-            Game.CEnemyManager.AddEnemy(_enemy);
+                , Matrix.CreateRotationX(-1 * MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi), 100.0f, 6f, 100.0f, false);*/
         }
 
         float x, y, z;
@@ -298,8 +299,9 @@ namespace Engine.GameStates
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
             // ENEMY TEST
-            _enemy.MoveTo(cam._cameraPos, gameTime);
-            _enemy.Update(gameTime);
+            //_enemy.MoveTo(cam._cameraPos, gameTime);
+
+            Game.CEnemyManager.Update(gameTime);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
@@ -344,8 +346,8 @@ namespace Engine.GameStates
             Display3D.CModelManager.Draw(cam, gameTime);
 
             // ENEMY TEST
-            _enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection, true);
-            
+            Game.CEnemyManager.Draw(gameTime, spriteBatch, cam);
+
 
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);
@@ -361,7 +363,7 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
-                _enemy.AddEnemyHUD(spriteBatch, cam);
+                Game.CEnemyManager.AddEnemyHud(spriteBatch, cam);
             }
 
             Display3D.CWaterManager.DrawDebug(spriteBatch);

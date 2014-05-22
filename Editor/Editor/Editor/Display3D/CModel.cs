@@ -673,7 +673,7 @@ namespace Engine.Display3D
                     Display3D.Particles.ParticlesManager.AddParticle("explosion", _modelPosition, 20);
                     //Game.CSoundManager.soundList["Explosion"]._sound.
                     Game.CSoundManager.soundList["Explosion"]._audioEmitter.Position = _modelPosition;
-                    Game.CSoundManager.PlayInstance("Explosion", 1);
+                    Game.CSoundManager.PlaySound("Explosion", 1);
 
                     // Check for nearby explodable models
                     CModel closestModel = null;
@@ -692,7 +692,11 @@ namespace Engine.Display3D
                     }
                     if (closestDist <= 5 && closestModel != null)
                     {
-                        closestModel.SetDamageToModel(150);
+                        System.Timers.Timer timer = new System.Timers.Timer();
+                        timer.Interval = 200;
+                        timer.Elapsed += (s, e) => { closestModel.SetDamageToModel(150); ((System.Timers.Timer)s).Stop(); };
+                        timer.Enabled = true;
+                        timer.Start();
                     }
                 }
             }
@@ -736,13 +740,15 @@ namespace Engine.Display3D
         public Vector3 V1;
         public Vector3 V2;
         public string TriName;
+        public Matrix transformMatrix;
 
-        public Triangle(Vector3 v0, Vector3 v1, Vector3 v2, string Name = "")
+        public Triangle(Vector3 v0, Vector3 v1, Vector3 v2, string Name = "", Matrix transform = default(Matrix))
         {
             V0 = v0;
             V1 = v1;
             V2 = v2;
             TriName = Name;
+            transformMatrix = transform;
         }
 
         public void UpdateByMatrix(Matrix world)

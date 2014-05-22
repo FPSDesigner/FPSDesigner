@@ -161,10 +161,8 @@ namespace Engine.Display3D
             return skinnedModel;
         }
 
-        public Matrix GetBoneMatrix(string boneName, Matrix rotation,float scale, Vector3 offset)
+        public Matrix GetBoneMatrix(int index, Matrix rotation, float scale, Vector3 offset)
         {
-            int index = skinnedModel.Model.Bones[boneName].Index;
-
             Matrix boneLocal = animationController.SkinnedBoneTransforms[index];
 
             boneLocal = Matrix.CreateTranslation(offset)
@@ -174,6 +172,11 @@ namespace Engine.Display3D
                             * animationController.SkinnedBoneTransforms[index]
                             * CreateWorldMatrix(_position, _rotation, _scale);
             return boneLocal;
+        }
+
+        public Matrix GetBoneMatrix(string boneName, Matrix rotation, float scale, Vector3 offset)
+        {
+            return GetBoneMatrix(skinnedModel.Model.Bones[boneName].Index, rotation, scale, offset);
         }
 
         public Matrix CreateWorldMatrix(Vector3 Translation, Matrix Rotation, float Scale)

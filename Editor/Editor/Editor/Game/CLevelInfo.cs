@@ -40,7 +40,7 @@ namespace Engine.Game.LevelInfo
         public Lights Lights { get; set; }
         public MapModels MapModels { get; set; }
         public GameFiles GameFiles { get; set; }
-        public Bots Bots { get; set; }
+        public BotsList Bots { get; set; }
         public Weapons Weapons { get; set; }
     }
 
@@ -198,13 +198,25 @@ namespace Engine.Game.LevelInfo
     #endregion
 
     #region "Node - Bots"
-    public class Bots
+    public class BotsList
+    {
+        public BotsList() { Bots = new List<Bot>(); }
+        [XmlElement("Bot")]
+        public List<Bot> Bots { get; set; }
+    }
+
+    public class Bot
     {
         public float NearClip { get; set; }
         public Coordinates SpawnPosition { get; set; }
         public Coordinates SpawnRotation { get; set; }
         public string ModelName { get; set; }
         public MapModels_Textures ModelTexture { get; set; }
+        public float Life { get; set; }
+        public float Velocity { get; set; }
+        public float RangeOfAttack { get; set; }
+        public bool IsAggressive { get; set; }
+        public string Name { get; set; }
     }
     #endregion
 
@@ -213,6 +225,9 @@ namespace Engine.Game.LevelInfo
     {
         [XmlIgnore]
         public Vector3 Vector3 { get { return new Vector3(X, Y, Z); } set { X = value.X; Y = value.Y; Z = value.Z; } }
+        [XmlIgnore]
+        public Matrix RotMatrix { get { return Matrix.CreateRotationX(X) * Matrix.CreateRotationY(Y) * Matrix.CreateRotationZ(Z); } }
+
         public Coordinates(float cX, float cY, float cZ) { X = cX; Y = cY; Z = cZ; }
         public Coordinates(Vector3 coord) { X = coord.X; Y = coord.Y; Z = coord.Z; }
         public Coordinates() { }
