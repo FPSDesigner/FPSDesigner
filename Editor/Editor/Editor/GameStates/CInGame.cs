@@ -225,16 +225,16 @@ namespace Engine.GameStates
                 cam._physicsMap._waterHeight = totalWaterHeight;
 
             /**** Enemies ****/
+            if (levelData.Bots != null && levelData.Bots.Bots.Count > 0)
+                foreach (Game.LevelInfo.Bot bots in levelData.Bots.Bots)
+                {
+                    List<Texture2D> enemyTexture = new List<Texture2D>();
 
-            foreach (Game.LevelInfo.Bot bots in levelData.Bots.Bots)
-            {
-                List<Texture2D> enemyTexture = new List<Texture2D>();
+                    foreach (Game.LevelInfo.MapModels_Texture textureInfo in bots.ModelTexture.Texture)
+                        enemyTexture.Add(content.Load<Texture2D>(textureInfo.Texture));
 
-                foreach (Game.LevelInfo.MapModels_Texture textureInfo in bots.ModelTexture.Texture)
-                    enemyTexture.Add(content.Load<Texture2D>(textureInfo.Texture));
-
-                Game.CEnemyManager.AddEnemy(content, cam, new Game.CEnemy(bots.ModelName, enemyTexture.ToArray(), bots.SpawnPosition.Vector3, bots.SpawnPosition.RotMatrix, bots.Life, bots.Velocity, bots.RangeOfAttack, bots.IsAggressive, bots.Name));
-            }
+                    Game.CEnemyManager.AddEnemy(content, cam, new Game.CEnemy(bots.ModelName, enemyTexture.ToArray(), bots.SpawnPosition.Vector3, bots.SpawnPosition.RotMatrix, bots.Life, bots.Velocity, bots.RangeOfAttack, bots.IsAggressive, bots.Name));
+                }
 
             /*// ENEMY TEST
             Texture2D[] ennemyTexture = new Texture2D[1];
