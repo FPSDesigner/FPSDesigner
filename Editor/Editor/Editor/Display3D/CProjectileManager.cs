@@ -13,9 +13,11 @@ namespace Engine.Display3D
     static class CProjectileManager
     {
         static List<CProjectile> _thrownProjectiles; // All the projectiles that have been thrown
+        static List<CProjectile> _collisionedProjectiles; // All the projectiles which reached the floor
 
-        public static void AddProjectile(CProjectile projectile)
+        public static void ThrowProjectile(CProjectile projectile)
         {
+            projectile._isThrown = true;
             _thrownProjectiles.Add(projectile);
         }
 
@@ -36,14 +38,14 @@ namespace Engine.Display3D
 
     class CProjectile
     {
-        public Vector3 _position { get; set; }
-        public Matrix _rotation { get; private set; }
+        public Vector3 _position { get; set ; }
+        private Matrix _rotation { get; set; }
 
         private CModel _model;
 
-        private bool _isThrown;
+        public bool _isThrown;
 
-        public CProjectile(CModel Model, Texture2D Texture, Vector3 Pos, Matrix Rot)
+        public CProjectile(CModel Model, Vector3 Pos, Matrix Rot)
         {
             this._position = Pos;
             this._rotation = Rot;
@@ -57,7 +59,6 @@ namespace Engine.Display3D
         {
             if (_isThrown)
                 _position += Vector3.Forward * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
         }
 
         public void Draw(Matrix view, Matrix projection, Vector3 camPos)
@@ -65,13 +66,16 @@ namespace Engine.Display3D
             _model.Draw(view, projection, camPos);
         }
 
-        public void ThrowProjectile()
+        public void UpdatePosition(Vector3 newPos)
         {
-            _isThrown = true;
-
-            _position += Vector3.Forward;
+            _position = newPos;
+            _model._modelPosition = newPos;
         }
 
-
+        public void UpdateRotation(Matrix rot)
+        {
+            //_rotation = rot;
+            //_model._modelRotation = _rotation;
+        }
     }
 }

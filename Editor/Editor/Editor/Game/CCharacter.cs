@@ -32,7 +32,6 @@ namespace Engine.Game
         // All variables useful to create an arrow
         private Model _arrowModel;
         private Texture2D _arrowTexture;
-        private CProjectile _arrowProjectile; // Before shoting, we have an arrow in the hand 
 
         private Random _muzzleRandom; // Randomize muzzle flashes
 
@@ -136,6 +135,23 @@ namespace Engine.Game
 
             _lensTexture = content.Load<Texture2D>("Textures//Lens");
 
+            // Load the arrow
+            _arrowModel = content.Load<Model>("Models\\Arrow");
+            _arrowTexture = content.Load<Texture2D>("Textures\\Arrow");
+
+            foreach (ModelMesh arrowMesh in _arrowModel.Meshes)
+            {
+                foreach (BasicEffect effect in arrowMesh.Effects)
+                {
+                    effect.TextureEnabled = true;
+                    effect.Texture = _arrowTexture;
+
+                    effect.SpecularColor = new Vector3(0.0f);
+                    effect.SpecularPower = 8;
+
+                }
+            }
+
             _muzzleRandom = new Random();
             _horizontalVelocity = _walkSpeed;
         }
@@ -200,7 +216,7 @@ namespace Engine.Game
                 // Draw the weapon attached to the mesh
                 if (!_isSwimAnimationPlaying)
                 {
-                    WeaponDrawing(weap, spriteBatch, view, projection, gametime);
+                    WeaponDrawing(weap, spriteBatch, view, projection, camPos, gametime);
                 }
             }
             else
@@ -522,7 +538,7 @@ namespace Engine.Game
             }
         }
 
-        private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, GameTime gameTime)
+        private void WeaponDrawing(Game.CWeapon weap, SpriteBatch spritebatch, Matrix view, Matrix projection, Vector3 camPos, GameTime gameTime)
         {
             // We draw the weapon only if the player is not looking in the lens
             if (!_isSniping)
@@ -532,8 +548,8 @@ namespace Engine.Game
 
                 if (weap._weaponPossessed[weap._selectedWeapon]._wepType != 3)
                 {
-                   world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
-                    weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
+                    world = _handAnimation.GetBoneMatrix("hand_R", weap._weaponPossessed[weap._selectedWeapon]._rotation,
+                     weap._weaponPossessed[weap._selectedWeapon]._scale, weap._weaponPossessed[weap._selectedWeapon]._offset);
                 }
                 else
                 {
@@ -589,6 +605,29 @@ namespace Engine.Game
                         effect.Projection = projection;
                     }
                     mesh.Draw();
+                }
+
+                // Draw the arrow only if the player has the bow
+                if (weap._weaponPossessed[weap._selectedWeapon]._wepType == 3 
+                    && !_isShoting)
+                {
+                    world = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(0.12f) * Matrix.CreateRotationZ(0.22f)
+                        , 0.8f, new Vector3(-0.1f, -0.72f, 0.1f));
+
+                    foreach (ModelMesh arrowMesh in _arrowModel.Meshes)
+                    {
+                        foreach (BasicEffect eff in arrowMesh.Effects)
+                        {
+                            eff.EnableDefaultLighting();
+                            eff.TextureEnabled = true;
+                            eff.Texture = _arrowTexture;
+
+                            eff.World = world;
+                            eff.View = view;
+                            eff.Projection = projection;
+                        }
+                        arrowMesh.Draw();
+                    }
                 }
 
                 // Draw the muzzle flash
@@ -742,25 +781,30 @@ namespace Engine.Game
             if ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload))
                 || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
             {
+                
                 if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                 {
-                    _isWaitAnimPlaying = false;
-                    _isWalkAnimPlaying = false;
-                    _isSwimAnimationPlaying = false;
-                    _isSwitchingAnim2ndPartPlaying = false;
-                    _isSwitchingAnimPlaying = false;
+                    // You cannot reload with a bow, so, we avoid any crash
+                    if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
+                    {
+                        _isWaitAnimPlaying = false;
+                        _isWalkAnimPlaying = false;
+                        _isSwimAnimationPlaying = false;
+                        _isSwitchingAnim2ndPartPlaying = false;
+                        _isSwitchingAnimPlaying = false;
 
-                    _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[3]);
-                    if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 1 || !_isSniping)
-                        _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[3], false, 0.12f);
-                    else
-                        _handAnimation.BeginAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[3], false);
+                        _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[3]);
+                        if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 1 || !_isSniping)
+                            _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[3], false, 0.12f);
+                        else
+                            _handAnimation.BeginAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[3], false);
 
-                    _isSniping = false;
-                    _isAiming = false;
-                    _isReloadingSoundPlayed = false;
-                    _isReloading = true;
+                        _isReloading = true;
+                    }
                 }
+                _isSniping = false;
+                _isAiming = false;
+                _isReloadingSoundPlayed = false;
             }
 
             // We play the sound after a delay
