@@ -241,6 +241,9 @@ namespace Engine.GameStates
             ennemyTexture[0] = content.Load<Texture2D>("Textures\\StormTrooper");
             _enemy = new Game.CEnemy("StormTrooperAnimation", ennemyTexture, new Vector3(-142.7562f, 168.2f, 100.6888f)
                 , Matrix.CreateRotationX(-1 * MathHelper.PiOver2) * Matrix.CreateRotationY(MathHelper.Pi), 100.0f, 6f, 100.0f, false);*/
+
+            // Initialize the Projectile Manager
+            Display3D.CProjectileManager.Initialize();
         }
 
         float x, y, z;
@@ -264,6 +267,9 @@ namespace Engine.GameStates
                 // ****** We get the weapon attribute to display it in console ****** //
                 Game.CConsole._Weapon = weapon;
             }
+
+            // Update projectile Manager
+            Display3D.CProjectileManager.updateProjectileList(gameTime);
 
             if (!isSoftwareEmbedded)
                 Display3D.TreeManager.Update(gameTime);

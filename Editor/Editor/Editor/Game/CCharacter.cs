@@ -30,8 +30,9 @@ namespace Engine.Game
         private Model _muzzleFlash; // The plane containing the muzzle flash texture
 
         // All variables useful to create an arrow
-        private Model _arrowModel;
+        private Model _arrowModel; // The model we draw before shoting
         private Texture2D _arrowTexture;
+        private Matrix _arrowWorld; // Contain the position and the rotation 
 
         private Random _muzzleRandom; // Randomize muzzle flashes
 
@@ -143,6 +144,7 @@ namespace Engine.Game
             {
                 foreach (BasicEffect effect in arrowMesh.Effects)
                 {
+                    effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
                     effect.Texture = _arrowTexture;
 
@@ -468,66 +470,79 @@ namespace Engine.Game
                             _isWalkAnimPlaying = false;
                             _isWaitAnimPlaying = false;
 
-                            // RAY DETECTION : KNOW IF SOMEONE IS TOUCHED
+                            // RAY DETECTION : KNOW IF SOMEONE IS TOUCHED (WITHOUT BOW)
 
-                            Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
-                            Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
-                            Vector3 direction = farSource - nearSource;
-
-                            direction.Normalize();
-
-                            Ray ray = new Ray(nearSource, direction);
-
-                            float? distance;
-                            CEnemy enemy;
-                            string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
-
-                            if (distance < weapon._weaponPossessed[weapon._selectedWeapon]._range)
+                            // The weapon is not a bow
+                            if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
                             {
-                                if (boxTouched != "")
-                                {
-                                    Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
-                                    Game.CConsole.addMessage("Hit " + boxTouched);
+                                Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
+                                Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
+                                Vector3 direction = farSource - nearSource;
 
-                                    switch (boxTouched)
+                                direction.Normalize();
+
+                                Ray ray = new Ray(nearSource, direction);
+
+                                float? distance;
+                                CEnemy enemy;
+                                string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
+
+                                if (distance < weapon._weaponPossessed[weapon._selectedWeapon]._range)
+                                {
+                                    if (boxTouched != "")
                                     {
-                                        case "Bb_Head":
-                                            enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
-                                            break;
-                                        case "Bb_Body":
-                                            enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
-                                            break;
+                                        Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
+                                        Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
+                                        Game.CConsole.addMessage("Hit " + boxTouched);
+
+                                        switch (boxTouched)
+                                        {
+                                            case "Bb_Head":
+                                                enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
+                                                break;
+                                            case "Bb_Body":
+                                                enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
+                                                break;
+                                        }
+                                    }
+                                }
+
+                                if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 2)
+                                {
+                                    int modelId = -1;
+                                    if (Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelId, weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet) != null)
+                                    {
+                                    }
+                                    else if (_terrain != null)
+                                    {
+                                        bool IsTerrainShot = false;
+                                        bool IsWaterShot = false;
+
+                                        Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
+                                        //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
+
+                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
+                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
+
+                                        Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
+                                            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                                            0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
+                                        Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
+
+
+                                        Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
+                                        Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
                                     }
                                 }
                             }
-
-                            if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 2)
+                            // If the player shot with a bow
+                            else
                             {
-                                int modelId = -1;
-                                if (Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelId, weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet) != null)
-                                {
-                                }
-                                else if (_terrain != null)
-                                {
-                                    bool IsTerrainShot = false;
-                                    bool IsWaterShot = false;
-
-                                    Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                    //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
-
-                                    //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                    //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
-
-                                    Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
-                                        Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                                        0.33f, new Vector3(-1f - 50, -2.0f, -2.85f - 100));
-                                    Vector3 gunSmokePos = Vector3.Transform(Vector3.Zero, muzzleMatrix);
-
-
-                                    Display3D.Particles.ParticlesManager.AddParticle("gunshot_dirt", terrainPos);
-                                    Display3D.Particles.ParticlesManager.AddParticle("gun_smoke", gunSmokePos);
-                                }
+                                Dictionary<string, Texture2D> arrowDic = new Dictionary<string, Texture2D>();
+                                arrowDic.Add("Arrow", _arrowTexture);
+                                Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, Vector3.Transform(Vector3.Zero, _arrowWorld),
+                                Vector3.Zero, new Vector3(1f), _graphicsDevice, arrowDic);
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, Vector3.Transform(Vector3.Zero, _arrowWorld), Matrix.Identity));
                             }
                         }
 
@@ -608,21 +623,20 @@ namespace Engine.Game
                 }
 
                 // Draw the arrow only if the player has the bow
-                if (weap._weaponPossessed[weap._selectedWeapon]._wepType == 3 
+                if (weap._weaponPossessed[weap._selectedWeapon]._wepType == 3
                     && !_isShoting)
                 {
-                    world = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(0.12f) * Matrix.CreateRotationZ(0.22f)
+                    _arrowWorld = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(0.12f) * Matrix.CreateRotationZ(0.22f)
                         , 0.8f, new Vector3(-0.1f, -0.72f, 0.1f));
 
                     foreach (ModelMesh arrowMesh in _arrowModel.Meshes)
                     {
                         foreach (BasicEffect eff in arrowMesh.Effects)
                         {
-                            eff.EnableDefaultLighting();
                             eff.TextureEnabled = true;
                             eff.Texture = _arrowTexture;
 
-                            eff.World = world;
+                            eff.World = _arrowWorld;
                             eff.View = view;
                             eff.Projection = projection;
                         }
@@ -781,7 +795,7 @@ namespace Engine.Game
             if ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload))
                 || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
             {
-                
+
                 if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                 {
                     // You cannot reload with a bow, so, we avoid any crash

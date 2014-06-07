@@ -15,15 +15,25 @@ namespace Engine.Display3D
         static List<CProjectile> _thrownProjectiles; // All the projectiles that have been thrown
         static List<CProjectile> _collisionedProjectiles; // All the projectiles which reached the floor
 
+        public static void Initialize()
+        {
+            _thrownProjectiles = new List<CProjectile>();
+            _collisionedProjectiles = new List<CProjectile>();
+        }
+
         public static void ThrowProjectile(CProjectile projectile)
         {
             projectile._isThrown = true;
             _thrownProjectiles.Add(projectile);
         }
 
-        public static void updateProjectileList()
+        public static void updateProjectileList(GameTime gameTime)
         {
-
+            // Change position/rotation of all arrows above the terrain
+            foreach(Display3D.CProjectile projectile in _thrownProjectiles)
+            {
+                projectile._position *= Vector3.Down * (float)gameTime.TotalGameTime.Seconds * 0.001f;
+            }
         }
 
         // Delete a projectile with its index or after a time span on the terrain
