@@ -538,11 +538,18 @@ namespace Engine.Game
                             // If the player shot with a bow
                             else
                             {
+                                // Texture
                                 Dictionary<string, Texture2D> arrowDic = new Dictionary<string, Texture2D>();
                                 arrowDic.Add("Arrow", _arrowTexture);
-                                Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, Vector3.Transform(Vector3.Zero, _arrowWorld),
-                                Vector3.Zero, new Vector3(1f), _graphicsDevice, arrowDic);
-                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, Vector3.Transform(Vector3.Zero, _arrowWorld), Matrix.Identity));
+
+                                Vector3 scale, pos;
+                                Quaternion rot;
+                                _arrowWorld.Decompose(out scale, out rot, out pos);
+
+
+                                Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
+                                new Vector3(rot.X,rot.Y,rot.Z), new Vector3(1f), _graphicsDevice, arrowDic);
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, new Vector3(rot.X, rot.Y, rot.Z)));
                             }
                         }
 

@@ -354,7 +354,6 @@ namespace Engine.GameStates
             // ENEMY TEST
             Game.CEnemyManager.Draw(gameTime, spriteBatch, cam);
 
-
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);
 
@@ -363,6 +362,9 @@ namespace Engine.GameStates
             _graphics.BlendState = BlendState.Opaque;
 
             Display3D.Particles.ParticlesManager.Draw(gameTime, cam._view, cam._projection);
+
+            // Draw Projectiles
+            Display3D.CProjectileManager.drawThrownProjectiles(gameTime, cam._view, cam._projection, cam);
 
             if (!isSoftwareEmbedded)
             {

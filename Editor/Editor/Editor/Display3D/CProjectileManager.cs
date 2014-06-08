@@ -23,7 +23,6 @@ namespace Engine.Display3D
 
         public static void ThrowProjectile(CProjectile projectile)
         {
-            projectile._isThrown = true;
             _thrownProjectiles.Add(projectile);
         }
 
@@ -32,43 +31,43 @@ namespace Engine.Display3D
             // Change position/rotation of all arrows above the terrain
             foreach(Display3D.CProjectile projectile in _thrownProjectiles)
             {
-                projectile._position *= Vector3.Down * (float)gameTime.TotalGameTime.Seconds * 0.001f;
+                projectile.UpdatePos((2.0f*Vector3.Backward + projectile._fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.001f, gameTime);
             }
         }
 
-        // Delete a projectile with its index or after a time span on the terrain
-        public static void DeleteProjectile(int index = -1)
+        public static void drawThrownProjectiles(GameTime gameTime, Matrix view, Matrix projection, Display3D.CCamera cam)
         {
-            if (index >= 0)
+            foreach (Display3D.CProjectile projectile in _thrownProjectiles)
             {
-
+                projectile.Draw(view, projection, cam._cameraPos);
             }
         }
+
     }
 
     class CProjectile
     {
-        public Vector3 _position { get; set ; }
-        private Matrix _rotation { get; set; }
-
         private CModel _model;
 
-        public bool _isThrown;
+        private Vector3 _pos;
+        private Vector3 _rot;
+        public bool _isCollisioned;
 
-        public CProjectile(CModel Model, Vector3 Pos, Matrix Rot)
+        public float _fallElapsedTime;
+
+        public CProjectile(CModel Model, Vector3 Pos, Vector3 Rot)
         {
-            this._position = Pos;
-            this._rotation = Rot;
 
             this._model = Model;
+            this._pos = Pos;
+            this._rot = Rot;
 
-            this._isThrown = false;
-        }
+            _fallElapsedTime = 0f;
 
-        public void Update(GameTime gameTime)
-        {
-            if (_isThrown)
-                _position += Vector3.Forward * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _model._modelPosition = _pos;
+            _model._modelRotation = _rot;
+
+            this._isCollisioned = false;
         }
 
         public void Draw(Matrix view, Matrix projection, Vector3 camPos)
@@ -76,16 +75,14 @@ namespace Engine.Display3D
             _model.Draw(view, projection, camPos);
         }
 
-        public void UpdatePosition(Vector3 newPos)
+        public void UpdatePos(Vector3 direction, GameTime gameTime)
         {
-            _position = newPos;
-            _model._modelPosition = newPos;
+            if (!_isCollisioned)
+                _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            _pos += direction;
+            _model._modelPosition = _pos;
         }
 
-        public void UpdateRotation(Matrix rot)
-        {
-            //_rotation = rot;
-            //_model._modelRotation = _rotation;
-        }
     }
 }
