@@ -471,16 +471,15 @@ namespace Engine.Game
                             _isWaitAnimPlaying = false;
 
                             // RAY DETECTION : KNOW IF SOMEONE IS TOUCHED (WITHOUT BOW)
+                            Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
+                            Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
+                            Vector3 direction = farSource - nearSource;
+
+                            direction.Normalize();
 
                             // The weapon is not a bow
                             if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
                             {
-                                Vector3 nearSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MinDepth), cam._projection, cam._view, Matrix.Identity);
-                                Vector3 farSource = Display2D.C2DEffect.softwareViewport.Unproject(new Vector3((float)shotPosScreen.X, (float)shotPosScreen.Y, Display2D.C2DEffect.softwareViewport.MaxDepth), cam._projection, cam._view, Matrix.Identity);
-                                Vector3 direction = farSource - nearSource;
-
-                                direction.Normalize();
-
                                 Ray ray = new Ray(nearSource, direction);
 
                                 float? distance;
@@ -549,7 +548,7 @@ namespace Engine.Game
 
                                 Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
                                 new Vector3(rot.X,rot.Y,rot.Z), new Vector3(1f), _graphicsDevice, arrowDic);
-                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, new Vector3(rot.X, rot.Y, rot.Z)));
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, new Vector3(rot.X, rot.Y, rot.Z),direction));
                             }
                         }
 

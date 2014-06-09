@@ -31,7 +31,7 @@ namespace Engine.Display3D
             // Change position/rotation of all arrows above the terrain
             foreach(Display3D.CProjectile projectile in _thrownProjectiles)
             {
-                projectile.UpdatePos((2.0f*Vector3.Backward + projectile._fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.001f, gameTime);
+                projectile.UpdatePos(gameTime);
             }
         }
 
@@ -51,16 +51,18 @@ namespace Engine.Display3D
 
         private Vector3 _pos;
         private Vector3 _rot;
+        private Vector3 _direction; // We throw the model in the chosen direction
         public bool _isCollisioned;
 
         public float _fallElapsedTime;
 
-        public CProjectile(CModel Model, Vector3 Pos, Vector3 Rot)
+        public CProjectile(CModel Model, Vector3 Pos, Vector3 Rot, Vector3 Direction)
         {
 
             this._model = Model;
             this._pos = Pos;
             this._rot = Rot;
+            this._direction = Direction;
 
             _fallElapsedTime = 0f;
 
@@ -75,12 +77,12 @@ namespace Engine.Display3D
             _model.Draw(view, projection, camPos);
         }
 
-        public void UpdatePos(Vector3 direction, GameTime gameTime)
+        public void UpdatePos(GameTime gameTime)
         {
             if (!_isCollisioned)
                 _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _pos += direction;
+            _pos += (5f*_direction + _fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.01f;
             _model._modelPosition = _pos;
         }
 
