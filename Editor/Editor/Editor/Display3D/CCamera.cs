@@ -36,6 +36,7 @@ namespace Engine.Display3D
         private bool hasPlayerUwEffect = false;
         public bool isFreeCam = false;
         public bool isCamFrozen = false;
+        public bool shouldDrawPlayer = true;
         public bool _isMoving { get; private set; } //If the player move, useful for animations
 
         // Rotations angles

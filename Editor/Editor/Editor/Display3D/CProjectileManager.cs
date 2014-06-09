@@ -68,6 +68,7 @@ namespace Engine.Display3D
 
             _model._modelPosition = _pos;
             _model._modelRotation = _rot;
+            _model._UseForwardVector = true;
 
             this._isCollisioned = false;
         }
@@ -82,7 +83,11 @@ namespace Engine.Display3D
             if (!_isCollisioned)
                 _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _pos += (5f*_direction + 1.2f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.025f;
+            _pos += 0.5f * (5f*_direction + 1.2f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.025f;
+
+            _model._modelRotation = _pos - _model._modelPosition;
+            _model._modelRotation.Normalize();
+
             _model._modelPosition = _pos;
         }
 

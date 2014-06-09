@@ -89,12 +89,15 @@ namespace Engine.Game.Script
             RegisterFunction("getEnum", scriptFunctions, scriptFunctions.GetType().GetMethod("GetEnum"));
             RegisterFunction("getGameState", scriptFunctions, scriptFunctions.GetType().GetMethod("GetGameState"));
             RegisterFunction("changeGameState", scriptFunctions, scriptFunctions.GetType().GetMethod("ChangeGameState"));
+            RegisterFunction("tobool", scriptFunctions, scriptFunctions.GetType().GetMethod("ToBool"));
             
             RegisterFunction("getMD5", scriptFunctions, scriptFunctions.GetType().GetMethod("GetMD5"));
             RegisterFunction("getFileMD5", scriptFunctions, scriptFunctions.GetType().GetMethod("GetFileMD5"));
 
             RegisterFunction("XMLReader", scriptFunctions, scriptFunctions.GetType().GetMethod("XMLReader"));
-            //RegisterFunction("xmlWriter", scriptFunctions, scriptFunctions.GetType().GetMethod("XMLWriter"));
+            
+            // Game
+            RegisterFunction("quitGame", scriptFunctions, scriptFunctions.GetType().GetMethod("QuitGame"));
 
             // Settings
             RegisterFunction("getKeyMappings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetKeyMappings"));
@@ -104,6 +107,7 @@ namespace Engine.Game.Script
             RegisterFunction("fadeScreen", scriptFunctions, scriptFunctions.GetType().GetMethod("FadeScreen"));
             RegisterFunction("guiRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GUIRectangle"));
             RegisterFunction("guiImage", scriptFunctions, scriptFunctions.GetType().GetMethod("GUIImage"));
+            RegisterFunction("guiText", scriptFunctions, scriptFunctions.GetType().GetMethod("GUIText"));
 
             // Basic GUI functions
             RegisterFunction("getRectangle", scriptFunctions, scriptFunctions.GetType().GetMethod("GetRectangle"));
@@ -111,6 +115,7 @@ namespace Engine.Game.Script
             RegisterFunction("getColor", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColor"));
             RegisterFunction("getColorFromHex", scriptFunctions, scriptFunctions.GetType().GetMethod("GetColorFromHex"));
             RegisterFunction("getCursorInfo", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCursorInfo"));
+            RegisterFunction("hasPlayerJustClicked", scriptFunctions, scriptFunctions.GetType().GetMethod("HasPlayerJustClicked"));
             RegisterFunction("get3DTo2DPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("Get3DTo2DPosition"));
             RegisterFunction("getScreenSize", scriptFunctions, scriptFunctions.GetType().GetMethod("GetScreenSize"));
 
@@ -121,7 +126,13 @@ namespace Engine.Game.Script
             // Camera function
             RegisterFunction("getCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCameraPosition"));
             RegisterFunction("setCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("SetCameraPosition"));
+            RegisterFunction("freezePlayer", scriptFunctions, scriptFunctions.GetType().GetMethod("FreezePlayer"));
+            RegisterFunction("isPlayerFrozen", scriptFunctions, scriptFunctions.GetType().GetMethod("IsPlayerFrozen"));
+            RegisterFunction("drawPlayer", scriptFunctions, scriptFunctions.GetType().GetMethod("DrawPlayer"));
 
+            // Sound function
+            RegisterFunction("getSound", scriptFunctions, scriptFunctions.GetType().GetMethod("GetSound"));
+            
         }
     }
 }

@@ -432,6 +432,9 @@ namespace Engine.Game
 
         private void Shot(MouseState mouseState, MouseState oldMouseState, CWeapon weapon, Display3D.CCamera cam, GameTime gameTime)
         {
+            if (cam.isCamFrozen)
+                return;
+
             // If the player shot
             if (mouseState.LeftButton == ButtonState.Pressed ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))

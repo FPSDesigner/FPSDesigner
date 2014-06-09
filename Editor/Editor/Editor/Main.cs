@@ -172,8 +172,10 @@ namespace Engine
                 Game.CGameManagement.SendParam("Error encountered\n\nCheck logs for more information");
                 Game.CConsole.WriteLogs(e.ToString());
             }
-            //Game.Script.CLuaVM.Initialize();
-            //Game.Script.CLuaVM.LoadScript("Scripts/GuiManager.lua");
+            Game.Script.CLuaVM.Initialize();
+
+            foreach (string file in System.IO.Directory.GetFiles("Scripts", "*.lua").ToList<string>())
+                Game.Script.CLuaVM.LoadScript(file);
         }
 
 
@@ -198,19 +200,22 @@ namespace Engine
                 if (Game.Script.CLuaVM._settingEnableHighFreqCalls)
                     Game.Script.CLuaVM.CallEvent("framePulse");
 
-                // Quit program when 'Escape' key is pressed
-                if (kbState.IsKeyDown(Keys.Escape))
-                    this.Exit();
-
                 Game.CGameManagement.Update(gameTime, kbState, mouseState);
 
                 Display2D.C2DEffect.Update(gameTime, kbState, mouseState);
                 Game.CConsole.Update(kbState, gameTime);
 
+                base.Update(gameTime);
+
+                if (Game.CConsole.ShouldQuitFromLua)
+                    this.Exit();
+
+                // Quit program when 'Escape' key is pressed
+                else if ((oldKeyboardState.IsKeyDown(Keys.Escape) && kbState.IsKeyUp(Keys.Escape)) || Game.Settings.CGameSettings.gamepadState.Buttons.Back == ButtonState.Pressed)
+                    Game.Script.CLuaVM.CallEvent("quitKeyPressed");
+
                 oldKeyboardState = kbState;
                 oldMouseState = mouseState;
-
-                base.Update(gameTime);
             }
         }
         
@@ -260,21 +265,6 @@ namespace Engine
         public object WPFHandler(string handle, object value)
         {
             return Game.CGameManagement.SendParam(new object[] { handle, value });
-            /*switch (handle)
-            {
-                case "changeCamFreeze":
-                case "moveCameraForward":
-                case "click":
-                case "selectObject":
-                case "unselectObject":
-                case "moveObject":
-                case "changeTool":
-                case "getElementInfo":
-                case "setElementInfo":
-                
-                    
-            }
-            return true;*/
         }
 
         public void GameLoop(object sender, EventArgs e)

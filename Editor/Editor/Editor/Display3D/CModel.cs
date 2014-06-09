@@ -19,6 +19,7 @@ namespace Engine.Display3D
         private Vector3 _Scale;
         private Vector3 _Rotation;
         private Vector3 _Position;
+        public bool _UseForwardVector = false;
 
         public Vector3 _modelPosition
         {
@@ -160,7 +161,7 @@ namespace Engine.Display3D
             if (_textures != null)
             {
                 foreach (ModelMesh mesh in _model.Meshes)
-                    if(mesh.Name != collisionShapeName)
+                    if (mesh.Name != collisionShapeName)
                         foreach (ModelMeshPart part in mesh.MeshParts)
                         {
                             Effect effect = part.Effect;
@@ -209,9 +210,13 @@ namespace Engine.Display3D
         /// <param name="cameraPosition">Vector representing the camera position</param>
         public void Draw(Matrix view, Matrix projection, Vector3 cameraPosition)
         {
-            Matrix world = Matrix.CreateScale(_modelScale) *
-                Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
-                Matrix.CreateTranslation(_modelPosition);
+            Matrix world;
+            if (_UseForwardVector)
+                world = Matrix.CreateScale(_modelScale) * Matrix.CreateWorld(_modelPosition, _modelRotation, Vector3.Up);
+            else
+                world = Matrix.CreateScale(_modelScale) *
+                    Matrix.CreateFromYawPitchRoll(_modelRotation.Y, _modelRotation.X, _modelRotation.Z) *
+                    Matrix.CreateTranslation(_modelPosition);
 
             foreach (ModelMesh mesh in _model.Meshes)
             {

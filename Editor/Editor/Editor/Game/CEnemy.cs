@@ -38,21 +38,17 @@ namespace Engine.Game
 
         }
 
-        public static void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime, Display3D.CCamera cam)
         {
             foreach (CEnemy enemy in _enemyList)
-            {
-                enemy.Update(gameTime);
-            }
+                enemy.Update(gameTime, cam);
 
         }
 
         public static void AddEnemyHud(SpriteBatch sb, Display3D.CCamera cam)
         {
             foreach (CEnemy enemy in _enemyList)
-            {
                 enemy.AddEnemyHUD(sb, cam);
-            }
         }
 
         public static string RayIntersectsHitbox(Ray ray, out float? distance, out CEnemy enemyVal)
@@ -173,10 +169,10 @@ namespace Engine.Game
             GenerateHitBoxesTriangles();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Display3D.CCamera cam)
         {
             //Play Anims
-            if (!_isFrozen && !_isDead && !_isDyingAnimPlaying) // Player is not frozen by the administrator
+            if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
             {
                 // The character is running
                 if (!_isMoving && !_isWaitAnimPlaying)
@@ -186,7 +182,6 @@ namespace Engine.Game
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
-
                 }
 
                 // The Character is running
@@ -231,6 +226,8 @@ namespace Engine.Game
             }
 
             _model.Update(gameTime, _position, _rotation);
+
+            MoveTo(cam._cameraPos, gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)

@@ -50,6 +50,11 @@ namespace Engine.Game.Script
             return DateTime.Now;
         }
 
+        public bool ToBool(string str)
+        {
+            return (str != null && (str.ToLower() == "true" || str == "1"));
+        }
+
         public string GetMD5(string str)
         {
             // Calculate MD5 from input
@@ -92,10 +97,10 @@ namespace Engine.Game.Script
             return new Embedded.XMLManager(file);
         }
 
-        /*public System.Xml.XmlWriter XMLWriter(string file)
+        public void QuitGame()
         {
-            return System.Xml.XmlWriter.Create(file);
-        }*/
+            Game.CConsole.ShouldQuitFromLua = true;
+        }
 
         // Enums
         public void GetEnum(string enumType)
@@ -175,9 +180,26 @@ namespace Engine.Game.Script
             return elt;
         }
 
-        public Texture2D GetTexture(string filename)
+        public void GUIText(string font, float posx, float posy, Color? color = null, bool active = true, int order = 1)
         {
-            return Display2D.C2DEffect._content.Load<Texture2D>(filename);
+
+        }
+
+        public Texture2D GetTexture(string filename, bool contentLoad)
+        {
+            Texture2D returnTexture;
+            try
+            {
+                if (contentLoad)
+                    returnTexture = Display2D.C2DEffect._content.Load<Texture2D>(filename);
+                else
+                    returnTexture = Texture2D.FromStream(Display2D.C2DEffect._graphicsDevice, new System.IO.FileStream(filename, System.IO.FileMode.Open));
+            }
+            catch
+            {
+                returnTexture = new Texture2D(Display2D.C2DEffect._graphicsDevice, 1, 1);
+            }
+            return returnTexture;
         }
 
         // 2D Effects - Basic usage functions
@@ -219,6 +241,10 @@ namespace Engine.Game.Script
         {
             return Display2D.C2DEffect._mouseState;
         }
+        public bool HasPlayerJustClicked()
+        {
+            return Display2D.C2DEffect._mouseState.LeftButton == ButtonState.Released && Display2D.C2DEffect._oldMouseState.LeftButton == ButtonState.Pressed;
+        }
 
         public Vector3 Get3DTo2DPosition(float x, float y, float z)
         {
@@ -248,7 +274,42 @@ namespace Engine.Game.Script
 
         public void SetCameraPosition(float x, float y, float z)
         {
-            CConsole._Camera._cameraPos = new Vector3(x,y,z);
+            CConsole._Camera._cameraPos = new Vector3(x, y, z);
+        }
+
+        public void FreezePlayer(bool toggle)
+        {
+            CConsole._Camera.isCamFrozen = toggle;
+        }
+
+        public void DrawPlayer(bool toggle)
+        {
+            CConsole._Camera.shouldDrawPlayer = toggle;
+        }
+
+        public bool IsPlayerFrozen()
+        {
+            return CConsole._Camera.isCamFrozen;
+        }
+
+        // Sound function
+        public SoundEffectInstance GetSound(string soundName, bool contentLoad)
+        {
+            SoundEffect returnEffect;
+            try
+            {
+                if (contentLoad)
+                    returnEffect = Display2D.C2DEffect._content.Load<SoundEffect>(soundName);
+                else
+                    returnEffect = SoundEffect.FromStream(new System.IO.FileStream(soundName, System.IO.FileMode.Open));
+            }
+            catch
+            {
+                byte[] buffer = new byte[SoundEffect.GetSampleSizeInBytes(TimeSpan.FromSeconds(1), 48000, AudioChannels.Stereo)];
+                returnEffect = new SoundEffect(buffer, 48000, AudioChannels.Stereo);
+            }
+
+            return returnEffect.CreateInstance();
         }
     }
 }

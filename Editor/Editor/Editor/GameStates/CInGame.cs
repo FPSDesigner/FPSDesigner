@@ -246,8 +246,6 @@ namespace Engine.GameStates
             Display3D.CProjectileManager.Initialize();
         }
 
-        float x, y, z;
-
         public void UnloadContent(ContentManager content)
         {
 
@@ -304,10 +302,7 @@ namespace Engine.GameStates
             //    * Matrix.CreateTranslation(new Vector3(xpos, ypos, zpos));
             //Game.CConsole.addMessage(x + " " + y + " " + z);
 
-            // ENEMY TEST
-            //_enemy.MoveTo(cam._cameraPos, gameTime);
-
-            Game.CEnemyManager.Update(gameTime);
+            Game.CEnemyManager.Update(gameTime, cam);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
         }
@@ -351,7 +346,7 @@ namespace Engine.GameStates
             _graphics.SamplerStates[0] = SamplerState.LinearWrap;
             Display3D.CModelManager.Draw(cam, gameTime);
 
-            // ENEMY TEST
+            // Draw enemies
             Game.CEnemyManager.Draw(gameTime, spriteBatch, cam);
 
             // Draw pickups
@@ -369,7 +364,8 @@ namespace Engine.GameStates
             if (!isSoftwareEmbedded)
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
-                _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
+                if(cam.shouldDrawPlayer)
+                    _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
                 Game.CEnemyManager.AddEnemyHud(spriteBatch, cam);
             }

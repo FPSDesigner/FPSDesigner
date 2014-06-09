@@ -36,6 +36,7 @@ namespace Engine.Display2D
 
         public static KeyboardState _kbState;
         public static MouseState _mouseState;
+        public static MouseState _oldMouseState;
 
         public static bool isSoftwareEmbedded;
         public static RenderTarget2D renderTarget;
@@ -257,7 +258,10 @@ namespace Engine.Display2D
         {
             _actualGameTime = gameTime;
             _kbState = kbState;
+
+            _oldMouseState = _mouseState;
             _mouseState = mouseState;
+
             if (_isFading)
             {
                 double elapsedMilliSeconds = gameTime.TotalGameTime.TotalMilliseconds - _fadeTimeStart;
@@ -295,7 +299,7 @@ namespace Engine.Display2D
                 _spriteBatch.Draw(_fadeTexture, _fadePositionRect, null, new Color(_fadeToColor.R, _fadeToColor.G, _fadeToColor.B, _fadeOpacity/255), 0f, Vector2.Zero, _fadeSizeRect, SpriteEffects.None, 0);
             }
 
-            _spriteBatch.Draw(_pixelTexture, new Rectangle(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2, 4, 4), Color.White);
+            //_spriteBatch.Draw(_pixelTexture, new Rectangle(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2, 4, 4), Color.White);
 
         }
 

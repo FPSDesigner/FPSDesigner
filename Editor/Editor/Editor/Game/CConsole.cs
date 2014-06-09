@@ -56,9 +56,10 @@ namespace Engine.Game
         public static Keys _activationKeys = Keys.OemTilde;
         public static Display3D.CCamera _Camera;
         public static Game.CCharacter _Character;
-        public static Game.CEnemyManager _EnemyManager;
         public static Game.CWeapon _Weapon;
         public static Display3D.CTerrain _Terrain;
+
+        public static bool ShouldQuitFromLua = false;
 
         /// <summary>
         /// Process new commands
