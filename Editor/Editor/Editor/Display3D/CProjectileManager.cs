@@ -82,7 +82,7 @@ namespace Engine.Display3D
             if (!_isCollisioned)
                 _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _pos += (5f*_direction + _fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.01f;
+            _pos += (5f*_direction + 1.2f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.025f;
             _model._modelPosition = _pos;
         }
 

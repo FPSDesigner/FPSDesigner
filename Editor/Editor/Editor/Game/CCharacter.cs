@@ -539,16 +539,17 @@ namespace Engine.Game
                             {
                                 // Texture
                                 Dictionary<string, Texture2D> arrowDic = new Dictionary<string, Texture2D>();
-                                arrowDic.Add("Arrow", _arrowTexture);
+                                arrowDic.Add("ApplyAllMesh", _arrowTexture);
 
-                                Vector3 scale, pos;
+                                Vector3 scale, pos, rotation;
                                 Quaternion rot;
                                 _arrowWorld.Decompose(out scale, out rot, out pos);
 
+                                rotation = new Vector3(rot.X,rot.Y,rot.Z);
 
                                 Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
-                                new Vector3(rot.X,rot.Y,rot.Z), new Vector3(1f), _graphicsDevice, arrowDic);
-                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, new Vector3(rot.X, rot.Y, rot.Z),direction));
+                                rotation, new Vector3(1f), _graphicsDevice, arrowDic);
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, rotation,direction));
                             }
                         }
 
