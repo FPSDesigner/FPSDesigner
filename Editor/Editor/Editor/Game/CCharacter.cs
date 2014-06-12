@@ -213,12 +213,12 @@ namespace Engine.Game
             if (!_isSniping)
             {
                 // Draw the animation mesh
-                //_handAnimation.Draw(gametime, spriteBatch, view, projection);
+                _handAnimation.Draw(gametime, spriteBatch, view, projection);
 
                 // Draw the weapon attached to the mesh
                 if (!_isSwimAnimationPlaying)
                 {
-                    //WeaponDrawing(weap, spriteBatch, view, projection, camPos, gametime);
+                    WeaponDrawing(weap, spriteBatch, view, projection, camPos, gametime);
                 }
             }
             else
@@ -480,6 +480,7 @@ namespace Engine.Game
                             Vector3 direction = farSource - nearSource;
 
                             direction.Normalize();
+                            weapon.Shot(true, _isShoting, gameTime);
 
                             // The weapon is not a bow
                             if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
@@ -522,10 +523,6 @@ namespace Engine.Game
                                         bool IsWaterShot = false;
 
                                         Vector3 terrainPos = _terrain.Pick(_cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsTerrainShot);
-                                        //Vector3 waterPos = _water.Pick(cam._view, cam._projection, shotPosScreen.X, shotPosScreen.Y, out IsWaterShot);
-
-                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(waterPos, 0.1f), Color.Green, 255f);
-                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(terrainPos, 0.1f), Color.Blue, 255f);
 
                                         Matrix muzzleMatrix = _handAnimation.GetBoneMatrix("hand_R",
                                             Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
@@ -538,6 +535,7 @@ namespace Engine.Game
                                     }
                                 }
                             }
+
                             // If the player shot with a bow
                             else
                             {
@@ -559,8 +557,6 @@ namespace Engine.Game
                                 ReloadingBow(weapon);
                             }
                         }
-
-                        weapon.Shot(true, _isShoting, gameTime);
 
                     }
                 }
@@ -640,21 +636,25 @@ namespace Engine.Game
                 if (weap._weaponPossessed[weap._selectedWeapon]._wepType == 3
                     && !_isShoting)
                 {
-                    _arrowWorld = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(0.12f) * Matrix.CreateRotationZ(0.22f)
-                        , 0.8f, new Vector3(-0.1f, -0.72f, 0.1f));
-
-                    foreach (ModelMesh arrowMesh in _arrowModel.Meshes)
+                    // Draw the arrow only if he has bullets
+                    if (weap._weaponPossessed[weap._selectedWeapon]._actualClip > 0)
                     {
-                        foreach (BasicEffect eff in arrowMesh.Effects)
-                        {
-                            eff.TextureEnabled = true;
-                            eff.Texture = _arrowTexture;
+                        _arrowWorld = _handAnimation.GetBoneMatrix("hand_R", Matrix.CreateRotationX(0.12f) * Matrix.CreateRotationZ(0.22f)
+                            , 0.8f, new Vector3(-0.1f, -0.72f, 0.1f));
 
-                            eff.World = _arrowWorld;
-                            eff.View = view;
-                            eff.Projection = projection;
+                        foreach (ModelMesh arrowMesh in _arrowModel.Meshes)
+                        {
+                            foreach (BasicEffect eff in arrowMesh.Effects)
+                            {
+                                eff.TextureEnabled = true;
+                                eff.Texture = _arrowTexture;
+
+                                eff.World = _arrowWorld;
+                                eff.View = view;
+                                eff.Projection = projection;
+                            }
+                            arrowMesh.Draw();
                         }
-                        arrowMesh.Draw();
                     }
                 }
 
@@ -952,7 +952,7 @@ namespace Engine.Game
 
                 if (!_isCrouched)
                 {
-                    cam._physicsMap._entityHeight = _entityCrouch + 30;
+                    cam._physicsMap._entityHeight = _entityCrouch;
                     _isCrouched = true;
                     _isStandingUp = false;
                 }

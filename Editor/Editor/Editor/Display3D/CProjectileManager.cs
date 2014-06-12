@@ -83,7 +83,7 @@ namespace Engine.Display3D
             if (!_isCollisioned)
                 _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _pos += (6.2f*_direction + 0.70f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.02f;
+            _pos += (5.6f*_direction + 0.70f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.018f;
 
             _model._modelRotation = _pos - _model._modelPosition;
             _model._modelRotation.Normalize();

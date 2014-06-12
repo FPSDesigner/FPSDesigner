@@ -205,10 +205,14 @@ namespace Engine.Game
             }
             else
             {
-                if (!_dryFirePlayed)
+                // DO not play the dry fire if the weapon is a bow
+                if (_weaponPossessed[_selectedWeapon]._wepType != 3)
                 {
-                    CSoundManager.PlaySound("WEP." + _weaponPossessed[_selectedWeapon]._dryShotSound);
-                    _dryFirePlayed = true;
+                    if (!_dryFirePlayed)
+                    {
+                        CSoundManager.PlaySound("WEP." + _weaponPossessed[_selectedWeapon]._dryShotSound);
+                        _dryFirePlayed = true;
+                    }
                 }
             }
             //Console.WriteLine("Weapon : " + _weaponPossessed[_selectedWeapon]._name + " Bullet avaible : " + _weaponPossessed[_selectedWeapon]._bulletsAvailable + " \n ActualClip : " + _weaponPossessed[_selectedWeapon]._actualClip);
