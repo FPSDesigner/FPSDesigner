@@ -179,7 +179,7 @@ namespace Engine.Game
                 + 0.025f * Vector3.Transform(Vector3.Down, rotation);
 
             //All arround weapons, the shot, animations ..
-            WeaponHandle(weapon, gameTime, mouseState, oldMouseState, cam);
+            WeaponHandle(weapon, gameTime, mouseState, oldMouseState, kbState, oldKbState, cam);
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
@@ -213,12 +213,12 @@ namespace Engine.Game
             if (!_isSniping)
             {
                 // Draw the animation mesh
-                _handAnimation.Draw(gametime, spriteBatch, view, projection);
+                //_handAnimation.Draw(gametime, spriteBatch, view, projection);
 
                 // Draw the weapon attached to the mesh
                 if (!_isSwimAnimationPlaying)
                 {
-                    WeaponDrawing(weap, spriteBatch, view, projection, camPos, gametime);
+                    //WeaponDrawing(weap, spriteBatch, view, projection, camPos, gametime);
                 }
             }
             else
@@ -289,7 +289,8 @@ namespace Engine.Game
 
         }
 
-        public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState, Display3D.CCamera cam)
+        public void WeaponHandle(Game.CWeapon weapon, GameTime gameTime, MouseState mouseState, MouseState oldMouseState,
+            KeyboardState kbState, KeyboardState oldKbState, Display3D.CCamera cam)
         {
             // If He is doing nothing, we stop him
             if ((!cam._isMoving && !_isWaitAnimPlaying && !_isShoting) && !_isUnderWater && !_isReloading &&
@@ -416,7 +417,7 @@ namespace Engine.Game
             }
 
             // We Call the shot function
-            Shot(mouseState, oldMouseState, weapon, cam, gameTime);
+            Shot(mouseState, oldMouseState, kbState, oldKbState, weapon, cam, gameTime);
 
             // ***** If he has shot : We play vibrations **** //
             if (CGameSettings.useGamepad)
@@ -430,7 +431,7 @@ namespace Engine.Game
             _elapsedSnipeShot += gameTime.ElapsedGameTime.Milliseconds;
         }
 
-        private void Shot(MouseState mouseState, MouseState oldMouseState, CWeapon weapon, Display3D.CCamera cam, GameTime gameTime)
+        private void Shot(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, Display3D.CCamera cam, GameTime gameTime)
         {
             if (cam.isCamFrozen)
                 return;
@@ -548,11 +549,14 @@ namespace Engine.Game
                                 Quaternion rot;
                                 _arrowWorld.Decompose(out scale, out rot, out pos);
 
-                                rotation = new Vector3(rot.X,rot.Y,rot.Z);
+                                rotation = new Vector3(rot.X, rot.Y, rot.Z);
 
                                 Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
                                 rotation, new Vector3(1f), _graphicsDevice, arrowDic);
-                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos, rotation,direction));
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos + direction, rotation, direction));
+
+                                // With a bow -> Reload after a shoot
+                                ReloadingBow(weapon);
                             }
                         }
 
@@ -805,11 +809,10 @@ namespace Engine.Game
             if ((kbState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.Reload))
                 || (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPReload)))
             {
-
-                if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
+                // You cannot reload with a bow, so, we avoid any crash
+                if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
                 {
-                    // You cannot reload with a bow, so, we avoid any crash
-                    if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
+                    if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                     {
                         _isWaitAnimPlaying = false;
                         _isWalkAnimPlaying = false;
@@ -825,10 +828,12 @@ namespace Engine.Game
 
                         _isReloading = true;
                     }
+
+                    _isSniping = false;
+                    _isAiming = false;
+                    _isReloadingSoundPlayed = false;
                 }
-                _isSniping = false;
-                _isAiming = false;
-                _isReloadingSoundPlayed = false;
+
             }
 
             // We play the sound after a delay
@@ -842,6 +847,18 @@ namespace Engine.Game
             else if (!_isReloadingSoundPlayed)
             {
                 elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
+        }
+
+        private void ReloadingBow(CWeapon weapon)
+        {
+            if (weapon.Reloading())
+            {
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+                _isSwimAnimationPlaying = false;
+                _isSwitchingAnim2ndPartPlaying = false;
+                _isSwitchingAnimPlaying = false;
             }
         }
 
@@ -935,7 +952,7 @@ namespace Engine.Game
 
                 if (!_isCrouched)
                 {
-                    cam._physicsMap._entityHeight = _entityCrouch;
+                    cam._physicsMap._entityHeight = _entityCrouch + 30;
                     _isCrouched = true;
                     _isStandingUp = false;
                 }
