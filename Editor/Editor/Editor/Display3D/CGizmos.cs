@@ -191,7 +191,8 @@ namespace Engine.Display3D
                 initialPosValue = CModelManager.modelsList[eltIdDragging]._modelPosition;
                 initialRotValue = CModelManager.modelsList[eltIdDragging]._modelRotation;
                 initialScaleValue = CModelManager.modelsList[eltIdDragging]._modelScale;
-            } else if (eltType == "tree")
+            }
+            else if (eltType == "tree")
             {
                 initialPosValue = TreeManager._tTrees[eltIdDragging].Position;
                 initialRotValue = TreeManager._tTrees[eltIdDragging].Rotation;
@@ -283,12 +284,15 @@ namespace Engine.Display3D
                     else if (shouldDrawScale)
                     {
                         Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 uniDist = new Vector3(Math.Sign(diff.X) * diff.Length()) / 20;
                         if (axisDragging == 1)
                             CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(initialScaleValue.X - diff.X, CModelManager.modelsList[eltIdDragging]._modelScale.Y, CModelManager.modelsList[eltIdDragging]._modelScale.Z);
                         else if (axisDragging == 2)
                             CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(CModelManager.modelsList[eltIdDragging]._modelScale.X, initialScaleValue.Y + diff.Y, CModelManager.modelsList[eltIdDragging]._modelScale.Z);
                         else if (axisDragging == 0)
                             CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(CModelManager.modelsList[eltIdDragging]._modelScale.X, CModelManager.modelsList[eltIdDragging]._modelScale.Y, initialScaleValue.Z - diff.Z);
+                        else if (axisDragging == 3) // Uni
+                            CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(initialScaleValue.X + uniDist.X, initialScaleValue.Y + uniDist.Y, initialScaleValue.Z + uniDist.Z);
                     }
                 }
                 else if (eltTypeDragging == "tree")
@@ -319,12 +323,15 @@ namespace Engine.Display3D
                     else if (shouldDrawScale)
                     {
                         Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 uniDist = new Vector3(Math.Sign(diff.X) * diff.Length()) / 20;
                         if (axisDragging == 1)
                             TreeManager._tTrees[eltIdDragging].Scale = new Vector3(initialScaleValue.X - diff.X, TreeManager._tTrees[eltIdDragging].Scale.Y, TreeManager._tTrees[eltIdDragging].Scale.Z);
                         else if (axisDragging == 2)
                             TreeManager._tTrees[eltIdDragging].Scale = new Vector3(TreeManager._tTrees[eltIdDragging].Scale.X, initialScaleValue.Y + diff.Y, TreeManager._tTrees[eltIdDragging].Scale.Z);
                         else if (axisDragging == 0)
                             TreeManager._tTrees[eltIdDragging].Scale = new Vector3(TreeManager._tTrees[eltIdDragging].Scale.X, TreeManager._tTrees[eltIdDragging].Scale.Y, initialScaleValue.Z - diff.Z);
+                        else if (axisDragging == 3) // Uni
+                            CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(initialScaleValue.X + uniDist.X, initialScaleValue.Y + uniDist.Y, initialScaleValue.Z + uniDist.Z);
                     }
                 }
                 else if (eltTypeDragging == "pickup")
@@ -358,12 +365,15 @@ namespace Engine.Display3D
                     {
                         Vector3 diff = contactPoint - initial3DPoint;
                         Vector3 oldPos = CPickUpManager._pickups[eltIdDragging]._Model._modelScale;
+                        Vector3 uniDist = new Vector3(Math.Sign(diff.X) * diff.Length()) / 20;
                         if (axisDragging == 1)
                             CPickUpManager._pickups[eltIdDragging]._Model._modelScale = new Vector3(initialScaleValue.X - diff.X, oldPos.Y, oldPos.Z);
                         else if (axisDragging == 2)
                             CPickUpManager._pickups[eltIdDragging]._Model._modelScale = new Vector3(oldPos.X, initialScaleValue.Y + diff.Y, oldPos.Z);
                         else if (axisDragging == 0)
                             CPickUpManager._pickups[eltIdDragging]._Model._modelScale = new Vector3(oldPos.X, oldPos.Y, initialScaleValue.Z - diff.Z);
+                        else if (axisDragging == 3) // Uni
+                            CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(initialScaleValue.X + uniDist.X, initialScaleValue.Y + uniDist.Y, initialScaleValue.Z + uniDist.Z);
                     }
                 }
                 else if (eltTypeDragging == "water")
@@ -386,10 +396,13 @@ namespace Engine.Display3D
                     {
                         Vector3 diff = contactPoint - initial3DPoint;
                         Vector2 oldPos = CWaterManager.listWater[eltIdDragging].waterSize;
+                        Vector3 uniDist = new Vector3(Math.Sign(diff.X) * diff.Length()) / 20;
                         if (axisDragging == 1)
                             CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(initialScaleValue.X - diff.X, oldPos.Y);
                         else if (axisDragging == 0)
                             CWaterManager.listWater[eltIdDragging].waterSize = new Vector2(oldPos.X, initialScaleValue.Z - diff.Z);
+                        else if (axisDragging == 3) // Uni
+                            CModelManager.modelsList[eltIdDragging]._modelScale = new Vector3(initialScaleValue.X + uniDist.X, initialScaleValue.Y + uniDist.Y, initialScaleValue.Z + uniDist.Z);
                     }
                 }
                 else if (eltTypeDragging == "light")
