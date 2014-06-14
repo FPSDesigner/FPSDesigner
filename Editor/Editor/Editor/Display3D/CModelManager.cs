@@ -126,7 +126,7 @@ namespace Engine.Display3D
             }
         }
 
-        public static float? CheckRayIntersectsModel(Ray ray, out int modelId, float damage = -1)
+        public static float? CheckRayIntersectsModel(Ray ray, out int modelId, float damage = -1, float range = 0f)
         {
             Dictionary<int, float> modelsClicked = new Dictionary<int, float>();
             for(int i = 0; i < modelsList.Count; i++)
@@ -155,6 +155,9 @@ namespace Engine.Display3D
                         select pair).First();
 
             modelId = closest.Key;
+
+            if (range != 0 && closest.Value > range)
+                return null;
 
             if (modelsList[modelId]._Explodable && damage > -1)
                 modelsList[modelId].SetDamageToModel(damage);

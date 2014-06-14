@@ -267,7 +267,7 @@ namespace Engine.GameStates
             }
 
             // Update projectile Manager
-            Display3D.CProjectileManager.updateProjectileList(gameTime);
+            Display3D.CProjectileManager.updateProjectileList(gameTime, terrain);
 
             if (!isSoftwareEmbedded)
                 Display3D.TreeManager.Update(gameTime);

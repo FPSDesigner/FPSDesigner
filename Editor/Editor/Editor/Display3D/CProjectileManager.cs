@@ -26,12 +26,12 @@ namespace Engine.Display3D
             _thrownProjectiles.Add(projectile);
         }
 
-        public static void updateProjectileList(GameTime gameTime)
+        public static void updateProjectileList(GameTime gameTime, CTerrain terrain)
         {
             // Change position/rotation of all arrows above the terrain
             foreach(Display3D.CProjectile projectile in _thrownProjectiles)
             {
-                projectile.UpdatePos(gameTime);
+                projectile.UpdatePos(gameTime, terrain);
             }
         }
 
@@ -54,15 +54,21 @@ namespace Engine.Display3D
         private Vector3 _direction; // We throw the model in the chosen direction
         public bool _isCollisioned;
 
+        public float _damage;
+        public bool _destroy;
+
         public float _fallElapsedTime;
 
-        public CProjectile(CModel Model, Vector3 Pos, Vector3 Rot, Vector3 Direction)
+        public CProjectile(CModel Model, Vector3 Pos, Vector3 Rot, Vector3 Direction, float damage = 20, bool destroy = false)
         {
 
             this._model = Model;
             this._pos = Pos;
             this._rot = Rot;
             this._direction = Direction;
+
+            this._damage = damage;
+            this._destroy = destroy;
 
             _fallElapsedTime = 0f;
 
@@ -78,17 +84,36 @@ namespace Engine.Display3D
             _model.Draw(view, projection, camPos);
         }
 
-        public void UpdatePos(GameTime gameTime)
+        public void UpdatePos(GameTime gameTime, CTerrain terrain)
         {
             if (!_isCollisioned)
+            {
                 _fallElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _pos += (5.6f*_direction + 0.70f*_fallElapsedTime*Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.018f;
+                _pos += (5.6f * _direction + 0.70f * _fallElapsedTime * Vector3.Down) * (float)gameTime.TotalGameTime.Seconds * 0.018f;
 
-            _model._modelRotation = _pos - _model._modelPosition;
-            _model._modelRotation.Normalize();
+                _model._modelRotation = _pos - _model._modelPosition;
+                _model._modelRotation.Normalize();
 
-            _model._modelPosition = _pos;
+                _model._modelPosition = _pos;
+
+                Ray ray = new Ray(_pos, _model._modelRotation);
+
+                int modelId;
+                float Steepness;
+
+                float? modelIntersectsDist = Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelId, _damage, 0.5f);
+                if (modelIntersectsDist != null)
+                {
+                    _isCollisioned = true;
+                    _model._modelPosition = _pos + _model._modelRotation * (float)modelIntersectsDist;
+                }
+                else if (_pos.Y - terrain.GetHeightAtPosition(_pos.X, _pos.Z, out Steepness, false) <= 0.5f)
+                {
+                    _isCollisioned = true;
+                    _model._modelPosition = new Vector3(_pos.X, terrain.GetHeightAtPosition(_pos.X, _pos.Z, out Steepness, false), _pos.Z);
+                }
+            }
         }
 
     }
