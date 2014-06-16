@@ -1325,15 +1325,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\WindMille.png">
+    <Compile Include="Textures\Model textures\WindMille.png">
       <Name>WindMille</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\WindmillSegel.png">
+    <Compile Include="Textures\Model textures\WindmillSegel.png">
       <Name>WindmillSegel</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\WoodenGuardTower.fbx">
+      <Name>WoodenGuardTower</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\WoodenGuardTower.jpg">
+      <Name>WoodenGuardTower</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
