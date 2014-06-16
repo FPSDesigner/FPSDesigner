@@ -108,6 +108,8 @@ namespace Engine.Game
 
     class CEnemy
     {
+        private int[] prob = new int[2]; // Store probabilities (shoot, roll...)
+
         public float _life;
         public float _runningVelocity; // Displacement velocity
         private float _collisionHeight; // Collision Height between terrain and the AI
@@ -116,7 +118,7 @@ namespace Engine.Game
 
         public Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
-        private List<CWeapon> _weaponPossessed;
+        private CWeapon _weaponPossessed;
 
         private Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position
@@ -138,6 +140,7 @@ namespace Engine.Game
 
         private bool _isMoving;
         private bool _isDead;
+        private bool _isShoting;
         private bool _isHeadShot; // The character took an headshot
         public bool _isFrozen; // Use to stop translation
 
@@ -180,8 +183,12 @@ namespace Engine.Game
             _isDead = false;
             _isFrozen = true;
             _isHeadShot = false;
+            _isShoting = false;
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
+
+            // Initialize probability
+            prob[0] = 1; // 1/2 chance to shot the player
 
             SetEnemyName(name);
         }
@@ -290,9 +297,27 @@ namespace Engine.Game
                 GetRealTriangles(true);
         }
 
-        public void Shot()
+        public void AttackPlayer(float distSquared, CCharacter player)
         {
-            
+            if (!_isShoting)
+            {
+                if (_isAgressive && IsAnyPlayerInSight())
+                {
+                    if (distSquared <= (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range) * (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range))
+                    {
+                        Random random = new Random();
+                        int rand = random.Next();
+
+                        // Shoot at the player
+                        if (rand == prob[0])
+                        {
+                            player._life -= _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._damagesPerBullet;
+                        }
+
+                    }
+                }
+                _isShoting = true;
+            }
 
         }
 

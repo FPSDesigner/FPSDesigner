@@ -63,6 +63,8 @@ namespace Engine.Game
 
         private float _horizontalVelocity;
 
+        public float _life = 100.0f;
+
         private float elapsedTime; // We get the time to know when play a sound
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
         private float _elapsedSnipeShot; // Time between two shots when the player is aiming with a sniper
