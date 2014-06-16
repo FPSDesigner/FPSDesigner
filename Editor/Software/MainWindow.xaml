@@ -14,6 +14,7 @@
                 <mui:Link DisplayName="terrain manager" Source="/Pages/Home.xaml#TerrainManager"/>
                 <mui:Link DisplayName="tree manager" Source="/Pages/Home.xaml#TreeManager" />
                 <mui:Link DisplayName="model manager" Source="/Pages/Home.xaml#ModelManager" />
+                <mui:Link DisplayName="bot manager" Source="/Pages/Home.xaml#BotManager" />
                 <mui:Link DisplayName="console" Source="/Pages/Home.xaml#Console" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>

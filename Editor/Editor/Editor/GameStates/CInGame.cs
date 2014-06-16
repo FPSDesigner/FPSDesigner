@@ -231,7 +231,7 @@ namespace Engine.GameStates
                     List<Texture2D> enemyTexture = new List<Texture2D>();
 
                     foreach (Game.LevelInfo.MapModels_Texture textureInfo in bots.ModelTexture.Texture)
-                        enemyTexture.Add(content.Load<Texture2D>(textureInfo.Texture));
+                        enemyTexture.Add(LoadCorrectlyTexture(textureInfo.Texture));
 
                     Game.CEnemyManager.AddEnemy(content, cam, new Game.CEnemy(bots.ModelName, enemyTexture.ToArray(), bots.SpawnPosition.Vector3, bots.SpawnPosition.RotMatrix, bots.Life, bots.Velocity, bots.RangeOfAttack, bots.IsAggressive, bots.Name));
                 }
@@ -364,21 +364,20 @@ namespace Engine.GameStates
             if (!isSoftwareEmbedded)
             {
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
-                if(cam.shouldDrawPlayer)
+                if (cam.shouldDrawPlayer)
                     _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
                 lensFlare.Draw(gameTime);
                 Game.CEnemyManager.AddEnemyHud(spriteBatch, cam);
             }
 
             Display3D.CWaterManager.DrawDebug(spriteBatch);
-
             Display3D.CSimpleShapes.Draw(gameTime, cam._view, cam._projection);
 
             if (isSoftwareEmbedded)
             {
-                Display3D.CLightsManager.DrawSelect(spriteBatch, cam);
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 Gizmos.Draw(cam, gameTime);
+                Display3D.CLightsManager.DrawSelect(spriteBatch, cam);
             }
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
@@ -416,6 +415,8 @@ namespace Engine.GameStates
                         pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
                     else if (type == "light")
                         pos = Display3D.CLightsManager.lights[eltId].Position;
+                    else if (type == "bot")
+                        pos = Game.CEnemyManager._enemyList[eltId]._model._position;
 
                     cam._cameraTarget = pos;
 
@@ -470,7 +471,7 @@ namespace Engine.GameStates
                         return new object[] { "light", selectedLight };
 
                     // Click distances
-                    float? treeDistance = null, modelDistance = null, pickupDistance = null;
+                    float? treeDistance = null, modelDistance = null, pickupDistance = null, botDistance = null;
 
                     // Tree check
                     int treeIdSelected;
@@ -484,13 +485,19 @@ namespace Engine.GameStates
                     int pickupIdSelected;
                     pickupDistance = Display3D.CPickUpManager.CheckRayIntersectsAnyPickup(ray, out pickupIdSelected);
 
+                    // Bot check
+                    int botIdSelected;
+                    botDistance = Game.CEnemyManager.CheckRayIntersectsAnyBot(ray, out botIdSelected);
+
                     // Check which is the closest one
-                    if (treeDistance != null && (treeDistance < modelDistance || modelDistance == null) && (treeDistance < pickupDistance || pickupDistance == null))
+                    if (treeDistance != null && (treeDistance < modelDistance || modelDistance == null) && (treeDistance < pickupDistance || pickupDistance == null) && (treeDistance < botDistance || botDistance == null))
                         return new object[] { "tree", treeIdSelected };
-                    else if (modelDistance != null && (modelDistance < pickupDistance || pickupDistance == null))
+                    else if (modelDistance != null && (modelDistance < pickupDistance || pickupDistance == null) && (modelDistance < botDistance || botDistance == null))
                         return new object[] { "model", modelIdSelected };
-                    else if (pickupDistance != null)
+                    else if (pickupDistance != null && (modelDistance < botDistance || botDistance == null))
                         return new object[] { "pickup", pickupIdSelected };
+                    else if (botDistance != null)
+                        return new object[] { "bot", botIdSelected };
                 }
                 else if (action == "unselectObject")
                 {
@@ -505,6 +512,8 @@ namespace Engine.GameStates
                         Display3D.CWaterManager.selectedWater = -1;
                     else if ((string)values[0] == "light")
                         Display3D.CLightsManager.selectedLight = -1;
+                    else if ((string)values[0] == "bot")
+                        Game.CEnemyManager.selectedBot = -1;
                 }
                 else if (action == "selectObject")
                 {
@@ -535,6 +544,11 @@ namespace Engine.GameStates
                     {
                         Display3D.CLightsManager.selectedLight = (int)values[1];
                         newPos = Display3D.CLightsManager.lights[(int)values[1]].Position;
+                    }
+                    else if ((string)values[0] == "bot")
+                    {
+                        Game.CEnemyManager.selectedBot = (int)values[1];
+                        newPos = Game.CEnemyManager._enemyList[(int)values[1]]._model._position;
                     }
                     Gizmos.posGizmo._modelPosition = newPos;
                     Gizmos.rotGizmo._modelPosition = newPos;
@@ -604,6 +618,8 @@ namespace Engine.GameStates
                             pos = Display3D.CWaterManager.listWater[eltId].waterPosition;
                         else if (eltType == "light")
                             pos = Display3D.CLightsManager.lights[eltId].Position;
+                        else if (eltType == "bot")
+                            pos = Game.CEnemyManager._enemyList[eltId]._model._position;
                     }
                     else if (info == "rot")
                     {
@@ -674,6 +690,11 @@ namespace Engine.GameStates
                     {
                         Display3D.CLightsManager.selectedLight = -1;
                         Display3D.CLightsManager.RemoveLight(eltId);
+                    }
+                    else if (eltType == "bot")
+                    {
+                        Game.CEnemyManager.selectedBot = -1;
+                        Game.CEnemyManager.RemoveBot(eltId);
                     }
                     SaveXMLFile();
                 }
@@ -749,7 +770,26 @@ namespace Engine.GameStates
                         levelData.Lights.LightsList.Add(lightVal);
                         Display3D.CLightsManager.AddLight(lightVal.Position.Vector3, lightVal.Col, lightVal.Attenuation);
                     }
+                    else if (eltType == "bot")
+                    {
+                        Game.LevelInfo.Bot botVal = (Game.LevelInfo.Bot)values[1];
+                        levelData.Bots.Bots.Add(botVal);
+
+                        Texture2D[] textures = new Texture2D[1];
+
+                        if (botVal.ModelTexture != null && botVal.ModelTexture.Texture != null)
+                        {
+                            textures = new Texture2D[botVal.ModelTexture.Texture.Count];
+                            for (int i = 0; i < botVal.ModelTexture.Texture.Count; i++)
+                                textures[i] = LoadCorrectlyTexture(botVal.ModelTexture.Texture[i].Texture);
+                        }
+
+                        Game.CEnemy enemy = new Game.CEnemy(botVal.ModelName, textures, botVal.SpawnPosition.Vector3, botVal.SpawnRotation.RotMatrix, botVal.Life, botVal.Velocity, botVal.RangeOfAttack, botVal.IsAggressive, botVal.Name, botVal.Type);
+
+                        Game.CEnemyManager.AddEnemy(_content, cam, enemy);
+                    }
                 }
+
                 else if (action == "setElementInfo")
                 {
                     object[] values = (object[])p[1];
@@ -869,6 +909,15 @@ namespace Engine.GameStates
             Display3D.CPickUpManager.UpdateGameLevel(ref levelData);
             Display3D.CWaterManager.UpdateGameLevel(ref levelData);
             Display3D.CLightsManager.UpdateGameLevel(ref levelData);
+            Game.CEnemyManager.UpdateGameLevel(ref levelData);
+        }
+
+        public Texture2D LoadCorrectlyTexture(string file)
+        {
+            if (file.Contains(".") && !file.Contains(".xnb"))
+                return Texture2D.FromStream(_graphics, new System.IO.FileStream(file, System.IO.FileMode.Open));
+            else
+                return _content.Load<Texture2D>(file.Replace(".xnb",""));
         }
     }
 }

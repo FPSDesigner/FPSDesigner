@@ -552,10 +552,13 @@ namespace Engine.Game
                                 Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
                                     rotation, new Vector3(1f), _graphicsDevice, arrowDic);
 
-                                Display3D.CSimpleShapes.AddLine(pos, pos + Vector3.Transform(Vector3.Up, rot), Color.Red, 255f);
-                                direction = -Vector3.Transform(Vector3.Up, rot);
-                                direction.Normalize();
-                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos + 0.1f*direction, rotation, direction));
+                                if (rot.X != 0 && rot.Y != 0 && rot.Z != 0)
+                                {
+                                    Display3D.CSimpleShapes.AddLine(pos, pos + Vector3.Transform(Vector3.Up, rot), Color.Red, 255f);
+                                    direction = -Vector3.Transform(Vector3.Up, rot);
+                                    direction.Normalize();
+                                }
+                                Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos + direction, rotation, direction));
 
                                 // With a bow -> Reload after a shoot
                                 ReloadingBow(weapon);

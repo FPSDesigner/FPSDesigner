@@ -93,7 +93,6 @@ namespace Software.Pages
 
         void GameButton1_KeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine(e.Key.ToString());
             if(e.Key == Key.F && GlobalVars.selectedElt != null)
                 m_game.WPFHandler("centerCamOnObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
         }

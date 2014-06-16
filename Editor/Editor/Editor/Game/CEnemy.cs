@@ -18,6 +18,8 @@ namespace Engine.Game
 
         public static SpriteFont _hudFont;
 
+        public static int selectedBot = -1;
+
         public static void LoadContent(ContentManager content)
         {
             _hudFont = content.Load<SpriteFont>("2D/consoleFont");
@@ -36,6 +38,11 @@ namespace Engine.Game
                 enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection);
             }
 
+        }
+
+        public static void RemoveBot(int eltId)
+        {
+            _enemyList.RemoveAt(eltId);
         }
 
         public static void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -64,17 +71,50 @@ namespace Engine.Game
             enemyVal = null;
             return "";
         }
+
+        public static float? CheckRayIntersectsAnyBot(Ray ray, out int idIntersected)
+        {
+            for (int i = 0; i < _enemyList.Count; i++)
+            {
+                float? distance;
+                idIntersected = i;
+                string enemytest = _enemyList[i].RayIntersectsHitbox(ray, out distance);
+                if (distance != null)
+                    return distance;
+            }
+            idIntersected = 0;
+            return null;
+        }
+
+        public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
+        {
+            for (int i = 0; i < _enemyList.Count; i++)
+            {
+                CEnemy enemy = _enemyList[i];
+
+                lvl.Bots.Bots[i].IsAggressive = enemy._isAgressive;
+                lvl.Bots.Bots[i].Life = enemy._life;
+                lvl.Bots.Bots[i].Name = enemy._hudText;
+                lvl.Bots.Bots[i].RangeOfAttack = enemy._rangeAttack;
+                lvl.Bots.Bots[i].SpawnPosition = new Game.LevelInfo.Coordinates(enemy._model._position);
+                lvl.Bots.Bots[i].Type = enemy._type;
+                lvl.Bots.Bots[i].Velocity = enemy._runningVelocity;
+            }
+
+            while (lvl.Bots.Bots.Count != _enemyList.Count)
+                lvl.Bots.Bots.RemoveAt(lvl.Bots.Bots.Count - 1);
+        }
     }
 
     class CEnemy
     {
         public float _life;
-        private float _runningVelocity; // Displacement velocity
+        public float _runningVelocity; // Displacement velocity
         private float _collisionHeight; // Collision Height between terrain and the AI
 
-        private float _rangeAttack; // AI : Minimal distance to attack
+        public float _rangeAttack; // AI : Minimal distance to attack
 
-        private Display3D.MeshAnimation _model; //The 3Dmodel and all animations
+        public Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
         private List<CWeapon> _weaponPossessed;
 
@@ -86,14 +126,15 @@ namespace Engine.Game
         private Matrix _deathRotation;
 
         private float _hudTestSizeX;
-        private string _hudText;
+        public string _hudText;
 
         private Matrix _rotation; // Model rotation
         private float rotationValue; // We give this float to the rotation mat
 
         private Game.CPhysics _physicEngine; // Ennemy will be submitted to forces
 
-        public bool _isAgressive; // Pacifiste or not
+        public bool _isAgressive; // Pacifist or not
+        public int _type; // 0: Friendly / 1: Enemy
 
         private bool _isMoving;
         private bool _isDead;
@@ -110,7 +151,7 @@ namespace Engine.Game
 
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false, string name = "Enemy")
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
         {
             _position = Position;
             _scale = new Vector3(0.5f);

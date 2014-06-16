@@ -207,7 +207,6 @@ namespace Engine.Game.LevelInfo
 
     public class Bot
     {
-        public float NearClip { get; set; }
         public Coordinates SpawnPosition { get; set; }
         public Coordinates SpawnRotation { get; set; }
         public string ModelName { get; set; }
@@ -217,6 +216,7 @@ namespace Engine.Game.LevelInfo
         public float RangeOfAttack { get; set; }
         public bool IsAggressive { get; set; }
         public string Name { get; set; }
+        public int Type { get; set; } // 0: Friendly/1: Enemy
     }
     #endregion
 

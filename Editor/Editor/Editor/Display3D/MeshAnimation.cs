@@ -36,7 +36,7 @@ namespace Engine.Display3D
 
         public Matrix[] _modelTransforms;
 
-        public MeshAnimation(string model, int animNbr,int meshNbr,float animSpeed,Vector3 pos, Matrix rot,float scale,Texture2D[] text, int specPower, float specColor,bool isLooped)
+        public MeshAnimation(string model, int animNbr, int meshNbr, float animSpeed, Vector3 pos, Matrix rot, float scale, Texture2D[] text, int specPower, float specColor, bool isLooped)
         {
             this._modelName = model;
             this._animationNumber = animNbr;
@@ -55,13 +55,21 @@ namespace Engine.Display3D
 
         public void LoadContent(ContentManager content)
         {
-            skinnedModel = content.Load<SkinnedModel>("Models\\"+_modelName);
+            if (_modelName.Contains(".xnb") || _modelName.Contains(".fbx"))
+            {
+                _modelName.Replace(".xnb", "");
+                _modelName.Replace(".fbx", "");
+            }
+            if (_modelName.Contains("Models"))
+                skinnedModel = content.Load<SkinnedModel>(_modelName.Replace(".xnb",""));
+            else
+                skinnedModel = content.Load<SkinnedModel>("Models\\" + _modelName.Replace(".xnb",""));
 
             foreach (ModelMesh mesh in skinnedModel.Model.Meshes)
             {
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
-                    if(_textures != null)
+                    if (_textures != null)
                         effect.Texture = _textures[0];
                     effect.EnableDefaultLighting();
 
@@ -101,13 +109,13 @@ namespace Engine.Display3D
                 foreach (SkinnedEffect effect in mesh.Effects)
                 {
                     effect.SetBoneTransforms(animationController.SkinnedBoneTransforms);
-                    effect.World = Matrix.CreateScale(_scale) * _rotation *  Matrix.CreateTranslation(_position);
+                    effect.World = Matrix.CreateScale(_scale) * _rotation * Matrix.CreateTranslation(_position);
                     effect.View = view;
                     effect.Projection = projection;
                 }
 
                 string newName = mesh.Name.Split('_')[0];
-                
+
                 // If the mesh is not a bounding box
                 if (newName != "Bb")
                 {
@@ -156,7 +164,7 @@ namespace Engine.Display3D
             return animationController.HasFinished;
         }
 
-        public  SkinnedModel GetModel()
+        public SkinnedModel GetModel()
         {
             return skinnedModel;
         }

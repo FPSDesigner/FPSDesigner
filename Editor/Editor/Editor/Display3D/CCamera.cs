@@ -163,13 +163,11 @@ namespace Engine.Display3D
                 _oldKeyState = keyState;
             }
 
-            if (Display2D.C2DEffect.isSoftwareEmbedded)
-                _middleScreen = new Point(mouseState.X, mouseState.Y);
-
             _view = Matrix.CreateLookAt(_cameraPos, _cameraTarget, _up);
 
-            // PLAY THE STEP SOUND
-            if (_isMoving && _elapsedStepTime > 350 * (14 / camVelocity))
+            if (Display2D.C2DEffect.isSoftwareEmbedded)
+                _middleScreen = new Point(mouseState.X, mouseState.Y);
+            else if (_isMoving && _elapsedStepTime > 350 * (14 / camVelocity))
             {
                 if (!_isPitchShiftedStepSound)
                     Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
