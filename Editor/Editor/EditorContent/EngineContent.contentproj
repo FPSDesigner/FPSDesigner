@@ -1318,8 +1318,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Model textures\WindMille.png">
-      <Name>WindMille</Name>
+    <Compile Include="Textures\Model textures\WindMill.png">
+      <Name>WindMill</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -1339,15 +1339,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\WindMill.fbx">
-      <Name>WindMill</Name>
+    <Compile Include="Models\WoodenGuardTower.fbx">
+      <Name>WoodenGuardTower</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\WoodenGuardTower.fbx">
-      <Name>WoodenGuardTower</Name>
+    <Compile Include="Models\Fence.fbx">
+      <Name>Fence</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\WoodenFence.png">
+      <Name>WoodenFence</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\WindMill.fbx">
+      <Name>WindMill</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
