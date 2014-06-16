@@ -1400,21 +1400,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BrickMedievalEroded.tga">
+    <Compile Include="Textures\Model textures\BrickMedievalEroded.tga">
       <Name>BrickMedievalEroded</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\ConcreteOldDamaged.tga">
+    <Compile Include="Textures\Model textures\ConcreteOldDamaged.tga">
       <Name>ConcreteOldDamaged</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\MedievalBrickBeam.png">
+    <Compile Include="Textures\Model textures\MedievalBrickBeam.png">
       <Name>MedievalBrickBeam</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -1432,13 +1432,6 @@
       <Name>MedievalPlatform</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\MedievalPlatform.jpg">
-      <Name>MedievalPlatform</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -1470,8 +1463,36 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BrickMedieval.tga">
+    <Compile Include="Textures\Model textures\BrickMedieval.tga">
       <Name>BrickMedieval</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\[VL]MedievalHouse.fbx">
+      <Name>[VL]MedievalHouse</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\[VL]MedievalHouse.png">
+      <Name>[VL]MedievalHouse</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\MedievalTower2.fbx">
+      <Name>MedievalTower2</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Model textures\MedievalTowerWood.jpg">
+      <Name>MedievalTowerWood</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
