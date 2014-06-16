@@ -11,9 +11,9 @@ FBXHeaderExtension:  {
 		Year: 2014
 		Month: 06
 		Day: 16
-		Hour: 16
-		Minute: 45
-		Second: 23
+		Hour: 17
+		Minute: 47
+		Second: 35
 		Millisecond: 0
 	}
 	Creator: "FBX SDK/FBX Plugins build 20070228"
@@ -21,8 +21,8 @@ FBXHeaderExtension:  {
 		FlagPLE: 0
 	}
 }
-CreationTime: "2014-06-16 16:45:23:000"
-Creator: "Blender version 2.70 (sub 0)"
+CreationTime: "2014-06-16 17:47:35:000"
+Creator: "Blender version 2.69 (sub 0)"
 
 ; Object definitions
 ;------------------------------------------------------------------
@@ -414,10 +414,6 @@ Objects:  {
 			}
 			LayerElement:  {
 				Type: "LayerElementSmoothing"
-				TypedIndex: 0
-			}
-			LayerElement:  {
-				Type: "LayerElementTexture"
 				TypedIndex: 0
 			}
 			LayerElement:  {
@@ -3412,10 +3408,6 @@ Objects:  {
 			}
 			LayerElement:  {
 				Type: "LayerElementUV"
-				TypedIndex: 0
-			}
-			LayerElement:  {
-				Type: "LayerElementTexture"
 				TypedIndex: 0
 			}
 			LayerElement:  {
