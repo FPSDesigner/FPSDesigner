@@ -216,6 +216,12 @@ namespace Engine.Display3D
                 initialRotValue = Vector3.Zero;
                 initialScaleValue = Vector3.Zero;
             }
+            else if (eltType == "bot")
+            {
+                initialPosValue = Game.CEnemyManager._enemyList[eltIdDragging]._position;
+                initialRotValue = new Vector3(Game.CEnemyManager._enemyList[eltIdDragging].rotationValue, 0, 0);
+                initialScaleValue = Game.CEnemyManager._enemyList[eltIdDragging]._scale;
+            }
         }
 
         public void Drag(int posX, int posY, CCamera cam)
@@ -422,6 +428,55 @@ namespace Engine.Display3D
                         scaleGizmo._modelPosition = CLightsManager.lights[eltIdDragging].Position;
                     }
                 }
+                else if (eltTypeDragging == "bot")
+                {
+                    if (shouldDrawPos)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        if (axisDragging == 1)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._position = new Vector3(initialPosValue.X + diff.X, Game.CEnemyManager._enemyList[eltIdDragging]._position.Y, Game.CEnemyManager._enemyList[eltIdDragging]._position.Z);
+                        else if (axisDragging == 2)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._position = new Vector3(Game.CEnemyManager._enemyList[eltIdDragging]._position.X, initialPosValue.Y + diff.Y, Game.CEnemyManager._enemyList[eltIdDragging]._position.Z);
+                        else if (axisDragging == 0)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._position = new Vector3(Game.CEnemyManager._enemyList[eltIdDragging]._position.X, Game.CEnemyManager._enemyList[eltIdDragging]._position.Y, initialPosValue.Z + diff.Z);
+                        posGizmo._modelPosition = Game.CEnemyManager._enemyList[eltIdDragging]._position;
+                        rotGizmo._modelPosition = Game.CEnemyManager._enemyList[eltIdDragging]._position;
+                        scaleGizmo._modelPosition = Game.CEnemyManager._enemyList[eltIdDragging]._position;
+                    }
+                    else if (shouldDrawRot)
+                    {
+                        Vector3 newRot = Vector3.Zero;
+                        Vector2 diff = new Vector2(posX, posY) - initialMousePos;
+
+                        /*float Yaw, Pitch, Roll;
+                        RotationMatrixToYawPitchRoll(ref Game.CEnemyManager._enemyList[eltIdDragging]._rotation, out Yaw, out Pitch, out Roll);*/
+
+                        //if (axisDragging == 2)
+                            //newRot = new Vector3(initialRotValue.X + diff.X / 20, Pitch, Roll);
+                            Game.CEnemyManager._enemyList[eltIdDragging].rotationValue = initialRotValue.X + diff.X / 20;
+                        /*else if (axisDragging == 0)
+                            newRot = new Vector3(Yaw, initialRotValue.Y + diff.X / rotateIntensity, Roll);
+                        else if (axisDragging == 1)
+                            newRot = new Vector3(Yaw, Pitch, initialRotValue.Z + diff.Y / rotateIntensity);*/
+
+                        //Game.CEnemyManager._enemyList[eltIdDragging]._rotation = Matrix.CreateFromYawPitchRoll(newRot.X, newRot.Y, newRot.Z);
+                        //scaleGizmo._modelRotation = CModelManager.modelsList[eltIdDragging]._modelRotation;
+                    }
+                    else if (shouldDrawScale)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 uniDist = new Vector3(Math.Sign(diff.X) * diff.Length()) / 20;
+                        if (axisDragging == 1)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._scale = new Vector3(initialScaleValue.X - diff.X);
+                        else if (axisDragging == 2)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._scale = new Vector3(initialScaleValue.Y + diff.Y);
+                        else if (axisDragging == 0)
+                            Game.CEnemyManager._enemyList[eltIdDragging]._scale = new Vector3(initialScaleValue.Z - diff.Z);
+                        else if (axisDragging == 3) // Uni
+                            Game.CEnemyManager._enemyList[eltIdDragging]._scale = new Vector3(initialScaleValue.X + uniDist.X);
+                        Game.CEnemyManager._enemyList[eltIdDragging]._model._scale = Game.CEnemyManager._enemyList[eltIdDragging]._scale.X;
+                    }
+                }
             }
         }
 
@@ -431,5 +486,26 @@ namespace Engine.Display3D
             posGizmo.shouldNotUpdateTriangles = false;
             posGizmo.generateModelTriangles();
         }
+
+        /// <summary> 
+        /// Get the yaw,pitch and roll from a rotation matrix.
+        /// http://xboxforums.create.msdn.com/forums/p/69970/427164.aspx
+        /// </summary> 
+        static public void RotationMatrixToYawPitchRoll(ref Matrix mx, out float Yaw, out float Pitch, out float Roll)
+        {
+            Pitch = (float)Math.Asin(-mx.M32);
+            float threshold = 0.001f;
+            float test = (float)Math.Cos(Pitch);
+            if (test > threshold)
+            {
+                Roll = (float)Math.Atan2(mx.M12, mx.M22);
+                Yaw = (float)Math.Atan2(mx.M31, mx.M33);
+            }
+            else
+            {
+                Roll = (float)Math.Atan2(-mx.M21, mx.M11);
+                Yaw = 0.0f;
+            }
+        }  
     }
 }

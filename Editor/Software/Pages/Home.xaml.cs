@@ -36,7 +36,7 @@ namespace Software.Pages
 
         private Point initialMoveMousePosGame1;
 
-        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters, listTree_Lights;
+        private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters, listTree_Lights, listTree_Bots;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -56,6 +56,7 @@ namespace Software.Pages
             listTree_Pickups = new List<TreeViewItem>();
             listTree_Waters = new List<TreeViewItem>();
             listTree_Lights = new List<TreeViewItem>();
+            listTree_Bots = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
 
@@ -240,6 +241,13 @@ namespace Software.Pages
                             m_game.WPFHandler("selectObject", new object[] { "light", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("light", (int)selectElt[1]);
                         }
+                        else if ((string)selectElt[0] == "bot" && selectElt[1] is int)
+                        {
+                            listTree_Bots[(int)selectElt[1]].IsSelected = true;
+
+                            m_game.WPFHandler("selectObject", new object[] { "bot", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("bot", (int)selectElt[1]);
+                        }
                     }
                     else if (GlobalVars.selectedElt != null)
                     {
@@ -298,6 +306,7 @@ namespace Software.Pages
             TreeViewItem Pickups = new TreeViewItem();
             TreeViewItem Characters = new TreeViewItem();
             TreeViewItem Lights = new TreeViewItem();
+            TreeViewItem Bots = new TreeViewItem();
 
             Models.Header = "Models";
             Trees.Header = "Trees";
@@ -306,6 +315,7 @@ namespace Software.Pages
             Pickups.Header = "Pick-Ups";
             Characters.Header = "Characters";
             Lights.Header = "Lights";
+            Bots.Header = "A.I.";
 
             // Trees
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Trees != null)
@@ -363,7 +373,6 @@ namespace Software.Pages
                     Water.Items.Add(treeItem);
                     listTree_Waters.Add(treeItem);
                 }
-
             }
 
             // Lights
@@ -376,6 +385,19 @@ namespace Software.Pages
 
                     Lights.Items.Add(treeItem);
                     listTree_Lights.Add(treeItem);
+                }
+            }
+
+            // Bots
+            if (GlobalVars.gameInfo.Bots != null && GlobalVars.gameInfo.Bots.Bots != null && GlobalVars.gameInfo.Bots.Bots.Count > 0)
+            {
+                foreach (Engine.Game.LevelInfo.Bot bot in GlobalVars.gameInfo.Bots.Bots)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = "A.I. - " + bot.Name;
+
+                    Bots.Items.Add(treeItem);
+                    listTree_Bots.Add(treeItem);
                 }
 
             }
@@ -395,6 +417,9 @@ namespace Software.Pages
 
             if (Lights.Items.Count > 0)
                 GameComponentsList.Items.Add(Lights);
+
+            if (Bots.Items.Count > 0)
+                GameComponentsList.Items.Add(Bots);
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
                 GameComponentsList.Items.Add(Terrain);
@@ -480,6 +505,22 @@ namespace Software.Pages
 
                     m_game.WPFHandler("selectObject", new object[] { "light", i, GlobalVars.selectedToolButton.Name });
                     GlobalVars.selectedElt = new GlobalVars.SelectedElement("light", i);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    return;
+                }
+            }
+
+            // Bot
+            for (int i = 0; i < listTree_Bots.Count; i++)
+            {
+                if (listTree_Bots[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    m_game.WPFHandler("selectObject", new object[] { "bot", i, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("bot", i);
                     ApplyPropertiesWindow();
                     m_game.shouldUpdateOnce = true;
                     return;
@@ -935,6 +976,183 @@ namespace Software.Pages
                     spElements["Attenuation"].Children.Add(titleAttenuation);
                     spElements["Attenuation"].Children.Add(tbWB);
                 }
+                else if (GlobalVars.selectedElt.eltType == "bot")
+                {
+                    // Duplicate Button
+                    spElements["OptionsButtons"] = new StackPanel();
+
+                    Button duplicateButton = new Button();
+                    duplicateButton.Content = "Duplicate";
+                    duplicateButton.Width = 150;
+
+                    duplicateButton.Click += (s, e) =>
+                    {
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        GlobalVars.embeddedGame.WPFHandler("addElement", new object[] { "bot", GlobalVars.gameInfo.Bots.Bots[GlobalVars.selectedElt.eltId] });
+                        LoadGameComponentsToTreeview();
+                    };
+
+
+                    // Remove Button
+                    Button removeButton = new Button();
+                    removeButton.Content = "Remove";
+                    removeButton.Width = 150;
+                    removeButton.Margin = new Thickness(3, 0, 0, 0);
+
+                    removeButton.Click += (s, e) =>
+                    {
+                        GlobalVars.embeddedGame.WPFHandler("removeElement", new object[] { "bot", GlobalVars.selectedElt.eltId });
+                        if (GlobalVars.selectedElt.eltId > 0)
+                            GlobalVars.selectedElt.eltId--;
+                        else
+                            GlobalVars.selectedElt = null;
+
+                        GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)m_game.WPFHandler("getLevelData", true);
+
+                        LoadGameComponentsToTreeview();
+                        m_game.shouldUpdateOnce = true;
+                    };
+
+                    spElements["OptionsButtons"].Children.Add(duplicateButton);
+                    spElements["OptionsButtons"].Children.Add(removeButton);
+
+                    // Bot name
+                    spElements["BotName"] = new StackPanel();
+
+                    TextBox tbName = new TextBox();
+                    tbName.Width = 200;
+
+                    object botname = m_game.WPFHandler("getElementInfo", new object[] { "bot_name", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbName.Text = botname.ToString();
+
+                    tbName.TextChanged += (s, e) => PropertyChanged(s, e, "bot_name");
+
+                    tbName.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleBotName = new Label();
+                    titleBotName.Content = "Name :";
+                    titleBotName.Target = tbName;
+
+                    spElements["BotName"].Children.Add(titleBotName);
+                    spElements["BotName"].Children.Add(tbName);
+
+                    // Bot life
+                    spElements["BotLife"] = new StackPanel();
+
+                    TextBox tbLife = new TextBox();
+                    tbLife.Width = 50;
+
+                    object botlife = m_game.WPFHandler("getElementInfo", new object[] { "bot_life", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    tbLife.Text = botlife.ToString();
+
+                    tbLife.TextChanged += (s, e) => PropertyChanged(s, e, "bot_life");
+
+                    tbLife.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleBotLife = new Label();
+                    titleBotLife.Content = "Life :";
+                    titleBotLife.Target = tbLife;
+
+                    spElements["BotLife"].Children.Add(titleBotLife);
+                    spElements["BotLife"].Children.Add(tbLife);
+
+                    // Bot speed
+                    spElements["BotSpeed"] = new StackPanel();
+
+                    Slider slSpeed = new Slider();
+                    slSpeed.Width = 200;
+                    slSpeed.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.TopLeft;
+                    slSpeed.TickFrequency = 4;
+                    slSpeed.Minimum = 0;
+                    slSpeed.Maximum = 50;
+
+                    object botSpeed = m_game.WPFHandler("getElementInfo", new object[] { "bot_speed", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    slSpeed.Value = (int)((float)botSpeed);
+
+                    slSpeed.ValueChanged += (s, e) => PropertyValueChange(s, e, "bot_speed");
+
+                    slSpeed.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleBotSpeed = new Label();
+                    titleBotSpeed.Content = "Speed :";
+                    titleBotSpeed.Target = slSpeed;
+
+                    spElements["BotSpeed"].Children.Add(titleBotSpeed);
+                    spElements["BotSpeed"].Children.Add(slSpeed);
+
+                    // Bot range of attack
+                    spElements["BotRangeOfAttack"] = new StackPanel();
+
+                    Slider slRange = new Slider();
+                    slRange.Width = 200;
+                    slRange.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.TopLeft;
+                    slRange.TickFrequency = 100;
+                    slRange.Minimum = 0;
+                    slRange.Maximum = 1000;
+
+                    object botRange = m_game.WPFHandler("getElementInfo", new object[] { "bot_rangeofattack", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    slRange.Value = (int)((float)botRange);
+
+                    slRange.ValueChanged += (s, e) => PropertyValueChange(s, e, "bot_rangeofattack");
+
+                    slRange.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleRange = new Label();
+                    titleRange.Content = "Range Of Attack :";
+                    titleRange.Target = slRange;
+
+                    spElements["BotRangeOfAttack"].Children.Add(titleRange);
+                    spElements["BotRangeOfAttack"].Children.Add(slRange);
+
+                    // Bot type
+                    spElements["BotType"] = new StackPanel();
+
+                    ListBox lbType = new ListBox();
+                    lbType.Width = 150;
+                    
+                    ListBoxItem lb1 = new ListBoxItem();
+                    ListBoxItem lb2 = new ListBoxItem();
+                    lb1.Content = "Friendly";
+                    lb2.Content = "Enemy";
+
+                    lbType.Items.Add(lb1);
+                    lbType.Items.Add(lb2);
+
+                    object botType = m_game.WPFHandler("getElementInfo", new object[] { "bot_type", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    lbType.SelectedIndex = (int)(botType);
+
+                    lbType.SelectionChanged += (s, e) => PropertySelectionChange(s, e, "bot_type");
+
+                    lbType.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleType = new Label();
+                    titleType.Content = "Type :";
+                    titleType.Target = slRange;
+
+                    spElements["BotType"].Children.Add(titleType);
+                    spElements["BotType"].Children.Add(lbType);
+
+                    // Is Aggressive
+                    spElements["IsAggressive"] = new StackPanel();
+
+                    CheckBox isAggressive = new CheckBox();
+                    isAggressive.Width = 50;
+
+                    object isaggressive = m_game.WPFHandler("getElementInfo", new object[] { "bot_isaggressive", GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+                    isAggressive.IsChecked = (bool)isaggressive;
+
+                    isAggressive.Click += (s, e) => PropertyChecked(s, e, "bot_isaggressive");
+
+                    isAggressive.Margin = new Thickness(5, 0, 0, 0);
+
+                    Label titleAggr = new Label();
+                    titleAggr.Content = "Attacks on sight :";
+                    titleAggr.Target = isAggressive;
+
+                    spElements["IsAggressive"].Children.Add(titleAggr);
+                    spElements["IsAggressive"].Children.Add(isAggressive);
+                }
 
                 // Add elements to the main StackPanel
                 foreach (KeyValuePair<string, StackPanel> pair in spElements)
@@ -957,10 +1175,20 @@ namespace Software.Pages
 
         private void PropertyChecked(object s, RoutedEventArgs e, string propertyType)
         {
-            if (propertyType == "explodable")
-            {
+            if (propertyType == "explodable" || propertyType == "bot_isaggressive")
                 m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((CheckBox)s).IsChecked, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
-            }
+        }
+
+        private void PropertySelectionChange(object s, SelectionChangedEventArgs e, string propertyType)
+        {
+            if (propertyType == "bot_type")
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((ListBox)s).SelectedIndex, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+        }
+
+        private void PropertyValueChange(object s, RoutedPropertyChangedEventArgs<double> e, string propertyType)
+        {
+            if (propertyType == "bot_speed" || propertyType == "bot_rangeofattack")
+                m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((Slider)s).Value, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
         }
 
         private void PropertyChanged(object s, TextChangedEventArgs e, string propertyType)
@@ -985,7 +1213,7 @@ namespace Software.Pages
                 }
 
             }
-            else if (propertyType == "pickupbullets" || propertyType == "lightrange")
+            else if (propertyType == "pickupbullets" || propertyType == "lightrange" || propertyType == "bot_life" || propertyType == "bot_name")
                 m_game.WPFHandler("setElementInfo", new object[] { propertyType, ((TextBox)s).Text, GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
 
             m_game.shouldUpdateOnce = true;

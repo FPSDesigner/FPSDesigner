@@ -20,7 +20,7 @@ namespace Engine.Display3D
         private int _animationNumber;
         private int _meshNumber;
         private float _animationSpeed;
-        private float _scale;
+        public float _scale;
 
         private int _specPower;
         private float _specColor;
@@ -29,7 +29,7 @@ namespace Engine.Display3D
         private Texture2D[] _textures;
 
         public Vector3 _position;
-        private Matrix _rotation;
+        public Matrix _rotation;
 
         public SkinnedModel skinnedModel;
         private AnimationController animationController;

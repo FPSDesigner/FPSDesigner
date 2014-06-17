@@ -33,11 +33,8 @@ namespace Engine.Game
 
         public static void Draw(GameTime gameTime, SpriteBatch spriteBatch, Display3D.CCamera cam)
         {
-            foreach (CEnemy enemy in _enemyList)
-            {
-                enemy.Draw(gameTime, spriteBatch, cam._view, cam._projection);
-            }
-
+            for (int i = 0; i < _enemyList.Count; i++)
+                _enemyList[i].Draw(gameTime, spriteBatch, cam._view, cam._projection, (selectedBot == i));
         }
 
         public static void RemoveBot(int eltId)
@@ -120,9 +117,9 @@ namespace Engine.Game
 
         private CWeapon _weaponPossessed;
 
-        private Vector3 _position; // The character positon
+        public Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position
-        private Vector3 _scale;
+        public Vector3 _scale;
 
         private Vector3 _deathPosition; // The coordinates where the enemy died
         private Matrix _deathRotation;
@@ -130,8 +127,8 @@ namespace Engine.Game
         private float _hudTestSizeX;
         public string _hudText;
 
-        private Matrix _rotation; // Model rotation
-        private float rotationValue; // We give this float to the rotation mat
+        public Matrix _rotation; // Model rotation
+        public float rotationValue; // We give this float to the rotation mat
 
         private Game.CPhysics _physicEngine; // Ennemy will be submitted to forces
 
@@ -166,6 +163,10 @@ namespace Engine.Game
 
             _rotation = Rotation;
             _rotation = Matrix.Identity;
+
+            float Yaw, Pitch, Roll;
+            Display3D.CGizmos.RotationMatrixToYawPitchRoll(ref Rotation, out Yaw, out Pitch, out Roll);
+            rotationValue = Yaw;
 
             this._life = Life;
 
@@ -411,10 +412,13 @@ namespace Engine.Game
             List<Display3D.Triangle> triangles = new List<Display3D.Triangle>();
             foreach (KeyValuePair<string, Display3D.Triangle> tri in hitBoxesTriangles)
             {
-                world = tri.Value.transformMatrix;
-                triangles.Add(tri.Value.NewByMatrix(world));
-                if(drawHitbox)
-                    Display3D.CSimpleShapes.AddTriangle(tri.Value.NewByMatrix(world).V0, tri.Value.NewByMatrix(world).V1, tri.Value.NewByMatrix(world).V2, Color.Black);
+                //world = tri.Value.transformMatrix;
+                Display3D.Triangle newTri = tri.Value.NewByMatrix(world);
+                triangles.Add(newTri);
+                if (drawHitbox)
+                {
+                    Display3D.CSimpleShapes.AddTriangle(newTri.V0, newTri.V1, newTri.V2, Color.Black);
+                }
             }
             return triangles;
         }

@@ -102,7 +102,7 @@ namespace Engine
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
             renderCapture.ChangeRenderTargetSize(width, height);
-            
+
             if (isSoftwareEmbedded)
             {
                 em_sizeViewport = new Point(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
@@ -113,7 +113,7 @@ namespace Engine
                 Display2D.C2DEffect.softwareViewport.Width = width;
                 Display2D.C2DEffect.softwareViewport.Height = height;
             }
-            
+
             //graphics.ApplyChanges(); // Seem to be crashing
         }
 
@@ -162,7 +162,7 @@ namespace Engine
             //Game.CConsole._activationKeys = Keys.P;
             try
             {
-                if(!isSoftwareEmbedded)
+                if (!isSoftwareEmbedded)
                     Game.CGameManagement.ChangeState("CInGame");
                 Game.CGameManagement.LoadContent(Content, GraphicsDevice, spriteBatch, graphics);
             }
@@ -172,10 +172,17 @@ namespace Engine
                 Game.CGameManagement.SendParam("Error encountered\n\nCheck logs for more information");
                 Game.CConsole.WriteLogs(e.ToString());
             }
-            Game.Script.CLuaVM.Initialize();
 
-            foreach (string file in System.IO.Directory.GetFiles("Scripts", "*.lua").ToList<string>())
-                Game.Script.CLuaVM.LoadScript(file);
+
+            if (!isSoftwareEmbedded)
+            {
+                Game.Script.CLuaVM.Initialize();
+                if (System.IO.Directory.Exists("Scripts"))
+                    foreach (string file in System.IO.Directory.GetFiles("Scripts", "*.lua").ToList<string>())
+                        Game.Script.CLuaVM.LoadScript(file);
+                else
+                    System.IO.Directory.CreateDirectory("Scripts");
+            }
         }
 
 
@@ -218,7 +225,7 @@ namespace Engine
                 oldMouseState = mouseState;
             }
         }
-        
+
         protected override void Draw(GameTime gameTime)
         {
             // WPF
@@ -246,7 +253,7 @@ namespace Engine
             postProcessor.Draw(gameTime);
 
             base.Draw(gameTime);
-            
+
             // WPF
             if (isSoftwareEmbedded)
             {

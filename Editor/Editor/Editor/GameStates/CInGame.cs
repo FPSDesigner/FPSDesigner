@@ -629,6 +629,8 @@ namespace Engine.GameStates
                             pos = Display3D.CModelManager.modelsList[eltId]._modelRotation;
                         else if (eltType == "pickup")
                             pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelRotation;
+                        else if (eltType == "bot")
+                            pos = new Vector3(Game.CEnemyManager._enemyList[eltId].rotationValue, 0, 0);
                     }
                     else if (info == "scale")
                     {
@@ -640,6 +642,8 @@ namespace Engine.GameStates
                             pos = Display3D.CPickUpManager._pickups[eltId]._Model._modelScale;
                         else if (eltType == "water")
                             pos = Display3D.CWaterManager.listWater[eltId].waterMesh._modelScale;
+                        else if (eltType == "bot")
+                            pos = Game.CEnemyManager._enemyList[eltId]._scale;
                     }
                     else if (info == "treeseed")
                         return Display3D.TreeManager._tTrees[eltId]._seed;
@@ -657,6 +661,21 @@ namespace Engine.GameStates
                     {
                         Color col = Display3D.CLightsManager.lights[eltId].Color;
                         return col.R.ToString("X") + col.G.ToString("X") + col.B.ToString("X");
+                    }
+                    else if (info.Substring(0, 4) == "bot_")
+                    {
+                        if (info == "bot_name")
+                            return Game.CEnemyManager._enemyList[eltId]._hudText;
+                        else if (info == "bot_life")
+                            return Game.CEnemyManager._enemyList[eltId]._life;
+                        else if (info == "bot_speed")
+                            return Game.CEnemyManager._enemyList[eltId]._runningVelocity;
+                        else if (info == "bot_type")
+                            return Game.CEnemyManager._enemyList[eltId]._type;
+                        else if (info == "bot_rangeofattack")
+                            return Game.CEnemyManager._enemyList[eltId]._rangeAttack;
+                        else if (info == "bot_isaggressive")
+                            return Game.CEnemyManager._enemyList[eltId]._isAgressive;
                     }
                     return new object[] { pos.X, pos.Y, pos.Z };
                 }
@@ -892,6 +911,35 @@ namespace Engine.GameStates
                         if (values[1] is bool)
                             Display3D.CModelManager.modelsList[eltId]._Explodable = (bool)values[1];
                     }
+                    else if (info.Length > 4 && info.Substring(0, 4) == "bot_")
+                    {
+                        int intVal;
+                        float floatVal;
+                        if (info == "bot_name")
+                            Game.CEnemyManager._enemyList[eltId].SetEnemyName(val.ToString());
+                        else if (info == "bot_life")
+                        {
+                            if (Int32.TryParse(values[1].ToString(), out intVal))
+                                Game.CEnemyManager._enemyList[eltId]._life = intVal;
+                        }
+                        else if (info == "bot_speed")
+                        {
+                            if (float.TryParse(values[1].ToString(), out floatVal))
+                                Game.CEnemyManager._enemyList[eltId]._runningVelocity = floatVal;
+                        }
+                        else if (info == "bot_rangeofattack")
+                        {
+                            if (float.TryParse(values[1].ToString(), out floatVal))
+                                Game.CEnemyManager._enemyList[eltId]._rangeAttack = floatVal;
+                        }
+                        else if (info == "bot_type")
+                        {
+                            if (Int32.TryParse(values[1].ToString(), out intVal))
+                                Game.CEnemyManager._enemyList[eltId]._type = intVal;
+                        }
+                        else if (info == "bot_isaggressive")
+                            Game.CEnemyManager._enemyList[eltId]._isAgressive = (bool)values[1];
+                    }
                 }
                 else if (action == "getLevelData")
                 {
@@ -917,7 +965,7 @@ namespace Engine.GameStates
             if (file.Contains(".") && !file.Contains(".xnb"))
                 return Texture2D.FromStream(_graphics, new System.IO.FileStream(file, System.IO.FileMode.Open));
             else
-                return _content.Load<Texture2D>(file.Replace(".xnb",""));
+                return _content.Load<Texture2D>(file.Replace(".xnb", ""));
         }
     }
 }

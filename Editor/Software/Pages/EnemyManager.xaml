@@ -93,9 +93,7 @@
             <Slider Grid.Column="2" Grid.Row="2" TickPlacement="TopLeft" TickFrequency="2" Value="10" HorizontalAlignment="Left" Width="400" Minimum="0" Maximum="50" Margin="0,5,0,0" x:Name="Speed" />
 
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Range of Attack:" Margin="0,5,0,0" />
-            <StackPanel Grid.Column="2" Grid.Row="3">
-                <Slider Grid.Column="2" Grid.Row="3" TickPlacement="TopLeft" TickFrequency="50"  Value="20" HorizontalAlignment="Left" Width="400" Minimum="0" Maximum="1000" Margin="0,5,0,0" x:Name="RangeOfAttack"/>
-            </StackPanel>
+            <Slider Grid.Column="2" Grid.Row="3" TickPlacement="TopLeft" TickFrequency="50"  Value="20" HorizontalAlignment="Left" Width="400" Minimum="0" Maximum="1000" Margin="0,5,0,0" x:Name="RangeOfAttack"/>
             
             <TextBlock Grid.Column="0" Grid.Row="4" Text="Should attack on sight:" Margin="0,5,0,0" />
             <CheckBox Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" x:Name="IsAggressive"/>
