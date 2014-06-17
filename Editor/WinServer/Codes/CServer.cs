@@ -12,29 +12,19 @@ namespace WinServer.Codes
 {
     class CServer
     {
-        private Socket socket;
+        private UdpClient ServerHandler;
+        private int Port;
 
-        public List<CClient> clientList;
-
-        enum SentData
-        {
-            Connection,
-            Position
-        }
+        public List<CPlayer> clientList;
 
         public CServer(int port)
         {
-            clientList = new List<CClient>();
+            Port = port;
+            clientList = new List<CPlayer>();
 
-            try
-            {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                socket.Bind(new IPEndPoint(IPAddress.Any, port));
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            ServerHandler = new UdpClient(port);
+
+            Run();
 
             GlobalVars.AddNewMessage("Connected on port [b]" + port + "[/b]");
             GlobalVars.AddNewMessage("Waiting for players...");
@@ -42,64 +32,46 @@ namespace WinServer.Codes
 
         public void Run()
         {
-            Thread ThreadReceiveData = new Thread(new ThreadStart(ReceiveData));
-
-            ThreadReceiveData.Start();
+            Thread ThreadListen = new Thread(new ThreadStart(Listen));
+            ThreadListen.IsBackground = true;
+            ThreadListen.Start();
         }
 
-        public void ReceiveData()
+        public void Listen()
         {
             while (true)
             {
-                IPEndPoint sender = new IPEndPoint(IPAddress.Any, GlobalVars.serverInfo.Properties.Port);
-                EndPoint tmpRemote = (EndPoint)sender;
+                IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, Port);
+                string data = GetString(ServerHandler.Receive(ref remoteEP));
 
-                // Client is not connected
-                byte[] data = new byte[1024];
-                int received = socket.ReceiveFrom(data, ref tmpRemote);
+                GlobalVars.AddNewMessage("Received data from [b]" + remoteEP.ToString() + "[/b] ...");
+                GlobalVars.AddNewMessage("Message: [b]" + data + "[/b]");
 
-                foreach (CClient client in clientList)
-                    if (client.Address == tmpRemote.ToString()) // Data from connected client
-                    {
-                        HandleDatas(data, received);
-                        return;
-                    }
-
-
-                GlobalVars.AddNewMessage("Connection received from [b]" + tmpRemote.ToString() + "[/b]");
-                if (data.Length > GlobalVars.ConnectionKey.Length + 2)
-                {
-                    int dataType = (int)data[0];
-                    if (dataType == (int)SentData.Connection)
-                    {
-                        string key = Encoding.ASCII.GetString(data, 1, GlobalVars.ConnectionKey.Length);
-                        if (key == GlobalVars.ConnectionKey)
-                        {
-                            string sentData = Encoding.ASCII.GetString(data, GlobalVars.ConnectionKey.Length + 1, received - GlobalVars.ConnectionKey.Length - 1);
-
-                            clientList.Add(new CClient(sentData, tmpRemote));
-
-
-                            GlobalVars.AddNewMessage("Connection accepted from [b]" + tmpRemote.ToString() + "[/b] ([i]" + sentData + "[/i])");
-                            
-                        }
-                    }
-                }
+                SendMessage("Welcome|My Server", remoteEP);
             }
         }
 
-        public void HandleDatas(byte[] datas, int received)
+
+
+        public void SendMessage(string msg, IPEndPoint remoteEp)
         {
-            if (datas.Length > 1)
-            {
-                SentData DataType = (SentData)datas[0];
-
-                switch (DataType)
-                {
-                    case SentData.Position:
-                        break;
-                }
-            }
+            byte[] bytes = GetBytes(msg);
+            ServerHandler.Send(bytes, bytes.Length, remoteEp);
         }
+
+        public byte[] GetBytes(string str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        public string GetString(byte[] bytes)
+        {
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
+        }
+
     }
 }
