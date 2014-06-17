@@ -201,6 +201,17 @@ namespace Engine.Game
                     if (Int32.TryParse(cmd[1], out lightEffect))
                         Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
                     break;
+                case "connect":
+                    if (cmd.Length > 1 && cmd[1].Contains(":"))
+                    {
+                        string IP = cmd[1].Split(':')[0];
+                        string Port = cmd[1].Split(':')[1];
+
+                        CMultiplayer mp = new CMultiplayer("John");
+                        mp.Connect("127.0.0.1", 7777);
+                        mp.Run();
+                    }
+                    break;
             }
         }
 

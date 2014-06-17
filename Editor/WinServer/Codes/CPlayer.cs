@@ -9,14 +9,14 @@ using System.Net;
 
 namespace WinServer.Codes
 {
-    class CClient
+    class CPlayer
     {
         public string userName { get; private set; }
 
         public EndPoint endPoint;
         public string Address;
 
-        public CClient(string name, EndPoint ep)
+        public CPlayer(string name, EndPoint ep)
         {
             this.userName = name;
             this.endPoint = ep;

@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Automation.Peers;
 using System.Windows.Media.Imaging;
+using System.Threading;
 
 using FirstFloor.ModernUI;
 using FirstFloor.ModernUI.Windows;
