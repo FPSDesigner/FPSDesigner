@@ -139,8 +139,10 @@ namespace Engine.Game
         private bool _isDead;
         private bool _isShoting;
         private bool _isHeadShot; // The character took an headshot
-        public bool _isFrozen; // Use to stop translation
         private bool _isFollowingPlayer;
+        private bool _isCrouch;
+
+        public bool _isFrozen; // Use to stop translation
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
@@ -187,6 +189,7 @@ namespace Engine.Game
             _isHeadShot = false;
             _isShoting = false;
             _isFollowingPlayer = false;
+            _isCrouch = false;
 
             _targetPos = _position; // The AI is not moving
 
@@ -231,7 +234,7 @@ namespace Engine.Game
                 if (!_isMoving && !_isWaitAnimPlaying)
                 {
                     _model.ChangeAnimSpeed(0.6f);
-                    _model.ChangeAnimation("wait", true, 0.5f);
+                    _model.ChangeAnimation("wait_machete", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
@@ -241,7 +244,7 @@ namespace Engine.Game
                 if (_isMoving && !_isWalkAnimPlaying)
                 {
                     _model.ChangeAnimSpeed(2.0f);
-                    _model.ChangeAnimation("walk", true, 0.7f);
+                    _model.ChangeAnimation("walk_machete", true, 1.4f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
@@ -374,6 +377,15 @@ namespace Engine.Game
             if (!_isFrozen && !_isDead)
             {
                 _isFollowingPlayer = !_isFollowingPlayer;
+            }
+        }
+
+        public void Crouch()
+        {
+            if (!_isCrouch)
+            {
+                _physicEngine._entityHeight = _height / 2f;
+                _runningVelocity /= 2f;
             }
         }
 
