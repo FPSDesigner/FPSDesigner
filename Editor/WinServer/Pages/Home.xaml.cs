@@ -20,16 +20,28 @@ namespace WinServer.Pages
     /// </summary>
     public partial class Home : UserControl
     {
-        private Codes.CServer server;
-
         public Home()
         {
             InitializeComponent();
 
             GlobalVars.consoleElement = MainLogs;
+            GlobalVars.consoleElementScroll = scrollConsole;
 
-            server = new Codes.CServer(GlobalVars.serverInfo.Properties.Port);
-            server.Run();
+            GlobalVars.serverInstance = new Codes.CServer(GlobalVars.serverInfo.Properties.Port);
+
+            Send.Click += Send_Click;
+            Send.IsDefault = true;
+        }
+
+        void Send_Click(object sender, RoutedEventArgs e)
+        {
+            if (CommandLine.Text.Length > 0)
+            {
+                GlobalVars.AddNewMessage(CommandLine.Text);
+                GlobalVars.serverInstance.HandleCommand(CommandLine.Text);
+            }
+
+            CommandLine.Text = "";
         }
     }
 }

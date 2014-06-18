@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+namespace Engine.Game
+{
+    class CPlayer
+    {
+        private CEnemy botController;
+        private string userName;
+        private int ID;
+
+        public CPlayer(int PlayerID, string Name, Vector3 pos)
+        {
+            this.userName = Name;
+            this.ID = PlayerID;
+
+            Texture2D[] textures = new Texture2D[1];
+            textures[0] = Display2D.C2DEffect._content.Load<Texture2D>("Textures\\StormTrooper");
+            botController = new CEnemy("StormTrooperAnimation", textures, pos, Matrix.CreateFromYawPitchRoll(0,0,0), 100f, 20, 10, false, Name, 2);
+        }
+
+        public void SetNewPos(Vector3 pos, Vector3 rot)
+        {
+            botController._position = pos;
+        }
+    }
+}

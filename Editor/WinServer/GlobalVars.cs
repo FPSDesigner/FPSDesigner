@@ -23,10 +23,12 @@ namespace WinServer
     {
         public static List<string> consoleListMessage = new List<string>();
         public static BBCodeBlock consoleElement;
+        public static ScrollViewer consoleElementScroll;
         public static string SettingsFile = "serverSettings.xml";
         public static string ConnectionKey = "LA45T6";
         public static Codes.ServerInfo serverInfo;
         public static BitmapFrame SoftwareIcon = BitmapFrame.Create(new Uri("pack://application:,,,/Assets/Icon.ico", UriKind.RelativeOrAbsolute));
+        public static Codes.CServer serverInstance;
 
         public static void AddNewMessage(string msg)
         {
@@ -35,9 +37,14 @@ namespace WinServer
             if (consoleElement != null)
             {
                 if (consoleElement.Dispatcher.CheckAccess())
+                {
                     consoleElement.BBCode += "> " + msg.Replace("\n", "") + "\n";
+                    consoleElementScroll.ScrollToEnd();
+                }
                 else
-                    consoleElement.Dispatcher.Invoke((Action)(() => consoleElement.BBCode += "> " + msg.Replace("\n", "") + "\n"));
+                {
+                    consoleElement.Dispatcher.Invoke((Action)(() => { consoleElement.BBCode += "> " + msg.Replace("\n", "") + "\n";  consoleElementScroll.ScrollToEnd(); }));
+                }
             }
         }
 

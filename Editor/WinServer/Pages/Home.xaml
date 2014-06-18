@@ -5,14 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mui ="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="209" d:DesignWidth="506">
     <Grid Style="{StaticResource ContentRoot}">
         <Grid.RowDefinitions>
             <RowDefinition Height="80*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
         <TextBox Grid.Row="0" AcceptsReturn="True" IsEnabled="False"/>
-        <mui:BBCodeBlock Margin="4" x:Name="MainLogs" />
-        <TextBox Grid.Row="1" Height="25" Margin="0,5,0,0"/>
+        <ScrollViewer x:Name="scrollConsole">
+        <mui:BBCodeBlock Margin="4" x:Name="MainLogs"/>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Height="25" Margin="0,5,0,0" x:Name="CommandLine" Width="Auto" Grid.Column="0"/>
+            <Button Height="25" Margin="0,5,0,0" x:Name="Send" Content="Send" Grid.Column="2" />
+        </Grid>
     </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using Microsoft.Xna.Framework;
 
 namespace WinServer.Codes
 {
@@ -14,20 +15,30 @@ namespace WinServer.Codes
     {
         private UdpClient ServerHandler;
         private int Port;
+        private string ConnectionKey = "LA45T6";
 
-        public List<CPlayer> clientList;
+        public List<CPlayer> playerList;
+
+        public enum SentData
+        {
+            Int,
+            Float,
+            Vector3,
+        };
 
         public CServer(int port)
         {
             Port = port;
-            clientList = new List<CPlayer>();
+            playerList = new List<CPlayer>();
 
             ServerHandler = new UdpClient(port);
 
             Run();
 
             GlobalVars.AddNewMessage("Connected on port [b]" + port + "[/b]");
-            GlobalVars.AddNewMessage("Waiting for players...");
+            GlobalVars.AddNewMessage("* Hostname: [b]" + GlobalVars.serverInfo.Properties.HostName + "[/b]");
+            GlobalVars.AddNewMessage("* Players: [b]0/" + GlobalVars.serverInfo.Properties.MaxPlayers + "[/b]");
+            GlobalVars.AddNewMessage("Server started! Waiting for players...");
         }
 
         public void Run()
@@ -37,21 +48,50 @@ namespace WinServer.Codes
             ThreadListen.Start();
         }
 
-        public void Listen()
+        private void Listen()
         {
             while (true)
             {
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, Port);
                 string data = GetString(ServerHandler.Receive(ref remoteEP));
+                string AddressEP = remoteEP.ToString();
+                string[] info = data.Split('|');
 
-                GlobalVars.AddNewMessage("Received data from [b]" + remoteEP.ToString() + "[/b] ...");
-                GlobalVars.AddNewMessage("Message: [b]" + data + "[/b]");
+                CPlayer PlayerWriting = null;
 
-                SendMessage("Welcome|My Server", remoteEP);
+                foreach (CPlayer pl in playerList)
+                    if (AddressEP == pl.Address)
+                        PlayerWriting = pl;
+
+                if (PlayerWriting == null && info.Length > 3)
+                {
+
+                    if (info[0] == "req" && info[1] == ConnectionKey && info[2] == Port.ToString())
+                    {
+                        CPlayer newPlayer = new CPlayer(GetNewUniqueID(), info[3], remoteEP);
+                        playerList.Add(newPlayer);
+                        GlobalVars.AddNewMessage("New player (" + info[3] + ") successfuly connected!");
+
+                        foreach (CPlayer pl in playerList)
+                            if (pl != newPlayer)
+                                SendMessage("JOIN|" + newPlayer.ID + "|" + info[3] + "|" + info[4], pl.endPoint);
+                    }
+                    else
+                        GlobalVars.AddNewMessage("Incorrect connection request: [b]" + data + "[/b]");
+                }
+                else if (PlayerWriting != null)
+                {
+                    PlayerWriting.lastPacket = DateTime.Now;
+
+                    if (info.Length > 1 && info[0] == "INFO")
+                    {
+                        foreach (CPlayer pl in playerList)
+                            if (pl != PlayerWriting)
+                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[1], pl.endPoint);
+                    }
+                }
             }
         }
-
-
 
         public void SendMessage(string msg, IPEndPoint remoteEp)
         {
@@ -59,18 +99,87 @@ namespace WinServer.Codes
             ServerHandler.Send(bytes, bytes.Length, remoteEp);
         }
 
-        public byte[] GetBytes(string str)
+        public void HandleCommand(string command)
+        {
+            string[] cmd = command.Split(' ');
+
+            if (cmd.Length > 1)
+            {
+                if (cmd[0] == "echo" || cmd[0] == "say")
+                {
+                    foreach (CPlayer pl in playerList)
+                        SendMessage("ECHO|" + command.Replace("echo ", ""), pl.endPoint);
+                }
+            }
+        }
+
+        public void DisconnectPlayer(CPlayer player)
+        {
+            playerList.Remove(player);
+
+            foreach (CPlayer pl in playerList)
+                SendMessage("QUIT|" + player.ID, pl.endPoint);
+        }
+
+        private byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        public string GetString(byte[] bytes)
+        private string GetString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
+        }
+
+        private int GetNewUniqueID()
+        {
+            int id = -1;
+            while (true)
+            {
+                id++;
+                foreach (CPlayer pl in playerList)
+                    if (pl.ID == id)
+                        continue;
+                break;
+            }
+            return id;
+        }
+
+        public string FormatDataToSend(object data)
+        {
+            if (data is float)
+                return Math.Round((float)data, 3).ToString();
+            else if (data is Vector3)
+            {
+                Vector3 ret = (Vector3)data;
+                return FormatDataToSend(ret.X) + "/" + FormatDataToSend(ret.Y) + "/" + FormatDataToSend(ret.Z);
+            }
+            return data.ToString();
+        }
+
+        public object ExtractDataFromString(string msg, SentData type)
+        {
+            if (type == SentData.Vector3)
+            {
+                if (msg.Count(f => f == '/') == 2)
+                {
+                    string[] extracted = msg.Split('/');
+                    return new Vector3((float)ExtractDataFromString(extracted[0], SentData.Float), (float)ExtractDataFromString(extracted[1], SentData.Float), (float)ExtractDataFromString(extracted[2], SentData.Float));
+                }
+            }
+            else if (type == SentData.Float)
+            {
+                float ret;
+                if (float.TryParse(msg, out ret))
+                    return ret;
+                else
+                    return 0f;
+            }
+            return null;
         }
 
     }
