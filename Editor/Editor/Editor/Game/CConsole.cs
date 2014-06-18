@@ -167,7 +167,7 @@ namespace Engine.Game
                     break;
                 case "help":
                     addMessage("Command List:");
-                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info - debug - teleport");
+                    addMessage("togglefps - effect - getposition - setrunspeed - weapon_info - debug - teleport - freezeEnemy - moveTo - followPlayer");
                     break;
                 case "weapon_info":
                     addMessage("Magazine : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._actualClip + " | Bullets available : " + _Weapon._weaponsArray[_Weapon._selectedWeapon]._bulletsAvailable);
@@ -190,6 +190,28 @@ namespace Engine.Game
                     if (cmd.Length > 0)
                     {
                         CEnemyManager._enemyList[0]._isFrozen = !CEnemyManager._enemyList[0]._isFrozen;
+                    }
+                    break;
+                case "moveTo":
+                    if (cmd.Length > 2)
+                    {
+                        float x, y, z;
+                        if (float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
+                        {
+                            CEnemyManager._enemyList[0].MoveTo(new Vector3(x, y, z), gameTime);
+                        }
+                        else
+                            addMessage("USAGE: " + cmd[0] + " <X : float> <Y : float> <Z : float>");
+                    }
+                    else
+                    {
+                        addMessage("USAGE: " + cmd[0] + " <X> <Y> <Z>");
+                    }
+                    break;
+                case "followPlayer":
+                    if (cmd.Length > 0)
+                    {
+                        CEnemyManager._enemyList[0].FollowPlayer(gameTime);
                     }
                     break;
                 case "enemyInfo":

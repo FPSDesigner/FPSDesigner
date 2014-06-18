@@ -19,52 +19,6 @@ namespace Engine.Game
 
         public static Dictionary<string, CSound> soundArea;
 
-        #region CSound class
-        public class CSound
-        {
-            public SoundEffect _sound;
-            public SoundEffectInstance _soundInstance;
-            public float _delay; // Used to play the song when after an elapsed time
-
-            public AudioListener _audioListener;
-            public AudioEmitter _audioEmitter;
-
-            public CSound(SoundEffect sound, bool isLooped, AudioListener listener = null, AudioEmitter emitter = null, float delay = 0f, float volume = 1f, float pitch = 0f, float pan = 0f)
-            {
-                this._sound = sound;
-
-                this._soundInstance = _sound.CreateInstance();
-                _soundInstance.IsLooped = isLooped; // Only for sound instance
-
-                this._delay = delay;
-
-                this._soundInstance.Volume = volume;
-                this._soundInstance.Pitch = pitch;
-                this._soundInstance.Pan = pan;
-
-                this._audioListener = listener;
-                this._audioEmitter = emitter;
-
-                // If we want to place the sound in the 3D world
-                if (_audioEmitter != null && _audioListener != null)
-                {
-                    _soundInstance.Apply3D(_audioListener, _audioEmitter);
-                }
-
-            }
-
-            /*public void Play(float vol = 1f, float pitch = 0f, float pan = 0f)
-            {
-                _soundInstance.Volume = (vol == 1f) ? _soundInstance.Volume : vol;
-                _soundInstance.Pitch = (pitch == 0f) ? _soundInstance.Pitch : pitch;
-                _soundInstance.Pan = (pan == 0f) ? _soundInstance.Pan : pan;
-
-                _soundInstance.Stop();
-                _soundInstance.Play();
-            }*/
-        }
-        #endregion
-
         public static void LoadContent()
         {
             soundList = new Dictionary<string, CSound>();
@@ -125,28 +79,72 @@ namespace Engine.Game
             soundList[soundName]._soundInstance.Stop();
         }
 
-        #region "Sound Area Class"
+    }
 
-        public class SoundArea
+    #region CSound class
+    public class CSound
+    {
+        public SoundEffect _sound;
+        public SoundEffectInstance _soundInstance;
+        public float _delay; // Used to play the song when after an elapsed time
+
+        public AudioListener _audioListener;
+        public AudioEmitter _audioEmitter;
+
+        public CSound(SoundEffect sound, bool isLooped, AudioListener listener = null, AudioEmitter emitter = null, float delay = 0f, float volume = 1f, float pitch = 0f, float pan = 0f)
         {
-            private BoundingBox _area;
+            this._sound = sound;
 
-            private CSound _sound;
+            this._soundInstance = _sound.CreateInstance();
+            _soundInstance.IsLooped = isLooped; // Only for sound instance
 
-            private string _name;
+            this._delay = delay;
 
-            public SoundArea(BoundingBox Area, CSound Sound,string Name)
+            this._soundInstance.Volume = volume;
+            this._soundInstance.Pitch = pitch;
+            this._soundInstance.Pan = pan;
+
+            this._audioListener = listener;
+            this._audioEmitter = emitter;
+
+            // If we want to place the sound in the 3D world
+            if (_audioEmitter != null && _audioListener != null)
             {
-                this._area = Area;
-                this._name = Name;
-                this._sound = Sound;
+                _soundInstance.Apply3D(_audioListener, _audioEmitter);
             }
 
         }
 
-        #endregion
+        /*public void Play(float vol = 1f, float pitch = 0f, float pan = 0f)
+        {
+            _soundInstance.Volume = (vol == 1f) ? _soundInstance.Volume : vol;
+            _soundInstance.Pitch = (pitch == 0f) ? _soundInstance.Pitch : pitch;
+            _soundInstance.Pan = (pan == 0f) ? _soundInstance.Pan : pan;
 
+            _soundInstance.Stop();
+            _soundInstance.Play();
+        }*/
+    }
+    #endregion
+
+    #region "Sound Area Class"
+
+    public struct SoundArea
+    {
+        private BoundingBox _area;
+
+        private string _sound;
+
+        private string _name;
+
+        public SoundArea(BoundingBox Area, string Sound, string Name)
+        {
+            this._area = Area;
+            this._name = Name;
+            this._sound = Sound;
+        }
 
     }
 
+    #endregion
 }

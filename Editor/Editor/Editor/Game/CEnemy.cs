@@ -140,6 +140,7 @@ namespace Engine.Game
         private bool _isShoting;
         private bool _isHeadShot; // The character took an headshot
         public bool _isFrozen; // Use to stop translation
+        private bool _isFollowingPlayer;
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
@@ -185,6 +186,9 @@ namespace Engine.Game
             _isFrozen = true;
             _isHeadShot = false;
             _isShoting = false;
+            _isFollowingPlayer = false;
+
+            _targetPos = _position; // The AI is not moving
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
 
@@ -276,7 +280,26 @@ namespace Engine.Game
 
             _model.Update(gameTime, _position, _rotation);
 
-            MoveTo(cam._cameraPos, gameTime);
+            // new target is the camera position
+            if (_isFollowingPlayer)
+            {
+                _targetPos = cam._cameraPos;
+            }
+
+            if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
+            {
+                Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+                translation.Normalize();
+
+                rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
+                _targetPos.Z - _position.Z);
+
+                translation = _runningVelocity * translation;
+                _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                _isMoving = true;
+            }
+            else
+                _isMoving = false;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)
@@ -324,32 +347,33 @@ namespace Engine.Game
 
         public bool IsAnyPlayerInSight()
         {
-
             return false;
         }
 
-        public void MoveTo(Vector3 newPos, GameTime gameTime)
+        public void MoveTo(Vector3 position, GameTime gameTime)
         {
-            if (!_isFrozen && !_isDead)
+            if (!_isFrozen && !_isFollowingPlayer)
             {
-                _targetPos = new Vector3(newPos.X - _position.X,
-                    newPos.Y - _position.Y, newPos.Z - _position.Z);
-                _targetPos.Normalize();
+                _targetPos = position;
 
-                rotationValue = (float)Math.Atan2(newPos.X - _position.X,
-                    newPos.Z - _position.Z);
+                _isMoving = true;
+
+                rotationValue = (float)Math.Atan2(position.X - _position.X,
+                    position.Z - _position.Z);
 
                 Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
                 translation.Normalize();
+                translation *= _runningVelocity;
 
-                if (Vector3.DistanceSquared(_position, newPos) > 10.0f)
-                {
-                    translation *= _runningVelocity;
-                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
-                    _isMoving = true;
-                }
-                else
-                    _isMoving = false;
+                _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+            }
+        }
+
+        public void FollowPlayer(GameTime gameTime)
+        {
+            if (!_isFrozen && !_isDead)
+            {
+                _isFollowingPlayer = !_isFollowingPlayer;
             }
         }
 
