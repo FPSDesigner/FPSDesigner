@@ -142,7 +142,7 @@ namespace Engine.Game
             return data.ToString();
         }
 
-        public object ExtractDataFromString(string msg, SentData type)
+        private object ExtractDataFromString(string msg, SentData type)
         {
             if (type == SentData.Vector3)
             {
