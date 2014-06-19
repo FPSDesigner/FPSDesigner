@@ -176,9 +176,9 @@ namespace Engine.Game
                     if (cmd.Length > 3)
                     {
                         float x, y, z;
-                        if(float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
+                        if (float.TryParse(cmd[1], out x) && float.TryParse(cmd[2], out y) && float.TryParse(cmd[3], out z))
                         {
-                            _Camera._cameraPos = new Vector3(x,y,z);
+                            _Camera._cameraPos = new Vector3(x, y, z);
                         }
                         else
                             addMessage("USAGE: " + cmd[0] + " <X : float> <Y : float> <Z : float>");
@@ -215,7 +215,7 @@ namespace Engine.Game
                     }
                     break;
                 case "enemyInfo":
-                    addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : "+
+                    addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : " +
                         CEnemyManager._enemyList[0]._life + " %\n");
                     break;
                 case "lightModels":
@@ -224,27 +224,26 @@ namespace Engine.Game
                         Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
                     break;
                 case "connect":
-                    
-                        string IP = "127.0.0.1";
-                        string Name = "John";
-                        int Port;
+                    string IP = "127.0.0.1";
+                    string Name = "John";
+                    int Port = 7777;
 
-                        if (cmd.Length > 1 && cmd[1].Contains(':'))
-                        {
-                            IP = cmd[1].Split(':')[0];
-                            if(!Int32.TryParse(cmd[1].Split(':')[1], out Port))
-                                Port = 7777;
-                        }
-                        else
-                            IP = cmd[1];
-
-                        if (cmd.Length > 2)
-                            Name = cmd[2];
-
-                        CMultiplayer mp = new CMultiplayer(Name);
-                        mp.Connect(IP, Port);
-                        mp.Run();
+                    if (cmd.Length > 1 && cmd[1].Contains(':'))
+                    {
+                        IP = cmd[1].Split(':')[0];
+                        if (!Int32.TryParse(cmd[1].Split(':')[1], out Port))
+                            Port = 7777;
                     }
+                    else
+                        IP = cmd[1];
+
+                    if (cmd.Length > 2)
+                        Name = cmd[2];
+
+                    CMultiplayer mp = new CMultiplayer(Name);
+                    mp.Connect(IP, Port);
+                    mp.Run();
+
                     break;
             }
         }
