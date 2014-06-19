@@ -168,7 +168,7 @@ namespace Engine.Game
         public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
         {
             _position = Position;
-            _scale = new Vector3(0.5f);
+            _scale = new Vector3(0.3f);
             _deathPosition = Vector3.Zero;
             _collisionHeight = 0.2f;
             this._rangeAttack = RangeToAttack;
@@ -195,6 +195,7 @@ namespace Engine.Game
 
             _isMoving = false;
             _isDyingAnimPlaying = false;
+            _isWaitAnimPlaying = false;
             _isDead = false;
             _isFrozen = true;
             _isHeadShot = false;
@@ -244,7 +245,7 @@ namespace Engine.Game
                 // The character is running
                 if (!_isMoving && !_isWaitAnimPlaying)
                 {
-                    _model.ChangeAnimSpeed(0.6f);
+                    _model.ChangeAnimSpeed(0.4f);
                     _model.ChangeAnimation("wait_machete", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
@@ -254,8 +255,8 @@ namespace Engine.Game
                 // The Character is running
                 if (_isMoving && !_isWalkAnimPlaying)
                 {
-                    _model.ChangeAnimSpeed(2.0f);
-                    _model.ChangeAnimation("walk_machete", true, 1.4f);
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("walk_machete", true, 0.5f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
@@ -341,6 +342,9 @@ namespace Engine.Game
             {
                 if (_isAgressive && IsAnyPlayerInSight())
                 {
+                    _model.ChangeAnimSpeed(5.0f);
+                    _model.ChangeAnimation("attack_machete", false, 0.2f);
+
                     if (distSquared <= (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range) * (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range))
                     {
                         Random random = new Random();
