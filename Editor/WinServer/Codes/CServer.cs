@@ -39,6 +39,7 @@ namespace WinServer.Codes
             GlobalVars.AddNewMessage("* Hostname: [b]" + GlobalVars.serverInfo.Properties.HostName + "[/b]");
             GlobalVars.AddNewMessage("* Players: [b]0/" + GlobalVars.serverInfo.Properties.MaxPlayers + "[/b]");
             GlobalVars.AddNewMessage("Server started! Waiting for players...");
+            GlobalVars.AddNewMessage("Val: " + ExtractDataFromString("-14.12", SentData.Float));
         }
 
         public void Run()
@@ -73,11 +74,13 @@ namespace WinServer.Codes
                         GlobalVars.AddNewMessage("New player (" + info[3] + ", ID: " + newPlayer.ID + ") successfuly connected!");
 
                         foreach (CPlayer pl in playerList)
+                        {
                             if (pl != newPlayer)
                             {
                                 SendMessage("JOIN|" + newPlayer.ID + "|" + info[3] + "|" + info[4], pl.endPoint);
-                                SendMessage("JOIN|" + pl.ID + "|0/0/0|0/0", newPlayer.endPoint);
+                                SendMessage("JOIN|" + pl.ID + "|" + pl.userName + "|0/0/0", newPlayer.endPoint);
                             }
+                        }
                     }
                     else
                         GlobalVars.AddNewMessage("Incorrect connection request: [b]" + data + "[/b]");
@@ -152,7 +155,7 @@ namespace WinServer.Codes
                         break;
                     }
 
-                if(!found)
+                if (!found)
                     break;
             }
             return id;
@@ -183,7 +186,7 @@ namespace WinServer.Codes
             else if (type == SentData.Float)
             {
                 float ret;
-                if (float.TryParse(msg, out ret) || float.TryParse(msg.Replace('.', ','), out ret))
+                if (float.TryParse(msg.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out ret))
                     return ret;
                 else
                     return 0f;

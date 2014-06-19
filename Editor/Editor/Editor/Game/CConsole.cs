@@ -234,8 +234,6 @@ namespace Engine.Game
                         if (!Int32.TryParse(cmd[1].Split(':')[1], out Port))
                             Port = 7777;
                     }
-                    else
-                        IP = cmd[1];
 
                     if (cmd.Length > 2)
                         Name = cmd[2];

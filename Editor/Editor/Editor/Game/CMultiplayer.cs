@@ -168,7 +168,7 @@ namespace Engine.Game
             else if (type == SentData.Float)
             {
                 float ret;
-                if (float.TryParse(msg, out ret) || float.TryParse(msg.Replace('.', ','), out ret))
+                if (float.TryParse(msg.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out ret))
                     return ret;
                 else
                     return 0f;
