@@ -242,21 +242,41 @@ namespace Engine.Game
             //Play Anims
             if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
             {
-                // The character is running
-                if (!_isMoving && !_isWaitAnimPlaying)
+                // The character is waiting
+                if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch)
                 {
                     _model.ChangeAnimSpeed(0.4f);
-                    _model.ChangeAnimation("wait_machete", true, 0.8f);
+                    _model.ChangeAnimation("machete_wait", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
                 }
 
                 // The Character is running
-                if (_isMoving && !_isWalkAnimPlaying)
+                if (_isMoving && !_isWalkAnimPlaying && !_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("walk_machete", true, 0.5f);
+                    _model.ChangeAnimation("machete_walk", true, 0.5f);
+
+                    _isWaitAnimPlaying = false;
+                    _isWalkAnimPlaying = true;
+                }
+
+                // The character is waiting crouched
+                if (_isCrouch && !_isMoving && !_isWaitAnimPlaying)
+                {
+                    _model.ChangeAnimSpeed(0.4f);
+                    _model.ChangeAnimation("machete_wait-crouch", true, 0.8f);
+
+                    _isWalkAnimPlaying = false;
+                    _isWaitAnimPlaying = true;
+                }
+
+                // The Character is running
+                if (_isCrouch && _isMoving && !_isWalkAnimPlaying)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("machete_walk-crouch", true, 0.3f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
@@ -343,7 +363,7 @@ namespace Engine.Game
                 if (_isAgressive && IsAnyPlayerInSight())
                 {
                     _model.ChangeAnimSpeed(5.0f);
-                    _model.ChangeAnimation("attack_machete", false, 0.2f);
+                    _model.ChangeAnimation("machete_attack", false, 0.2f);
 
                     if (distSquared <= (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range) * (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range))
                     {
@@ -399,27 +419,27 @@ namespace Engine.Game
         {
             if (!_isCrouch)
             {
-                _physicEngine._entityHeight = _height / 2f;
+                _physicEngine._entityHeight /= 2f;
                 _runningVelocity /= 2f;
+
+                _model.ChangeAnimSpeed(1.5f);
+                _model.ChangeAnimation("machete_walk-crouch", true, 0.8f);
+
+                _isCrouch = true;
+            }
+            else
+            {
+                _physicEngine._entityHeight *= 2;
+                _runningVelocity *= 2;
+
+                _model.ChangeAnimSpeed(2.5f);
+                _model.ChangeAnimation("machete_walk", true, 0.8f);
+
+                _isCrouch = false;
             }
         }
 
-        // This function allows us to find the good rotation to apply on the enemy when it is died
-        // With this, we can rotate the mesh to make it aligned with the terrain.
-        private Matrix GetTerrainNormalRotation(Vector3 position)
-        {
-            // Get the normal of the plane
-            Vector3 normal = _physicEngine.GetNormal(position);
-            Vector3 currentNormal = new Vector3(0f,1f,0f);
-
-            Vector3 axis = Vector3.Normalize(Vector3.Cross(currentNormal, normal));
-
-            float angle = (float)Math.Acos(Vector3.Dot(currentNormal, normal));
-
-            return Matrix.CreateFromAxisAngle(axis, angle) * Matrix.CreateRotationX(MathHelper.Pi);
-        }
-
-        // launch the appropriate def animation
+        // Handle the damages and the character death
         public void ReceivedDamages(float damages, string animToPlay)
         {
             // If the player is not already dead
@@ -441,13 +461,31 @@ namespace Engine.Game
                         _deathRotation =
                             _rotation * GetTerrainNormalRotation(_position);
 
-                        _model.ChangeAnimSpeed(2f);
-                        _model.ChangeAnimation(animToPlay, false, 0.75f);
-                        _isDyingAnimPlaying = true;
+                        if (!_isCrouch)
+                        {
+                            _model.ChangeAnimSpeed(2f);
+                            _model.ChangeAnimation(animToPlay, false, 0.75f);
+                            _isDyingAnimPlaying = true;
+                        }
                     }
                     _life = 0;
                 }
             }
+        }
+
+        // This function allows us to find the good rotation to apply on the enemy when it is died
+        // With this, we can rotate the mesh to make it aligned with the terrain.
+        private Matrix GetTerrainNormalRotation(Vector3 position)
+        {
+            // Get the normal of the plane
+            Vector3 normal = _physicEngine.GetNormal(position);
+            Vector3 currentNormal = new Vector3(0f,1f,0f);
+
+            Vector3 axis = Vector3.Normalize(Vector3.Cross(currentNormal, normal));
+
+            float angle = (float)Math.Acos(Vector3.Dot(currentNormal, normal));
+
+            return Matrix.CreateFromAxisAngle(axis, angle) * Matrix.CreateRotationX(MathHelper.Pi);
         }
 
         public Matrix GetModelMatrix()

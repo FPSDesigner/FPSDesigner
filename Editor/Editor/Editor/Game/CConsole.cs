@@ -214,6 +214,9 @@ namespace Engine.Game
                         CEnemyManager._enemyList[0].FollowPlayer(gameTime);
                     }
                     break;
+                case "crouchEnemy":
+                    CEnemyManager._enemyList[0].Crouch();
+                    break;
                 case "enemyInfo":
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : " +
                         CEnemyManager._enemyList[0]._life + " %\n");
