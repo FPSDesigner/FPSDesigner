@@ -110,7 +110,7 @@ namespace Engine.Game
             if (false) // Is aiming here, we send pitch
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
-            SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw) + "/" + pitch + "/0|");
+            SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|");
         }
 
         public void PlayerDisconnected(int id)
