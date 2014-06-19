@@ -224,16 +224,16 @@ namespace Engine.Game
                         Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
                     break;
                 case "connect":
-                    if (cmd.Length > 1)
-                    {
+                    
                         string IP = "127.0.0.1";
                         string Name = "John";
+                        int Port;
 
-                        int Port = 7777;
-                        if (cmd[1].Contains(':'))
+                        if (cmd.Length > 1 && cmd[1].Contains(':'))
                         {
                             IP = cmd[1].Split(':')[0];
-                            Int32.TryParse(cmd[1].Split(':')[1], out Port);
+                            if(!Int32.TryParse(cmd[1].Split(':')[1], out Port))
+                                Port = 7777;
                         }
                         else
                             IP = cmd[1];
