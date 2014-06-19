@@ -15,6 +15,7 @@ namespace Engine.Game
     class CEnemyManager
     {
         public static List<CEnemy> _enemyList = new List<CEnemy>();
+        private static List<CEnemy> enemiesToAddQueue = new List<CEnemy>(); // MultiThread pb hack
 
         public static SpriteFont _hudFont;
 
@@ -27,7 +28,7 @@ namespace Engine.Game
 
         public static void AddEnemy(ContentManager content, Display3D.CCamera cam, CEnemy enemy)
         {
-            _enemyList.Add(enemy);
+            enemiesToAddQueue.Add(enemy);
             enemy.LoadContent(content, cam);
         }
 
@@ -42,11 +43,21 @@ namespace Engine.Game
             _enemyList.RemoveAt(eltId);
         }
 
+        public static void RemoveBot(CEnemy enemy)
+        {
+            _enemyList.Remove(enemy);
+        }
+
         public static void Update(GameTime gameTime, Display3D.CCamera cam)
         {
+            if (enemiesToAddQueue.Count > 0)
+            {
+                _enemyList.AddRange(enemiesToAddQueue);
+                enemiesToAddQueue.Clear();
+            }
+
             foreach (CEnemy enemy in _enemyList)
                 enemy.Update(gameTime, cam);
-
         }
 
         public static void AddEnemyHud(SpriteBatch sb, Display3D.CCamera cam)

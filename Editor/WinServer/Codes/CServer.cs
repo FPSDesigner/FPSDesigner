@@ -70,7 +70,7 @@ namespace WinServer.Codes
                     {
                         CPlayer newPlayer = new CPlayer(GetNewUniqueID(), info[3], remoteEP);
                         playerList.Add(newPlayer);
-                        GlobalVars.AddNewMessage("New player (" + info[3] + ") successfuly connected!");
+                        GlobalVars.AddNewMessage("New player (" + info[3] + ", ID: " + newPlayer.ID + ") successfuly connected!");
 
                         foreach (CPlayer pl in playerList)
                             if (pl != newPlayer)
@@ -115,10 +115,10 @@ namespace WinServer.Codes
 
         public void DisconnectPlayer(CPlayer player)
         {
-            playerList.Remove(player);
+            //playerList.Remove(player);
 
-            foreach (CPlayer pl in playerList)
-                SendMessage("QUIT|" + player.ID, pl.endPoint);
+            /*foreach (CPlayer pl in playerList)
+                SendMessage("QUIT|" + player.ID, pl.endPoint);*/
         }
 
         private byte[] GetBytes(string str)
@@ -141,10 +141,16 @@ namespace WinServer.Codes
             while (true)
             {
                 id++;
+                bool found = false;
                 foreach (CPlayer pl in playerList)
                     if (pl.ID == id)
-                        continue;
-                break;
+                    {
+                        found = true;
+                        break;
+                    }
+
+                if(!found)
+                    break;
             }
             return id;
         }
@@ -174,7 +180,7 @@ namespace WinServer.Codes
             else if (type == SentData.Float)
             {
                 float ret;
-                if (float.TryParse(msg, out ret))
+                if (float.TryParse(msg, out ret) || float.TryParse(msg.Replace('.', ','), out ret))
                     return ret;
                 else
                     return 0f;

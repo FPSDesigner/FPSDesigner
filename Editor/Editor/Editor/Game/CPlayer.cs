@@ -26,11 +26,17 @@ namespace Engine.Game
             Texture2D[] textures = new Texture2D[1];
             textures[0] = Display2D.C2DEffect._content.Load<Texture2D>("Textures\\StormTrooper");
             botController = new CEnemy("StormTrooperAnimation", textures, pos, Matrix.CreateFromYawPitchRoll(0,0,0), 100f, 20, 10, false, Name, 2);
+            Game.CEnemyManager.AddEnemy(Display2D.C2DEffect._content, CConsole._Camera, botController);
         }
 
         public void SetNewPos(Vector3 pos, Vector3 rot)
         {
             botController._position = pos;
+        }
+
+        public void Disconnect()
+        {
+            Game.CEnemyManager.RemoveBot(botController);
         }
     }
 }

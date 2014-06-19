@@ -81,6 +81,10 @@ namespace Engine.Game
                 else if (receivedData.StartsWith("JOIN|")) // New player
                 {
                     int id = Int32.Parse(datas[1]);
+
+                    if (listPlayers.ContainsKey(id))
+                        PlayerDisconnected(id);
+
                     CPlayer newPlayer = new CPlayer(id, datas[2], (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                     listPlayers.Add(id, newPlayer);
                 }
@@ -107,6 +111,15 @@ namespace Engine.Game
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
             SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw) + "/" + pitch + "|");
+        }
+
+        public void PlayerDisconnected(int id)
+        {
+            if (listPlayers.ContainsKey(id))
+            {
+                listPlayers[id].Disconnect();
+                listPlayers.Remove(id);
+            }
         }
 
 
@@ -155,7 +168,7 @@ namespace Engine.Game
             else if (type == SentData.Float)
             {
                 float ret;
-                if (float.TryParse(msg, out ret))
+                if (float.TryParse(msg, out ret) || float.TryParse(msg.Replace('.', ','), out ret))
                     return ret;
                 else
                     return 0f;
