@@ -224,13 +224,25 @@ namespace Engine.Game
                         Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
                     break;
                 case "connect":
-                    if (cmd.Length > 1 && cmd[1].Contains(":"))
+                    if (cmd.Length > 1)
                     {
-                        string IP = cmd[1].Split(':')[0];
-                        string Port = cmd[1].Split(':')[1];
+                        string IP = "127.0.0.1";
+                        string Name = "John";
 
-                        CMultiplayer mp = new CMultiplayer("John");
-                        mp.Connect("127.0.0.1", 7777);
+                        int Port = 7777;
+                        if (cmd[1].Contains(':'))
+                        {
+                            IP = cmd[1].Split(':')[0];
+                            Int32.TryParse(cmd[1].Split(':')[1], out Port);
+                        }
+                        else
+                            IP = cmd[1];
+
+                        if (cmd.Length > 2)
+                            Name = cmd[2];
+
+                        CMultiplayer mp = new CMultiplayer(Name);
+                        mp.Connect(IP, Port);
                         mp.Run();
                     }
                     break;

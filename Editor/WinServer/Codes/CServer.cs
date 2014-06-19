@@ -74,7 +74,10 @@ namespace WinServer.Codes
 
                         foreach (CPlayer pl in playerList)
                             if (pl != newPlayer)
+                            {
                                 SendMessage("JOIN|" + newPlayer.ID + "|" + info[3] + "|" + info[4], pl.endPoint);
+                                SendMessage("JOIN|" + pl.ID + "|0/0/0|0/0", newPlayer.endPoint);
+                            }
                     }
                     else
                         GlobalVars.AddNewMessage("Incorrect connection request: [b]" + data + "[/b]");
