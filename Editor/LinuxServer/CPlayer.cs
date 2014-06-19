@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Net;
 
-namespace WinServer.Codes
+namespace LinuxServer
 {
     class CPlayer
     {

@@ -61,6 +61,8 @@ namespace Engine.Game
 
         public static bool ShouldQuitFromLua = false;
 
+        public static CMultiplayer multiInstance;
+
         /// <summary>
         /// Process new commands
         /// </summary>
@@ -241,9 +243,9 @@ namespace Engine.Game
                     if (cmd.Length > 2)
                         Name = cmd[2];
 
-                    CMultiplayer mp = new CMultiplayer(Name);
-                    mp.Connect(IP, Port);
-                    mp.Run();
+                    multiInstance = new CMultiplayer(Name);
+                    multiInstance.Connect(IP, Port);
+                    multiInstance.Run();
 
                     break;
             }

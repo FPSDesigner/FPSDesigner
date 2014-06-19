@@ -191,6 +191,17 @@ namespace Engine
             Game.CGameManagement.UnloadContent(Content);
         }
 
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+
+            Game.CConsole.addMessage("Unloading content... Exiting game...");
+            if (Game.CConsole.multiInstance != null)
+            {
+                Game.CConsole.multiInstance.Disconnect();
+            }
+        }
+
         protected override void Update(GameTime gameTime)
         {
             if (isSoftwareEmbedded || base.IsActive)

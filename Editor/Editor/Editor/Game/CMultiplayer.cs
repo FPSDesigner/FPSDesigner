@@ -27,6 +27,7 @@ namespace Engine.Game
         private Timer timerSendInfo;
 
         private bool isConnected = false;
+        private int tickRate = 128;
 
         private Dictionary<int, CPlayer> listPlayers;
 
@@ -41,6 +42,7 @@ namespace Engine.Game
         public CMultiplayer(string username)
         {
             userName = username;
+            tickRate = 1000 / tickRate;
             ClientHandler = new UdpClient();
             listPlayers = new Dictionary<int, CPlayer>();
         }
@@ -76,7 +78,7 @@ namespace Engine.Game
                 if (receivedData.StartsWith("OK|")) // Connection success
                 {
                     CConsole.addMessage("Connection succeed to " + EndPoint.ToString() + " (" + receivedData.Replace("OK|", "") + ")!");
-                    timerSendInfo = new Timer(new TimerCallback(SendServerInformations), null, 1000, 333);
+                    timerSendInfo = new Timer(new TimerCallback(SendServerInformations), null, 1000, tickRate);
                 }
                 else if (receivedData.StartsWith("JOIN|")) // New player
                 {
@@ -96,10 +98,17 @@ namespace Engine.Game
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                     }
                 }
+                else if (receivedData.StartsWith("QUIT|")) // Server message
+                {
+                    int ID;
+                    if (Int32.TryParse(datas[1], out ID))
+                        PlayerDisconnected(ID);
+                }
                 else if (receivedData.StartsWith("ECHO|")) // Server message
                 {
                     CConsole.addMessage("Server: "+receivedData.Replace("ECHO|", ""));
                 }
+
 
             }
         }
@@ -178,6 +187,13 @@ namespace Engine.Game
 
         public void Disconnect()
         {
+            isConnected = false;
+
+            SendMessage("QUIT");
+
+            foreach (KeyValuePair<int, CPlayer> pl in listPlayers)
+                pl.Value.Disconnect();
+
             timerSendInfo.Dispose();
 
             try
