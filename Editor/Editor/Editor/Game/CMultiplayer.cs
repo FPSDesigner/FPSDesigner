@@ -93,7 +93,7 @@ namespace Engine.Game
                     int ID;
                     if(Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
                     {
-                        listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), Vector3.Zero);
+                        listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                     }
                 }
                 else if (receivedData.StartsWith("ECHO|")) // Server message
@@ -110,7 +110,7 @@ namespace Engine.Game
             if (false) // Is aiming here, we send pitch
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
-            SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw) + "/" + pitch + "|");
+            SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw) + "/" + pitch + "/0|");
         }
 
         public void PlayerDisconnected(int id)

@@ -32,6 +32,7 @@ namespace Engine.Game
         public void SetNewPos(Vector3 pos, Vector3 rot)
         {
             botController._position = pos;
+            botController.rotationValue = rot.X;
         }
 
         public void Disconnect()

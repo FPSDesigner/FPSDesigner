@@ -39,7 +39,6 @@ namespace WinServer.Codes
             GlobalVars.AddNewMessage("* Hostname: [b]" + GlobalVars.serverInfo.Properties.HostName + "[/b]");
             GlobalVars.AddNewMessage("* Players: [b]0/" + GlobalVars.serverInfo.Properties.MaxPlayers + "[/b]");
             GlobalVars.AddNewMessage("Server started! Waiting for players...");
-            GlobalVars.AddNewMessage("Val: " + ExtractDataFromString("-14.12", SentData.Float));
         }
 
         public void Run()
@@ -93,7 +92,7 @@ namespace WinServer.Codes
                     {
                         foreach (CPlayer pl in playerList)
                             if (pl != PlayerWriting)
-                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[1], pl.endPoint);
+                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2], pl.endPoint);
                     }
                 }
             }
