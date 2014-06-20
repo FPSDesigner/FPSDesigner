@@ -107,7 +107,7 @@ namespace Engine.Game
                     {
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
-                        listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[5], SentData.Bool));
+                        listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[6], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
