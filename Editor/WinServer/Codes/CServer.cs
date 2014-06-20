@@ -92,7 +92,7 @@ namespace WinServer.Codes
                     {
                         foreach (CPlayer pl in playerList)
                             if (pl != PlayerWriting)
-                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5], pl.endPoint);
+                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5] + "|" + info[6], pl.endPoint);
                     }
                     else if (data == "QUIT")
                     {

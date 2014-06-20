@@ -56,6 +56,9 @@ namespace Engine.Game
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
         public bool _isCrouched = false;
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
+        public bool _justShot = false;
+
+        public Ray _lastShot;
 
         private bool _isReloadingSoundPlayed = true;
 
@@ -425,6 +428,7 @@ namespace Engine.Game
             // We Call the shot function
             Shot(mouseState, oldMouseState, kbState, oldKbState, weapon, cam, gameTime);
 
+
             // ***** If he has shot : We play vibrations **** //
             if (CGameSettings.useGamepad)
             {
@@ -441,7 +445,6 @@ namespace Engine.Game
         {
             if (cam.isCamFrozen)
                 return;
-
             // If the player shot
             if (mouseState.LeftButton == ButtonState.Pressed ||
                 (CGameSettings.useGamepad && CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPShot)))
@@ -454,9 +457,10 @@ namespace Engine.Game
                         Point shotPosScreen =
                             new Point(_graphicsDevice.PresentationParameters.BackBufferWidth / 2, _graphicsDevice.PresentationParameters.BackBufferHeight / 2);
 
-                        // The Player can shot : enought bullets
+                        // The player can shot : enough bullets
                         if (weapon._weaponPossessed[weapon._selectedWeapon]._actualClip > 0)
                         {
+                            _justShot = true;
                             _isRecoilAffected += weapon._weaponPossessed[weapon._selectedWeapon]._recoilIntensity;
                             _recoilBackIntensity = weapon._weaponPossessed[weapon._selectedWeapon]._recoilBackIntensity;
 
@@ -492,7 +496,9 @@ namespace Engine.Game
                             if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
                             {
                                 Ray ray = new Ray(nearSource, direction);
+                                _lastShot = ray;
 
+                                Display3D.CSimpleShapes.AddLine(ray.Position, ray.Position + 3 * direction, Color.Green, 255f);
                                 float? distance;
                                 CEnemy enemy;
                                 string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);

@@ -103,7 +103,7 @@ namespace Engine.Game
                 else if (receivedData.StartsWith("SETINFO|")) // New player
                 {
                     int ID;
-                    if(Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
+                    if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
                     {
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
@@ -118,7 +118,7 @@ namespace Engine.Game
                 }
                 else if (receivedData.StartsWith("ECHO|")) // Server message
                 {
-                    CConsole.addMessage("Server: "+receivedData.Replace("ECHO|", ""));
+                    CConsole.addMessage("Server: " + receivedData.Replace("ECHO|", ""));
                 }
 
 
@@ -144,8 +144,24 @@ namespace Engine.Game
                 CConsole._Camera._justJumped = false;
             }
 
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump);
+            string lastshotRay = "";
+
+            if (CConsole._Character._justShot) // player shot
+            {
+                CConsole._Character._justShot = false;
+                foreach (KeyValuePair<int, CPlayer> pl in listPlayers)
+                {
+                    float? distance;
+                    string intersects = pl.Value.CheckIntersects(CConsole._Character._lastShot, out distance);
+                    if (intersects != "")
+                    {
+                        Console.WriteLine("HIT! " + intersects + " on " + pl.Value.userName);
+                    }
+                }
+            }
+
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay);
         }
 
         public void PlayerDisconnected(int id)

@@ -15,8 +15,8 @@ namespace Engine.Game
     class CPlayer
     {
         private CEnemy botController;
-        private string userName;
-        private int ID;
+        public string userName;
+        public int ID;
 
         private bool isCrouched = false;
 
@@ -55,6 +55,11 @@ namespace Engine.Game
         {
             if (toggle)
                 botController.Jump();
+        }
+
+        public string CheckIntersects(Ray ray, out float? distance)
+        {
+            return botController.RayIntersectsHitbox(ray, out distance);
         }
     }
 }
