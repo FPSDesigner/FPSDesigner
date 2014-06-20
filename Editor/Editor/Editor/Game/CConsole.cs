@@ -244,9 +244,10 @@ namespace Engine.Game
                         Name = cmd[2];
 
                     multiInstance = new CMultiplayer(Name);
-                    multiInstance.Connect(IP, Port);
-                    multiInstance.Run();
-
+                    if (multiInstance.Connect(IP, Port))
+                        multiInstance.Run();
+                    else
+                        Console.WriteLine("Couldn't connect (Invalid IP Address)");
                     break;
             }
         }

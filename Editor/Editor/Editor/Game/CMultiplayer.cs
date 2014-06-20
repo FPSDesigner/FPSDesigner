@@ -45,17 +45,26 @@ namespace Engine.Game
             tickRate = 1000 / tickRate;
             ClientHandler = new UdpClient();
             listPlayers = new Dictionary<int, CPlayer>();
+
+            /*ClientHandler.Client.SendTimeout = 5000;
+            ClientHandler.Client.ReceiveTimeout = 5000;*/
         }
 
-        public void Connect(string host, int port)
+        public bool Connect(string host, int port)
         {
-            EndPoint = new IPEndPoint(IPAddress.Parse(host), port);
-            ClientHandler.Connect(EndPoint);
+            IPAddress IP;
+            if (IPAddress.TryParse(host, out IP))
+            {
+                EndPoint = new IPEndPoint(IP, port);
+                ClientHandler.Connect(EndPoint);
 
-            SendMessage("req|" + ConnectionKey + "|" + port + "|" + userName + "|" + FormatDataToSend(CConsole._Camera._cameraPos));
+                SendMessage("req|" + ConnectionKey + "|" + port + "|" + userName + "|" + FormatDataToSend(CConsole._Camera._cameraPos));
 
-            CConsole.addMessage("Connecting to server...");
-            isConnected = true;
+                CConsole.addMessage("Connecting to server...");
+                isConnected = true;
+                return true;
+            }
+            return false;
         }
 
         public void Run()
@@ -140,16 +149,18 @@ namespace Engine.Game
 
         public byte[] GetBytes(string str)
         {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
+            /*byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
+            return bytes;*/
+            return System.Text.Encoding.ASCII.GetBytes(str);
         }
 
         public string GetString(byte[] bytes)
         {
-            char[] chars = new char[bytes.Length / sizeof(char)];
+            /*char[] chars = new char[bytes.Length / sizeof(char)];
             System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
+            return new string(chars);*/
+            return System.Text.Encoding.ASCII.GetString(bytes);
         }
 
         public string FormatDataToSend(object data)
