@@ -36,6 +36,7 @@ namespace Engine.Game
             Int,
             Float,
             Vector3,
+            Bool,
         };
 
 
@@ -105,6 +106,7 @@ namespace Engine.Game
                     if(Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
                     {
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
+                        listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
@@ -196,6 +198,10 @@ namespace Engine.Game
                     return ret;
                 else
                     return 0f;
+            }
+            else if (type == SentData.Bool)
+            {
+                return (msg == "1" || msg == "true");
             }
             return null;
         }

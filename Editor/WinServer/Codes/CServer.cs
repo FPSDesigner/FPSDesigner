@@ -23,6 +23,7 @@ namespace WinServer.Codes
             Int,
             Float,
             Vector3,
+            Bool,
         };
 
         public CServer(int port)
@@ -197,6 +198,10 @@ namespace WinServer.Codes
                     return ret;
                 else
                     return 0f;
+            }
+            else if (type == SentData.Bool)
+            {
+                return (msg == "1" || msg == "true");
             }
             return null;
         }
