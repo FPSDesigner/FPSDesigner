@@ -18,6 +18,8 @@ namespace Engine.Game
         private string userName;
         private int ID;
 
+        private bool isCrouched = false;
+
         public CPlayer(int PlayerID, string Name, Vector3 pos)
         {
             this.userName = Name;
@@ -38,6 +40,15 @@ namespace Engine.Game
         public void Disconnect()
         {
             Game.CEnemyManager.RemoveBot(botController);
+        }
+
+        public void SetCrouched(bool toggle)
+        {
+            if (isCrouched != toggle)
+            {
+                isCrouched = toggle;
+                botController.Crouch(toggle);
+            }
         }
     }
 }

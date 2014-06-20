@@ -415,9 +415,9 @@ namespace Engine.Game
             }
         }
 
-        public void Crouch()
+        public void Crouch(bool toggle)
         {
-            if (!_isCrouch)
+            if (!_isCrouch && toggle)
             {
                 _physicEngine._entityHeight /= 2f;
                 _runningVelocity /= 2f;
@@ -427,7 +427,7 @@ namespace Engine.Game
 
                 _isCrouch = true;
             }
-            else
+            else if(_isCrouch && !toggle)
             {
                 _physicEngine._entityHeight *= 2;
                 _runningVelocity *= 2;

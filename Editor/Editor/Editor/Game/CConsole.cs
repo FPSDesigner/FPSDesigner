@@ -217,7 +217,7 @@ namespace Engine.Game
                     }
                     break;
                 case "crouchEnemy":
-                    CEnemyManager._enemyList[0].Crouch();
+                    CEnemyManager._enemyList[0].Crouch(true);
                     break;
                 case "enemyInfo":
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : " +

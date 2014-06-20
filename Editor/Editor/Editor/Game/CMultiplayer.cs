@@ -125,10 +125,14 @@ namespace Engine.Game
         private void SendServerInformations(Object param)
         {
             string pitch = "0";
+            Vector3 pos = CConsole._Camera._cameraPos;
             if (false) // Is aiming here, we send pitch
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
-            SendMessage("INFO|"+FormatDataToSend(CConsole._Camera._cameraPos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|");
+            if (CConsole._Character._isCrouched)
+                pos = new Vector3(pos.X, pos.Y + (CConsole._Character._entityHeight - CConsole._Camera._physicsMap._entityHeight), pos.Z);
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched
+            SendMessage("INFO|"+FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0"));
         }
 
         public void PlayerDisconnected(int id)

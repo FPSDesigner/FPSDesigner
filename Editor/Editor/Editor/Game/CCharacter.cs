@@ -54,7 +54,7 @@ namespace Engine.Game
         private float _recoilBackIntensity = 0;
 
         private bool _isAiming = false; // Check if he was aiming to change the FOV just one time
-        private bool _isCrouched = false;
+        public bool _isCrouched = false;
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
 
         private bool _isReloadingSoundPlayed = true;
@@ -76,8 +76,8 @@ namespace Engine.Game
         public float _crouchSpeed = 3f;
         public float _movementsLerp = 0.25f;
 
-        private float _entityHeight; // Used to crouch the player with the physicsMap in Camera
-        private float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
+        public float _entityHeight; // Used to crouch the player with the physicsMap in Camera
+        public float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
 
         public Display3D.CTerrain _terrain;
 
