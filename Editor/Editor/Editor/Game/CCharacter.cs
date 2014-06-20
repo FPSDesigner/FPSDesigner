@@ -167,7 +167,6 @@ namespace Engine.Game
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
-            Console.WriteLine(_uniqueWeaponIdCarrying);
             _cam = cam;
 
             this._isUnderWater = isUnderWater;

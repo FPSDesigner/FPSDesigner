@@ -133,7 +133,9 @@ namespace Engine.Game
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
             if (CConsole._Character._isCrouched)
-                pos = new Vector3(pos.X, pos.Y + (CConsole._Character._entityHeight - CConsole._Camera._physicsMap._entityHeight), pos.Z);
+                pos = new Vector3(pos.X, pos.Y - (CConsole._Character._entityCrouch), pos.Z);
+            else
+                pos = new Vector3(pos.X, pos.Y - (CConsole._Character._entityHeight), pos.Z);
 
             // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid
             SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying);

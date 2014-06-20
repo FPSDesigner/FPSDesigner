@@ -47,7 +47,7 @@ namespace Engine.Game
             if (isCrouched != toggle)
             {
                 isCrouched = toggle;
-               // botController.Crouch(toggle);
+                botController.Crouch(toggle);
             }
         }
     }

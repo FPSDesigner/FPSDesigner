@@ -16,6 +16,7 @@ namespace Engine.Game
     {
         public static List<CEnemy> _enemyList = new List<CEnemy>();
         private static List<CEnemy> enemiesToAddQueue = new List<CEnemy>(); // MultiThread pb hack
+        private static List<CEnemy> enemiesToRemoveQueue = new List<CEnemy>(); // MultiThread pb hack
 
         public static SpriteFont _hudFont;
 
@@ -40,12 +41,12 @@ namespace Engine.Game
 
         public static void RemoveBot(int eltId)
         {
-            _enemyList.RemoveAt(eltId);
+            RemoveBot(_enemyList[eltId]);
         }
 
         public static void RemoveBot(CEnemy enemy)
         {
-            _enemyList.Remove(enemy);
+            enemiesToRemoveQueue.Add(enemy);
         }
 
         public static void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -54,6 +55,12 @@ namespace Engine.Game
             {
                 _enemyList.AddRange(enemiesToAddQueue);
                 enemiesToAddQueue.Clear();
+            }
+            if (enemiesToRemoveQueue.Count > 0)
+            {
+                foreach (CEnemy enemy in enemiesToRemoveQueue)
+                    _enemyList.Remove(enemy);
+                enemiesToRemoveQueue.Clear();
             }
 
             foreach (CEnemy enemy in _enemyList)
