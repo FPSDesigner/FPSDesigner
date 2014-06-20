@@ -219,6 +219,9 @@ namespace Engine.Game
                 case "crouchEnemy":
                     CEnemyManager._enemyList[0].Crouch(true);
                     break;
+                case "jumpEnemy":
+                    CEnemyManager._enemyList[0].Jump();
+                    break;
                 case "enemyInfo":
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : " +
                         CEnemyManager._enemyList[0]._life + " %\n");

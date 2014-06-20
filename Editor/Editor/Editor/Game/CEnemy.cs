@@ -152,6 +152,7 @@ namespace Engine.Game
         private bool _isHeadShot; // The character took an headshot
         private bool _isFollowingPlayer;
         private bool _isCrouch;
+        private bool _isJumping;
 
         public bool _isFrozen; // Use to stop translation
 
@@ -202,6 +203,7 @@ namespace Engine.Game
             _isShoting = false;
             _isFollowingPlayer = false;
             _isCrouch = false;
+            _isJumping = false;
 
             _targetPos = _position; // The AI is not moving
 
@@ -243,7 +245,7 @@ namespace Engine.Game
             if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
             {
                 // The character is waiting
-                if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch)
+                if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(0.4f);
                     _model.ChangeAnimation("machete_wait", true, 0.8f);
@@ -253,27 +255,27 @@ namespace Engine.Game
                 }
 
                 // The Character is running
-                if (_isMoving && !_isWalkAnimPlaying && !_isCrouch)
+                if (_isMoving && !_isWalkAnimPlaying && !_isCrouch && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("machete_walk", true, 0.5f);
+                    _model.ChangeAnimation("heavy_walk", true, 0.5f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
                 }
 
                 // The character is waiting crouched
-                if (_isCrouch && !_isMoving && !_isWaitAnimPlaying)
+                if (_isCrouch && !_isMoving && !_isWaitAnimPlaying && !_isJumping)
                 {
-                    _model.ChangeAnimSpeed(0.4f);
+                    _model.ChangeAnimSpeed(0.8f);
                     _model.ChangeAnimation("machete_wait-crouch", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
                 }
 
-                // The Character is running
-                if (_isCrouch && _isMoving && !_isWalkAnimPlaying)
+                // The Character is walking crouched
+                if (_isCrouch && _isMoving && !_isWalkAnimPlaying && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(2.5f);
                     _model.ChangeAnimation("machete_walk-crouch", true, 0.3f);
@@ -313,6 +315,14 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
             }
 
+            if (_isJumping && _model.HasFinished())
+            {
+                _model.ChangeAnimSpeed(2.5f);
+                _model.ChangeAnimation("machete_walk", true, 0.5f);
+
+                _isJumping = false;
+            }
+
             _model.Update(gameTime, _position, _rotation);
 
             // new target is the camera position
@@ -334,7 +344,9 @@ namespace Engine.Game
                 _isMoving = true;
             }
             else
+            {
                 _isMoving = false;
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)
@@ -404,6 +416,15 @@ namespace Engine.Game
                 translation *= _runningVelocity;
 
                 _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+            }
+        }
+
+        public void Jump()
+        {
+            if (!_isJumping)
+            {
+                _model.ChangeAnimSpeed(2.0f);
+                _model.ChangeAnimation("oneHand_jump", false, 0.65f);
             }
         }
 
