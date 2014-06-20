@@ -50,5 +50,11 @@ namespace Engine.Game
                 botController.Crouch(toggle);
             }
         }
+
+        public void SetJump(bool toggle)
+        {
+            if (toggle)
+                botController.Jump();
+        }
     }
 }

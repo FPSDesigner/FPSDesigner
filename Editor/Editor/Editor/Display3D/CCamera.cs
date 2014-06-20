@@ -53,6 +53,7 @@ namespace Engine.Display3D
         private float _elapsedStepTime; // We play after a time the new step sound
         private bool _isPitchShiftedStepSound;
         public float sensibilityMultiplier = 1;
+        public bool _justJumped = false;
 
         public float _playerHeight = 1.9f;
 
@@ -225,7 +226,10 @@ namespace Engine.Display3D
                     _translation += new Vector3(direction.X, 0, -direction.Y);
 
                     if (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPJump))
+                    {
                         _physicsMap.Jump();
+                        _justJumped = true;
+                    }
                 }
 
                 if (keyState.IsKeyDown(CGameSettings._gameSettings.KeyMapping.MForward))
@@ -244,7 +248,10 @@ namespace Engine.Display3D
 
 
                 if (keyState.IsKeyDown(Keys.Space))
+                {
                     _physicsMap.Jump();
+                    _justJumped = true;
+                }
             }
 
             if (!isFreeCam)

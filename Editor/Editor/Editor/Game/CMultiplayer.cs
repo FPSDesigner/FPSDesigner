@@ -107,6 +107,7 @@ namespace Engine.Game
                     {
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
+                        listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[5], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
@@ -126,7 +127,7 @@ namespace Engine.Game
 
         private void SendServerInformations(Object param)
         {
-            string pitch = "0";
+            string pitch = "0", jump = "0";
             Vector3 pos = CConsole._Camera._cameraPos;
             int wepId = -1;
             if (false) // Is aiming here, we send pitch
@@ -137,8 +138,14 @@ namespace Engine.Game
             else
                 pos = new Vector3(pos.X, pos.Y - (CConsole._Character._entityHeight), pos.Z);
 
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying);
+            if (CConsole._Camera._justJumped)
+            {
+                jump = "1";
+                CConsole._Camera._justJumped = false;
+            }
+
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump);
         }
 
         public void PlayerDisconnected(int id)
