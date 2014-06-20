@@ -79,6 +79,9 @@ namespace Engine.Game
         public float _entityHeight; // Used to crouch the player with the physicsMap in Camera
         public float _entityCrouch; // Used to crouch the player with the physicsMap in Camera
 
+        public float _mpCrouchCorrection = -99f;
+        public float _uniqueWeaponIdCarrying = 0;
+
         public Display3D.CTerrain _terrain;
 
         public void Initialize()
@@ -95,6 +98,7 @@ namespace Engine.Game
             _entityCrouch = _entityHeight * 0.58f;
 
             _futurSelectedWeapon = weap._selectedWeapon;
+            SetUniqueWepId(weap);
 
             _handTexture[0] = content.Load<Texture2D>(handTexture);
             _handAnimation = new Display3D.MeshAnimation("Arm_Animation(Smoothed)", 1, 1, 1.0f, new Vector3(0, 0, 0), _handRotation, 0.03f, _handTexture, 8, 0.05f, true);
@@ -163,7 +167,7 @@ namespace Engine.Game
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
-
+            Console.WriteLine(_uniqueWeaponIdCarrying);
             _cam = cam;
 
             this._isUnderWater = isUnderWater;
@@ -185,6 +189,7 @@ namespace Engine.Game
 
             _handAnimation.Update(gameTime, _handPos, _handRotation);
 
+            //Console.WriteLine(weapon._weaponsArray);
             // If he changed weapon
             ChangeWeapon(weapon, mouseState);
 
@@ -752,10 +757,12 @@ namespace Engine.Game
                         _isAiming = false;
                         _isSniping = false;
 
+
                         _handAnimation.InverseMode("forward");
                         _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
                         _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
                         _isSwitchingAnimPlaying = true;
+                        SetUniqueWepId(weapon);
                     }
                     else if (mouseState.ScrollWheelValue < _previousScrollWheelValue)
                     {
@@ -779,6 +786,7 @@ namespace Engine.Game
                         _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
                         _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
                         _isSwitchingAnimPlaying = true;
+                        SetUniqueWepId(weapon);
                     }
 
                     //// Switching weapons with a GamePad
@@ -808,8 +816,16 @@ namespace Engine.Game
                 _handAnimation.ChangeAnimSpeed(weapon._weaponPossessed[weapon._selectedWeapon]._animVelocity[4]);
                 _handAnimation.ChangeAnimation(weapon._weaponPossessed[weapon._selectedWeapon]._weapAnim[4], false);
                 _isSwitchingAnimPlaying = true;
+                SetUniqueWepId(weapon);
             }
             _previousScrollWheelValue = mouseState.ScrollWheelValue;
+        }
+
+        private void SetUniqueWepId(CWeapon weapon)
+        {
+            for (int i = 0; i < weapon._weaponsArray.Count; i++)
+                if (weapon._weaponsArray[i]._name == weapon._weaponPossessed[_futurSelectedWeapon]._name)
+                    _uniqueWeaponIdCarrying = i;
         }
 
         // Reloading function

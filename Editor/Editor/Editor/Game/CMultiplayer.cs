@@ -128,13 +128,15 @@ namespace Engine.Game
         {
             string pitch = "0";
             Vector3 pos = CConsole._Camera._cameraPos;
+            int wepId = -1;
             if (false) // Is aiming here, we send pitch
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 
             if (CConsole._Character._isCrouched)
                 pos = new Vector3(pos.X, pos.Y + (CConsole._Character._entityHeight - CConsole._Camera._physicsMap._entityHeight), pos.Z);
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched
-            SendMessage("INFO|"+FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0"));
+
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying);
         }
 
         public void PlayerDisconnected(int id)
