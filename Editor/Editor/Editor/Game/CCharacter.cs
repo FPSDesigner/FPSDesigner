@@ -513,10 +513,10 @@ namespace Engine.Game
 
                                         switch (boxTouched)
                                         {
-                                            case "Bb_Head":
+                                            case "bb_Head":
                                                 enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
                                                 break;
-                                            case "Bb_Body":
+                                            case "bb_Body":
                                                 enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
                                                 break;
                                         }

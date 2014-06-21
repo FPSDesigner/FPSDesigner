@@ -117,7 +117,7 @@ namespace Engine.Display3D
                 string newName = mesh.Name.Split('_')[0];
 
                 // If the mesh is not a bounding box
-                if (newName != "Bb")
+                if (newName != "bb")
                 {
                     // If undrawable mesh is empty 
                     if (unDrawable == null || !unDrawable.Contains<string>(newName))
