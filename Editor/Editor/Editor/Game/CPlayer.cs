@@ -54,7 +54,7 @@ namespace Engine.Game
         public void SetJump(bool toggle)
         {
             if (toggle)
-                botController.Jump();
+                botController.SetJump();
         }
 
         public string CheckIntersects(Ray ray, out float? distance)

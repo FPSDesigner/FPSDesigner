@@ -220,7 +220,7 @@ namespace Engine.Game
                     CEnemyManager._enemyList[0].Crouch(true);
                     break;
                 case "jumpEnemy":
-                    CEnemyManager._enemyList[0].Jump();
+                    CEnemyManager._enemyList[0].SetJump();
                     break;
                 case "enemyInfo":
                     addMessage("Is Agressive : " + CEnemyManager._enemyList[0]._isAgressive + "\n Life : " +

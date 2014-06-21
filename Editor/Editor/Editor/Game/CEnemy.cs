@@ -174,6 +174,7 @@ namespace Engine.Game
         private bool _isWalkAnimPlaying;
         private bool _isDyingAnimPlaying;
         private bool _isFrozenAnimPlaying;
+        private bool _isReloading;
 
         private float _height = 1.9f;
 
@@ -217,6 +218,7 @@ namespace Engine.Game
             _isFollowingPlayer = false;
             _isCrouch = false;
             _isJumping = false;
+            _isReloading = false;
 
             _targetPos = _position; // The AI is not moving
 
@@ -336,6 +338,20 @@ namespace Engine.Game
                 _isJumping = false;
             }
 
+            if (_isReloading && _model.HasFinished())
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("machete_walk-crouch", true, 0.5f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("machete_walk", true, 0.5f);
+                }
+            }
+
             _model.Update(gameTime, _position, _rotation);
 
             // new target is the camera position
@@ -432,15 +448,6 @@ namespace Engine.Game
             }
         }
 
-        public void Jump()
-        {
-            if (!_isJumping)
-            {
-                _model.ChangeAnimSpeed(2.0f);
-                _model.ChangeAnimation("oneHand_jump", false, 0.65f);
-            }
-        }
-
         public void FollowPlayer(GameTime gameTime)
         {
             if (!_isFrozen && !_isDead)
@@ -470,6 +477,75 @@ namespace Engine.Game
                 _model.ChangeAnimation("machete_walk", true, 0.8f);
 
                 _isCrouch = false;
+            }
+        }
+
+        public void SetJump()
+        {
+            if (!_isJumping)
+            {
+                _model.ChangeAnimSpeed(2.0f);
+                _model.ChangeAnimation("oneHand_jump", false, 0.65f);
+
+                _isJumping = true;
+            }
+        }
+
+        public void SetReload()
+        {
+            if (!_isReloading)
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("handgun_reload-crouch", true, 0.55f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("handgun_reload", true, 0.55f);
+                }
+
+                _isReloading = true;
+                _isWalkAnimPlaying = false;
+                _isWaitAnimPlaying = false;
+            }
+        }
+
+        public void SetWalk(bool toggle)
+        {
+            if (toggle)
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("bow_walk-crouch", true, 0.55f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("bow_walk", true, 0.55f);
+                }
+
+                _isWalkAnimPlaying = true;
+                _isWaitAnimPlaying = false;
+            }
+
+            else
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("bow_wait-crouch", true, 0.55f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation("bow_wait", true, 0.55f);
+                }
+
+                _isWalkAnimPlaying = false;
+                _isWaitAnimPlaying = true;
             }
         }
 
