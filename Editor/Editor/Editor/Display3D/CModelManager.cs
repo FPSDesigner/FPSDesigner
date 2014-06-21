@@ -58,11 +58,12 @@ namespace Engine.Display3D
             }
         }
 
-        public static void addModel(ContentManager content, CModel model)
+        public static int addModel(ContentManager content, CModel model)
         {
             modelsList.Add(model);
             renderer.Models.Add(model);
             model.LoadContent(content);
+            return modelsList.IndexOf(model);
         }
 
         public static void Draw(CCamera cam, GameTime gameTime)

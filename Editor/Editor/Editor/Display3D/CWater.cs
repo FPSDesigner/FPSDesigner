@@ -33,9 +33,10 @@ namespace Engine.Display3D
             }
         }
 
-        public static void AddWater(CWater water)
+        public static int AddWater(CWater water)
         {
             listWater.Add(water);
+            return listWater.IndexOf(water);
         }
 
         public static void PreDraw(CCamera camera, GameTime gameTime)
@@ -131,6 +132,8 @@ namespace Engine.Display3D
         public RenderTarget2D reflectionTarg;
         public List<IRenderable> Objects = new List<IRenderable>();
 
+        public Vector3 _waterDeepestPoint;
+
         private Vector3 _waterPosition;
         public Vector3 waterPosition
         {
@@ -139,6 +142,7 @@ namespace Engine.Display3D
             {
                 _waterPosition = value;
                 waterMesh._modelPosition = _waterPosition;
+                GenerateBoundingBoxes();
             }
         }
 
@@ -204,6 +208,7 @@ namespace Engine.Display3D
 
             this._waterPosition = position;
             this._waterSize = size;
+            this._waterDeepestPoint = deepestPoint;
 
             waterMesh = new CModel(content.Load<Model>("3D/plane"), position, Vector3.Zero, new Vector3(size.X, 1, size.Y), graphics);
 
@@ -220,16 +225,19 @@ namespace Engine.Display3D
 
             reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true);
 
-            List<Vector3> list = new List<Vector3>();
-            list.Add(new Vector3(position.X - size.X, position.Y, position.Z - size.Y));
-            list.Add(new Vector3(position.X + size.X, position.Y, position.Z - size.Y));
-            list.Add(new Vector3(position.X - size.X, position.Y, position.Z + size.Y));
-            list.Add(new Vector3(position.X + size.X, position.Y, position.Z + size.Y));
-            BoundingBoxChunk = BoundingBox.CreateFromPoints(list);
-            list.Add(deepestPoint);
-            RealBoundingBox = BoundingBox.CreateFromPoints(list);
-
             pickWorld = Matrix.CreateTranslation(Vector3.Zero);
+        }
+
+        public void GenerateBoundingBoxes()
+        {
+            List<Vector3> list = new List<Vector3>();
+            list.Add(new Vector3(_waterPosition.X - _waterSize.X, _waterPosition.Y, _waterPosition.Z - _waterSize.Y));
+            list.Add(new Vector3(_waterPosition.X + _waterSize.X, _waterPosition.Y, _waterPosition.Z - _waterSize.Y));
+            list.Add(new Vector3(_waterPosition.X - _waterSize.X, _waterPosition.Y, _waterPosition.Z + _waterSize.Y));
+            list.Add(new Vector3(_waterPosition.X + _waterSize.X, _waterPosition.Y, _waterPosition.Z + _waterSize.Y));
+            BoundingBoxChunk = BoundingBox.CreateFromPoints(list);
+            list.Add(new Vector3(_waterPosition.X, _waterDeepestPoint.Y, _waterPosition.Z));
+            RealBoundingBox = BoundingBox.CreateFromPoints(list);
         }
 
         /// <summary>

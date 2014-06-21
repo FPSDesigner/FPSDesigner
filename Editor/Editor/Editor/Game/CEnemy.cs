@@ -51,6 +51,20 @@ namespace Engine.Game
 
         public static void Update(GameTime gameTime, Display3D.CCamera cam)
         {
+            FixQueuedBots();
+
+            foreach (CEnemy enemy in _enemyList)
+                enemy.Update(gameTime, cam);
+        }
+
+        public static void AddEnemyHud(SpriteBatch sb, Display3D.CCamera cam)
+        {
+            foreach (CEnemy enemy in _enemyList)
+                enemy.AddEnemyHUD(sb, cam);
+        }
+
+        public static void FixQueuedBots()
+        {
             if (enemiesToAddQueue.Count > 0)
             {
                 _enemyList.AddRange(enemiesToAddQueue);
@@ -62,15 +76,6 @@ namespace Engine.Game
                     _enemyList.Remove(enemy);
                 enemiesToRemoveQueue.Clear();
             }
-
-            foreach (CEnemy enemy in _enemyList)
-                enemy.Update(gameTime, cam);
-        }
-
-        public static void AddEnemyHud(SpriteBatch sb, Display3D.CCamera cam)
-        {
-            foreach (CEnemy enemy in _enemyList)
-                enemy.AddEnemyHUD(sb, cam);
         }
 
         public static string RayIntersectsHitbox(Ray ray, out float? distance, out CEnemy enemyVal)
@@ -103,6 +108,7 @@ namespace Engine.Game
 
         public static void UpdateGameLevel(ref Game.LevelInfo.LevelData lvl)
         {
+            FixQueuedBots();
             for (int i = 0; i < _enemyList.Count; i++)
             {
                 CEnemy enemy = _enemyList[i];
@@ -173,7 +179,7 @@ namespace Engine.Game
 
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
-        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity,float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
+        public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity, float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
         {
             _position = Position;
             _scale = new Vector3(0.3f);
@@ -294,7 +300,7 @@ namespace Engine.Game
                 _isFrozenAnimPlaying = false;
             }
 
-            else if(_isFrozen && !_isFrozenAnimPlaying)
+            else if (_isFrozen && !_isFrozenAnimPlaying)
             {
                 _model.ChangeAnimation("frozen", true, 0.8f);
                 _isFrozenAnimPlaying = true;
@@ -366,7 +372,7 @@ namespace Engine.Game
                 _model.Draw(gameTime, spriteBatch, view, projection);
             else
             {
-                string[] undrawable = new string [1];
+                string[] undrawable = new string[1];
                 undrawable[0] = "Head";
                 _model.Draw(gameTime, spriteBatch, view, projection, undrawable);
             }
@@ -455,7 +461,7 @@ namespace Engine.Game
 
                 _isCrouch = true;
             }
-            else if(_isCrouch && !toggle)
+            else if (_isCrouch && !toggle)
             {
                 _physicEngine._entityHeight *= 2;
                 _runningVelocity *= 2;
@@ -507,7 +513,7 @@ namespace Engine.Game
         {
             // Get the normal of the plane
             Vector3 normal = _physicEngine.GetNormal(position);
-            Vector3 currentNormal = new Vector3(0f,1f,0f);
+            Vector3 currentNormal = new Vector3(0f, 1f, 0f);
 
             Vector3 axis = Vector3.Normalize(Vector3.Cross(currentNormal, normal));
 
@@ -563,6 +569,7 @@ namespace Engine.Game
             GenerateHitBoxesTriangles();
             foreach (Display3D.Triangle tri in GetRealTriangles())
             {
+                Display3D.CSimpleShapes.AddTriangle(tri.V0, tri.V1, tri.V2, Color.Blue, 255f);
                 Display3D.Triangle triangle = tri;
                 float? dist = Display3D.TriangleTest.Intersects(ref ray, ref triangle);
                 if (dist.HasValue)

@@ -172,6 +172,7 @@
                 <TreeView Grid.Row="1" x:Name="AvailableComponentsList" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,20,0,3">
                     <TreeViewItem Header="Models"></TreeViewItem>
                     <TreeViewItem Header="Pick-Ups"></TreeViewItem>
+                    <TreeViewItem Header="Lights"></TreeViewItem>
                 </TreeView>
 
 

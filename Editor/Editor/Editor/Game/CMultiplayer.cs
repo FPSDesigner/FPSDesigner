@@ -153,6 +153,7 @@ namespace Engine.Game
                 {
                     float? distance;
                     string intersects = pl.Value.CheckIntersects(CConsole._Character._lastShot, out distance);
+
                     if (intersects != "")
                     {
                         Console.WriteLine("HIT! " + intersects + " on " + pl.Value.userName);

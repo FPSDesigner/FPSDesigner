@@ -21,9 +21,11 @@ namespace Engine.Display3D
             textureLight = content.Load<Texture2D>("2D/light");
         }
 
-        public static void AddLight(Vector3 position, Color color, float attenuation)
+        public static int AddLight(Vector3 position, Color color, float attenuation)
         {
-            lights.Add(new Materials.PPPointLight(position, color, attenuation));
+            Materials.PPPointLight elt = new Materials.PPPointLight(position, color, attenuation);
+            lights.Add(elt);
+            return lights.IndexOf(elt);
         }
 
         public static void RemoveLight(int id)

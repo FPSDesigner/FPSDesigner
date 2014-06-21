@@ -37,6 +37,7 @@ namespace Software.Pages
         private Point initialMoveMousePosGame1;
 
         private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters, listTree_Lights, listTree_Bots;
+        private List<TreeViewItem> listTreeAv_Models, listTreeAv_Pickups, listTreeAv_Waters, listTreeAv_Lights, listTreeAv_Bots;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -57,6 +58,12 @@ namespace Software.Pages
             listTree_Waters = new List<TreeViewItem>();
             listTree_Lights = new List<TreeViewItem>();
             listTree_Bots = new List<TreeViewItem>();
+
+            listTreeAv_Models = new List<TreeViewItem>();
+            listTreeAv_Pickups = new List<TreeViewItem>();
+            listTreeAv_Waters = new List<TreeViewItem>();
+            listTreeAv_Lights = new List<TreeViewItem>();
+            listTreeAv_Bots = new List<TreeViewItem>();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
 
@@ -79,6 +86,7 @@ namespace Software.Pages
             GlobalVars.ReloadGameComponentsTreeView += (s, e) => { LoadGameComponentsToTreeview(); };
 
             GameComponentsList.SelectedItemChanged += GameComponentsList_SelectedItemChanged;
+            AvailableComponentsList.SelectedItemChanged += AvailableGameComponentsList_SelectedItemChanged;
 
             GlobalVars.selectedToolButton = SelectButton;
             SelectButton.Foreground = new SolidColorBrush((Color)FindResource("AccentColor"));
@@ -94,7 +102,7 @@ namespace Software.Pages
 
         void GameButton1_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.F && GlobalVars.selectedElt != null)
+            if (e.Key == Key.F && GlobalVars.selectedElt != null)
                 m_game.WPFHandler("centerCamOnObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
         }
 
@@ -284,6 +292,8 @@ namespace Software.Pages
 
         private void LoadGameComponentsToTreeview()
         {
+            LoadAvailableGameComponentsToTreeview();
+
             object gameInfo = m_game.WPFHandler("getLevelData", true);
             if (gameInfo is Engine.Game.LevelInfo.LevelData)
                 GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)gameInfo;
@@ -304,7 +314,6 @@ namespace Software.Pages
             TreeViewItem Water = new TreeViewItem();
             TreeViewItem Terrain = new TreeViewItem();
             TreeViewItem Pickups = new TreeViewItem();
-            TreeViewItem Characters = new TreeViewItem();
             TreeViewItem Lights = new TreeViewItem();
             TreeViewItem Bots = new TreeViewItem();
 
@@ -313,7 +322,6 @@ namespace Software.Pages
             Water.Header = "Water";
             Terrain.Header = "Terrain";
             Pickups.Header = "Pick-Ups";
-            Characters.Header = "Characters";
             Lights.Header = "Lights";
             Bots.Header = "A.I.";
 
@@ -423,8 +431,123 @@ namespace Software.Pages
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
                 GameComponentsList.Items.Add(Terrain);
+        }
 
-            GameComponentsList.Items.Add(Characters);
+        private void LoadAvailableGameComponentsToTreeview()
+        {
+            object gameInfo = m_game.WPFHandler("getLevelData", true);
+            if (gameInfo is Engine.Game.LevelInfo.LevelData)
+                GlobalVars.gameInfo = (Engine.Game.LevelInfo.LevelData)gameInfo;
+            else
+            {
+                ModernDialog.ShowMessage("Error loading project game level.", "Error", MessageBoxButton.OK);
+                GlobalVars.RaiseEvent("SoftwareShouldForceClose");
+            }
+            AvailableComponentsList.Items.Clear();
+            listTreeAv_Models.Clear();
+            listTreeAv_Pickups.Clear();
+            listTreeAv_Waters.Clear();
+            listTreeAv_Lights.Clear();
+
+            TreeViewItem Models = new TreeViewItem();
+            TreeViewItem Water = new TreeViewItem();
+            TreeViewItem Terrain = new TreeViewItem();
+            TreeViewItem Pickups = new TreeViewItem();
+            TreeViewItem Lights = new TreeViewItem();
+            TreeViewItem Bots = new TreeViewItem();
+
+            Models.Header = "Models";
+            Water.Header = "Water";
+            Pickups.Header = "Pick-Ups";
+            Lights.Header = "Lights";
+            Bots.Header = "A.I.";
+
+            // Models
+            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Models != null)
+            {
+                foreach (Engine.Game.LevelInfo.MapModels_Model model in GlobalVars.gameInfo.MapModels.Models)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = System.IO.Path.GetFileName(model.ModelFile);
+                    if (treeItem.Header == null)
+                        treeItem.Header = model.ModelFile;
+
+                    Models.Items.Add(treeItem);
+                    listTreeAv_Models.Add(treeItem);
+                }
+            }
+
+            // Pick-Ups
+            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Pickups != null)
+            {
+                foreach (Engine.Game.LevelInfo.Weapon wep in GlobalVars.gameInfo.Weapons.Weapon)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = wep.Name;
+                    if (treeItem.Header == null)
+                        treeItem.Header = "Pick-up";
+
+                    Pickups.Items.Add(treeItem);
+                    listTreeAv_Pickups.Add(treeItem);
+                }
+            }
+
+            // Water
+            if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.Water != null && GlobalVars.gameInfo.Water.Water.Count > 0)
+            {
+                TreeViewItem treeItem = new TreeViewItem();
+                treeItem.Header = "Water Instance";
+
+                Water.Items.Add(treeItem);
+                listTreeAv_Waters.Add(treeItem);
+            }
+
+            // Lights
+            if (GlobalVars.gameInfo.Lights != null && GlobalVars.gameInfo.Lights.LightsList != null && GlobalVars.gameInfo.Lights.LightsList.Count > 0)
+            {
+                string[] colors = new string[] { "Green", "Red", "Blue" };
+                foreach (string clr in colors)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = "Light #" + clr;
+
+                    Lights.Items.Add(treeItem);
+                    listTreeAv_Lights.Add(treeItem);
+                }
+            }
+
+            // Bots
+            if (GlobalVars.gameInfo.Bots != null && GlobalVars.gameInfo.Bots.Bots != null && GlobalVars.gameInfo.Bots.Bots.Count > 0)
+            {
+                foreach (Engine.Game.LevelInfo.Bot bot in GlobalVars.gameInfo.Bots.Bots)
+                {
+                    TreeViewItem treeItem = new TreeViewItem();
+                    treeItem.Header = "A.I. - " + bot.Name;
+
+                    Bots.Items.Add(treeItem);
+                    listTreeAv_Bots.Add(treeItem);
+                }
+
+            }
+
+            // Add items to main tree view
+            if (Models.Items.Count > 0)
+                AvailableComponentsList.Items.Add(Models);
+
+            if (Pickups.Items.Count > 0)
+                AvailableComponentsList.Items.Add(Pickups);
+
+            if (Water.Items.Count > 0)
+                AvailableComponentsList.Items.Add(Water);
+
+            if (Lights.Items.Count > 0)
+                AvailableComponentsList.Items.Add(Lights);
+
+            if (Bots.Items.Count > 0)
+                AvailableComponentsList.Items.Add(Bots);
+
+            if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
+                AvailableComponentsList.Items.Add(Terrain);
         }
 
         void GameComponentsList_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -527,6 +650,120 @@ namespace Software.Pages
                 }
             }
 
+        }
+
+        void AvailableGameComponentsList_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            TreeViewItem selectedItem = (TreeViewItem)GameComponentsList.SelectedItem;
+
+            // Models
+            for (int i = 0; i < listTreeAv_Models.Count; i++)
+            {
+                if (listTreeAv_Models[i].IsSelected)
+                {
+                    foreach (Engine.Game.LevelInfo.MapModels_Model model in GlobalVars.gameInfo.MapModels.Models)
+                        if ((string)listTreeAv_Models[i].Header == System.IO.Path.GetFileName(model.ModelFile) || (string)listTreeAv_Models[i].Header == model.ModelFile)
+                        {
+                            if (GlobalVars.selectedElt != null)
+                                m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                            int id = (int)m_game.WPFHandler("addElement", new object[] { "model", new Engine.Game.LevelInfo.MapModels_Model { Alpha = model.Alpha, BumpTextures = model.BumpTextures, Explodable = model.Explodable, ModelFile = model.ModelFile, Scale = model.Scale, SpecColor = model.SpecColor, Textures = model.Textures, Rotation = new Engine.Game.LevelInfo.Coordinates(0, 0, 0), Position = new Engine.Game.LevelInfo.Coordinates((Microsoft.Xna.Framework.Vector3)m_game.WPFHandler("forwardVec", 5.0f)) } });
+
+                            m_game.WPFHandler("selectObject", new object[] { "model", id, GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("model", id);
+                            ApplyPropertiesWindow();
+                            m_game.shouldUpdateOnce = true;
+                            LoadGameComponentsToTreeview();
+                            return;
+                        }
+                }
+            }
+
+            // Pickups
+            for (int i = 0; i < listTreeAv_Pickups.Count; i++)
+            {
+                if (listTreeAv_Pickups[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    int id = (int)m_game.WPFHandler("addElement", new object[] { "pickup", new Engine.Game.LevelInfo.MapModels_Pickups { WeaponName = (string)listTreeAv_Pickups[i].Header, WeaponBullets = 100, Scale = new Engine.Game.LevelInfo.Coordinates(0.5f, 0.5f, 0.5f), Rotation = new Engine.Game.LevelInfo.Coordinates(0, 0, 0), Position = new Engine.Game.LevelInfo.Coordinates((Microsoft.Xna.Framework.Vector3)m_game.WPFHandler("forwardVec", 5.0f)) } });
+
+                    m_game.WPFHandler("selectObject", new object[] { "pickup", id, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("pickup", id);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    LoadGameComponentsToTreeview();
+                    return;
+                }
+            }
+
+            // Water
+            for (int i = 0; i < listTreeAv_Waters.Count; i++)
+            {
+                if (listTreeAv_Waters[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    int id = (int)m_game.WPFHandler("addElement", new object[] { "water", new Engine.Game.LevelInfo.Water { SizeX = 10, SizeY = 10, Alpha = 1f, DeepestPoint = new Engine.Game.LevelInfo.Coordinates(0, -10f, 0), Coordinates = new Engine.Game.LevelInfo.Coordinates((Microsoft.Xna.Framework.Vector3)m_game.WPFHandler("forwardVec", 5.0f)) } });
+
+                    m_game.WPFHandler("selectObject", new object[] { "water", id, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("water", id);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    LoadGameComponentsToTreeview();
+                    return;
+                }
+            }
+
+            // Lights
+            for (int i = 0; i < listTreeAv_Lights.Count; i++)
+            {
+                if (listTreeAv_Lights[i].IsSelected)
+                {
+                    if (GlobalVars.selectedElt != null)
+                        m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                    string colStr = "#339966";
+                    if (((string)listTreeAv_Lights[i].Header).Contains("Red"))
+                        colStr = "#C7292E";
+                    else if (((string)listTreeAv_Lights[i].Header).Contains("Blue"))
+                        colStr = "#3366FF";
+
+                    int id = (int)m_game.WPFHandler("addElement", new object[] { "light", new Engine.Game.LevelInfo.Light { Attenuation = 10, Color = colStr, Position = new Engine.Game.LevelInfo.Coordinates((Microsoft.Xna.Framework.Vector3)m_game.WPFHandler("forwardVec", 5.0f)) } });
+
+                    m_game.WPFHandler("selectObject", new object[] { "light", id, GlobalVars.selectedToolButton.Name });
+                    GlobalVars.selectedElt = new GlobalVars.SelectedElement("light", id);
+                    ApplyPropertiesWindow();
+                    m_game.shouldUpdateOnce = true;
+                    LoadGameComponentsToTreeview();
+                    return;
+                }
+            }
+
+            // Bot
+            for (int i = 0; i < listTreeAv_Bots.Count; i++)
+            {
+                if (listTreeAv_Bots[i].IsSelected)
+                {
+                    foreach (Engine.Game.LevelInfo.Bot bot in GlobalVars.gameInfo.Bots.Bots)
+                        if ((string)listTreeAv_Models[i].Header == bot.Name)
+                        {
+                            if (GlobalVars.selectedElt != null)
+                                m_game.WPFHandler("unselectObject", new object[] { GlobalVars.selectedElt.eltType, GlobalVars.selectedElt.eltId });
+
+                            int id = (int)m_game.WPFHandler("addElement", new object[] { "bot", new Engine.Game.LevelInfo.Bot { IsAggressive = bot.IsAggressive, Life = bot.Life, Name = bot.Name, ModelName = bot.ModelName, ModelTexture = bot.ModelTexture, RangeOfAttack = bot.RangeOfAttack, SpawnRotation = new Engine.Game.LevelInfo.Coordinates(0, 0, 0), Type = bot.Type, Velocity = bot.Velocity, SpawnPosition = new Engine.Game.LevelInfo.Coordinates((Microsoft.Xna.Framework.Vector3)m_game.WPFHandler("forwardVec", 5.0f)) } });
+
+                            m_game.WPFHandler("selectObject", new object[] { "bot", id, GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("bot", id);
+                            ApplyPropertiesWindow();
+                            m_game.shouldUpdateOnce = true;
+                            LoadGameComponentsToTreeview();
+                            return;
+                        }
+                }
+            }
         }
 
         #region ApplyProperties
@@ -1110,7 +1347,7 @@ namespace Software.Pages
 
                     ListBox lbType = new ListBox();
                     lbType.Width = 150;
-                    
+
                     ListBoxItem lb1 = new ListBoxItem();
                     ListBoxItem lb2 = new ListBoxItem();
                     lb1.Content = "Friendly";

@@ -322,14 +322,14 @@ namespace Engine.GameStates
             }
             terrain.frustum = cam._Frustum;
 
-            if (!isSoftwareEmbedded)
-            {
+            /*if (!isSoftwareEmbedded)
+            {*/
                 skybox.ColorIntensity = 0.8f;
                 Display3D.CWaterManager.PreDraw(cam, gameTime);
                 skybox.ColorIntensity = 1;
-            }
+            /*}
             else
-                _graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);
+                _graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);*/
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
@@ -396,6 +396,13 @@ namespace Engine.GameStates
                 {
                     cam.isCamFrozen = (bool)p[1];
                     cam.shouldUpdateMiddleScreen = true;
+                }
+                else if (action == "forwardVec")
+                {
+                    Matrix rotation = Matrix.CreateFromYawPitchRoll(cam._yaw, cam._pitch, cam._roll);
+                    Vector3 _translation = Vector3.Transform(Vector3.Forward * (float)p[1], rotation);
+                    //Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+                    return cam._cameraPos + _translation;
                 }
                 else if (action == "centerCamOnObject")
                 {
@@ -757,7 +764,7 @@ namespace Engine.GameStates
                                 bumpTextures.Add(textureInfo.Mesh, _content.Load<Texture2D>(textureInfo.Texture));
                         }
 
-                        Display3D.CModelManager.addModel(_content,
+                        return Display3D.CModelManager.addModel(_content,
                             new Display3D.CModel(
                             _content.Load<Model>(modelInfo.ModelFile),
                             modelInfo.Position.Vector3,
@@ -775,19 +782,19 @@ namespace Engine.GameStates
                     {
                         Game.LevelInfo.MapModels_Pickups pickupVal = (Game.LevelInfo.MapModels_Pickups)values[1];
                         levelData.MapModels.Pickups.Add(pickupVal);
-                        Display3D.CPickUpManager.AddPickup(_graphics, modelsListWeapons[pickupVal.WeaponName], textureListWeapons[pickupVal.WeaponName], pickupVal.Position.Vector3, pickupVal.Rotation.Vector3, pickupVal.Scale.Vector3, pickupVal.WeaponName, pickupVal.WeaponBullets);
+                        return Display3D.CPickUpManager.AddPickup(_graphics, modelsListWeapons[pickupVal.WeaponName], textureListWeapons[pickupVal.WeaponName], pickupVal.Position.Vector3, pickupVal.Rotation.Vector3, pickupVal.Scale.Vector3, pickupVal.WeaponName, pickupVal.WeaponBullets);
                     }
                     else if (eltType == "water")
                     {
                         Game.LevelInfo.Water waterVal = (Game.LevelInfo.Water)values[1];
                         levelData.Water.Water.Add(waterVal);
-                        Display3D.CWaterManager.AddWater(new Display3D.CWater(_content, _graphics, waterVal.Coordinates.Vector3, waterVal.DeepestPoint.Vector3, new Vector2(waterVal.SizeX, waterVal.SizeY), waterVal.Alpha));
+                        return Display3D.CWaterManager.AddWater(new Display3D.CWater(_content, _graphics, waterVal.Coordinates.Vector3, waterVal.DeepestPoint.Vector3, new Vector2(waterVal.SizeX, waterVal.SizeY), waterVal.Alpha));
                     }
                     else if (eltType == "light")
                     {
                         Game.LevelInfo.Light lightVal = (Game.LevelInfo.Light)values[1];
                         levelData.Lights.LightsList.Add(lightVal);
-                        Display3D.CLightsManager.AddLight(lightVal.Position.Vector3, lightVal.Col, lightVal.Attenuation);
+                        return Display3D.CLightsManager.AddLight(lightVal.Position.Vector3, lightVal.Col, lightVal.Attenuation);
                     }
                     else if (eltType == "bot")
                     {

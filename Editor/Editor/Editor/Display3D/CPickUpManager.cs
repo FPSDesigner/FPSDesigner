@@ -16,9 +16,11 @@ namespace Engine.Display3D
         public static List<CPickUp> _pickups = new List<CPickUp>();
         public static int selectedPickupId = -1;
 
-        public static void AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 rotation, Vector3 scale, string weaponName, int weaponBullets)
+        public static int AddPickup(GraphicsDevice graphics, Model model, Texture2D texture, Vector3 position, Vector3 rotation, Vector3 scale, string weaponName, int weaponBullets)
         {
-            _pickups.Add(new CPickUp(graphics, model, texture, position, rotation, scale, weaponName, weaponBullets));
+            CPickUp elt = new CPickUp(graphics, model, texture, position, rotation, scale, weaponName, weaponBullets);
+            _pickups.Add(elt);
+            return _pickups.IndexOf(elt);
         }
 
         public static void DelPickup(CPickUp pickup)
