@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Engine.Game
 {
-
     class CEnemyManager
     {
         public static List<CEnemy> _enemyList = new List<CEnemy>();
@@ -268,6 +267,8 @@ namespace Engine.Game
             // Play Anims
             if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
             {
+                _model.RotateBone(2, cam._pitch);
+
                 // The character is waiting
                 if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch && !_isJumping)
                 {
@@ -465,7 +466,7 @@ namespace Engine.Game
             }
         }
 
-        public void Crouch(bool toggle)
+        public void Crouch(bool toggle, string typeName)
         {
             if (!_isCrouch && toggle)
             {
@@ -473,7 +474,7 @@ namespace Engine.Game
                 _runningVelocity /= 2f;
 
                 _model.ChangeAnimSpeed(1.5f);
-                _model.ChangeAnimation("machete_walk-crouch", true, 0.8f);
+                _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.8f);
 
                 _isCrouch = true;
             }
@@ -483,36 +484,36 @@ namespace Engine.Game
                 _runningVelocity *= 2;
 
                 _model.ChangeAnimSpeed(2.5f);
-                _model.ChangeAnimation("machete_walk", true, 0.8f);
+                _model.ChangeAnimation(typeName + "_waik", true, 0.8f);
 
                 _isCrouch = false;
             }
         }
 
-        public void SetJump()
+        public void SetJump(string type)
         {
             if (!_isJumping)
             {
                 _model.ChangeAnimSpeed(2.0f);
-                _model.ChangeAnimation("oneHand_jump", false, 0.65f);
+                _model.ChangeAnimation(type+"_jump", false, 0.65f);
 
                 _isJumping = true;
             }
         }
 
-        public void SetReload()
+        public void SetReload(string typeName)
         {
             if (!_isReloading)
             {
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("handgun_reload-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"_reload-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("handgun_reload", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"handgun_reload", true, 0.55f);
                 }
 
                 _isReloading = true;
@@ -521,19 +522,19 @@ namespace Engine.Game
             }
         }
 
-        public void SetWalk(bool toggle)
+        public void SetWalk(bool toggle, string typeName)
         {
             if (toggle)
             {
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("bow_walk-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"_walk-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("bow_walk", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"_walk", true, 0.55f);
                 }
 
                 _isWalkAnimPlaying = true;
@@ -545,12 +546,12 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("bow_wait-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"_wait-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("bow_wait", true, 0.55f);
+                    _model.ChangeAnimation(typeName+"_wait", true, 0.55f);
                 }
 
                 _isWalkAnimPlaying = false;

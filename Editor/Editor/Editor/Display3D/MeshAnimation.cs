@@ -154,6 +154,25 @@ namespace Engine.Display3D
             animationController.CrossFade(skinnedModel.AnimationClips[name], TimeSpan.FromSeconds(velocity));
         }
 
+        public void RotateBone(int index, float value)
+        {
+            //// get the current transformation matrix that we want to modify...
+            //Matrix transform = animationController.SkinnedBoneTransforms[index];
+            //Vector3 translation = transform.Translation; // save for later use...
+ 
+            //// move the matrix down so we rotate around the base point correctly.
+            //transform.Translation += new Vector3(0, translation.Y, 0);
+ 
+            //// apply your transformations here. I’m rotating based on the pitch of the camera.
+            //transform *= Matrix.CreateFromYawPitchRoll(0, value, 0);
+ 
+            //// move the matrix back up again...
+            //transform.Translation -= new Vector3(0, translation.Y, 0);
+ 
+            //// set the final transformation matrix...
+            //animationController.SkinnedBoneTransforms[index] = transform;
+        }
+
         public bool isPlaying()
         {
             return animationController.IsPlaying;
