@@ -161,7 +161,7 @@ namespace Engine.Display3D
             this.length = heightMap.Height;
             this.cellSize = CellSize;
             this.height = Height;
-            this.World = Matrix.CreateTranslation(new Vector3(0, 0, 0));
+            this.World = Matrix.CreateTranslation(new Vector3(0, 290, 0));
 
             this.GraphicsDevice = GraphicsDevice;
 

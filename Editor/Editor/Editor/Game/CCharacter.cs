@@ -844,6 +844,7 @@ namespace Engine.Game
                 {
                     if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                     {
+                        Console.WriteLine("realod");
                         _isWaitAnimPlaying = false;
                         _isWalkAnimPlaying = false;
                         _isSwimAnimationPlaying = false;
