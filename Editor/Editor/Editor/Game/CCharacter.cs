@@ -503,6 +503,8 @@ namespace Engine.Game
                                 CEnemy enemy;
                                 string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
 
+                                boxTouched.Split('.');
+
                                 if (distance < weapon._weaponPossessed[weapon._selectedWeapon]._range)
                                 {
                                     if (boxTouched != "")
