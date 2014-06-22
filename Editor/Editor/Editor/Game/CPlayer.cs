@@ -18,6 +18,11 @@ namespace Engine.Game
         public string userName;
         public int ID;
 
+        private Vector3 newPos;
+        private Vector3 oldPos;
+        private DateTime oldTime;
+        private Vector3 direction;
+
         private bool isCrouched = false;
 
         public CPlayer(int PlayerID, string Name, Vector3 pos)
@@ -29,10 +34,23 @@ namespace Engine.Game
             textures[0] = Display2D.C2DEffect._content.Load<Texture2D>("Textures\\MedievalCharacter");
             botController = new CEnemy("MedievalCharacter", textures, pos, Matrix.CreateFromYawPitchRoll(0, 0, 0), 100f, 20, 10, false, Name, 2);
             Game.CEnemyManager.AddEnemy(Display2D.C2DEffect._content, CConsole._Camera, botController);
+
+            oldPos = pos;
+            newPos = pos;
+            oldTime = DateTime.Now;
         }
 
         public void SetNewPos(Vector3 pos, Vector3 rot)
         {
+            oldPos = botController._position;
+            newPos = pos;
+            direction = newPos - oldPos;
+            botController._multiSpeed = (float)((direction.Length()) / ((DateTime.Now - oldTime).TotalMilliseconds));
+            direction.Normalize();
+            oldTime = DateTime.Now;
+
+            botController._multiDirection = direction;
+
             botController._position = pos;
             botController.rotationValue = rot.X;
         }

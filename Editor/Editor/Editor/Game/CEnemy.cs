@@ -178,6 +178,9 @@ namespace Engine.Game
 
         private float _height = 1.9f;
 
+        public float _multiSpeed = 0f;
+        public Vector3 _multiDirection = Vector3.Zero;
+
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
         public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity, float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
@@ -256,7 +259,13 @@ namespace Engine.Game
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
         {
-            //Play Anims
+            // Interpolation
+            if (_multiSpeed > 0)
+            {
+                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _position += _multiDirection * _multiSpeed * elapsedTime;
+            }
+            // Play Anims
             if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
             {
                 // The character is waiting
@@ -663,7 +672,7 @@ namespace Engine.Game
             hitBoxesTriangles.Clear();
             foreach (ModelMesh mesh in _model.skinnedModel.Model.Meshes)
             {
-                if (mesh.Name.Length > 3 && mesh.Name.Substring(0, 3) == "Bb_")
+                if (mesh.Name.Length > 3 && mesh.Name.Substring(0, 3) == "bb_")
                 {
                     Matrix localWorld = _model._modelTransforms[mesh.ParentBone.Index];
                     foreach (ModelMeshPart meshPart in mesh.MeshParts)
