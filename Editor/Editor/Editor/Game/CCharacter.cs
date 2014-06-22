@@ -668,9 +668,6 @@ namespace Engine.Game
                         {
                             foreach (BasicEffect eff in arrowMesh.Effects)
                             {
-                                eff.TextureEnabled = true;
-                                eff.Texture = _arrowTexture;
-
                                 eff.World = _arrowWorld;
                                 eff.View = view;
                                 eff.Projection = projection;

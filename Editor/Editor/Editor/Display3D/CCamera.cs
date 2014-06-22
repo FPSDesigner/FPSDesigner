@@ -13,7 +13,6 @@ using Engine.Game.Settings;
 
 namespace Engine.Display3D
 {
-
     /// <summary>
     /// The camera class process all the camera movement and the world view & projection matrix.
     /// </summary>
