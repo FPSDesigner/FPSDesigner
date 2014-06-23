@@ -604,9 +604,9 @@ namespace Engine.Game
 
         }
 
-        public void ChangeWeapon(CWeapon newWeap)
+        public void ChangeWeapon(int iD)
         {
-            _weaponPossessed = newWeap;
+            _weaponPossessed._selectedWeapon = iD;
         }
 
         // Handle the damages and the character death

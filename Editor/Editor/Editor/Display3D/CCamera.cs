@@ -167,7 +167,7 @@ namespace Engine.Display3D
 
             if (Display2D.C2DEffect.isSoftwareEmbedded)
                 _middleScreen = new Point(mouseState.X, mouseState.Y);
-            else if (_isMoving && _elapsedStepTime > 350 * (14 / camVelocity))
+            else if (_isMoving && (_physicsMap._fallingVelocity >= 0f) && _elapsedStepTime > 350 * (14 / camVelocity))
             {
                 if (!_isPitchShiftedStepSound)
                     Game.CSoundManager.PlayInstance("GRASSSTEP", 0.75f);
