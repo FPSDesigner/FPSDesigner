@@ -289,22 +289,13 @@ namespace Engine.GameStates
                 Display3D.CPickUpManager.DelPickup(EnteredPickup); // Destroy the pickup
             }
 
-            //if (kbState.IsKeyDown(Keys.Left))
-            //    z -= 0.005f;
-            //else if (kbState.IsKeyDown(Keys.Right))
-            //    z += 0.005f;
-            //else if (kbState.IsKeyDown(Keys.Up))
-            //    x -= 0.005f;
-            //else if (kbState.IsKeyDown(Keys.Down))
-            //    x += 0.005f;
-
-            //weapon._weaponsArray[weapon._selectedWeapon]._rotation = Matrix.CreateRotationX(x) * Matrix.CreateRotationY(y) * Matrix.CreateRotationZ(z)
-            //    * Matrix.CreateTranslation(new Vector3(xpos, ypos, zpos));
-            //Game.CConsole.addMessage(x + " " + y + " " + z);
-
             Game.CEnemyManager.Update(gameTime, cam);
 
+            Game.CEnemyManager._enemyList[0].debugKey(kbState);
+
             Display3D.Particles.ParticlesManager.Update(gameTime);
+
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

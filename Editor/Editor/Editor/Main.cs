@@ -53,8 +53,8 @@ namespace Engine
             //graphics.PreferMultiSampling = false; // Lags!!!
             Content.RootDirectory = ContentRootDirectoy;
 
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1400;
+            graphics.PreferredBackBufferHeight = 900;
             //graphics.IsFullScreen = !launchedFromSoftware;
             graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;

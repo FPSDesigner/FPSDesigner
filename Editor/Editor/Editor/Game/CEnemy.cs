@@ -183,6 +183,10 @@ namespace Engine.Game
 
         private Dictionary<string, Display3D.Triangle> hitBoxesTriangles;
 
+        // DEBUG 
+        float px, py, pz;
+        float rx, ry, rz;
+
         public CEnemy(string ModelName, Texture2D[] Textures, Vector3 Position, Matrix Rotation, float Life, float Velocity, float RangeToAttack, bool isAgressive = false, string name = "Enemy", int type = 1)
         {
             _position = Position;
@@ -214,8 +218,9 @@ namespace Engine.Game
             _isMoving = false;
             _isDyingAnimPlaying = false;
             _isWaitAnimPlaying = false;
+            _isWalkAnimPlaying = false;
             _isDead = false;
-            _isFrozen = true;
+            _isFrozen = false;
             _isHeadShot = false;
             _isShoting = false;
             _isFollowingPlayer = false;
@@ -235,6 +240,68 @@ namespace Engine.Game
             prob[0] = 1; // 1/2 chance to shot the player
 
             SetEnemyName(name);
+        }
+
+        // DEBUG
+        public void debugKey(KeyboardState kbState)
+        {
+            if (kbState.IsKeyDown(Keys.Right))
+            {
+                px += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.Right) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                px -= 0.01f;
+            }
+
+            if (kbState.IsKeyDown(Keys.Left))
+            {
+                pz += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.Left) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                pz -= 0.01f;
+            }
+
+            if (kbState.IsKeyDown(Keys.Up))
+            {
+                py += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.Up) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                py -= 0.01f;
+            }
+
+            // Rotation
+            if (kbState.IsKeyDown(Keys.Y))
+            {
+                ry += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.Y) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                ry -= 0.01f;
+            }
+
+            if (kbState.IsKeyDown(Keys.G))
+            {
+                pz += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.G) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                pz -= 0.01f;
+            }
+
+            if (kbState.IsKeyDown(Keys.J))
+            {
+                px += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.J) && kbState.IsKeyDown(Keys.LeftShift))
+            {
+                px -= 0.01f;
+            }
+
+            CConsole.addMessage("Transla : " + px + " | " + py + " |" + pz+"\n"+
+            "Rot : "+ rx + " | " + ry + " |" + rz+"\n");
         }
 
         public void SetEnemyName(string name)
@@ -259,6 +326,10 @@ namespace Engine.Game
             _physicEngine.heightCorrection = 0.85f;
 
             GenerateHitBoxesTriangles();
+
+            // Play first anim
+            _model.ChangeAnimSpeed(0.5f);
+            _model.BeginAnimation("machete_wait", true);
         }
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -411,32 +482,25 @@ namespace Engine.Game
             if (drawHitbox)
                 GetRealTriangles(true);
 
-            DrawWeapon();
+            DrawWeapon(view, projection);
         }
 
-        public void DrawWeapon()
+        public void DrawWeapon(Matrix view, Matrix projection)
         {
             foreach (ModelMesh mesh in _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._wepModel.Meshes)
             {
-                Matrix world;
-
-                if (_weaponPossessed._weaponPossessed[_weaponPossessed._selectedWeapon]._wepType != 3)
-                {
-                    world = _model.GetBoneMatrix("palm_02_R", Matrix.Identity,
-                     1.0f, Vector3.Zero);
-                }
-                else
-                {
-                    world = _model.GetBoneMatrix("palm_02_L", Matrix.Identity,
-                     1.0f, Vector3.Zero);
-                }
-
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
                     effect.Texture = _weaponPossessed._weaponPossessed[_weaponPossessed._selectedWeapon]._weapTexture;
+
+                    effect.World = ComputeWeaponWorldMatrix();
+                    effect.View = view;
+                    effect.Projection = projection;
                 }
+
+                mesh.Draw();
 
             }
 
@@ -547,12 +611,12 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_reload-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_reload-crouch", false, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_reload", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_reload", false, 0.55f);
                 }
 
                 _isReloading = true;
@@ -845,6 +909,45 @@ namespace Engine.Game
             }
 
             indices.AddRange(tvi);
+        }
+
+        private Matrix ComputeWeaponWorldMatrix()
+        {
+            Matrix world = Matrix.Identity;
+
+            switch (_weaponPossessed._selectedWeapon)
+            {
+                case 0:
+                    //world = _model.GetBoneMatrix(40, Matrix.Identity,
+                    //1.0f, new Vector3(-2.0f, 0.0f, -2.0f));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+                case 1:
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+                case 2:
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+                case 3:
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+                case 4:
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+                case 5:
+                    world = _model.GetBoneMatrix(17, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
+                    1.0f, new Vector3(px, py, pz));
+                    break;
+
+            }
+
+
+            return world;
         }
     }
 }
