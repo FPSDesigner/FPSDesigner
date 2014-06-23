@@ -228,6 +228,9 @@ namespace Engine.Game
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
 
+            _weaponPossessed = CConsole._Weapon;
+            _weaponPossessed._selectedWeapon = 0;
+
             // Initialize probability
             prob[0] = 1; // 1/2 chance to shot the player
 
@@ -407,20 +410,22 @@ namespace Engine.Game
 
             if (drawHitbox)
                 GetRealTriangles(true);
+
+            DrawWeapon();
         }
 
         public void DrawWeapon()
         {
-            //foreach (ModelMesh mesh in _weaponPossessed[weap._selectedWeapon]._wepModel.Meshes)
-            //{
-            //    foreach (BasicEffect effect in mesh.Effects)
-            //    {
-            //        effect.EnableDefaultLighting();
-            //        effect.TextureEnabled = true;
-            //        effect.Texture = weap._weaponPossessed[weap._selectedWeapon]._weapTexture;
-            //    }
+            foreach (ModelMesh mesh in _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._wepModel.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.TextureEnabled = true;
+                    effect.Texture = _weaponPossessed._weaponPossessed[_weaponPossessed._selectedWeapon]._weapTexture;
+                }
 
-            //}
+            }
 
         }
 

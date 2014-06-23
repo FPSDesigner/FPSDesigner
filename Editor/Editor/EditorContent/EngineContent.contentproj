@@ -1044,13 +1044,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="2D\Menu\Menu_Bckground.png">
-      <Name>Menu_Bckground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Models\StormTrooperAnimation.fbx">
       <Name>StormTrooperAnimation</Name>
       <Importer>FbxImporter</Importer>

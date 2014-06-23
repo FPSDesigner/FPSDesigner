@@ -50,7 +50,7 @@ namespace Engine.Game
             /*ClientHandler.Client.SendTimeout = 5000;
             ClientHandler.Client.ReceiveTimeout = 5000;*/
         }
-
+        
         public bool Connect(string host, int port)
         {
             IPAddress IP;
