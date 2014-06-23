@@ -164,8 +164,12 @@ namespace Engine.Game
                 }
             }
 
+            bool setReload = CConsole._Character._justReloaded;
+            if (setReload)
+                CConsole._Character._justReloaded = false;
+
             // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + CConsole._Character._justReloaded);
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + setReload);
         }
 
         public void PlayerDisconnected(int id)
