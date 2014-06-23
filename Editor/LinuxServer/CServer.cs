@@ -52,11 +52,11 @@ namespace LinuxServer
         {
             while (true)
             {
+
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, Port);
                 string data = GetString(ServerHandler.Receive(ref remoteEP));
                 string AddressEP = remoteEP.ToString();
                 string[] info = data.Split('|');
-
                 CPlayer PlayerWriting = null;
 
                 foreach (CPlayer pl in playerList)
@@ -98,6 +98,21 @@ namespace LinuxServer
                     {
                         GlobalVars.AddNewMessage(PlayerWriting.userName + " disconnected.");
                         DisconnectPlayer(PlayerWriting);
+                    }
+                    else if (info.Length > 3 && info[0] == "HIT")
+                    {
+                        int id = (int)ExtractDataFromString(info[1], SentData.Int);
+                        foreach (CPlayer pl in playerList)
+                            if (pl.ID != id)
+                            {
+                                SendMessage("PLGOTHIT|" + id + "|" + info[2] + "|" + info[3], pl.endPoint);
+                                return;
+                            }
+                            else
+                            {
+                                SendMessage("UGOTHIT|" + PlayerWriting.ID + "|" + info[2] + "|" + info[3], pl.endPoint);
+                                return;
+                            }
                     }
                 }
             }

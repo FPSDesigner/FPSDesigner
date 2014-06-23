@@ -122,9 +122,20 @@ namespace Engine.Game
                 {
                     CConsole.addMessage("Server: " + receivedData.Replace("ECHO|", ""));
                 }
-                else if (receivedData.StartsWith("GOTHIT|"))
+                else if (receivedData.StartsWith("PLGOTHIT|"))
                 {
-                    Console.WriteLine("Got hit on " + datas[2] + " (" + datas[3] + " dmgs)");
+                    int ID;
+                    if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
+                    {
+                        listPlayers[ID].ReceiveHit((int)ExtractDataFromString(datas[3], SentData.Int), datas[2]);
+                    }
+                } else if(receivedData.StartsWith("UGOTHIT|"))
+                {
+                     int ID;
+                     if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
+                     {
+                         CConsole._Character._life -= (int)ExtractDataFromString(datas[3], SentData.Int);
+                     }
                 }
 
 
@@ -162,7 +173,7 @@ namespace Engine.Game
 
                     if (intersects != "")
                     {
-                        SendMessage("HIT|" + pl.Value.ID + "|" + intersects + "|" + pl.Value.GetRealDamages(intersects));
+                        SendMessage("HIT|" + pl.Value.ID + "|" + intersects + "|" + (int)pl.Value.GetRealDamages(intersects));
                     }
                 }
             }

@@ -24,6 +24,8 @@ namespace Engine.Game
         private DateTime oldTime;
         private Vector3 direction;
 
+        public float life;
+
         private bool isCrouched = false;
 
         public CPlayer(int PlayerID, string Name, Vector3 pos)
@@ -39,6 +41,9 @@ namespace Engine.Game
             oldPos = pos;
             newPos = pos;
             oldTime = DateTime.Now;
+
+            life = 100;
+            botController._life = life;
         }
 
         public void SetNewPos(Vector3 pos, Vector3 rot)
@@ -59,6 +64,12 @@ namespace Engine.Game
         public void Disconnect()
         {
             Game.CEnemyManager.RemoveBot(botController);
+        }
+
+        public void ReceiveHit(float damage, string hitbox)
+        {
+            botController.HandleDamages(damage, hitbox);
+            life = botController._life;
         }
 
         public void SetCrouched(bool toggle)
