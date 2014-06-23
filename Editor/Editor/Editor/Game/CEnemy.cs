@@ -676,7 +676,6 @@ namespace Engine.Game
             GenerateHitBoxesTriangles();
             foreach (Display3D.Triangle tri in GetRealTriangles())
             {
-                Display3D.CSimpleShapes.AddTriangle(tri.V0, tri.V1, tri.V2, Color.Blue, 255f);
                 Display3D.Triangle triangle = tri;
                 float? dist = Display3D.TriangleTest.Intersects(ref ray, ref triangle);
                 if (dist.HasValue)
