@@ -138,7 +138,7 @@ namespace Engine.Game
 
         public Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
-        private CWeapon _weaponPossessed;
+        private int _selectedWeap; // ID of the selected weapon
 
         public Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position
@@ -233,8 +233,7 @@ namespace Engine.Game
 
             hitBoxesTriangles = new Dictionary<string, Display3D.Triangle>();
 
-            _weaponPossessed = CConsole._Weapon;
-            _weaponPossessed._selectedWeapon = 0;
+            _selectedWeap = 5;
 
             // Initialize probability
             prob[0] = 1; // 1/2 chance to shot the player
@@ -245,63 +244,65 @@ namespace Engine.Game
         // DEBUG
         public void debugKey(KeyboardState kbState)
         {
-            if (kbState.IsKeyDown(Keys.Right))
+            if (kbState.IsKeyDown(Keys.PageUp))
             {
                 px += 0.01f;
             }
-            if (kbState.IsKeyDown(Keys.Right) && kbState.IsKeyDown(Keys.LeftShift))
-            {
-                px -= 0.01f;
-            }
-
             if (kbState.IsKeyDown(Keys.Left))
             {
-                pz += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.Left) && kbState.IsKeyDown(Keys.LeftShift))
-            {
-                pz -= 0.01f;
+                px -= 0.01f;
             }
 
             if (kbState.IsKeyDown(Keys.Up))
             {
                 py += 0.01f;
             }
-            if (kbState.IsKeyDown(Keys.Up) && kbState.IsKeyDown(Keys.LeftShift))
+            if (kbState.IsKeyDown(Keys.Down))
             {
                 py -= 0.01f;
             }
 
-            // Rotation
-            if (kbState.IsKeyDown(Keys.Y))
-            {
-                ry += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.Y) && kbState.IsKeyDown(Keys.LeftShift))
-            {
-                ry -= 0.01f;
-            }
-
-            if (kbState.IsKeyDown(Keys.G))
+            if (kbState.IsKeyDown(Keys.PageDown))
             {
                 pz += 0.01f;
             }
-            if (kbState.IsKeyDown(Keys.G) && kbState.IsKeyDown(Keys.LeftShift))
+            if (kbState.IsKeyDown(Keys.Right))
             {
                 pz -= 0.01f;
             }
 
-            if (kbState.IsKeyDown(Keys.J))
+            // Rotation
+            if (kbState.IsKeyDown(Keys.T))
             {
-                px += 0.01f;
+                rx += 0.01f;
             }
-            if (kbState.IsKeyDown(Keys.J) && kbState.IsKeyDown(Keys.LeftShift))
+            if (kbState.IsKeyDown(Keys.G))
             {
-                px -= 0.01f;
+                rx -= 0.01f;
             }
 
-            CConsole.addMessage("Transla : " + px + " | " + py + " |" + pz+"\n"+
-            "Rot : "+ rx + " | " + ry + " |" + rz+"\n");
+            if (kbState.IsKeyDown(Keys.Y))
+            {
+                ry += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.H))
+            {
+                ry -= 0.01f;
+            }
+
+            if (kbState.IsKeyDown(Keys.U))
+            {
+                rz += 0.01f;
+            }
+            if (kbState.IsKeyDown(Keys.J))
+            {
+                rz -= 0.01f;
+            }
+
+
+
+            CConsole.addMessage("Transla : " + px + " | " + py + " |" + pz+"\n");
+            CConsole.addMessage("Rot : " + rx + " | " + ry + " |" + rz + "\n");
         }
 
         public void SetEnemyName(string name)
@@ -329,7 +330,7 @@ namespace Engine.Game
 
             // Play first anim
             _model.ChangeAnimSpeed(0.5f);
-            _model.BeginAnimation("machete_wait", true);
+            _model.BeginAnimation("bow_wait", true);
         }
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -349,7 +350,7 @@ namespace Engine.Game
                 if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(0.4f);
-                    _model.ChangeAnimation("machete_wait", true, 0.8f);
+                    _model.ChangeAnimation("bow_wait", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
@@ -487,13 +488,13 @@ namespace Engine.Game
 
         public void DrawWeapon(Matrix view, Matrix projection)
         {
-            foreach (ModelMesh mesh in _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._wepModel.Meshes)
+            foreach (ModelMesh mesh in CConsole._Weapon._weaponsArray[_selectedWeap]._wepModel.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
                     effect.TextureEnabled = true;
-                    effect.Texture = _weaponPossessed._weaponPossessed[_weaponPossessed._selectedWeapon]._weapTexture;
+                    effect.Texture = CConsole._Weapon._weaponsArray[_selectedWeap]._weapTexture;
 
                     effect.World = ComputeWeaponWorldMatrix();
                     effect.View = view;
@@ -515,7 +516,7 @@ namespace Engine.Game
                     _model.ChangeAnimSpeed(5.0f);
                     _model.ChangeAnimation("machete_attack", false, 0.2f);
 
-                    if (distSquared <= (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range) * (_weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._range))
+                    if (distSquared <= (CConsole._Weapon._weaponsArray[_selectedWeap]._range) * (CConsole._Weapon._weaponsArray[_selectedWeap]._range))
                     {
                         Random random = new Random();
                         int rand = random.Next();
@@ -523,7 +524,7 @@ namespace Engine.Game
                         // Shoot at the player
                         if (rand == prob[0])
                         {
-                            player._life -= _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._damagesPerBullet;
+                            player._life -= CConsole._Weapon._weaponsArray[_selectedWeap]._damagesPerBullet;
                         }
 
                     }
@@ -606,7 +607,7 @@ namespace Engine.Game
 
         public void SetReload(string typeName)
         {
-            if (!_isReloading)
+            if (!_isReloading && !_isShoting)
             {
                 if (_isCrouch)
                 {
@@ -664,7 +665,7 @@ namespace Engine.Game
 
         public void SetSwitchingWeapon(string typeName)
         {
-            if (!_isSwitchingWeapon && !_isReloading && !_isJumping)
+            if (!_isSwitchingWeapon && !_isReloading && !_isJumping && !_isShoting)
             {
                 if (_isCrouch)
                 {
@@ -686,9 +687,33 @@ namespace Engine.Game
 
         }
 
+        public void SetShot(string typeName)
+        {
+            if (!_isShoting && !_isReloading && !_isSwitchingWeapon && !_isJumping)
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation(typeName + "_attack-crouch", false, 0.3f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation(typeName + "_attack", false, 0.3f);
+                }
+
+                _isShoting = true;
+                _isSwitchingWeapon = false;
+                _isWalkAnimPlaying = false;
+                _isWaitAnimPlaying = false;
+                _isReloading = false;
+                _isJumping = false;
+            }
+        }
+
         public void ChangeWeapon(int iD)
         {
-            _weaponPossessed._selectedWeapon = iD;
+            _selectedWeap = iD;
         }
 
         // Handle the damages and the character death
@@ -915,33 +940,31 @@ namespace Engine.Game
         {
             Matrix world = Matrix.Identity;
 
-            switch (_weaponPossessed._selectedWeapon)
+            switch (_selectedWeap)
             {
                 case 0:
-                    //world = _model.GetBoneMatrix(40, Matrix.Identity,
-                    //1.0f, new Vector3(-2.0f, 0.0f, -2.0f));
-                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(0f) * Matrix.CreateRotationY(3.089f) * Matrix.CreateRotationZ(1.2799f),
+                    0.65f, new Vector3(-0.34f, 0.0f, 0.13f));
                     break;
                 case 1:
-                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(0f) * Matrix.CreateRotationY(1.6899f) * Matrix.CreateRotationZ(3.08f),
+                    0.72f, new Vector3(0.2f, -0.45f, 0.049f));
                     break;
                 case 2:
-                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(0.2f) * Matrix.CreateRotationY(1.28f) * Matrix.CreateRotationZ(3.179f),
+                    0.28f, new Vector3(0.559f, -1.579f, -0.09f));
                     break;
                 case 3:
-                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(1.8599f) * Matrix.CreateRotationZ(1.4999f),
+                    0.585f, new Vector3(0.039f, 0.2f, 0.709f));
                     break;
                 case 4:
-                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(40, Matrix.CreateRotationX(3.12f) * Matrix.CreateRotationY(-0.09f) * Matrix.CreateRotationZ(-1.549f),
+                    0.65f, new Vector3(-1.469f, 0.08f, 0.2f));
                     break;
                 case 5:
-                    world = _model.GetBoneMatrix(17, Matrix.CreateRotationX(rx) * Matrix.CreateRotationY(ry) * Matrix.CreateRotationZ(rz),
-                    1.0f, new Vector3(px, py, pz));
+                    world = _model.GetBoneMatrix(17, Matrix.CreateRotationX(1.4999f) * Matrix.CreateRotationY(4.78f) * Matrix.CreateRotationZ(-4.38f),
+                    0.625f, new Vector3(0.01f, 1.697f, -0.27f));
                     break;
 
             }
