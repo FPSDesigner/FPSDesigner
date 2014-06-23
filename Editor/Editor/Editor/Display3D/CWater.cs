@@ -226,6 +226,8 @@ namespace Engine.Display3D
             reflectionCamera = new CCamera(graphics, Vector3.Zero, Vector3.Zero, 0.1f, 10000.0f, true);
 
             pickWorld = Matrix.CreateTranslation(Vector3.Zero);
+
+            GenerateBoundingBoxes();
         }
 
         public void GenerateBoundingBoxes()
@@ -294,7 +296,8 @@ namespace Engine.Display3D
         /// <param name="gameTime">GameTime snapshot</param>
         public void PreDraw(CCamera camera, GameTime gameTime)
         {
-            isInView = camera.BoundingVolumeIsInView(BoundingBoxChunk);
+            isInView = camera.BoundingVolumeIsInView(RealBoundingBox);
+            Console.WriteLine(isInView);
             if (isInView)
             {
                 renderReflection(camera, gameTime);

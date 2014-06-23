@@ -32,7 +32,7 @@ namespace Engine.Display3D
         public Matrix _rotation;
 
         public SkinnedModel skinnedModel;
-        private AnimationController animationController;
+        public AnimationController animationController;
 
         public Matrix[] _modelTransforms;
 
@@ -65,6 +65,8 @@ namespace Engine.Display3D
             else
                 skinnedModel = content.Load<SkinnedModel>("Models\\" + _modelName.Replace(".xnb",""));
 
+            animationController = new AnimationController(skinnedModel.SkeletonBones);
+
             foreach (ModelMesh mesh in skinnedModel.Model.Meshes)
             {
                 foreach (SkinnedEffect effect in mesh.Effects)
@@ -79,7 +81,6 @@ namespace Engine.Display3D
             }
 
             // Create an animation controller and start a clip
-            animationController = new AnimationController(skinnedModel.SkeletonBones);
             animationController.Speed = _animationSpeed;
 
             animationController.TranslationInterpolation = InterpolationMode.Linear;

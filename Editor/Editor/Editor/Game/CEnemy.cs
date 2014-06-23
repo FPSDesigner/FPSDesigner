@@ -559,6 +559,8 @@ namespace Engine.Game
 
         public void SetWalk(bool toggle, string typeName)
         {
+            if (_model.animationController == null)
+                return;
             if (!_isReloading && !_isSwitchingWeapon & !_isJumping)
             {
                 if (toggle && !_isWalkAnimPlaying)
@@ -604,6 +606,9 @@ namespace Engine.Game
 
         public void SetSwitchingWeapon(string typeName)
         {
+            if (_model.animationController == null)
+                return;
+
             if (!_isSwitchingWeapon && !_isReloading && !_isJumping && !_isShoting)
             {
                 if (_isCrouch)
@@ -628,6 +633,8 @@ namespace Engine.Game
 
         public void SetShot(string typeName)
         {
+            if (_model.animationController == null)
+                return;
             if (!_isShoting && !_isReloading && !_isSwitchingWeapon && !_isJumping)
             {
                 if (_isCrouch)
