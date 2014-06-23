@@ -515,8 +515,8 @@ namespace Engine.Game
                                     if (boxTouched != "")
                                     {
                                         Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                        Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
-                                        Game.CConsole.addMessage("Hit " + boxTouched);
+                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
+                                        //Game.CConsole.addMessage("Hit " + boxTouched);
 
                                         // We handle all the damages according to the box touched...
                                         enemy.HandleDamages(enemy.GetDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, boxTouched), boxTouched);

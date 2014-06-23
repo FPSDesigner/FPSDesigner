@@ -418,6 +418,19 @@ namespace Engine.Game
         {
             foreach (ModelMesh mesh in _weaponPossessed._weaponsArray[_weaponPossessed._selectedWeapon]._wepModel.Meshes)
             {
+                Matrix world;
+
+                if (_weaponPossessed._weaponPossessed[_weaponPossessed._selectedWeapon]._wepType != 3)
+                {
+                    world = _model.GetBoneMatrix("palm_02_R", Matrix.Identity,
+                     1.0f, Vector3.Zero);
+                }
+                else
+                {
+                    world = _model.GetBoneMatrix("palm_02_L", Matrix.Identity,
+                     1.0f, Vector3.Zero);
+                }
+
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
