@@ -270,6 +270,9 @@ namespace Engine.Game
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
         {
+            if (_model.animationController == null)
+                return;
+
             // Interpolation
             if (_multiSpeed > 0)
             {
