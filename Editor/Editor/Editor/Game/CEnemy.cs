@@ -560,7 +560,29 @@ namespace Engine.Game
         }
 
         // Handle the damages and the character death
-        public void ReceivedDamages(float damages, string animToPlay)
+        public float GetDamages(float damages, string hitbox)
+        {
+            hitbox = hitbox.Split('.')[0];
+            switch (hitbox)
+            {
+                case "bb_Head":
+                    damages *= 1.75f;
+                    break;
+                case "bb_Arm":
+                    damages *= 0.9f;
+                    break;
+                case "bb_Leg":
+                    damages *= 0.9f;
+                    break;
+                case "bb_Body":
+                    damages = 1.35f;
+                    break;
+            }
+
+            return damages;
+        }
+
+        public void HandleDamages(float damages, string hitbox)
         {
             // If the player is not already dead
             if (!_isDead)
@@ -571,9 +593,6 @@ namespace Engine.Game
                     // The player is not 
                     if (!_isDyingAnimPlaying)
                     {
-                        if (animToPlay == "death_headshot")
-                            _isHeadShot = true;
-
                         _collisionHeight = 0.05f;
 
                         // We save the death pos and rot
@@ -581,12 +600,14 @@ namespace Engine.Game
                         _deathRotation =
                             _rotation * GetTerrainNormalRotation(_position);
 
-                        if (!_isCrouch)
-                        {
-                            _model.ChangeAnimSpeed(2f);
-                            _model.ChangeAnimation(animToPlay, false, 0.75f);
-                            _isDyingAnimPlaying = true;
-                        }
+                        _model.ChangeAnimSpeed(2f);
+                        // Back Death
+                        if (hitbox.Contains('.'))
+                            _model.ChangeAnimation("death_back", false, 0.75f);
+                        else
+                            _model.ChangeAnimation("death_front", false, 0.75f);
+
+                        _isDyingAnimPlaying = true;
                     }
                     _life = 0;
                 }

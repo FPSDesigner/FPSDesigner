@@ -516,15 +516,8 @@ namespace Engine.Game
                                         Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
                                         Game.CConsole.addMessage("Hit " + boxTouched);
 
-                                        switch (boxTouched)
-                                        {
-                                            case "bb_Head":
-                                                enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_headshot");
-                                                break;
-                                            case "bb_Body":
-                                                enemy.ReceivedDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, "death_bodyFront");
-                                                break;
-                                        }
+                                        // We handle all the damages according to the box touched...
+                                        enemy.HandleDamages(enemy.GetDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, boxTouched), boxTouched);
                                     }
                                 }
 
