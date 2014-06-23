@@ -115,15 +115,6 @@ namespace Engine.Game
 
         }
 
-        /*public void Play(float vol = 1f, float pitch = 0f, float pan = 0f)
-        {
-            _soundInstance.Volume = (vol == 1f) ? _soundInstance.Volume : vol;
-            _soundInstance.Pitch = (pitch == 0f) ? _soundInstance.Pitch : pitch;
-            _soundInstance.Pan = (pan == 0f) ? _soundInstance.Pan : pan;
-
-            _soundInstance.Stop();
-            _soundInstance.Play();
-        }*/
     }
     #endregion
 

@@ -111,6 +111,7 @@ namespace Engine.Game
                         listPlayers[ID].gunId = (int)ExtractDataFromString(datas[5], SentData.Int);
                         listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[6], SentData.Bool));
                         listPlayers[ID].SetReload((bool)ExtractDataFromString(datas[8], SentData.Bool));
+                        listPlayers[ID].SetShot((bool)ExtractDataFromString(datas[9], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
@@ -163,9 +164,11 @@ namespace Engine.Game
             }
 
             string lastshotRay = "";
+            bool setShot = false;
 
             if (CConsole._Character._justShot) // player shot
             {
+                setShot = true;
                 CConsole._Character._justShot = false;
                 foreach (KeyValuePair<int, CPlayer> pl in listPlayers)
                 {
@@ -183,8 +186,10 @@ namespace Engine.Game
             if (setReload)
                 CConsole._Character._justReloaded = false;
 
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0"));
+            bool setSwitch = CConsole._Character._justSwitch;
+
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload|shot|switch
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0") + "|" + ((setShot) ? "1":"0"));
         }
 
         public void PlayerDisconnected(int id)

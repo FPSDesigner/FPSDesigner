@@ -58,6 +58,7 @@ namespace Engine.Game
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
         public bool _justShot = false;
         public bool _justReloaded = false;
+        public bool _justSwitch = false;
 
         public Ray _lastShot;
 
@@ -742,6 +743,8 @@ namespace Engine.Game
             {
                 if ((!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying) && !_isReloading && !_isShoting && !_isSwimAnimationPlaying)
                 {
+                    _justSwitch = true;
+
                     // If he scrolls down
                     if ((mouseState.ScrollWheelValue > _previousScrollWheelValue) ||
                         CGameSettings.useGamepad && (CGameSettings.gamepadState.IsButtonDown(CGameSettings._gameSettings.KeyMapping.GPSwitch) && CGameSettings.oldGamepadState.IsButtonUp(CGameSettings._gameSettings.KeyMapping.GPSwitch)))

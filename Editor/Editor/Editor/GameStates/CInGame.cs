@@ -291,8 +291,6 @@ namespace Engine.GameStates
 
             Game.CEnemyManager.Update(gameTime, cam);
 
-            Game.CEnemyManager._enemyList[0].debugKey(kbState);
-
             Display3D.Particles.ParticlesManager.Update(gameTime);
 
             

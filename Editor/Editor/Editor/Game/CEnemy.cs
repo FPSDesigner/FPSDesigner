@@ -241,70 +241,6 @@ namespace Engine.Game
             SetEnemyName(name);
         }
 
-        // DEBUG
-        public void debugKey(KeyboardState kbState)
-        {
-            if (kbState.IsKeyDown(Keys.PageUp))
-            {
-                px += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.Left))
-            {
-                px -= 0.01f;
-            }
-
-            if (kbState.IsKeyDown(Keys.Up))
-            {
-                py += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.Down))
-            {
-                py -= 0.01f;
-            }
-
-            if (kbState.IsKeyDown(Keys.PageDown))
-            {
-                pz += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.Right))
-            {
-                pz -= 0.01f;
-            }
-
-            // Rotation
-            if (kbState.IsKeyDown(Keys.T))
-            {
-                rx += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.G))
-            {
-                rx -= 0.01f;
-            }
-
-            if (kbState.IsKeyDown(Keys.Y))
-            {
-                ry += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.H))
-            {
-                ry -= 0.01f;
-            }
-
-            if (kbState.IsKeyDown(Keys.U))
-            {
-                rz += 0.01f;
-            }
-            if (kbState.IsKeyDown(Keys.J))
-            {
-                rz -= 0.01f;
-            }
-
-
-
-            CConsole.addMessage("Transla : " + px + " | " + py + " |" + pz+"\n");
-            CConsole.addMessage("Rot : " + rx + " | " + ry + " |" + rz + "\n");
-        }
-
         public void SetEnemyName(string name)
         {
             _hudText = name;
@@ -313,7 +249,6 @@ namespace Engine.Game
 
         public void LoadContent(ContentManager content, Display3D.CCamera cam)
         {
-
             // We load the ennemy content
             _model.LoadContent(content);
 
@@ -709,6 +644,15 @@ namespace Engine.Game
                 _isReloading = false;
                 _isJumping = false;
             }
+        }
+
+        public void PlayFireSound(Vector3 PlayerPos)
+        {
+            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._audioEmitter.Position = _position;
+            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._audioListener.Position = PlayerPos;
+
+            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._soundInstance.Play();
+
         }
 
         public void ChangeWeapon(int iD)

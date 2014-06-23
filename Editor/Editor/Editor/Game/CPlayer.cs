@@ -93,6 +93,15 @@ namespace Engine.Game
                 botController.SetReload(CConsole._Weapon._weaponsArray[gunId].MultiType);
         }
 
+        public void SetShot(bool toggle)
+        {
+            if (toggle)
+            {
+                botController.SetShot(CConsole._Weapon._weaponsArray[gunId].MultiType);
+                botController.PlayFireSound(CConsole._Camera._cameraPos);
+            }
+        }
+
         public string CheckIntersects(Ray ray, out float? distance)
         {
             return botController.RayIntersectsHitbox(ray, out distance);

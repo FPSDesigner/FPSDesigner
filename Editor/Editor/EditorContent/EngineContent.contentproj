@@ -204,11 +204,6 @@
       <Processor>TextureProcessor</Processor>
       <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
     </Compile>
-    <Compile Include="Textures\Terrain\weightMap.bmp">
-      <Name>weightMap</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\terrain_grass.jpg">
       <Name>terrain_grass</Name>
       <Importer>TextureImporter</Importer>
@@ -1531,6 +1526,20 @@
   <ItemGroup>
     <Compile Include="2D\Menu\MENU_Background.png">
       <Name>MENU_Background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Terrain\PavingOldStones.tga">
+      <Name>PavingOldStones</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Terrain\weightMap.bmp">
+      <Name>weightMap</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
