@@ -105,12 +105,12 @@ namespace Engine.Game
                     int ID;
                     if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
                     {
-                        Console.WriteLine(receivedData);
+                        Console.WriteLine(datas[8]);
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
                         listPlayers[ID].gunId = (int)ExtractDataFromString(datas[5], SentData.Int);
                         listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[6], SentData.Bool));
-                        listPlayers[ID].SetReload((bool)ExtractDataFromString(datas[7], SentData.Bool));
+                        listPlayers[ID].SetReload((bool)ExtractDataFromString(datas[8], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
