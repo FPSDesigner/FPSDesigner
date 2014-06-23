@@ -484,7 +484,7 @@ namespace Engine.Game
                 _runningVelocity *= 2;
 
                 _model.ChangeAnimSpeed(2.5f);
-                _model.ChangeAnimation(typeName + "_waik", true, 0.8f);
+                _model.ChangeAnimation(typeName + "_wait", true, 0.8f);
 
                 _isCrouch = false;
             }
@@ -513,7 +513,7 @@ namespace Engine.Game
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "handgun_reload", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_reload", true, 0.55f);
                 }
 
                 _isReloading = true;
