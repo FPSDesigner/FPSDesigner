@@ -478,7 +478,7 @@ namespace Software.Pages
             }
 
             // Pick-Ups
-            if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Pickups != null)
+            if (GlobalVars.gameInfo.Weapons.Weapon != null)
             {
                 foreach (Engine.Game.LevelInfo.Weapon wep in GlobalVars.gameInfo.Weapons.Weapon)
                 {
@@ -493,27 +493,22 @@ namespace Software.Pages
             }
 
             // Water
-            if (GlobalVars.gameInfo.Water != null && GlobalVars.gameInfo.Water.Water != null && GlobalVars.gameInfo.Water.Water.Count > 0)
-            {
-                TreeViewItem treeItem = new TreeViewItem();
-                treeItem.Header = "Water Instance";
 
-                Water.Items.Add(treeItem);
-                listTreeAv_Waters.Add(treeItem);
-            }
+            TreeViewItem treeItem2 = new TreeViewItem();
+            treeItem2.Header = "Water Instance";
+
+            Water.Items.Add(treeItem2);
+            listTreeAv_Waters.Add(treeItem2);
 
             // Lights
-            if (GlobalVars.gameInfo.Lights != null && GlobalVars.gameInfo.Lights.LightsList != null && GlobalVars.gameInfo.Lights.LightsList.Count > 0)
+            string[] colors = new string[] { "Green", "Red", "Blue" };
+            foreach (string clr in colors)
             {
-                string[] colors = new string[] { "Green", "Red", "Blue" };
-                foreach (string clr in colors)
-                {
-                    TreeViewItem treeItem = new TreeViewItem();
-                    treeItem.Header = "Light #" + clr;
+                TreeViewItem treeItem = new TreeViewItem();
+                treeItem.Header = "Light #" + clr;
 
-                    Lights.Items.Add(treeItem);
-                    listTreeAv_Lights.Add(treeItem);
-                }
+                Lights.Items.Add(treeItem);
+                listTreeAv_Lights.Add(treeItem);
             }
 
             // Bots

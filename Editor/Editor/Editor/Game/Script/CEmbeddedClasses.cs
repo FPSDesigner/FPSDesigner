@@ -24,6 +24,8 @@ namespace Engine.Game.Script.Embedded
         public Rectangle? SourceRectangle;
         public Texture2D Texture;
         public Color Color;
+        public float Rotation;
+        public Vector2 Origin;
 
         public bool isActive;
 
@@ -57,9 +59,10 @@ namespace Engine.Game.Script.Embedded
         }
 
 
-        public C2DScriptRectangle(Rectangle rect, Rectangle? sourceRect = null, Color? color = null, Texture2D texture = null, bool active = true, int order = 1)
+        public C2DScriptRectangle(Rectangle rect, Rectangle? sourceRect = null, Color? color = null, Texture2D texture = null, bool active = true, int order = 1, float rot = 0)
         {
             Color = color ?? Color.White;
+            Rotation = rot;
             
             if (texture != null)
                 Texture = texture;
@@ -73,6 +76,7 @@ namespace Engine.Game.Script.Embedded
             drawOrder = order;
             Rectangle = rect;
             SourceRectangle = sourceRect;
+            Origin = Vector2.Zero;
         }
     }
 

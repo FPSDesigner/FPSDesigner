@@ -169,6 +169,11 @@ namespace Engine.Game.Script
             return elt;
         }
 
+        public Vector2 GetVector2(float x, float y)
+        {
+            return new Vector2(x, y);
+        }
+
         public Embedded.C2DScriptRectangle GUIImage(Rectangle rect, Texture2D texture, Rectangle? sourceRect = null, Color? color = null, bool active = true, int order = 1)
         {
             if (sourceRect == Rectangle.Empty)

@@ -291,7 +291,7 @@ namespace Engine.Display2D
                 for (int i = 0; i < ScriptableRectangle.Count; i++)
                 {
                     if (ScriptableRectangle[i].isActive)
-                        _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].SourceRectangle, ScriptableRectangle[i].Color);
+                        _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].SourceRectangle, ScriptableRectangle[i].Color, ScriptableRectangle[i].Rotation, ScriptableRectangle[i].Origin, SpriteEffects.None, 0);
                 }
             }
             if (_isFading)

@@ -118,6 +118,7 @@ namespace Engine.Game.Script
             RegisterFunction("hasPlayerJustClicked", scriptFunctions, scriptFunctions.GetType().GetMethod("HasPlayerJustClicked"));
             RegisterFunction("get3DTo2DPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("Get3DTo2DPosition"));
             RegisterFunction("getScreenSize", scriptFunctions, scriptFunctions.GetType().GetMethod("GetScreenSize"));
+            RegisterFunction("getVector2", scriptFunctions, scriptFunctions.GetType().GetMethod("GetVector2"));
 
             // Area functions
             RegisterFunction("getDistanceBetweenPoints3D", scriptFunctions, scriptFunctions.GetType().GetMethod("GetDistanceBetweenPoints3D"));
