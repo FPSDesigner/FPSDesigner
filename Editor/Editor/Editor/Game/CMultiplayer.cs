@@ -50,7 +50,7 @@ namespace Engine.Game
             /*ClientHandler.Client.SendTimeout = 5000;
             ClientHandler.Client.ReceiveTimeout = 5000;*/
         }
-        
+
         public bool Connect(string host, int port)
         {
             IPAddress IP;
@@ -112,6 +112,8 @@ namespace Engine.Game
                         listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[6], SentData.Bool));
                         listPlayers[ID].SetReload((bool)ExtractDataFromString(datas[8], SentData.Bool));
                         listPlayers[ID].SetShot((bool)ExtractDataFromString(datas[9], SentData.Bool));
+                        listPlayers[ID].SetSwitch((bool)ExtractDataFromString(datas[10], SentData.Bool));
+                        listPlayers[ID].SetWalk((bool)ExtractDataFromString(datas[11], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
@@ -131,13 +133,14 @@ namespace Engine.Game
                     {
                         listPlayers[ID].ReceiveHit((int)ExtractDataFromString(datas[3], SentData.Int), datas[2]);
                     }
-                } else if(receivedData.StartsWith("UGOTHIT|"))
+                }
+                else if (receivedData.StartsWith("UGOTHIT|"))
                 {
-                     int ID;
-                     if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
-                     {
-                         CConsole._Character._life -= (int)ExtractDataFromString(datas[3], SentData.Int);
-                     }
+                    int ID;
+                    if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
+                    {
+                        CConsole._Character._life -= (int)ExtractDataFromString(datas[3], SentData.Int);
+                    }
                 }
 
 
@@ -187,9 +190,11 @@ namespace Engine.Game
                 CConsole._Character._justReloaded = false;
 
             bool setSwitch = CConsole._Character._justSwitch;
+            if (setSwitch)
+                CConsole._Character._justSwitch = false;
 
             // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload|shot|switch
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0") + "|" + ((setShot) ? "1":"0"));
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0") + "|" + ((setShot) ? "1" : "0") + "|" + ((setSwitch) ? "1" : "0") + "|" + ((CConsole._Camera._isMoving) ? "1" : "0"));
         }
 
         public void PlayerDisconnected(int id)

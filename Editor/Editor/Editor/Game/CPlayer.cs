@@ -72,6 +72,12 @@ namespace Engine.Game
             life = botController._life;
         }
 
+        public void SetWalk(bool toggle)
+        {
+            if (toggle)
+                botController.SetWalk(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
+        }
+
         public void SetCrouched(bool toggle)
         {
             if (isCrouched != toggle)
@@ -99,6 +105,15 @@ namespace Engine.Game
             {
                 botController.SetShot(CConsole._Weapon._weaponsArray[gunId].MultiType);
                 botController.PlayFireSound(CConsole._Camera._cameraPos);
+            }
+        }
+
+
+        public void SetSwitch(bool toggle)
+        {
+            if (toggle)
+            {
+                botController.SetSwitchingWeapon(CConsole._Weapon._weaponsArray[gunId].MultiType);
             }
         }
 

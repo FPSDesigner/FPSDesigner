@@ -265,7 +265,7 @@ namespace Engine.Game
 
             // Play first anim
             _model.ChangeAnimSpeed(0.5f);
-            _model.BeginAnimation("bow_wait", true);
+            _model.BeginAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait", true);
         }
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -285,7 +285,7 @@ namespace Engine.Game
                 if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(0.4f);
-                    _model.ChangeAnimation("bow_wait", true, 0.8f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
@@ -295,7 +295,7 @@ namespace Engine.Game
                 if (_isMoving && !_isWalkAnimPlaying && !_isCrouch && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("heavy_walk", true, 0.5f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk", true, 0.5f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
@@ -305,7 +305,7 @@ namespace Engine.Game
                 if (_isCrouch && !_isMoving && !_isWaitAnimPlaying && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(0.8f);
-                    _model.ChangeAnimation("machete_wait-crouch", true, 0.8f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait-crouch", true, 0.8f);
 
                     _isWalkAnimPlaying = false;
                     _isWaitAnimPlaying = true;
@@ -315,7 +315,7 @@ namespace Engine.Game
                 if (_isCrouch && _isMoving && !_isWalkAnimPlaying && !_isJumping)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("machete_walk-crouch", true, 0.3f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk-crouch", true, 0.3f);
 
                     _isWaitAnimPlaying = false;
                     _isWalkAnimPlaying = true;
@@ -352,26 +352,22 @@ namespace Engine.Game
                 _isWalkAnimPlaying = false;
             }
 
-            if (_isJumping && _model.HasFinished())
-            {
-                _model.ChangeAnimSpeed(2.5f);
-                _model.ChangeAnimation("machete_walk", true, 0.5f);
-
-                _isJumping = false;
-            }
-
-            if (_isReloading && _model.HasFinished())
+            if ((_isJumping || _isSwitchingWeapon || _isReloading) && _model.HasFinished())
             {
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("machete_walk-crouch", true, 0.5f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk-crouch", true, 0.5f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation("machete_walk", true, 0.5f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk", true, 0.5f);
                 }
+
+                _isJumping = false;
+                _isReloading = false;
+                _isSwitchingWeapon = false;
             }
 
             _model.Update(gameTime, _position, _rotation);
@@ -449,7 +445,7 @@ namespace Engine.Game
                 if (_isAgressive && IsAnyPlayerInSight())
                 {
                     _model.ChangeAnimSpeed(5.0f);
-                    _model.ChangeAnimation("machete_attack", false, 0.2f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_attack", false, 0.2f);
 
                     if (distSquared <= (CConsole._Weapon._weaponsArray[_selectedWeap]._range) * (CConsole._Weapon._weaponsArray[_selectedWeap]._range))
                     {
@@ -563,39 +559,47 @@ namespace Engine.Game
 
         public void SetWalk(bool toggle, string typeName)
         {
-            if (toggle)
+            if (!_isReloading && !_isSwitchingWeapon & !_isJumping)
             {
-                if (_isCrouch)
+                if (toggle && !_isWalkAnimPlaying)
                 {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.35f);
-                }
-                else
-                {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_walk", true, 0.35f);
+                    if (_isCrouch)
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.35f);
+                    }
+                    else
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(typeName + "_walk", true, 0.35f);
+                    }
+
+                    _isWalkAnimPlaying = true;
+                    _isWaitAnimPlaying = false;
+
                 }
 
+                if (!toggle && !_isWaitAnimPlaying)
+                {
+                    if (_isCrouch)
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.35f);
+                    }
+                    else
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(typeName + "_wait", true, 0.35f);
+                    }
+
+
+                    _isWalkAnimPlaying = false;
+                    _isWaitAnimPlaying = true;
+                }
+
+                _isReloading = false;
+                _isSwitchingWeapon = false;
             }
-
-            else
-            {
-                if (_isCrouch)
-                {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.35f);
-                }
-                else
-                {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_wait", true, 0.35f);
-                }
-            }
-
-            _isWalkAnimPlaying = true;
-            _isWaitAnimPlaying = false;
-            _isReloading = false;
-            _isSwitchingWeapon = false;
         }
 
         public void SetSwitchingWeapon(string typeName)

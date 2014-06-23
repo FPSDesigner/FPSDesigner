@@ -92,7 +92,7 @@ namespace LinuxServer
                     {
                         foreach (CPlayer pl in playerList)
                             if (pl != PlayerWriting)
-                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5] + "|" + info[6] + "|" + info[7] + "|" + info[8], pl.endPoint);
+                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5] + "|" + info[6] + "|" + info[7] + "|" + info[8] + "|" + info[10] + "|" + info[11], pl.endPoint);
                     }
                     else if (data == "QUIT")
                     {
