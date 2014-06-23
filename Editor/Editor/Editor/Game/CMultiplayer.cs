@@ -105,6 +105,7 @@ namespace Engine.Game
                     int ID;
                     if (Int32.TryParse(datas[1], out ID) && listPlayers.ContainsKey(ID))
                     {
+                        Console.WriteLine(receivedData);
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
                         listPlayers[ID].gunId = (int)ExtractDataFromString(datas[5], SentData.Int);
@@ -183,7 +184,7 @@ namespace Engine.Game
                 CConsole._Character._justReloaded = false;
 
             // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + setReload);
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0"));
         }
 
         public void PlayerDisconnected(int id)
