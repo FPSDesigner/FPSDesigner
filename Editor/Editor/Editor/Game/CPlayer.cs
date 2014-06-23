@@ -14,7 +14,7 @@ namespace Engine.Game
 {
     class CPlayer
     {
-        private CEnemy botController;
+        public CEnemy botController;
         public string userName;
         public int ID;
         public int gunId = 0;
@@ -85,6 +85,11 @@ namespace Engine.Game
         public string CheckIntersects(Ray ray, out float? distance)
         {
             return botController.RayIntersectsHitbox(ray, out distance);
+        }
+
+        public float GetRealDamages(string hitbox)
+        {
+            return botController.GetDamages(CConsole._Weapon._weaponsArray[gunId]._damagesPerBullet, hitbox);
         }
     }
 }

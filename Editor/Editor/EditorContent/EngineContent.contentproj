@@ -1424,7 +1424,7 @@
     <Compile Include="Models\MedievalPlatform.fbx">
       <Name>MedievalPlatform</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
+      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

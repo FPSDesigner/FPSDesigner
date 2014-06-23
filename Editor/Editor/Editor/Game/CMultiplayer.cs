@@ -122,6 +122,10 @@ namespace Engine.Game
                 {
                     CConsole.addMessage("Server: " + receivedData.Replace("ECHO|", ""));
                 }
+                else if (receivedData.StartsWith("GOTHIT|"))
+                {
+                    Console.WriteLine("Got hit on " + datas[2] + " (" + datas[3] + " dmgs)");
+                }
 
 
             }
@@ -158,8 +162,7 @@ namespace Engine.Game
 
                     if (intersects != "")
                     {
-                        Console.WriteLine("HIT! " + intersects + " on " + pl.Value.userName);
-                        SendMessage("HIT|" + pl.Value.ID);
+                        SendMessage("HIT|" + pl.Value.ID + "|" + intersects + "|" + pl.Value.GetRealDamages(intersects));
                     }
                 }
             }

@@ -99,6 +99,16 @@ namespace WinServer.Codes
                         GlobalVars.AddNewMessage(PlayerWriting.userName + " disconnected.");
                         DisconnectPlayer(PlayerWriting);
                     }
+                    else if (info.Length > 3 && data == "HIT")
+                    {
+                        int id = (int)ExtractDataFromString(info[1], SentData.Int);
+                        foreach (CPlayer pl in playerList)
+                            if (pl.ID == id)
+                            {
+                                SendMessage("GOTHIT|" + PlayerWriting.ID + "|" + info[2] + "|" + info[3], PlayerWriting.endPoint);
+                                return;
+                            }
+                    }
                 }
             }
         }

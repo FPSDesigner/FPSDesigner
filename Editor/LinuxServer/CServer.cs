@@ -92,7 +92,7 @@ namespace LinuxServer
                     {
                         foreach (CPlayer pl in playerList)
                             if (pl != PlayerWriting)
-                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5] + "|" + info[6], pl.endPoint);
+                                SendMessage("SETINFO|" + PlayerWriting.ID + "|" + info[1] + "|" + info[2] + "|" + info[3] + "|" + info[4] + "|" + info[5] + "|" + info[6] + "|" + info[7], pl.endPoint);
                     }
                     else if (data == "QUIT")
                     {
@@ -181,7 +181,7 @@ namespace LinuxServer
             return data.ToString();
         }
 
-        public object ExtractDataFromString(string msg, SentData type)
+        private object ExtractDataFromString(string msg, SentData type)
         {
             if (type == SentData.Vector3)
             {
@@ -202,6 +202,14 @@ namespace LinuxServer
             else if (type == SentData.Bool)
             {
                 return (msg == "1" || msg == "true");
+            }
+            else if (type == SentData.Int)
+            {
+                int ret;
+                if (Int32.TryParse(msg, out ret))
+                    return ret;
+                else
+                    return 0;
             }
             return null;
         }
