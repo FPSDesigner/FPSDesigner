@@ -25,7 +25,7 @@ namespace LinuxServer
             Vector3,
             Bool,
         };
-
+        
         public CServer(int port)
         {
             Port = port;

@@ -174,6 +174,8 @@ namespace Engine.Game
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
             bool isUnderWater)
         {
+            if (_life < 0)
+                CConsole.addMessage("You're dead!!");
             _cam = cam;
 
             this._isUnderWater = isUnderWater;
