@@ -57,6 +57,7 @@ namespace Engine.Game
         public bool _isCrouched = false;
         private bool _isStandingUp = false; // Used when the player want to stand up after a crouch
         public bool _justShot = false;
+        public bool _justReloaded = false;
 
         public Ray _lastShot;
 
@@ -86,6 +87,7 @@ namespace Engine.Game
         public float _uniqueWeaponIdCarrying = 0;
 
         public Display3D.CTerrain _terrain;
+        public Game.CWeapon _weaponClass;
 
         public void Initialize()
         {
@@ -165,6 +167,8 @@ namespace Engine.Game
 
             _muzzleRandom = new Random();
             _horizontalVelocity = _walkSpeed;
+
+            _weaponClass = weap;
         }
 
         public void Update(MouseState mouseState, MouseState oldMouseState, KeyboardState kbState, KeyboardState oldKbState, CWeapon weapon, GameTime gameTime, Display3D.CCamera cam,
@@ -844,7 +848,7 @@ namespace Engine.Game
                 {
                     if ((weapon.Reloading() && !_isReloading && !_isShoting) && (!_isSwitchingAnimPlaying && !_isSwitchingAnim2ndPartPlaying))
                     {
-                        Console.WriteLine("realod");
+                        _justReloaded = true;
                         _isWaitAnimPlaying = false;
                         _isWalkAnimPlaying = false;
                         _isSwimAnimationPlaying = false;

@@ -495,7 +495,7 @@ namespace Engine.Game
             if (!_isJumping)
             {
                 _model.ChangeAnimSpeed(2.0f);
-                _model.ChangeAnimation(type+"_jump", false, 0.65f);
+                _model.ChangeAnimation(type + "_jump", false, 0.65f);
 
                 _isJumping = true;
             }
@@ -508,12 +508,12 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"_reload-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_reload-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"handgun_reload", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "handgun_reload", true, 0.55f);
                 }
 
                 _isReloading = true;
@@ -529,12 +529,12 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"_walk-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"_walk", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_walk", true, 0.55f);
                 }
 
                 _isWalkAnimPlaying = true;
@@ -546,12 +546,12 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"_wait-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.55f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName+"_wait", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_wait", true, 0.55f);
                 }
 
                 _isWalkAnimPlaying = false;

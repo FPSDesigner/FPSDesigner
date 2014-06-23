@@ -107,7 +107,9 @@ namespace Engine.Game
                     {
                         listPlayers[ID].SetNewPos((Vector3)ExtractDataFromString(datas[2], SentData.Vector3), (Vector3)ExtractDataFromString(datas[3], SentData.Vector3));
                         listPlayers[ID].SetCrouched((bool)ExtractDataFromString(datas[4], SentData.Bool));
+                        listPlayers[ID].gunId = (int)ExtractDataFromString(datas[5], SentData.Int));
                         listPlayers[ID].SetJump((bool)ExtractDataFromString(datas[6], SentData.Bool));
+                        listPlayers[ID].SetReload((bool)ExtractDataFromString(datas[7], SentData.Bool));
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
@@ -157,12 +159,13 @@ namespace Engine.Game
                     if (intersects != "")
                     {
                         Console.WriteLine("HIT! " + intersects + " on " + pl.Value.userName);
+                        SendMessage("HIT|" + pl.Value.ID);
                     }
                 }
             }
 
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray
-            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay);
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload
+            SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + CConsole._Character._justReloaded);
         }
 
         public void PlayerDisconnected(int id)
@@ -230,6 +233,14 @@ namespace Engine.Game
             else if (type == SentData.Bool)
             {
                 return (msg == "1" || msg == "true");
+            }
+            else if (type == SentData.Int)
+            {
+                int ret;
+                if (Int32.TryParse(msg, out ret))
+                    return ret;
+                else
+                    return 0;
             }
             return null;
         }

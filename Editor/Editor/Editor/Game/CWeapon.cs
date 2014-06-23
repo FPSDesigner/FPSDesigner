@@ -119,6 +119,26 @@ namespace Engine.Game
             public Vector3 _offset;
             public float _scale;
 
+            public string MultiType
+            {
+                get
+                {
+                    switch (_name)
+                    {
+                        default:
+                        case "Machete":
+                            return "machete";
+                        case "M1911":
+                        case "Deagle":
+                            return "handgun";
+                        case "AK47":
+                        case "M40A5":
+                            return "heavy";
+                        case "Bow":
+                            return "bow";
+                    }
+                }
+            }
         }
         #endregion
 

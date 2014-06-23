@@ -17,6 +17,7 @@ namespace Engine.Game
         private CEnemy botController;
         public string userName;
         public int ID;
+        public int gunId = 0;
 
         private Vector3 newPos;
         private Vector3 oldPos;
@@ -65,14 +66,20 @@ namespace Engine.Game
             if (isCrouched != toggle)
             {
                 isCrouched = toggle;
-                botController.Crouch(toggle);
+                botController.Crouch(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
             }
         }
 
         public void SetJump(bool toggle)
         {
             if (toggle)
-                botController.SetJump();
+                botController.SetJump(CConsole._Weapon._weaponsArray[gunId].MultiType);
+        }
+
+        public void SetReload(bool toggle)
+        {
+            if (toggle)
+                botController.SetReload(CConsole._Weapon._weaponsArray[gunId].MultiType);
         }
 
         public string CheckIntersects(Ray ray, out float? distance)
