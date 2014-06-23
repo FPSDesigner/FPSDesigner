@@ -131,8 +131,11 @@ namespace Engine.Display3D
 
         public void ChangeAnimSpeed(float newSpeed)
         {
-            _animationSpeed = newSpeed;
-            animationController.Speed = _animationSpeed;
+            if (animationController != null)
+            {
+                _animationSpeed = newSpeed;
+                animationController.Speed = _animationSpeed;
+            }
         }
 
         public float GetAnimSpeed()
