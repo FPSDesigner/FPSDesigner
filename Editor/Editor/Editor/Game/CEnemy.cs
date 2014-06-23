@@ -172,6 +172,7 @@ namespace Engine.Game
         private bool _isWaitAnimPlaying;
         private bool _isWalkAnimPlaying;
         private bool _isDyingAnimPlaying;
+        private bool _isSwitchingWeapon;
         private bool _isFrozenAnimPlaying;
         private bool _isReloading;
 
@@ -221,6 +222,7 @@ namespace Engine.Game
             _isCrouch = false;
             _isJumping = false;
             _isReloading = false;
+            _isSwitchingWeapon = false;
 
             _targetPos = _position; // The AI is not moving
 
@@ -407,6 +409,21 @@ namespace Engine.Game
                 GetRealTriangles(true);
         }
 
+        public void DrawWeapon()
+        {
+            //foreach (ModelMesh mesh in _weaponPossessed[weap._selectedWeapon]._wepModel.Meshes)
+            //{
+            //    foreach (BasicEffect effect in mesh.Effects)
+            //    {
+            //        effect.EnableDefaultLighting();
+            //        effect.TextureEnabled = true;
+            //        effect.Texture = weap._weaponPossessed[weap._selectedWeapon]._weapTexture;
+            //    }
+
+            //}
+
+        }
+
         public void AttackPlayer(float distSquared, CCharacter player)
         {
             if (!_isShoting)
@@ -498,6 +515,10 @@ namespace Engine.Game
                 _model.ChangeAnimation(type + "_jump", false, 0.65f);
 
                 _isJumping = true;
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+                _isReloading = false;
+                _isSwitchingWeapon = false;
             }
         }
 
@@ -529,16 +550,14 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_walk-crouch", true, 0.35f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_walk", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_walk", true, 0.35f);
                 }
 
-                _isWalkAnimPlaying = true;
-                _isWaitAnimPlaying = false;
             }
 
             else
@@ -546,17 +565,48 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.35f);
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(typeName + "_wait", true, 0.55f);
+                    _model.ChangeAnimation(typeName + "_wait", true, 0.35f);
+                }
+            }
+
+            _isWalkAnimPlaying = true;
+            _isWaitAnimPlaying = false;
+            _isReloading = false;
+            _isSwitchingWeapon = false;
+        }
+
+        public void SetSwitchingWeapon(string typeName)
+        {
+            if (!_isSwitchingWeapon && !_isReloading && !_isJumping)
+            {
+                if (_isCrouch)
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation(typeName + "_switch-crouch", false, 0.65f);
+                }
+                else
+                {
+                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimation(typeName + "_switch", false, 0.65f);
                 }
 
+                _isSwitchingWeapon = true;
                 _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = true;
+                _isWaitAnimPlaying = false;
+                _isReloading = false;
+                _isJumping = false;
             }
+
+        }
+
+        public void ChangeWeapon(CWeapon newWeap)
+        {
+            _weaponPossessed = newWeap;
         }
 
         // Handle the damages and the character death
@@ -652,7 +702,6 @@ namespace Engine.Game
             }
             return triangles;
         }
-
 
         public void AddEnemyHUD(SpriteBatch sb, Display3D.CCamera cam)
         {
