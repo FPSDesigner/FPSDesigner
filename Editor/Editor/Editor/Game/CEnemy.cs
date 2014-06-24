@@ -138,7 +138,7 @@ namespace Engine.Game
 
         public Display3D.MeshAnimation _model; //The 3Dmodel and all animations
 
-        private int _selectedWeap; // ID of the selected weapon
+        public int _selectedWeap; // ID of the selected weapon
 
         public Vector3 _position; // The character positon
         private Vector3 _targetPos; // The target position

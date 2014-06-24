@@ -121,6 +121,9 @@ namespace Engine.Game
                         listPlayers[ID].SetShot((bool)ExtractDataFromString(datas[9], SentData.Bool));
                         listPlayers[ID].SetSwitch((bool)ExtractDataFromString(datas[10], SentData.Bool));
                         listPlayers[ID].SetWalk((bool)ExtractDataFromString(datas[11], SentData.Bool));
+
+                        if (listPlayers[ID].botController._selectedWeap != listPlayers[ID].gunId)
+                            listPlayers[ID].botController._selectedWeap = listPlayers[ID].gunId;
                     }
                 }
                 else if (receivedData.StartsWith("QUIT|")) // Server message
