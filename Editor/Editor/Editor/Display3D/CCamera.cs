@@ -158,6 +158,7 @@ namespace Engine.Display3D
 
             if (!isCamFrozen)
             {
+                Console.WriteLine(_isMoving);
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
                 CGameSettings.reloadGamepadState();
                 _oldKeyState = keyState;

@@ -624,7 +624,6 @@ namespace Engine.Game
                     _isWaitAnimPlaying = false;
 
                 }
-
                 if (!toggle && !_isWaitAnimPlaying)
                 {
                     if (_isCrouch)

@@ -75,9 +75,7 @@ namespace Engine.Game
 
         public void SetWalk(bool toggle)
         {
-            //Console.WriteLine(toggle);
-            if (toggle)
-                botController.SetWalk(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
+            botController.SetWalk(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
         }
 
         public void SetCrouched(bool toggle)
