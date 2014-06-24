@@ -167,6 +167,7 @@ namespace Engine.Game
         private bool _isJumping;
 
         public bool _isFrozen; // Use to stop translation
+        public bool _isMultiPlayer;
 
         // Animation Boolean
         private bool _isWaitAnimPlaying;
@@ -335,6 +336,8 @@ namespace Engine.Game
 
             // We update the character pos, rot...
             _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
+            if(_isMultiPlayer)
+                Console.WriteLine(rotationValue);
 
             // He was playing the anim, now the character is really dead
             if (_isDyingAnimPlaying && _model.HasFinished())
@@ -375,27 +378,30 @@ namespace Engine.Game
 
             _model.Update(gameTime, _position, _rotation);
 
-            // new target is the camera position
-            if (_isFollowingPlayer)
+            if (!_isMultiPlayer)
             {
-                _targetPos = cam._cameraPos;
-            }
+                // new target is the camera position
+                if (_isFollowingPlayer)
+                {
+                    _targetPos = cam._cameraPos;
+                }
 
-            if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
-            {
-                Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
-                translation.Normalize();
+                if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
+                {
+                    Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+                    translation.Normalize();
 
-                rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
-                _targetPos.Z - _position.Z);
+                    rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
+                    _targetPos.Z - _position.Z);
 
-                translation = _runningVelocity * translation;
-                _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
-                _isMoving = true;
-            }
-            else
-            {
-                _isMoving = false;
+                    translation = _runningVelocity * translation;
+                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                    _isMoving = true;
+                }
+                else
+                {
+                    _isMoving = false;
+                }
             }
         }
 
@@ -475,7 +481,7 @@ namespace Engine.Game
 
         public void MoveTo(Vector3 position, GameTime gameTime)
         {
-            if (!_isFrozen && !_isFollowingPlayer)
+            if (!_isMultiPlayer && !_isFrozen && !_isFollowingPlayer)
             {
                 _targetPos = position;
 
@@ -662,11 +668,13 @@ namespace Engine.Game
 
         public void PlayFireSound(Vector3 PlayerPos)
         {
-            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._audioEmitter.Position = _position;
-            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._audioListener.Position = PlayerPos;
-
-            CSoundManager.soundList[CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound]._soundInstance.Play();
-
+            string key = "WEP.MULTI." + CConsole._Weapon._weaponsArray[_selectedWeap]._shotSound;
+            if (CSoundManager.soundList.ContainsKey(key) && CSoundManager.soundList[key]._audioEmitter != null)
+            {
+                CSoundManager.soundList[key]._audioEmitter.Position = _position;
+                CSoundManager.soundList[key]._audioListener.Position = PlayerPos;
+                CSoundManager.soundList[key]._soundInstance.Play();
+            }
         }
 
         public void ChangeWeapon(int iD)

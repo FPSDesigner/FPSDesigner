@@ -160,8 +160,11 @@ namespace Engine.Game
             for (int i = 0; i < weaponsSounds.Count; i++)
                 for (int x = 0; x < weaponsSounds[i].Length; x++)
                 {
-                    if(weaponsSounds[i][x] != "")
+                    if (weaponsSounds[i][x] != "")
+                    {
                         CSoundManager.AddSound("WEP." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]), (bool)weaponsInfo[i][5], (float)weaponsInfo[i][11]);
+                        CSoundManager.AddSound("WEP.MULTI." + weaponsSounds[i][x], content.Load<SoundEffect>(weaponsSounds[i][x]), (bool)weaponsInfo[i][5], (float)weaponsInfo[i][11], new AudioListener(), new AudioEmitter());
+                    }
                 }
             for (int i = 0; i < _weaponsAmount; i++)
             {

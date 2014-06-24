@@ -36,6 +36,7 @@ namespace Engine.Game
             Texture2D[] textures = new Texture2D[1];
             textures[0] = Display2D.C2DEffect._content.Load<Texture2D>("Textures\\MedievalCharacter");
             botController = new CEnemy("MedievalCharacter", textures, pos, Matrix.CreateFromYawPitchRoll(0, 0, 0), 100f, 20, 10, false, Name, 2);
+            botController._isMultiPlayer = true;
             Game.CEnemyManager.AddEnemy(Display2D.C2DEffect._content, CConsole._Camera, botController);
 
             oldPos = pos;
@@ -114,6 +115,7 @@ namespace Engine.Game
             if (toggle)
             {
                 botController.SetSwitchingWeapon(CConsole._Weapon._weaponsArray[gunId].MultiType);
+                botController.ChangeWeapon(gunId);
             }
         }
 
