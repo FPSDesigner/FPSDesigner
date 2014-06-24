@@ -369,6 +369,7 @@ namespace Engine.Game
             {
                 UpdateMultiplayer(gameTime, cam);
             }
+
         }
 
         public void UpdateMultiplayer(GameTime gameTime, Display3D.CCamera cam)
@@ -386,6 +387,7 @@ namespace Engine.Game
             {
                 _model.ChangeAnimation("frozen", true, 0.8f);
                 _isFrozenAnimPlaying = true;
+                _isMoving = false;
             }
             // We update the character pos, rot...
             _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
@@ -396,6 +398,7 @@ namespace Engine.Game
                 _position = _deathPosition;
                 _rotation = _deathRotation;
                 _isDead = true;
+                _isMoving = false;
             }
 
             if (_isDead)
@@ -426,12 +429,20 @@ namespace Engine.Game
                     _isWalkAnimPlaying = true;
                 }
 
+                _isMoving = true;
                 _isJumping = false;
                 _isReloading = false;
                 _isSwitchingWeapon = false;
             }
 
             _model.Update(gameTime, _position, _rotation);
+
+            
+            if (CConsole._Character._justShot)
+            {
+                Console.WriteLine("Wait : " + _isWaitAnimPlaying + "\n Walk: " + _isWalkAnimPlaying);
+                Console.WriteLine("isMoving : " + _isMoving);
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)

@@ -200,7 +200,7 @@ namespace Engine.Game
             if (setSwitch)
                 CConsole._Character._justSwitch = false;
 
-            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload|shot|isMoving
+            // INFO|posx/posy/posz|yaw/pitch/0|crouched|wepid|jumped|lastshotray|reload|shot|switch|isMoving
             SendMessage("INFO|" + FormatDataToSend(pos) + "|" + FormatDataToSend(CConsole._Camera._yaw + MathHelper.Pi) + "/" + pitch + "/0|" + (CConsole._Character._isCrouched ? "1" : "0") + "|" + CConsole._Character._uniqueWeaponIdCarrying + "|" + jump + "|" + lastshotRay + "|" + ((setReload) ? "1" : "0") + "|" + ((setShot) ? "1" : "0") + "|" + ((setSwitch) ? "1" : "0") + "|" + ((CConsole._Camera._isMoving) ? "1" : "0"));
         }
 
