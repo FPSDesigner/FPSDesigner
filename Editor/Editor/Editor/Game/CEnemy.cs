@@ -829,8 +829,8 @@ namespace Engine.Game
                             Vector3 v0 = indices[triangles[x].A];
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
-
-                            hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name, mesh.ParentBone.Transform));
+                            if(hitBoxesTriangles.ContainsKey(mesh.Name + "_" + x))
+                                hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name, mesh.ParentBone.Transform));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
                         }
                     }

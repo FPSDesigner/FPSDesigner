@@ -226,7 +226,7 @@ namespace Engine.Game
                         Display3D.CModelManager.ChangeModelsLightingEffect((Display3D.LightingMode)lightEffect);
                     break;
                 case "connect":
-                    string IP = "127.0.0.1";
+                    string IP = "192.168.1.23";
                     string Name = "John";
                     int Port = 7777;
 

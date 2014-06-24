@@ -55,8 +55,8 @@ namespace Engine
             //graphics.PreferMultiSampling = false; // Lags!!!
             Content.RootDirectory = ContentRootDirectoy;
 
-            graphics.PreferredBackBufferWidth = 1400;
-            graphics.PreferredBackBufferHeight = 900;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             //graphics.IsFullScreen = !launchedFromSoftware;
             graphics.IsFullScreen = false;
             Window.AllowUserResizing = true;
@@ -161,7 +161,7 @@ namespace Engine
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
-            //Game.CConsole._activationKeys = Keys.P;
+            Game.CConsole._activationKeys = Keys.P;
             try
             {
                 if (!isSoftwareEmbedded)
