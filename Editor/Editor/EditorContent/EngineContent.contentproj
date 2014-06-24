@@ -1490,11 +1490,6 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
-    <Compile Include="Models\MedievalCastleWall.fbx">
-      <Name>MedievalCastleWall</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
     <Compile Include="Models\MedievalStairs.fbx">
       <Name>MedievalStairs</Name>
       <Importer>FbxImporter</Importer>
@@ -1555,6 +1550,13 @@
   <ItemGroup>
     <Compile Include="Models\Flag.fbx">
       <Name>Flag</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\MedievalCastleWall.fbx">
+      <Name>MedievalCastleWall</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
