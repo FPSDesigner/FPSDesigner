@@ -563,7 +563,7 @@ namespace Engine.Game
                 _physicEngine._entityHeight *= 2;
                 _runningVelocity *= 2;
 
-                _model.ChangeAnimSpeed(2.5f);
+                _model.ChangeAnimSpeed(0.7f);
                 _model.ChangeAnimation(typeName + "_wait", true, 0.8f);
 
                 _isCrouch = false;
@@ -574,7 +574,7 @@ namespace Engine.Game
         {
             if (!_isJumping)
             {
-                _model.ChangeAnimSpeed(2.0f);
+                _model.ChangeAnimSpeed(3.0f);
                 _model.ChangeAnimation(type + "_jump", false, 0.65f);
 
                 _isJumping = true;
@@ -628,12 +628,12 @@ namespace Engine.Game
                 {
                     if (_isCrouch)
                     {
-                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimSpeed(0.7f);
                         _model.ChangeAnimation(typeName + "_wait-crouch", true, 0.35f);
                     }
                     else
                     {
-                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimSpeed(0.7f);
                         _model.ChangeAnimation(typeName + "_wait", true, 0.35f);
                     }
 
@@ -676,12 +676,12 @@ namespace Engine.Game
             {
                 if (_isCrouch)
                 {
-                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimSpeed(6f);
                     _model.ChangeAnimation(typeName + "_attack-crouch", false, 0.3f);
                 }
                 else
                 {
-                    _model.ChangeAnimSpeed(2.5f);
+                    _model.ChangeAnimSpeed(6f);
                     _model.ChangeAnimation(typeName + "_attack", false, 0.3f);
                 }
 

@@ -80,11 +80,8 @@ namespace Engine.Game
 
         public void SetCrouched(bool toggle)
         {
-            if (isCrouched != toggle)
-            {
-                isCrouched = toggle;
-                botController.Crouch(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
-            }
+            isCrouched = toggle;
+            botController.Crouch(toggle, CConsole._Weapon._weaponsArray[gunId].MultiType);
         }
 
         public void SetJump(bool toggle)
