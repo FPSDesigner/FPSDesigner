@@ -463,10 +463,10 @@ namespace Engine.Game
             if (drawHitbox)
                 GetRealTriangles(true);
 
-            DrawWeapon(view, projection);
+            DrawWeapon(view, projection, gameTime);
         }
 
-        public void DrawWeapon(Matrix view, Matrix projection)
+        public void DrawWeapon(Matrix view, Matrix projection, GameTime gameTime)
         {
             foreach (ModelMesh mesh in CConsole._Weapon._weaponsArray[_selectedWeap]._wepModel.Meshes)
             {
@@ -480,10 +480,60 @@ namespace Engine.Game
                     effect.View = view;
                     effect.Projection = projection;
                 }
-
                 mesh.Draw();
-
             }
+                //            // Draw the muzzle flash
+                //if (weap._weaponPossessed[weap._selectedWeapon]._wepType != 2 &&
+                //    (_isShoting && _elapsedTimeMuzzle < 50))
+                //{
+                //    Matrix muzzleDestination = Matrix.Identity;
+                //    float randomScale = (float)_muzzleRandom.NextDouble() / 2f;
+
+                //    switch (weap._weaponPossessed[weap._selectedWeapon]._name)
+                //    {
+                //        case "M1911":
+                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                //            0.25f + randomScale * 0.5f, new Vector3(-1f, -2.0f + randomScale, -2.85f));
+                //            break;
+                //        case "AK47":
+                //            randomScale = (float)_muzzleRandom.NextDouble() * 1.4f;
+                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                //            0.7f + randomScale * 1.4f, new Vector3(-3.6f, -1.6f + randomScale * 1.1f, -2.85f + 0.1f * randomScale));
+                //            break;
+                //        case "Deagle":
+                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                //            0.5f + randomScale * 0.05f, new Vector3(-0.7f, -1.4f, -2.85f));
+                //            break;
+                //        case "M40A5":
+                //            randomScale = (float)_muzzleRandom.NextDouble() * 1.4f;
+                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
+                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
+                //            0.7f + randomScale * 1.4f, new Vector3(-3f, -1.6f + randomScale * 1.1f, -2.85f + 0.1f * randomScale));
+                //            break;
+                //    }
+
+
+                //    graphicsDevice.BlendState = BlendState.Additive;
+                //    foreach (ModelMesh mesh in _muzzleFlash.Meshes)
+                //    {
+                //        foreach (BasicEffect effect in mesh.Effects)
+                //        {
+                //            effect.World = muzzleDestination;
+                //            effect.View = view;
+                //            effect.Projection = projection;
+                //        }
+                //        mesh.Draw();
+                //    }
+                //    graphicsDevice.BlendState = BlendState.Opaque;
+
+                //                // We increment the muzzleTime or we reinit it
+                //if (_isShoting)
+                //{
+                //    _elapsedTimeMuzzle += gameTime.ElapsedGameTime.Milliseconds;
+                //}
 
         }
 

@@ -134,7 +134,7 @@ namespace Software.Pages
                 textureList[textId] = "Textures/" + Path.GetFileName(imageDialog.FileName);
                 // Change image placeholder to this image
                 if(Path.GetExtension(destImage) != ".xnb")
-                    ((Image)((StackPanel)VisualTreeHelper.GetParent((UIElement)sender)).Children[2]).Source = new BitmapImage(new Uri(destImage));
+                    ((Image)((StackPanel)VisualTreeHelper.GetParent((UIElement)sender)).Children[2]).Source = new BitmapImage(new Uri(destImage,UriKind.Relative));
             }
         }
 
