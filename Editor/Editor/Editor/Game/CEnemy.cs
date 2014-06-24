@@ -177,6 +177,8 @@ namespace Engine.Game
         private bool _isFrozenAnimPlaying;
         private bool _isReloading;
 
+        private bool _loaded = false;
+
         private float _height = 1.9f;
 
         public float _multiSpeed = 0f;
@@ -437,16 +439,14 @@ namespace Engine.Game
 
             _model.Update(gameTime, _position, _rotation);
 
-            
-            if (CConsole._Character._justShot)
-            {
-                Console.WriteLine("Wait : " + _isWaitAnimPlaying + "\n Walk: " + _isWalkAnimPlaying);
-                Console.WriteLine("isMoving : " + _isMoving);
-            }
+
+            _loaded = true;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)
         {
+            if (!_loaded)
+                return;
             //GenerateHitBoxesTriangles();
             //GetRealTriangles();
 
@@ -539,6 +539,8 @@ namespace Engine.Game
 
         public void AttackPlayer(float distSquared, CCharacter player)
         {
+            if (!_loaded)
+                return;
             if (!_isShoting)
             {
                 if (_isAgressive && IsAnyPlayerInSight())
