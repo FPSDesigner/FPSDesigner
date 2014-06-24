@@ -41,7 +41,7 @@ namespace Engine.Display3D
 
         public static void PreDraw(CCamera camera, GameTime gameTime)
         {
-            foreach(CWater water in listWater)
+            foreach (CWater water in listWater)
                 water.PreDraw(camera, gameTime);
         }
 
@@ -115,8 +115,11 @@ namespace Engine.Display3D
                 lvl.Water.Water[i].SizeY = water.waterSize.Y;
             }
 
-            while (lvl.Water.Water.Count != listWater.Count)
-                lvl.Water.Water.RemoveAt(lvl.Water.Water.Count - 1);
+            if (lvl.Water != null && lvl.Water.Water != null)
+            {
+                while (lvl.Water.Water.Count != listWater.Count)
+                    lvl.Water.Water.RemoveAt(lvl.Water.Water.Count - 1);
+            }
         }
 
     }

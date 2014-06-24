@@ -107,7 +107,7 @@ namespace Engine.GameStates
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
-
+            
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             /**** Terrain ****/
@@ -191,13 +191,13 @@ namespace Engine.GameStates
             cam = new Display3D.CCamera(graphics, camPosition, camRotation, nearClip, levelData.SpawnInfo.FarClip, isSoftwareEmbedded, isSoftwareEmbedded, (levelData.Terrain.UseTerrain) ? terrain : null, new bool[] { levelData.Terrain.UseTerrain, (levelData.Water != null && levelData.Water.Water != null && levelData.Water.Water.Count > 0) });
 
             /**** Lights ****/
-            if (levelData.Lights.UseShadow != null && levelData.Lights.UseShadow)
-                Display3D.CModelManager.ApplyRendererShadow(content, levelData.Lights.ShadowLightPos.Vector3, levelData.Lights.ShadowLightTarget.Vector3);
-            else
-                Display3D.CModelManager.ApplyLightEffect(content);
-            Display3D.CLightsManager.LoadContent(content);
             if (levelData.Lights != null)
             {
+                if (levelData.Lights.UseShadow != null && levelData.Lights.UseShadow)
+                    Display3D.CModelManager.ApplyRendererShadow(content, levelData.Lights.ShadowLightPos.Vector3, levelData.Lights.ShadowLightTarget.Vector3);
+                else
+                    Display3D.CModelManager.ApplyLightEffect(content);
+                Display3D.CLightsManager.LoadContent(content);
                 foreach (Game.LevelInfo.Light light in levelData.Lights.LightsList)
                     Display3D.CLightsManager.AddLight(light.Position.Vector3, light.Col, light.Attenuation);
                 Display3D.CLightsManager.AddToRenderer();
@@ -249,7 +249,7 @@ namespace Engine.GameStates
             {
                 Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
 
-                    modelTextures.Add("Cylinder", content.Load<Texture2D>("Textures/Model textures/Flag"));
+                modelTextures.Add("Cylinder", content.Load<Texture2D>("Textures/Model textures/Flag"));
 
                 Dictionary<string, Texture2D> bumpTextures = new Dictionary<string, Texture2D>();
 
@@ -319,7 +319,9 @@ namespace Engine.GameStates
                 Display3D.CWaterManager.isUnderWater = isPlayerUnderwater;
                 terrain.isUnderWater = isPlayerUnderwater;
             }
-            terrain.frustum = cam._Frustum;
+
+            if(terrain != null)
+                terrain.frustum = cam._Frustum;
 
             /*if (!isSoftwareEmbedded)
             {*/
@@ -332,7 +334,8 @@ namespace Engine.GameStates
 
             skybox.Draw(cam._view, cam._projection, cam._cameraPos);
 
-            terrain.Draw(cam._view, cam._projection, cam._cameraPos);
+            if (terrain != null)
+                terrain.Draw(cam._view, cam._projection, cam._cameraPos);
 
             Display3D.CWaterManager.Draw(cam._view, cam._projection, cam._cameraPos);
 
