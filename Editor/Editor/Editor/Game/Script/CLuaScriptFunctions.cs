@@ -306,6 +306,11 @@ namespace Engine.Game.Script
             CConsole._Camera._cameraPos = new Vector3(x, y, z);
         }
 
+        public void SetCameraTarget(float x, float y, float z)
+        {
+            CConsole._Camera._cameraTarget = new Vector3(x, y, z);
+        }
+
         public void FreezePlayer(bool toggle)
         {
             CConsole._Camera.isCamFrozen = toggle;

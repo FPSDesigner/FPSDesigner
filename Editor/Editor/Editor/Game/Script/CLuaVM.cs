@@ -128,6 +128,7 @@ namespace Engine.Game.Script
             // Camera function
             RegisterFunction("getCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("GetCameraPosition"));
             RegisterFunction("setCameraPosition", scriptFunctions, scriptFunctions.GetType().GetMethod("SetCameraPosition"));
+            RegisterFunction("setCameraTarget", scriptFunctions, scriptFunctions.GetType().GetMethod("SetCameraTarget"));
             RegisterFunction("freezePlayer", scriptFunctions, scriptFunctions.GetType().GetMethod("FreezePlayer"));
             RegisterFunction("isPlayerFrozen", scriptFunctions, scriptFunctions.GetType().GetMethod("IsPlayerFrozen"));
             RegisterFunction("drawPlayer", scriptFunctions, scriptFunctions.GetType().GetMethod("DrawPlayer"));
