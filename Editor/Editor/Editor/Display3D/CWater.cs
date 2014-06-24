@@ -297,7 +297,6 @@ namespace Engine.Display3D
         public void PreDraw(CCamera camera, GameTime gameTime)
         {
             isInView = camera.BoundingVolumeIsInView(RealBoundingBox);
-            Console.WriteLine(isInView);
             if (isInView)
             {
                 renderReflection(camera, gameTime);

@@ -139,7 +139,6 @@ namespace Engine.Display3D
         public void Update(GameTime gametime, float camVelocity = 0.3f, bool isUnderWater = false, float waterLevel = 0f, KeyboardState keyState = default(KeyboardState), MouseState mouseState = default(MouseState),
             KeyboardState oldKeyState = default(KeyboardState))
         {
-            Console.WriteLine(_isMoving);
             if (shouldUpdateMiddleScreen)
             {
                 _middleScreen = new Point(mouseState.X, mouseState.Y);

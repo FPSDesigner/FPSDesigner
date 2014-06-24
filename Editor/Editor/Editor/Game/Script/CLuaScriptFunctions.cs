@@ -102,6 +102,27 @@ namespace Engine.Game.Script
             Game.CConsole.ShouldQuitFromLua = true;
         }
 
+        public void ConnectMultiplayer(string ip)
+        {
+            if (ip.Contains(":"))
+            {
+                string[] host = ip.Replace("|", "").Split(':');
+
+                string IP = host[0];
+                string Name = "John";
+                int Port = 7777;
+
+                if (!Int32.TryParse(host[1], out Port))
+                    Port = 7777;
+
+                Game.CConsole.multiInstance = new CMultiplayer("Player");
+                if (Game.CConsole.multiInstance.Connect(IP, Port))
+                    Game.CConsole.multiInstance.Run();
+                else
+                    Console.WriteLine("Couldn't connect (Invalid IP Address)");
+            }
+        }
+
         // Enums
         public void GetEnum(string enumType)
         {
@@ -185,9 +206,12 @@ namespace Engine.Game.Script
             return elt;
         }
 
-        public void GUIText(string font, float posx, float posy, Color? color = null, bool active = true, int order = 1)
+        public Embedded.C2DText GUIText(string text, string font, float x, float y, float scale, Color? color = null, float rot = 0f)
         {
-
+            Embedded.C2DText elt = new Embedded.C2DText(text, font, x, y, scale, color, rot);
+            Display2D.C2DEffect.ScriptableText.Add(elt);
+            Display2D.C2DEffect.ScriptableText = Display2D.C2DEffect.ScriptableText.OrderBy(ord => ord.drawOrder).ToList();
+            return elt;
         }
 
         public Texture2D GetTexture(string filename, bool contentLoad)

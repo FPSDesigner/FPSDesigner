@@ -80,6 +80,44 @@ namespace Engine.Game.Script.Embedded
         }
     }
 
+    public class C2DText
+    {
+
+        public string Text;
+        public SpriteFont Font;
+        public Vector2 Pos;
+        public Color Color;
+        public float Scale;
+        public float Rotation;
+
+        public bool isActive;
+
+        private int _drawOrder;
+        public int drawOrder
+        {
+            get
+            {
+                return _drawOrder;
+            }
+            set
+            {
+                _drawOrder = value;
+                Display2D.C2DEffect.ScriptableText = Display2D.C2DEffect.ScriptableText.OrderBy(ord => ord.drawOrder).ToList();
+            }
+        }
+
+        public C2DText(string text, string font, float x, float y, float scale, Color? color = null, float rot = 0f)
+        {
+            Font = Display2D.C2DEffect._content.Load<SpriteFont>(font);
+            Text = text;
+            Pos = new Vector2(x, y);
+            Color = color ?? Color.White;
+            Scale = scale;
+            Rotation = rot;
+            isActive = false;
+        }
+    }
+
     // XML Manager
     public class XMLManager
     {

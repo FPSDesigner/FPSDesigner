@@ -98,6 +98,7 @@ namespace Engine.Game.Script
             
             // Game
             RegisterFunction("quitGame", scriptFunctions, scriptFunctions.GetType().GetMethod("QuitGame"));
+            RegisterFunction("connectMultiplayer", scriptFunctions, scriptFunctions.GetType().GetMethod("ConnectMultiplayer"));
 
             // Settings
             RegisterFunction("getKeyMappings", scriptFunctions, scriptFunctions.GetType().GetMethod("GetKeyMappings"));

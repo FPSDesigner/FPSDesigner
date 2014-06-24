@@ -71,6 +71,7 @@ namespace Engine.Display2D
 
         // Scripts:
         public static List<C2DScriptRectangle> ScriptableRectangle = new List<C2DScriptRectangle>();
+        public static List<C2DText> ScriptableText = new List<C2DText>();
 
 
         /// <summary>
@@ -292,6 +293,14 @@ namespace Engine.Display2D
                 {
                     if (ScriptableRectangle[i].isActive)
                         _spriteBatch.Draw(ScriptableRectangle[i].Texture, ScriptableRectangle[i].Rectangle, ScriptableRectangle[i].SourceRectangle, ScriptableRectangle[i].Color, ScriptableRectangle[i].Rotation, ScriptableRectangle[i].Origin, SpriteEffects.None, 0);
+                }
+            }
+            if (ScriptableText.Any())
+            {
+                for (int i = 0; i < ScriptableText.Count; i++)
+                {
+                    if (ScriptableText[i].isActive)
+                        _spriteBatch.DrawString(ScriptableText[i].Font, ScriptableText[i].Text, ScriptableText[i].Pos, ScriptableText[i].Color, ScriptableText[i].Rotation, Vector2.Zero, ScriptableText[i].Scale, SpriteEffects.None, 0);
                 }
             }
             if (_isFading)

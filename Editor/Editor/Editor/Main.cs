@@ -45,6 +45,8 @@ namespace Engine
         public bool shouldNotUpdate = false;
         public bool shouldUpdateOnce = false;
 
+        private string[] KeysType = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+
         public MainGameEngine(bool launchedFromSoftware = false, string ContentRootDirectoy = "Content")
         {
             isSoftwareEmbedded = launchedFromSoftware;
@@ -231,6 +233,20 @@ namespace Engine
                 // Quit program when 'Escape' key is pressed
                 else if ((oldKeyboardState.IsKeyDown(Keys.Escape) && kbState.IsKeyUp(Keys.Escape)) || Game.Settings.CGameSettings.gamepadState.Buttons.Back == ButtonState.Pressed)
                     Game.Script.CLuaVM.CallEvent("quitKeyPressed");
+
+                if (kbState.GetPressedKeys().Length > 0)
+                {
+                    Keys Key = kbState.GetPressedKeys()[0];
+
+                    string k = Key.ToString().Replace("NumPad", "");
+
+                    string type = "";
+                    if (Array.Exists(KeysType, delegate(string s) { return s.Equals(k); }))
+                        type = "number";
+
+                    if (oldKeyboardState.IsKeyUp(Key) && kbState.IsKeyDown(Key))
+                        Game.Script.CLuaVM.CallEvent("keyPress", new object[] { k, type });
+                }
 
                 oldKeyboardState = kbState;
                 oldMouseState = mouseState;
