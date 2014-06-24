@@ -239,7 +239,7 @@ namespace Engine.Game
             _selectedWeap = 5;
 
             // Initialize probability
-            prob[0] = 1; // 1/2 chance to shot the player
+            prob[0] = 1; // 1/3 chance to shot the player
 
             SetEnemyName(name);
         }
@@ -368,6 +368,9 @@ namespace Engine.Game
                 {
                     _isMoving = false;
                 }
+
+                // Attack 
+                AttackPlayer(Vector3.DistanceSquared(_position, CConsole._Camera._cameraPos));
 
             }
             else
@@ -540,26 +543,25 @@ namespace Engine.Game
 
         }
 
-        public void AttackPlayer(float distSquared, CCharacter player)
+        public void AttackPlayer(float distSquared)
         {
             if (!_loaded)
                 return;
             if (!_isShoting)
             {
-                if (_isAgressive && IsAnyPlayerInSight())
+                if (_isAgressive && IsPositionInSight(CConsole._Camera._cameraPos))
                 {
-                    _model.ChangeAnimSpeed(5.0f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_attack", false, 0.2f);
-
                     if (distSquared <= (CConsole._Weapon._weaponsArray[_selectedWeap]._range) * (CConsole._Weapon._weaponsArray[_selectedWeap]._range))
                     {
+                        SetShot(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType);
+
                         Random random = new Random();
                         int rand = random.Next();
 
                         // Shoot at the player
                         if (rand == prob[0])
                         {
-                            player._life -= CConsole._Weapon._weaponsArray[_selectedWeap]._damagesPerBullet;
+                            CConsole._Character._life -= CConsole._Weapon._weaponsArray[_selectedWeap]._damagesPerBullet;
                         }
 
                     }
