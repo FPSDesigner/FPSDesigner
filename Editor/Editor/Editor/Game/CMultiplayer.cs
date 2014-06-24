@@ -79,7 +79,15 @@ namespace Engine.Game
         {
             while (true)
             {
-                string receivedData = GetString(ClientHandler.Receive(ref EndPoint));
+                string receivedData = "";
+                try
+                {
+                    receivedData = GetString(ClientHandler.Receive(ref EndPoint));
+                }
+                catch (Exception e)
+                {
+                    Disconnect();
+                }
                 string[] datas = receivedData.Split('|');
 
                 if (!isConnected)
@@ -282,7 +290,8 @@ namespace Engine.Game
             foreach (KeyValuePair<int, CPlayer> pl in listPlayers)
                 pl.Value.Disconnect();
 
-            timerSendInfo.Dispose();
+            if (timerSendInfo != null)
+                timerSendInfo.Dispose();
 
             try
             {

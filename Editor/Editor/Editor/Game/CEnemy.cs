@@ -336,8 +336,6 @@ namespace Engine.Game
 
             // We update the character pos, rot...
             _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
-            if(_isMultiPlayer)
-                Console.WriteLine(rotationValue);
 
             // He was playing the anim, now the character is really dead
             if (_isDyingAnimPlaying && _model.HasFinished())
@@ -538,10 +536,6 @@ namespace Engine.Game
                 _model.ChangeAnimation(type + "_jump", false, 0.65f);
 
                 _isJumping = true;
-                _isWaitAnimPlaying = false;
-                _isWalkAnimPlaying = false;
-                _isReloading = false;
-                _isSwitchingWeapon = false;
             }
         }
 
@@ -561,8 +555,6 @@ namespace Engine.Game
                 }
 
                 _isReloading = true;
-                _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = false;
             }
         }
 
@@ -570,6 +562,7 @@ namespace Engine.Game
         {
             if (_model.animationController == null)
                 return;
+
             if (!_isReloading && !_isSwitchingWeapon & !_isJumping)
             {
                 if (toggle && !_isWalkAnimPlaying)
@@ -608,8 +601,6 @@ namespace Engine.Game
                     _isWaitAnimPlaying = true;
                 }
 
-                _isReloading = false;
-                _isSwitchingWeapon = false;
             }
         }
 
@@ -632,10 +623,6 @@ namespace Engine.Game
                 }
 
                 _isSwitchingWeapon = true;
-                _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = false;
-                _isReloading = false;
-                _isJumping = false;
             }
 
         }
@@ -658,11 +645,6 @@ namespace Engine.Game
                 }
 
                 _isShoting = true;
-                _isSwitchingWeapon = false;
-                _isWalkAnimPlaying = false;
-                _isWaitAnimPlaying = false;
-                _isReloading = false;
-                _isJumping = false;
             }
         }
 
