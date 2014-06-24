@@ -1447,13 +1447,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\MedievalCharacter.fbx">
-      <Name>MedievalCharacter</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>SkinnedModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="2D\Menu\MENU_Background.png">
       <Name>MENU_Background</Name>
       <Importer>TextureImporter</Importer>
@@ -1629,13 +1622,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ConcreteTowerGuard.fbx">
-      <Name>ConcreteTowerGuard</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Model textures\ConcreteTileClean.tga">
       <Name>ConcreteTileClean</Name>
       <Importer>TextureImporter</Importer>
@@ -1663,20 +1649,6 @@
       <Name>ConcreteBrownOldFractured</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\ConcreteWallSplit.fbx">
-      <Name>ConcreteWallSplit</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\ConcreteWall.fbx">
-      <Name>ConcreteWall</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -1779,6 +1751,32 @@
   <ItemGroup>
     <Compile Include="Models\ConcretePlatformSymetry.fbx">
       <Name>ConcretePlatformSymetry</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\ConcreteTowerGuard.fbx">
+      <Name>ConcreteTowerGuard</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\MedievalCharacter.fbx">
+      <Name>MedievalCharacter</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\ConcreteWall.fbx">
+      <Name>ConcreteWall</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Models\ConcreteWallSplit.fbx">
+      <Name>ConcreteWallSplit</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
