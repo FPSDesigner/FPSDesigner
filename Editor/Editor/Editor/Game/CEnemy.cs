@@ -218,7 +218,7 @@ namespace Engine.Game
 
             _isMoving = false;
             _isDyingAnimPlaying = false;
-            _isWaitAnimPlaying = false;
+            _isWaitAnimPlaying = true;
             _isWalkAnimPlaying = false;
             _isDead = false;
             _isFrozen = false;
@@ -266,10 +266,112 @@ namespace Engine.Game
 
             // Play first anim
             _model.ChangeAnimSpeed(0.5f);
-            _model.BeginAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait", true);
+            _model.BeginAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_wait", true);
         }
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
+        {
+            if (!_isMultiPlayer)
+            {
+                if (_model.animationController == null)
+                    return;
+
+                // Interpolation
+                if (_multiSpeed > 0)
+                {
+                    float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    _position += _multiDirection * _multiSpeed * elapsedTime;
+                }
+                // Play Anims
+                if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
+                {
+                    _model.RotateBone(2, cam._pitch);
+
+                    // The character is waiting or running
+                    SetWalk(_isMoving, CConsole._Weapon._weaponsArray[_selectedWeap].MultiType);
+
+                    _isFrozenAnimPlaying = false;
+                }
+
+                else if (_isFrozen && !_isFrozenAnimPlaying)
+                {
+                    _model.ChangeAnimation("frozen", true, 0.8f);
+                    _isFrozenAnimPlaying = true;
+                }
+
+                // We update the character pos, rot...
+                _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
+
+                // He was playing the anim, now the character is really dead
+                if (_isDyingAnimPlaying && _model.HasFinished())
+                {
+                    _position = _deathPosition;
+                    _rotation = _deathRotation;
+                    _isDead = true;
+                }
+
+                if (_isDead)
+                {
+                    _position = _deathPosition;
+                    Matrix world = Matrix.CreateWorld(_position, Vector3.Right, Vector3.Up);
+                    _rotation = _deathRotation;
+
+                    _isMoving = false;
+                    _isWaitAnimPlaying = false;
+                    _isWalkAnimPlaying = false;
+                }
+
+                if ((_isJumping || _isSwitchingWeapon || _isReloading) && _model.HasFinished())
+                {
+                    if (_isCrouch)
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk-crouch", true, 0.5f);
+                    }
+                    else
+                    {
+                        _model.ChangeAnimSpeed(2.5f);
+                        _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk", true, 0.5f);
+                    }
+
+                    _isJumping = false;
+                    _isReloading = false;
+                    _isSwitchingWeapon = false;
+                }
+
+                _model.Update(gameTime, _position, _rotation);
+
+                // new target is the camera position
+                if (_isFollowingPlayer)
+                {
+                    _targetPos = cam._cameraPos;
+                }
+
+                if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
+                {
+                    Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+                    translation.Normalize();
+
+                    rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
+                    _targetPos.Z - _position.Z);
+
+                    translation = _runningVelocity * translation;
+                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                    _isMoving = true;
+                }
+                else
+                {
+                    _isMoving = false;
+                }
+
+            }
+            else
+            {
+                UpdateMultiplayer(gameTime, cam);
+            }
+        }
+
+        public void UpdateMultiplayer(GameTime gameTime, Display3D.CCamera cam)
         {
             if (_model.animationController == null)
                 return;
@@ -280,60 +382,11 @@ namespace Engine.Game
                 float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 _position += _multiDirection * _multiSpeed * elapsedTime;
             }
-            // Play Anims
-            if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
-            {
-                _model.RotateBone(2, cam._pitch);
-
-                // The character is waiting
-                if (!_isMoving && !_isWaitAnimPlaying && !_isCrouch && !_isJumping)
-                {
-                    _model.ChangeAnimSpeed(0.4f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait", true, 0.8f);
-
-                    _isWalkAnimPlaying = false;
-                    _isWaitAnimPlaying = true;
-                }
-
-                // The Character is running
-                if (_isMoving && !_isWalkAnimPlaying && !_isCrouch && !_isJumping)
-                {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk", true, 0.5f);
-
-                    _isWaitAnimPlaying = false;
-                    _isWalkAnimPlaying = true;
-                }
-
-                // The character is waiting crouched
-                if (_isCrouch && !_isMoving && !_isWaitAnimPlaying && !_isJumping)
-                {
-                    _model.ChangeAnimSpeed(0.8f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_wait-crouch", true, 0.8f);
-
-                    _isWalkAnimPlaying = false;
-                    _isWaitAnimPlaying = true;
-                }
-
-                // The Character is walking crouched
-                if (_isCrouch && _isMoving && !_isWalkAnimPlaying && !_isJumping)
-                {
-                    _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk-crouch", true, 0.3f);
-
-                    _isWaitAnimPlaying = false;
-                    _isWalkAnimPlaying = true;
-                }
-
-                _isFrozenAnimPlaying = false;
-            }
-
             else if (_isFrozen && !_isFrozenAnimPlaying)
             {
                 _model.ChangeAnimation("frozen", true, 0.8f);
                 _isFrozenAnimPlaying = true;
             }
-
             // We update the character pos, rot...
             _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
 
@@ -361,12 +414,16 @@ namespace Engine.Game
                 if (_isCrouch)
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk-crouch", true, 0.5f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk-crouch", true, 0.5f);
+                    _isWaitAnimPlaying = false;
+                    _isWalkAnimPlaying = true;
                 }
                 else
                 {
                     _model.ChangeAnimSpeed(2.5f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_walk", true, 0.5f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk", true, 0.5f);
+                    _isWaitAnimPlaying = false;
+                    _isWalkAnimPlaying = true;
                 }
 
                 _isJumping = false;
@@ -375,32 +432,6 @@ namespace Engine.Game
             }
 
             _model.Update(gameTime, _position, _rotation);
-
-            if (!_isMultiPlayer)
-            {
-                // new target is the camera position
-                if (_isFollowingPlayer)
-                {
-                    _targetPos = cam._cameraPos;
-                }
-
-                if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
-                {
-                    Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
-                    translation.Normalize();
-
-                    rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
-                    _targetPos.Z - _position.Z);
-
-                    translation = _runningVelocity * translation;
-                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
-                    _isMoving = true;
-                }
-                else
-                {
-                    _isMoving = false;
-                }
-            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, bool drawHitbox = false)
@@ -452,7 +483,7 @@ namespace Engine.Game
                 if (_isAgressive && IsAnyPlayerInSight())
                 {
                     _model.ChangeAnimSpeed(5.0f);
-                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType+"_attack", false, 0.2f);
+                    _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_attack", false, 0.2f);
 
                     if (distSquared <= (CConsole._Weapon._weaponsArray[_selectedWeap]._range) * (CConsole._Weapon._weaponsArray[_selectedWeap]._range))
                     {
@@ -560,12 +591,12 @@ namespace Engine.Game
 
         public void SetWalk(bool toggle, string typeName)
         {
-            if (_model.animationController == null)
-                return;
+            //if (_model.animationController == null)
+            //    return;
 
             if (!_isReloading && !_isSwitchingWeapon & !_isJumping)
             {
-                if (toggle && !_isWalkAnimPlaying)
+                if (toggle && !_isWalkAnimPlaying )
                 {
                     if (_isCrouch)
                     {
@@ -811,7 +842,7 @@ namespace Engine.Game
                             Vector3 v0 = indices[triangles[x].A];
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
-                            if(hitBoxesTriangles.ContainsKey(mesh.Name + "_" + x))
+                            if (hitBoxesTriangles.ContainsKey(mesh.Name + "_" + x))
                                 hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name, mesh.ParentBone.Transform));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
                         }
