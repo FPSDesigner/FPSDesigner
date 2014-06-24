@@ -244,6 +244,18 @@ namespace Engine.GameStates
 
             // Initialize the Projectile Manager
             Display3D.CProjectileManager.Initialize();
+
+            if (isSoftwareEmbedded)
+            {
+                Dictionary<string, Texture2D> modelTextures = new Dictionary<string, Texture2D>();
+
+                    modelTextures.Add("Cylinder", content.Load<Texture2D>("Textures/Model textures/Flag"));
+
+                Dictionary<string, Texture2D> bumpTextures = new Dictionary<string, Texture2D>();
+
+                Display3D.CModelManager.SpawnPoint = new Display3D.CModel(content.Load<Model>("Models/Flag"), camPosition, Vector3.Zero, Vector3.One, graphics, modelTextures, 0, 1, bumpTextures, false);
+                Display3D.CModelManager.SpawnPoint.LoadContent(content);
+            }
         }
 
         public void UnloadContent(ContentManager content)
@@ -292,8 +304,6 @@ namespace Engine.GameStates
             Game.CEnemyManager.Update(gameTime, cam);
 
             Display3D.Particles.ParticlesManager.Update(gameTime);
-
-            
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -313,9 +323,9 @@ namespace Engine.GameStates
 
             /*if (!isSoftwareEmbedded)
             {*/
-                skybox.ColorIntensity = 0.8f;
-                Display3D.CWaterManager.PreDraw(cam, gameTime);
-                skybox.ColorIntensity = 1;
+            skybox.ColorIntensity = 0.8f;
+            Display3D.CWaterManager.PreDraw(cam, gameTime);
+            skybox.ColorIntensity = 1;
             /*}
             else
                 _graphics.SetRenderTarget(Display2D.C2DEffect.renderTarget);*/
@@ -371,6 +381,9 @@ namespace Engine.GameStates
 
             //renderer.DrawDebugBoxes(gameTime, cam._view, cam._projection);
 
+            if (isSoftwareEmbedded)
+                Display3D.CModelManager.SpawnPoint.Draw(cam._view, cam._projection, Display3D.CModelManager.SpawnPoint._modelPosition);
+
         }
 
         public object SendParam(object param)
@@ -413,6 +426,8 @@ namespace Engine.GameStates
                         pos = Display3D.CLightsManager.lights[eltId].Position;
                     else if (type == "bot")
                         pos = Game.CEnemyManager._enemyList[eltId]._model._position;
+                    else if (type == "spawnpoint")
+                        pos = Display3D.CModelManager.SpawnPoint._modelPosition;
 
                     cam._cameraTarget = pos;
 
@@ -545,6 +560,10 @@ namespace Engine.GameStates
                     {
                         Game.CEnemyManager.selectedBot = (int)values[1];
                         newPos = Game.CEnemyManager._enemyList[(int)values[1]]._model._position;
+                    }
+                    else if ((string)values[0] == "spawnpoint")
+                    {
+                        newPos = Display3D.CModelManager.SpawnPoint._modelPosition;
                     }
                     Gizmos.posGizmo._modelPosition = newPos;
                     Gizmos.rotGizmo._modelPosition = newPos;
@@ -838,6 +857,8 @@ namespace Engine.GameStates
                                         Display3D.CWaterManager.listWater[eltId].waterPosition = newPos;
                                     else if (eltType == "light")
                                         Display3D.CLightsManager.lights[eltId].Position = newPos;
+                                    else if (eltType == "spawnpoint")
+                                        Display3D.CModelManager.SpawnPoint._modelPosition = newPos;
                                 }
                                 else if (info == "rot")
                                 {
@@ -954,6 +975,7 @@ namespace Engine.GameStates
             Display3D.CWaterManager.UpdateGameLevel(ref levelData);
             Display3D.CLightsManager.UpdateGameLevel(ref levelData);
             Game.CEnemyManager.UpdateGameLevel(ref levelData);
+            levelData.SpawnInfo.SpawnPosition = new Game.LevelInfo.Coordinates(Display3D.CModelManager.SpawnPoint._modelPosition);
         }
 
         public Texture2D LoadCorrectlyTexture(string file)

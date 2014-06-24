@@ -18,6 +18,8 @@ namespace Engine.Display3D
         public static Effect lightEffect;
         public static Materials.PrelightingRenderer renderer;
 
+        public static CModel SpawnPoint;
+
         public static SoundEffect sound;
 
         public static bool DebugActivated = false;

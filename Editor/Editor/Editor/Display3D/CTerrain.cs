@@ -506,6 +506,39 @@ namespace Engine.Display3D
             return Vector3.Zero;
         }
 
+        public Vector3 RayPick(Ray ray)
+        {
+            float t = 0f;
+
+            Vector3 nearSource = ray.Position;
+            Vector3 farSource = ray.Position + ray.Direction * 50;
+            Vector3 direction = ray.Direction;
+
+            while (true)
+            {
+                t += 0.0001f;
+
+                Vector3 newPos = new Vector3(nearSource.X + direction.X * t, 0, nearSource.Z + direction.Z * t);
+
+                if (newPos.X - cellSize < -middleWidthRelative || newPos.X + cellSize > middleWidthRelative || newPos.Z - cellSize < -middleLengthRelative || newPos.Z + cellSize > middleLengthRelative)
+                    break;
+
+                newPos.Y = nearSource.Y + direction.Y * t;
+
+                float steepness;
+                float IndHeight = GetHeightAtPosition(newPos.X, newPos.Z, out steepness, false);
+
+                if (debugActivated)
+                    Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(newPos, 0.1f), Color.Blue, 5f);
+
+                if (IndHeight >= newPos.Y)
+                {
+                    return newPos;
+                }
+            }
+            return Vector3.Zero;
+        }
+
         /// <summary>
         /// Get the terrain height at a certain position
         /// </summary>
@@ -532,6 +565,12 @@ namespace Engine.Display3D
             int z = (int)Z;
             float fTX = X - x;
             float fTY = Z - z;
+
+            if (z >= width - 1 || x >= length - 1)
+            {
+                Steepness = 0;
+                return 0;
+            }
 
             float fSampleH1 = heights[x, z];
             float fSampleH2 = heights[x + 1, z];

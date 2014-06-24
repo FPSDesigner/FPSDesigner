@@ -222,6 +222,10 @@ namespace Engine.Display3D
                 initialRotValue = new Vector3(Game.CEnemyManager._enemyList[eltIdDragging].rotationValue, 0, 0);
                 initialScaleValue = Game.CEnemyManager._enemyList[eltIdDragging]._scale;
             }
+            else if (eltType == "spawnpoint")
+            {
+                initialPosValue = Display3D.CModelManager.SpawnPoint._modelPosition;
+            }
         }
 
         public void Drag(int posX, int posY, CCamera cam)
@@ -475,6 +479,21 @@ namespace Engine.Display3D
                         else if (axisDragging == 3) // Uni
                             Game.CEnemyManager._enemyList[eltIdDragging]._scale = new Vector3(initialScaleValue.X + uniDist.X);
                         Game.CEnemyManager._enemyList[eltIdDragging]._model._scale = Game.CEnemyManager._enemyList[eltIdDragging]._scale.X;
+                    }
+                }
+                else if (eltTypeDragging == "spawnpoint")
+                {
+                    if (shouldDrawPos)
+                    {
+                        Vector3 diff = contactPoint - initial3DPoint;
+                        Vector3 oldPos = CModelManager.SpawnPoint._modelPosition;
+                        if (axisDragging == 1)
+                            CModelManager.SpawnPoint._modelPosition = new Vector3(initialPosValue.X + diff.X, oldPos.Y, oldPos.Z);
+                        else if (axisDragging == 2)
+                            CModelManager.SpawnPoint._modelPosition = new Vector3(oldPos.X, initialPosValue.Y + diff.Y, oldPos.Z);
+                        else if (axisDragging == 0)
+                            CModelManager.SpawnPoint._modelPosition = new Vector3(oldPos.X, oldPos.Y, initialPosValue.Z + diff.Z);
+                        posGizmo._modelPosition = CModelManager.SpawnPoint._modelPosition;
                     }
                 }
             }

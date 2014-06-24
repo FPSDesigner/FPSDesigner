@@ -38,6 +38,7 @@ namespace Software.Pages
 
         private List<TreeViewItem> listTree_Trees, listTree_Models, listTree_Pickups, listTree_Waters, listTree_Lights, listTree_Bots;
         private List<TreeViewItem> listTreeAv_Models, listTreeAv_Pickups, listTreeAv_Waters, listTreeAv_Lights, listTreeAv_Bots;
+        private TreeViewItem spawnPoint;
 
         private bool isMovingGyzmoAxis = false;
 
@@ -64,6 +65,8 @@ namespace Software.Pages
             listTreeAv_Waters = new List<TreeViewItem>();
             listTreeAv_Lights = new List<TreeViewItem>();
             listTreeAv_Bots = new List<TreeViewItem>();
+
+            spawnPoint = new TreeViewItem();
 
             ShowXNAImage1.Source = m_game.em_WriteableBitmap;
 
@@ -256,6 +259,11 @@ namespace Software.Pages
                             m_game.WPFHandler("selectObject", new object[] { "bot", (int)selectElt[1], GlobalVars.selectedToolButton.Name });
                             GlobalVars.selectedElt = new GlobalVars.SelectedElement("bot", (int)selectElt[1]);
                         }
+                        else if ((string)selectElt[0] == "spawnpoint" && selectElt[1] is int)
+                        {
+                            m_game.WPFHandler("selectObject", new object[] { "spawnpoint", 0, GlobalVars.selectedToolButton.Name });
+                            GlobalVars.selectedElt = new GlobalVars.SelectedElement("spawnpoint", 0);
+                        }
                     }
                     else if (GlobalVars.selectedElt != null)
                     {
@@ -316,6 +324,7 @@ namespace Software.Pages
             TreeViewItem Pickups = new TreeViewItem();
             TreeViewItem Lights = new TreeViewItem();
             TreeViewItem Bots = new TreeViewItem();
+            TreeViewItem SpawnPoint = new TreeViewItem();
 
             Models.Header = "Models";
             Trees.Header = "Trees";
@@ -324,6 +333,9 @@ namespace Software.Pages
             Pickups.Header = "Pick-Ups";
             Lights.Header = "Lights";
             Bots.Header = "A.I.";
+            SpawnPoint.Header = "Spawn Point";
+
+            spawnPoint = SpawnPoint;
 
             // Trees
             if (GlobalVars.gameInfo.MapModels != null && GlobalVars.gameInfo.MapModels.Trees != null)
@@ -431,6 +443,8 @@ namespace Software.Pages
 
             if (GlobalVars.gameInfo.Terrain != null && GlobalVars.gameInfo.Terrain.UseTerrain)
                 GameComponentsList.Items.Add(Terrain);
+
+            GameComponentsList.Items.Add(SpawnPoint);
         }
 
         private void LoadAvailableGameComponentsToTreeview()
@@ -548,6 +562,17 @@ namespace Software.Pages
         void GameComponentsList_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeViewItem selectedItem = (TreeViewItem)GameComponentsList.SelectedItem;
+
+            // SpawnPoint
+            if (selectedItem == spawnPoint)
+            {
+                m_game.WPFHandler("selectObject", new object[] { "spawnpoint", 0, GlobalVars.selectedToolButton.Name });
+                GlobalVars.selectedElt = new GlobalVars.SelectedElement("spawnpoint", 0);
+                ApplyPropertiesWindow();
+                m_game.shouldUpdateOnce = true;
+                return;
+            }
+
 
             // Models
             for (int i = 0; i < listTree_Models.Count; i++)

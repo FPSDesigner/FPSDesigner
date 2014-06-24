@@ -269,6 +269,9 @@ namespace Engine.Game
             // Play first anim
             _model.ChangeAnimSpeed(0.5f);
             _model.BeginAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_wait", true);
+
+            if(!_isMultiPlayer)
+                _loaded = true;
         }
 
         public void Update(GameTime gameTime, Display3D.CCamera cam)
@@ -564,6 +567,23 @@ namespace Engine.Game
                 _isShoting = true;
             }
 
+        }
+
+        public bool IsPositionInSight(Vector3 pos)
+        {
+            Ray ray = new Ray(_position, pos - _position);
+
+            float Length = (pos - _position).Length();
+            int modelId = -1;
+            float? dist = Display3D.CModelManager.CheckRayIntersectsModel(ray, out modelId);
+            if (dist == null || dist > Length)
+            {
+                Vector3 terrainPos = CConsole._Terrain.RayPick(ray);
+
+                if (terrainPos == Vector3.Zero || (terrainPos - _position).Length() > Length)
+                    return true;
+            }
+            return false;
         }
 
         public bool IsAnyPlayerInSight()
