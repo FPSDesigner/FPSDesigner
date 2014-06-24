@@ -149,8 +149,6 @@ namespace Engine.Game
                         CConsole._Character._life -= (int)ExtractDataFromString(datas[3], SentData.Int);
                     }
                 }
-
-
             }
         }
 
@@ -158,7 +156,7 @@ namespace Engine.Game
         {
             string pitch = "0", jump = "0";
             Vector3 pos = CConsole._Camera._cameraPos;
-            int wepId = -1;
+
             if (false) // Is aiming here, we send pitch
                 pitch = FormatDataToSend(CConsole._Camera._pitch);
 

@@ -52,7 +52,6 @@ namespace WinServer.Codes
         {
             while (true)
             {
-
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, Port);
                 string data = GetString(ServerHandler.Receive(ref remoteEP));
                 string AddressEP = remoteEP.ToString();
@@ -65,7 +64,6 @@ namespace WinServer.Codes
 
                 if (PlayerWriting == null && info.Length > 3)
                 {
-
                     if (info[0] == "req" && info[1] == ConnectionKey && info[2] == Port.ToString())
                     {
                         CPlayer newPlayer = new CPlayer(GetNewUniqueID(), info[3], remoteEP);

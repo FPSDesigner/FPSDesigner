@@ -104,6 +104,8 @@ namespace Engine.Display3D
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Matrix view, Matrix projection, string[] unDrawable = null)
         {
+            if (skinnedModel == null)
+                return;
             //draw the model (also the anim obviously)
             foreach (ModelMesh mesh in skinnedModel.Model.Meshes)
             {
