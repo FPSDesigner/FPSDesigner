@@ -158,7 +158,6 @@ namespace Engine.Display3D
 
             if (!isCamFrozen)
             {
-                Console.WriteLine(_isMoving);
                 CameraUpdates(gametime, keyState, oldKeyState, mouseState, camVelocity, isUnderWater, waterLevel);
                 CGameSettings.reloadGamepadState();
                 _oldKeyState = keyState;
@@ -192,8 +191,6 @@ namespace Engine.Display3D
         /// <param name="mouseState">Current mouseState</param>
         private void CameraUpdates(GameTime gametime, KeyboardState keyState, KeyboardState oldKeySate, MouseState mouseState, float camVelocity, bool isUnderWater, float waterLevel)
         {
-            // Just used for the animation in Character
-            _isMoving = false;
 
             if (!Display2D.C2DEffect.isSoftwareEmbedded)
                 Mouse.SetPosition(_middleScreen.X, _middleScreen.Y);
@@ -284,9 +281,9 @@ namespace Engine.Display3D
             this._right = Vector3.Cross(forward, up);
 
             if (_translation != Vector3.Zero)
-            {
                 _isMoving = true;
-            }
+            else
+                _isMoving = false;
 
         }
 
