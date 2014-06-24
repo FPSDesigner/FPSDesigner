@@ -51,7 +51,7 @@ namespace Engine.GameStates
         {
             /**** Variables Initialization ***/
             isSoftwareEmbedded = Display2D.C2DEffect.isSoftwareEmbedded;
-            levelData = levelInfo.loadLevelData("GameLevel.xml");
+            levelData = levelInfo.loadLevelData(Game.CConsole.contentGamefileFolder + "GameLevel.xml");
             _graphics = graphics;
             _content = content;
 
@@ -107,7 +107,7 @@ namespace Engine.GameStates
 
             lensFlare = new Display3D.CLensFlare();
             lensFlare.LoadContent(content, graphics, spriteBatch, new Vector3(0.8434627f, -0.4053462f, -0.4539611f));
-            
+
             skybox = new Display3D.CSkybox(content, graphics, content.Load<TextureCube>("Textures/Clouds"));
 
             /**** Terrain ****/
@@ -320,7 +320,7 @@ namespace Engine.GameStates
                 terrain.isUnderWater = isPlayerUnderwater;
             }
 
-            if(terrain != null)
+            if (terrain != null)
                 terrain.frustum = cam._Frustum;
 
             /*if (!isSoftwareEmbedded)
@@ -354,9 +354,12 @@ namespace Engine.GameStates
             // Draw pickups
             Display3D.CPickUpManager.Draw(cam, gameTime);
 
-            _graphics.BlendState = BlendState.Additive;
-            lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
-            _graphics.BlendState = BlendState.Opaque;
+            if (levelData.Terrain != null && levelData.Terrain.UseLensflare)
+            {
+                _graphics.BlendState = BlendState.Additive;
+                lensFlare.UpdateOcclusion(cam._view, cam._nearProjection);
+                _graphics.BlendState = BlendState.Opaque;
+            }
 
             Display3D.Particles.ParticlesManager.Draw(gameTime, cam._view, cam._projection);
 
@@ -368,7 +371,10 @@ namespace Engine.GameStates
                 _graphics.Clear(ClearOptions.DepthBuffer, new Vector4(0), 65535, 0);
                 if (cam.shouldDrawPlayer)
                     _character.Draw(spriteBatch, gameTime, cam._view, cam._nearProjection, cam._cameraPos, weapon);
-                lensFlare.Draw(gameTime);
+
+                if (levelData.Terrain != null && levelData.Terrain.UseLensflare)
+                    lensFlare.Draw(gameTime);
+
                 Game.CEnemyManager.AddEnemyHud(spriteBatch, cam);
             }
 
@@ -990,3 +996,4 @@ namespace Engine.GameStates
         }
     }
 }
+

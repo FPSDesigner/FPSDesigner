@@ -64,6 +64,8 @@ namespace Engine
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
 
+            if (ContentRootDirectoy != "Content")
+                Game.CConsole.contentGamefileFolder = ContentRootDirectoy.Replace("Content/", "");
 
             // Icon
             if (System.IO.File.Exists("Icon.ico"))
@@ -161,7 +163,7 @@ namespace Engine
             Game.Settings.CGameSettings.LoadDatas(GraphicsDevice);
             Game.CConsole.LoadContent(Content, GraphicsDevice, spriteBatch, true, true/*false*/);
             Game.CConsole._activationKeys = Game.Settings.CGameSettings._gameSettings.KeyMapping.Console;
-            Game.CConsole._activationKeys = Keys.P;
+            Game.CConsole._activationKeys = Keys.F1;
             try
             {
                 if (!isSoftwareEmbedded)

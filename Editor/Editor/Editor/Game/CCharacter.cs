@@ -74,7 +74,7 @@ namespace Engine.Game
         private float _elapsedTimeMuzzle; // Used to draw the muzzle flash
         private float _elapsedSnipeShot; // Time between two shots when the player is aiming with a sniper
 
-        public float _sprintSpeed = 3f;
+        public float _sprintSpeed = 1.9f;
         public float _walkSpeed = 1.6f;
         public float _aimSpeed = 3f;
         public float _freeCamSpeed = 30f;

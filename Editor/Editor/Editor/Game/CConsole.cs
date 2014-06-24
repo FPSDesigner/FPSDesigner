@@ -19,6 +19,7 @@ namespace Engine.Game
     /// </summary>
     class CConsole
     {
+        public static string contentGamefileFolder = "";
         private static bool _isConsoleActivated = false;
         public static bool _isConsoleEnabled = false;
         private static bool _isConsoleFileLoaded = false;

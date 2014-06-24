@@ -223,7 +223,7 @@ namespace Engine.Game
             _isWaitAnimPlaying = true;
             _isWalkAnimPlaying = false;
             _isDead = false;
-            _isFrozen = false;
+            _isFrozen = true;
             _isHeadShot = false;
             _isShoting = false;
             _isFollowingPlayer = false;

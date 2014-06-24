@@ -72,6 +72,7 @@ namespace Engine.Game.LevelInfo
     #region "Node - MapTerrain"
     public class Terrain
     {
+        public bool UseLensflare { get; set; }
         public bool UseTerrain { get; set; }
         public float CellSize { get; set; }
         public float Height { get; set; }

@@ -268,7 +268,7 @@ namespace Engine.Display3D
             }
             if (isUnderWater && !isFreeCam)
             {
-                _translation = _translation * 0.3f;
+                _translation = _translation * 0.12f;
             }
 
             Matrix rotation = Matrix.CreateFromYawPitchRoll(_yaw, _pitch, _roll);
