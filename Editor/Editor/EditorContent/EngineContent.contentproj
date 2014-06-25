@@ -1767,7 +1767,7 @@
     <Compile Include="Models\MedievalCharacter.fbx">
       <Name>MedievalCharacter</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>SkinnedModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

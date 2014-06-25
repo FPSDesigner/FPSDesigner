@@ -499,25 +499,23 @@ namespace Engine.Game
                             direction.Normalize();
                             weapon.Shot(true, _isShoting, gameTime);
 
+                            Ray ray = new Ray(nearSource, direction);
+                            _lastShot = ray;
+
+                            float? distance;
+                            CEnemy enemy;
+                            string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
+
+                            boxTouched.Split('.');
+
                             // The weapon is not a bow
                             if (weapon._weaponPossessed[weapon._selectedWeapon]._wepType != 3)
                             {
-                                Ray ray = new Ray(nearSource, direction);
-                                _lastShot = ray;
-
-                                float? distance;
-                                CEnemy enemy;
-                                string boxTouched = CEnemyManager.RayIntersectsHitbox(ray, out distance, out enemy);
-
-                                boxTouched.Split('.');
-
                                 if (distance < weapon._weaponPossessed[weapon._selectedWeapon]._range)
                                 {
                                     if (boxTouched != "")
                                     {
                                         Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
-                                        //Display3D.CSimpleShapes.AddBoundingSphere(new BoundingSphere(hitPosition, 0.1f), Color.Blue, 255f);
-                                        //Game.CConsole.addMessage("Hit " + boxTouched);
 
                                         // We handle all the damages according to the box touched...
                                         enemy.HandleDamages(enemy.GetDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, boxTouched), boxTouched);
@@ -552,6 +550,14 @@ namespace Engine.Game
                             // If the player shot with a bow
                             else
                             {
+                                if (boxTouched != "")
+                                {
+                                    Vector3 hitPosition = ray.Position + ray.Direction * distance.Value;
+
+                                    // We handle all the damages according to the box touched...
+                                    enemy.HandleDamages(enemy.GetDamages(weapon._weaponPossessed[weapon._selectedWeapon]._damagesPerBullet, boxTouched), boxTouched);
+                                }
+
                                 // Texture
                                 Dictionary<string, Texture2D> arrowDic = new Dictionary<string, Texture2D>();
                                 arrowDic.Add("ApplyAllMesh", _arrowTexture);
@@ -565,14 +571,6 @@ namespace Engine.Game
                                 Display3D.CModel arrowModelProjectile = new Display3D.CModel(_arrowModel, pos,
                                     rotation, new Vector3(1f), _graphicsDevice, arrowDic);
 
-                                /*if (rot.X != 0 && rot.Y != 0 && rot.Z != 0)
-                                {
-                                    Display3D.CSimpleShapes.AddLine(pos, pos + Vector3.Transform(Vector3.Up, rot), Color.Red, 255f);
-                                    direction = -Vector3.Transform(Vector3.Up, rot);
-                                    direction.Normalize();
-                                }*/
-                                /*Display3D.CSimpleShapes.AddLine(pos, pos + direction, Color.Green, 255f);
-                                Console.WriteLine(direction);*/
                                 Display3D.CProjectileManager.ThrowProjectile(new Display3D.CProjectile(arrowModelProjectile, pos + direction, rotation, direction));
 
                                 // With a bow -> Reload after a shoot

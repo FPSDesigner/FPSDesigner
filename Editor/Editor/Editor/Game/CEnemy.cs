@@ -266,10 +266,6 @@ namespace Engine.Game
 
             GenerateHitBoxesTriangles();
 
-            // Play first anim
-            _model.ChangeAnimSpeed(0.5f);
-            _model.BeginAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_wait", true);
-
             if(!_isMultiPlayer)
                 _loaded = true;
         }
@@ -281,39 +277,9 @@ namespace Engine.Game
                 if (_model.animationController == null)
                     return;
 
-                // Interpolation
-                if (_multiSpeed > 0)
-                {
-                    float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    _position += _multiDirection * _multiSpeed * elapsedTime;
-                }
-                // Play Anims
-                if (!_isFrozen && !_isDead && !_isDyingAnimPlaying)
-                {
-                    _model.RotateBone(2, cam._pitch);
-
-                    // The character is waiting or running
-                    SetWalk(_isMoving, CConsole._Weapon._weaponsArray[_selectedWeap].MultiType);
-
-                    _isFrozenAnimPlaying = false;
-                }
-
-                else if (_isFrozen && !_isFrozenAnimPlaying)
-                {
-                    _model.ChangeAnimation("frozen", true, 0.8f);
-                    _isFrozenAnimPlaying = true;
-                }
-
                 // We update the character pos, rot...
                 _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
-
-                // He was playing the anim, now the character is really dead
-                if (_isDyingAnimPlaying && _model.HasFinished())
-                {
-                    _position = _deathPosition;
-                    _rotation = _deathRotation;
-                    _isDead = true;
-                }
+                _model.Update(gameTime, _position, _rotation);
 
                 if (_isDead)
                 {
@@ -326,51 +292,76 @@ namespace Engine.Game
                     _isWalkAnimPlaying = false;
                 }
 
-                if ((_isJumping || _isSwitchingWeapon || _isReloading) && _model.HasFinished())
+                // Play Anims
+                if (!_isFrozen && !_isDead)
                 {
-                    if (_isCrouch)
+                    _model.RotateBone(2, cam._pitch);
+
+                    // The character is waiting or running
+                    SetWalk(_isMoving, CConsole._Weapon._weaponsArray[_selectedWeap].MultiType);
+
+                    _isFrozenAnimPlaying = false;
+                }
+                else if (_isFrozen && !_isFrozenAnimPlaying)
+                {
+                    _model.ChangeAnimation("frozen", true, 0.8f);
+                    _isFrozenAnimPlaying = true;
+                }
+
+                if (!_isDead && !_isFrozen)
+                {
+                    // He was playing the anim, now the character is really dead
+                    if (_isDyingAnimPlaying && _model.HasFinished())
                     {
-                        _model.ChangeAnimSpeed(2.5f);
-                        _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk-crouch", true, 0.5f);
+                        _position = _deathPosition;
+                        _rotation = _deathRotation;
+                        _isDead = true;
+                    }
+
+                    if ((_isJumping || _isSwitchingWeapon || _isReloading) && !_isDyingAnimPlaying &&_model.HasFinished())
+                    {
+                        if (_isCrouch)
+                        {
+                            _model.ChangeAnimSpeed(2.5f);
+                            _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk-crouch", true, 0.5f);
+                        }
+                        else
+                        {
+                            _model.ChangeAnimSpeed(2.5f);
+                            _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk", true, 0.5f);
+                        }
+
+                        _isJumping = false;
+                        _isReloading = false;
+                        _isSwitchingWeapon = false;
+                    }
+
+                    // new target is the camera position
+                    if (_isFollowingPlayer && !_isDyingAnimPlaying)
+                    {
+                        _targetPos = cam._cameraPos;
+                    }
+
+                    if (!_isFrozen && !_isDyingAnimPlaying && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
+                    {
+                        Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
+                        translation.Normalize();
+
+                        rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
+                        _targetPos.Z - _position.Z);
+
+                        translation = _runningVelocity * translation;
+                        _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
+                        _isMoving = true;
                     }
                     else
                     {
-                        _model.ChangeAnimSpeed(2.5f);
-                        _model.ChangeAnimation(CConsole._Weapon._weaponsArray[_selectedWeap].MultiType + "_walk", true, 0.5f);
+                        _isMoving = false;
                     }
 
-                    _isJumping = false;
-                    _isReloading = false;
-                    _isSwitchingWeapon = false;
+                    // Attack 
+                    AttackPlayer(Vector3.DistanceSquared(_position, CConsole._Camera._cameraPos));
                 }
-
-                _model.Update(gameTime, _position, _rotation);
-
-                // new target is the camera position
-                if (_isFollowingPlayer)
-                {
-                    _targetPos = cam._cameraPos;
-                }
-
-                if (!_isFrozen && Vector3.DistanceSquared(_position, _targetPos) > 10.0f)
-                {
-                    Vector3 translation = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(rotationValue));
-                    translation.Normalize();
-
-                    rotationValue = (float)Math.Atan2(_targetPos.X - _position.X,
-                    _targetPos.Z - _position.Z);
-
-                    translation = _runningVelocity * translation;
-                    _position = _physicEngine.GetNewPosition(gameTime, _position, translation, false);
-                    _isMoving = true;
-                }
-                else
-                {
-                    _isMoving = false;
-                }
-
-                // Attack 
-                AttackPlayer(Vector3.DistanceSquared(_position, CConsole._Camera._cameraPos));
 
             }
             else
@@ -382,23 +373,17 @@ namespace Engine.Game
 
         public void UpdateMultiplayer(GameTime gameTime, Display3D.CCamera cam)
         {
-            if (_model.animationController == null)
-                return;
+            if (_isDead)
+            {
+                _position = _deathPosition;
+                Matrix world = Matrix.CreateWorld(_position, Vector3.Right, Vector3.Up);
+                _rotation = _deathRotation;
 
-            // Interpolation
-            if (_multiSpeed > 0)
-            {
-                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                _position += _multiDirection * _multiSpeed * elapsedTime;
-            }
-            else if (_isFrozen && !_isFrozenAnimPlaying)
-            {
-                _model.ChangeAnimation("frozen", true, 0.8f);
-                _isFrozenAnimPlaying = true;
                 _isMoving = false;
+                _isWaitAnimPlaying = false;
+                _isWalkAnimPlaying = false;
+
             }
-            // We update the character pos, rot...
-            _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
 
             // He was playing the anim, now the character is really dead
             if (_isDyingAnimPlaying && _model.HasFinished())
@@ -409,16 +394,23 @@ namespace Engine.Game
                 _isMoving = false;
             }
 
-            if (_isDead)
-            {
-                _position = _deathPosition;
-                Matrix world = Matrix.CreateWorld(_position, Vector3.Right, Vector3.Up);
-                _rotation = _deathRotation;
+            if (_model.animationController == null)
+                return;
 
-                _isMoving = false;
-                _isWaitAnimPlaying = false;
-                _isWalkAnimPlaying = false;
+            // Interpolation
+            if (_multiSpeed > 0)
+            {
+                float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _position += _multiDirection * _multiSpeed * elapsedTime;
             }
+            else if (_isFrozen && !_isFrozenAnimPlaying && !_isDyingAnimPlaying)
+            {
+                _model.ChangeAnimation("frozen", true, 0.8f);
+                _isFrozenAnimPlaying = true;
+                _isMoving = false;
+            }
+            // We update the character pos, rot...
+            _rotation = Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationY((rotationValue));
 
             if ((_isJumping || _isSwitchingWeapon || _isReloading) && _model.HasFinished())
             {
@@ -488,59 +480,7 @@ namespace Engine.Game
                 }
                 mesh.Draw();
             }
-                //            // Draw the muzzle flash
-                //if (weap._weaponPossessed[weap._selectedWeapon]._wepType != 2 &&
-                //    (_isShoting && _elapsedTimeMuzzle < 50))
-                //{
-                //    Matrix muzzleDestination = Matrix.Identity;
-                //    float randomScale = (float)_muzzleRandom.NextDouble() / 2f;
-
-                //    switch (weap._weaponPossessed[weap._selectedWeapon]._name)
-                //    {
-                //        case "M1911":
-                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                //            0.25f + randomScale * 0.5f, new Vector3(-1f, -2.0f + randomScale, -2.85f));
-                //            break;
-                //        case "AK47":
-                //            randomScale = (float)_muzzleRandom.NextDouble() * 1.4f;
-                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                //            0.7f + randomScale * 1.4f, new Vector3(-3.6f, -1.6f + randomScale * 1.1f, -2.85f + 0.1f * randomScale));
-                //            break;
-                //        case "Deagle":
-                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                //            0.5f + randomScale * 0.05f, new Vector3(-0.7f, -1.4f, -2.85f));
-                //            break;
-                //        case "M40A5":
-                //            randomScale = (float)_muzzleRandom.NextDouble() * 1.4f;
-                //            muzzleDestination = _handAnimation.GetBoneMatrix("hand_R",
-                //            Matrix.CreateRotationX(-MathHelper.PiOver2) * Matrix.CreateRotationZ(MathHelper.PiOver2),
-                //            0.7f + randomScale * 1.4f, new Vector3(-3f, -1.6f + randomScale * 1.1f, -2.85f + 0.1f * randomScale));
-                //            break;
-                //    }
-
-
-                //    graphicsDevice.BlendState = BlendState.Additive;
-                //    foreach (ModelMesh mesh in _muzzleFlash.Meshes)
-                //    {
-                //        foreach (BasicEffect effect in mesh.Effects)
-                //        {
-                //            effect.World = muzzleDestination;
-                //            effect.View = view;
-                //            effect.Projection = projection;
-                //        }
-                //        mesh.Draw();
-                //    }
-                //    graphicsDevice.BlendState = BlendState.Opaque;
-
-                //                // We increment the muzzleTime or we reinit it
-                //if (_isShoting)
-                //{
-                //    _elapsedTimeMuzzle += gameTime.ElapsedGameTime.Milliseconds;
-                //}
-
+              
         }
 
         public void AttackPlayer(float distSquared)
@@ -549,7 +489,7 @@ namespace Engine.Game
                 return;
             if (!_isShoting)
             {
-                if (_isAgressive && IsPositionInSight(CConsole._Camera._cameraPos))
+                if (_isAgressive)
                 {
                     if (distSquared <= (CConsole._Weapon._weaponsArray[_selectedWeap]._range) * (CConsole._Weapon._weaponsArray[_selectedWeap]._range))
                     {
@@ -750,12 +690,12 @@ namespace Engine.Game
             {
                 if (_isCrouch)
                 {
-                    _model.ChangeAnimSpeed(6f);
+                    _model.ChangeAnimSpeed(6.5f);
                     _model.ChangeAnimation(typeName + "_attack-crouch", false, 0.3f);
                 }
                 else
                 {
-                    _model.ChangeAnimSpeed(6f);
+                    _model.ChangeAnimSpeed(6.5f);
                     _model.ChangeAnimation(typeName + "_attack", false, 0.3f);
                 }
 
@@ -782,20 +722,28 @@ namespace Engine.Game
         // Handle the damages and the character death
         public float GetDamages(float damages, string hitbox)
         {
-            hitbox = hitbox.Split('.')[0];
+            if(hitbox.Contains('.'))
+                hitbox = hitbox.Split('.')[0];
+
             switch (hitbox)
             {
                 case "bb_Head":
-                    damages *= 1.75f;
+                    damages *= 2f;
                     break;
-                case "bb_Arm":
+                case "bb_Arm-L":
                     damages *= 0.9f;
                     break;
-                case "bb_Leg":
+                case "bb_Arm-R":
+                    damages *= 0.9f;
+                    break;
+                case "bb_Leg-L":
+                    damages *= 0.9f;
+                    break;
+                case "bb_Leg-R":
                     damages *= 0.9f;
                     break;
                 case "bb_Body":
-                    damages = 1.35f;
+                    damages = 1.5f;
                     break;
             }
 
@@ -816,9 +764,9 @@ namespace Engine.Game
                         _collisionHeight = 0.05f;
 
                         // We save the death pos and rot
-                        _deathPosition = _position;
+                        _deathPosition = new Vector3(_position.X,_position.Y - 0.2f,_position.Z);
                         _deathRotation =
-                            _rotation * GetTerrainNormalRotation(_position);
+                            _rotation;
 
                         _model.ChangeAnimSpeed(2f);
                         // Back Death
@@ -926,7 +874,7 @@ namespace Engine.Game
                             Vector3 v0 = indices[triangles[x].A];
                             Vector3 v1 = indices[triangles[x].B];
                             Vector3 v2 = indices[triangles[x].C];
-                            if (hitBoxesTriangles.ContainsKey(mesh.Name + "_" + x))
+                            if (!hitBoxesTriangles.ContainsKey(mesh.Name + "_" + x))
                                 hitBoxesTriangles.Add(mesh.Name + "_" + x, new Display3D.Triangle(v0, v1, v2, mesh.Name, mesh.ParentBone.Transform));
                             //Display3D.CSimpleShapes.AddTriangle(v0, v1, v2, Color.Red,20.0f);
                         }
