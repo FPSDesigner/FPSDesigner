@@ -21,6 +21,13 @@ As a requirement for our first year project, we had to use XNA, a framework whic
 Credits
 ------------
 
-Check our website [here](https://www.fpsdesigner.com) for more information.
+Check our website [here](http://www.fpsdesigner.com) for more information.
 
 Created by [Adrien Neveu](https://github.com/AdrienNeveu) and [David Peicho](https://github.com/DavidPeicho).
+
+Images
+------------
+
+![FPSDesigner](http://puu.sh/n7K9v/d926e028e1.jpg "FPSDesigner Preview")
+
+![FPSDesigner](http://puu.sh/n7KoT/678f81fbaf.jpg "FPSDesigner Preview")
